@@ -1018,7 +1018,7 @@ try
     GameData.Descriptor := ReadStringFromStream(EntryStream);
     GameData.Version := ReadIntegerFromStream(EntryStream);
     GameData.Icon := ReadStringFromStream(EntryStream);
-    GameData.Date := ReadInt64FromStream(EntryStream);
+    GameData.Date := UnixToDateTime(ReadInt64FromStream(EntryStream));
     GameData.Author := ReadStringFromStream(EntryStream);
     GameData.Title := ReadStringFromStream(EntryStream);
     GameData.Info := ReadStringFromStream(EntryStream);
