@@ -1,6 +1,6 @@
 object fMainForm: TfMainForm
-  Left = 658
-  Top = 122
+  Left = 687
+  Top = 114
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Adjustable Cruise Control'

@@ -80,7 +80,7 @@ var
         begin
           SetLength(ProgramParams.GameIconFiles,ParamCount - Index);
           For i := Succ(Index) to ParamCount do
-            ProgramParams.GameIconFiles[i] := ExpandFileName(ParamStr(i));
+            ProgramParams.GameIconFiles[i - Succ(Index)] := ExpandFileName(ParamStr(i));
         end;
     Result := FileExists(ProgramParams.InputFile) and (ProgramParams.InputFormat >= 0) and
               (ProgramParams.OutputFormat >= 0) and DirectoryExists(ExtractFileDir(ProgramParams.OutputFile));
@@ -110,6 +110,7 @@ var
             try
               For i := Low(ProgramParams.GameIconFiles) to High(ProgramParams.GameIconFiles) do
                 begin
+                  IconStream.Clear;
                   IconStream.LoadFromFile(ProgramParams.GameIconFiles[i]);
                   DataManager.GameIcons.AddItem(ChangeFileExt(ExtractFileName(ProgramParams.GameIconFiles[i]),''),IconStream);
                 end;

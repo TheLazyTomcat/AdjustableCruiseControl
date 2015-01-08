@@ -26,8 +26,8 @@ type
       1: (uVersion:     DWORD;
           szInfoTitle:  Array[0..63] of Char;
           dwInfoFlags:  DWORD;
-          guidItem:     TGUID;
-          hBalloonIcon: HICON);
+         {guidItem:     TGUID;}
+         {hBalloonIcon: HICON});
   end;
 
 {==============================================================================}
@@ -166,7 +166,7 @@ fIcon := TIcon.Create;
 LoadIconFromResources;
 with fIconData do
   begin
-    cbSize := SizeOf(TNotifyIconData);
+    cbSize := SizeOf(fIconData);
     hWnd := fUtilityWindow.WindowHandle;
     uID := 0;
     uFlags := NIF_MESSAGE or NIF_ICON or NIF_TIP;

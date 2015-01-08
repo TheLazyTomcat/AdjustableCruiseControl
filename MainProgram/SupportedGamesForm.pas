@@ -208,10 +208,10 @@ with lbGamesList.Canvas do
     Brush.Style := bsClear;
     Font := lbGamesList.Font;
     Font.Style := [fsBold];
-    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 2,
+    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 4,
             Rect.Top + 4,TempGameData.Title);
     Font.Style := [];
-    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 2,
+    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 4,
             Rect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
     Pen.Color := clHorSplit;
     MoveTo(Rect.Left,Rect.Bottom - 1);

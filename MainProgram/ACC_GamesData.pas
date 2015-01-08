@@ -585,7 +585,7 @@ try
       Identifier := ReadStringFromStream(Stream);
       Size := ReadIntegerFromStream(Stream);
       WorkStream.CopyFrom(Stream,Size);
-//      WorkStream.Position := 0;
+      WorkStream.Position := 0;
       fGameIcons.AddItem(Identifier,WorkStream);
     end;
 finally

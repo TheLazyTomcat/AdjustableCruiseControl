@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=-i gamesdata.ini -if ini -o _gamesdata.ini -of bin
+RunParams=-i GamesData.ini -if ini -o GamesData.gdb -of bin -ic auts.png alh.png
 HostApplication=
 Launcher=
 UseLauncher=0
