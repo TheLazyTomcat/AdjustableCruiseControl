@@ -174,7 +174,7 @@ const
   clSideBar       = $00EFEFEF;
   clSideBarBinded = clLime;
   clHorSplit      = clSilver;
-  DefIconSize     = 34;
+  DefIconSize     = 32;
   LeftBarWidth    = 6;
 var
   TempGameData: TGameData;
@@ -208,10 +208,10 @@ with lbGamesList.Canvas do
     Brush.Style := bsClear;
     Font := lbGamesList.Font;
     Font.Style := [fsBold];
-    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 4,
+    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 6,
             Rect.Top + 4,TempGameData.Title);
     Font.Style := [];
-    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 4,
+    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 6,
             Rect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
     Pen.Color := clHorSplit;
     MoveTo(Rect.Left,Rect.Bottom - 1);
