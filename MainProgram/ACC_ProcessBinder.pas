@@ -423,7 +423,7 @@ try
               begin
                 fGameData := fGamesDataPtr^[i];
                   fGameData.ProcessInfo.ProcessID := fPossibleGameProcess.ProcessID;
-                fWaitObjects.GameProcess := OpenProcess(PROCESS_ALL_ACCESS,False,fGameData.ProcessInfo.ProcessID);
+                fWaitObjects.GameProcess := OpenProcess(PROCESS_VM_READ or PROCESS_VM_WRITE or PROCESS_VM_OPERATION or $00100000{SYNCHRONIZE},False,fGameData.ProcessInfo.ProcessID);
                 fGameData.ProcessInfo.ProcessHandle := fWaitObjects.GameProcess;
                 Result := fWaitObjects.GameProcess <> 0;
                 Break{i};
