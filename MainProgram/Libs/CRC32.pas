@@ -2,13 +2,21 @@
 
 CRC32 Calculation
 
-©František Milt 2013-11-22
+©František Milt 2015-01-09
 
-Version 1.3.1
+Version 1.3.2
+
+Polynomial 0x04c11db7
 
 ===============================================================================}
-
 unit CRC32;
+
+{$IFDEF x64}
+  {$DEFINE PurePascal}
+{$ENDIF}
+
+{$DEFINE LargeBuffer}
+{.$DEFINE UseStringStream}
 
 interface
 
@@ -19,25 +27,29 @@ type
   TCRC32 = LongWord;
   PCRC32 = ^TCRC32;
 
-Function CRC32ToStr(const CRC32: TCRC32): String;
-Function StrToCRC32(const Str: String): TCRC32;
+const
+  InitialCRC32 = $00000000;  
 
-Function BufferCRC32(const CRC32: TCRC32; const Buffer; Size: Integer): TCRC32; register;
+Function CRC32ToStr(CRC32: TCRC32): String;
+Function StrToCRC32(const Str: String): TCRC32;
+Function SameCRC32(A,B: TCRC32): Boolean;
+
+Function BufferCRC32(CRC32: TCRC32; const Buffer; Size: Integer): TCRC32; register; overload;
+Function BufferCRC32(const Buffer; Size: Integer): TCRC32; overload;
+
 Function StringCRC32(const Text: AnsiString): TCRC32; overload;
 Function StringCRC32(const Text: WideString): TCRC32; overload;
+
+Function StreamCRC32(InputStream: TStream): TCRC32;
 Function FileCRC32(const FileName: String): TCRC32;
-Function StreamCRC32(const InputStream: TStream): TCRC32;
 
 implementation
-
-{.$DEFINE LargeBuffers}
-{.$DEFINE UseStringStream}
 
 uses
   SysUtils;
 
 const
-{$IFDEF LargeBuffers}
+{$IFDEF LargeBuffer}
   cBufferSize = $100000;  // 1MiB buffer
 {$ELSE}
   cBufferSize = 4096;     // 4KiB buffer
@@ -84,7 +96,7 @@ const
 
 //==============================================================================
 
-Function CRC32ToStr(const CRC32: TCRC32): String;
+Function CRC32ToStr(CRC32: TCRC32): String;
 begin
 Result := IntToHex(CRC32,8);
 end;
@@ -93,13 +105,27 @@ end;
 
 Function StrToCRC32(const Str: String): TCRC32;
 begin
-Result := TCRC32(StrToInt('$' + Str));
+If Length(Str) > 0 then
+  begin
+    If Str[1] = '$' then
+      Result := TCRC32(StrToInt(Str))
+    else
+      Result := TCRC32(StrToInt('$' + Str));
+  end
+else Result := InitialCRC32;
+end;
+
+//------------------------------------------------------------------------------
+
+Function SameCRC32(A,B: TCRC32): Boolean;
+begin
+Result := LongWord(A) = LongWord(B);
 end;
 
 //==============================================================================
 
-Function BufferCRC32(const CRC32: TCRC32; const Buffer; Size: Integer): TCRC32; register;
-{$IFDEF PUREPASCAL}
+Function BufferCRC32(CRC32: TCRC32; const Buffer; Size: Integer): TCRC32; register; {$IFNDEF PurePascal}assembler;{$ENDIF}
+{$IFDEF PurePascal}
 var
   i:    Integer;
   Buff: PByteArray;
@@ -109,11 +135,12 @@ If Size > 0 then
   begin
     Buff := @Buffer;
     For i := 0 to Pred(Size) do
-      Result := CRCTable[Byte(Result xor LongWord(Buff^[i]))] xor (Result shr 8);
+      Result := CRCTable[Byte(Result xor TCRC32(Buff^[i]))] xor (Result shr 8);
   end;
 Result := not Result;
 end;
 {$ELSE}
+{$IFDEF FPC}{$ASMMODE intel}{$ENDIF}
 asm
 {******************************************************************************}
 {     Register    Content                                                      }
@@ -148,6 +175,13 @@ asm
   @RoutineEnd:  MOV   Result, EAX
 end;
 {$ENDIF}
+
+//------------------------------------------------------------------------------
+
+Function BufferCRC32(const Buffer; Size: Integer): TCRC32;
+begin
+Result := BufferCRC32(InitialCRC32,Buffer,Size);
+end;
 
 //==============================================================================
 
@@ -189,6 +223,29 @@ Result := BufferCRC32(0,PWideChar(Text)^,Length(Text) * SizeOf(WideChar));
 end;
 {$ENDIF}
 
+//==============================================================================
+
+Function StreamCRC32(InputStream: TStream): TCRC32;
+var
+  Buffer:     Pointer;
+  BytesRead:  Integer;
+begin
+Result := InitialCRC32;
+If Assigned(InputStream) then
+  begin
+    InputStream.Position := 0;
+    GetMem(Buffer,cBufferSize);
+    try
+      repeat
+        BytesRead := InputStream.Read(Buffer^,cBufferSize);
+        Result := BufferCRC32(Result,Buffer^,BytesRead);
+      until BytesRead < cBufferSize;
+    finally
+      FreeMem(Buffer,cBufferSize);
+    end;
+  end;
+end;
+
 //------------------------------------------------------------------------------
 
 Function FileCRC32(const FileName: String): TCRC32;
@@ -201,30 +258,6 @@ try
 finally
   FileStream.Free;
 end;
-end;
-
-//------------------------------------------------------------------------------
-
-Function StreamCRC32(const InputStream: TStream): TCRC32;
-var
-  Buffer: Pointer;
-  Readed: Integer;
-begin
-Result := 0;
-If Assigned(InputStream) then
-  begin
-    InputStream.Position := 0;
-    GetMem(Buffer,cBufferSize);
-    try
-      Repeat
-        Readed := InputStream.Read(Buffer^,cBufferSize);
-        Result := BufferCRC32(Result,Buffer^,Readed);
-      Until Readed < cBufferSize;
-    finally
-      FreeMem(Buffer,cBufferSize);
-    end;
-    InputStream.Position := 0;
-  end;
 end;
 
 end.

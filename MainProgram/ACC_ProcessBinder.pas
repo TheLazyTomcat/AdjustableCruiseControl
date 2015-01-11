@@ -373,7 +373,7 @@ var
                       Modules[k].MD5 := FileMD5(Modules[k].RuntimeInfo.FullPath);
                     Modules[k].CheckFlags := Modules[k].CheckFlags or CF_FILEMD5;
                     GameData.Modules[j].RuntimeInfo.Check := GameData.Modules[j].RuntimeInfo.Check
-                                                             and CompareMD5(Modules[k].MD5,GameData.Modules[j].MD5);
+                                                             and SameMD5(Modules[k].MD5,GameData.Modules[j].MD5);
                 end;
                 If GameData.Modules[j].RuntimeInfo.Check then
                   begin

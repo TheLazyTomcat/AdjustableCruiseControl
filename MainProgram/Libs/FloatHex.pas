@@ -2,35 +2,39 @@
 
 Floating point numbers <> HexString conversion routines
 
-©František Milt 2013-12-04
+©František Milt 2015-01-09
 
-Version 1.2.1
+Version 1.2.2
 
 ===============================================================================}
 unit FloatHex;
 
+{$IFDEF x64}
+  {$DEFINE Extended64}
+{$ENDIF}
+
 interface
 
-Function SingleToHex(const Value: Single): String;
+Function SingleToHex(Value: Single): String;
 Function HexToSingle(const HexString: String): Single;
 Function HexToSingleDef(const HexString: String; const DefaultValue: Single): Single;
 Function TryHexToSingle(const HexString: String; out Value: Single): Boolean;
 
-Function DoubleToHex(const Value: Double): String;
+Function DoubleToHex(Value: Double): String;
 Function HexToDouble(const HexString: String): Double;
 Function HexToDoubleDef(const HexString: String; const DefaultValue: Double): Double;
 Function TryHexToDouble(const HexString: String; out Value: Double): Boolean;
 
-Function ExtendedToHex(const Value: Extended): String;
+Function ExtendedToHex(Value: Extended): String;
 Function HexToExtended(const HexString: String): Extended;
 Function HexToExtendedDef(const HexString: String; const DefaultValue: Extended): Extended;
 Function TryHexToExtended(const HexString: String; out Value: Extended): Boolean;
 
 //------------------------------------------------------------------------------
 
-Function FloatToHex(const Value: Single): String; overload;
-Function FloatToHex(const Value: Double): String; overload;
-Function FloatToHex(const Value: Extended): String; overload;
+Function FloatToHex(Value: Single): String; overload;
+Function FloatToHex(Value: Double): String; overload;
+Function FloatToHex(Value: Extended): String; overload;
 
 Function HexToFloat(const HexString: String): Double; overload;
 
@@ -47,11 +51,13 @@ implementation
 uses
   SysUtils;
 
+{$IFNDEF Extended64}
 type
   TOverlay_80b = packed record
     Part_16:  Word;
     Part_64:  Int64;
   end;
+{$ENDIF}
 
 const
   cHexMark = '$';
@@ -66,7 +72,7 @@ end;
 
 //==============================================================================
 
-Function SingleToHex(const Value: Single): String;
+Function SingleToHex(Value: Single): String;
 var
   Overlay:  LongWord absolute Value;
 begin
@@ -110,7 +116,7 @@ end;
 
 //==============================================================================
 
-Function DoubleToHex(const Value: Double): String;
+Function DoubleToHex(Value: Double): String;
 var
   Overlay:  Int64 absolute Value;
 begin
@@ -154,16 +160,27 @@ end;
 
 //==============================================================================
 
-Function ExtendedToHex(const Value: Extended): String;
+Function ExtendedToHex(Value: Extended): String;
+{$IFDEF Extended64}
+begin
+Result := DoubleToHex(Value);
+end;
+{$ELSE}
 var
   Overlay: TOverlay_80b absolute Value;
 begin
 Result := IntToHex(Overlay.Part_64,16) + IntToHex(Overlay.Part_16,4);
 end;
+{$ENDIF}
 
 //------------------------------------------------------------------------------
 
 Function HexToExtended(const HexString: String): Extended;
+{$IFDEF Extended64}
+begin
+Result := HexToDouble(HexString);
+end;
+{$ELSE}
 var
   Num:      Extended;
   Overlay:  TOverlay_80b absolute Num;
@@ -180,6 +197,7 @@ else
   end;
 Result := Num;
 end;
+{$ENDIF}
 
 //------------------------------------------------------------------------------
 
@@ -205,22 +223,23 @@ end;
 end;
 
 //******************************************************************************
+//******************************************************************************
 
-Function FloatToHex(const Value: Single): String;
+Function FloatToHex(Value: Single): String;
 begin
 Result := SingleToHex(Value);
 end;
 
 //------------------------------------------------------------------------------
 
-Function FloatToHex(const Value: Double): String;
+Function FloatToHex(Value: Double): String;
 begin
 Result := DoubleToHex(Value);
 end;
 
 //------------------------------------------------------------------------------
 
-Function FloatToHex(const Value: Extended): String;
+Function FloatToHex(Value: Extended): String;
 begin
 Result := ExtendedToHex(Value);
 end;

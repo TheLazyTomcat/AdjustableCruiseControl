@@ -2,7 +2,7 @@
 
 DefRegistry
 
-©František Milt 28.1.2012
+©František Milt 2012-01-28
 
 Version 1.0
 
@@ -42,6 +42,8 @@ except
 end;
 end;
 
+//------------------------------------------------------------------------------
+
 Function TDefRegistry.ReadBinaryDataDef(const Name: String; var Buffer; BufSize: Integer; const DefaultBuffer): Integer;
 begin
 try
@@ -57,6 +59,8 @@ except
 end;
 end;
 
+//------------------------------------------------------------------------------
+
 Function TDefRegistry.ReadBoolDef(const Name: String; const DefaultValue: Boolean): Boolean;
 begin
 try
@@ -68,6 +72,8 @@ except
   Result := DefaultValue;
 end;
 end;
+
+//------------------------------------------------------------------------------
 
 Function TDefRegistry.ReadDateDef(const Name: String; const DefaultValue: TDateTime): TDateTime;
 begin
@@ -81,6 +87,8 @@ except
 end;
 end;
 
+//------------------------------------------------------------------------------
+
 Function TDefRegistry.ReadDateTimeDef(const Name: String; const DefaultValue: TDateTime): TDateTime;
 begin
 try
@@ -92,6 +100,8 @@ except
   Result := DefaultValue;
 end;
 end;
+
+//------------------------------------------------------------------------------
 
 Function TDefRegistry.ReadFloatDef(const Name: String; const DefaultValue: Double): Double;
 begin
@@ -105,6 +115,8 @@ except
 end;
 end;
 
+//------------------------------------------------------------------------------
+
 Function TDefRegistry.ReadIntegerDef(const Name: String; const DefaultValue: Integer): Integer;
 begin
 try
@@ -117,6 +129,8 @@ except
 end;
 end;
 
+//------------------------------------------------------------------------------
+
 Function TDefRegistry.ReadStringDef(const Name: String; const DefaultValue: String): String;
 begin
 try
@@ -128,6 +142,8 @@ except
   Result := DefaultValue;
 end;
 end;
+
+//------------------------------------------------------------------------------
 
 Function TDefRegistry.ReadTimeDef(const Name: String; const DefaultValue: TDateTime): TDateTime;
 begin

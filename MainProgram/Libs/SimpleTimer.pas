@@ -1,4 +1,19 @@
+{==============================================================================}
+{                                                                              }
+{   Simple timer                                                               }
+{                                                                              }
+{   Non visual variant of TTimer component.                                    }
+{                                                                              }
+{   ©František Milt 2015-01-11                                                 }
+{                                                                              }
+{   Version 1.1                                                                }
+{                                                                              }
+{==============================================================================}
 unit SimpleTimer;
+
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
 
 interface
 
@@ -40,7 +55,7 @@ type
 implementation
 
 uses
-  SysUtils, Consts;
+  SysUtils;
 
 {=== TSimpleTimer // Private methods ==========================================}
 
@@ -72,7 +87,7 @@ begin
 KillTimer(WindowHandle,fTimerID);
 If (fInterval > 0) and fEnabled then
   If SetTimer(WindowHandle,fTimerID,fInterval,nil) = 0 then
-    raise EOutOfResources.Create(sNoTimers);
+    raise EOutOfResources.Create('Not enough timers available');
 end;
 
 procedure TSimpleTimer.MessagesHandler(var Msg: TMessage; var Handled: Boolean);
@@ -111,6 +126,8 @@ fInterval := 1000;
 fEnabled := False;
 end;
 
+//------------------------------------------------------------------------------
+
 destructor TSimpleTimer.Destroy;
 begin
 fEnabled := False;
@@ -119,6 +136,8 @@ If fOwnsWindow then fWindow.Free
   else fWindow.OnMessage.Remove(MessagesHandler);
 inherited;
 end;
+
+//------------------------------------------------------------------------------
 
 procedure TSimpleTimer.ProcessMassages;
 begin

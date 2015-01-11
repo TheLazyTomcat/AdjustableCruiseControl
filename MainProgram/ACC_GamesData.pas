@@ -698,7 +698,7 @@ var
           Module.CRC32 := StrToInt(AnsiLeftStr(ModText,AnsiPos('@',ModText) - 1));
           Delete(ModText,1,AnsiPos('@',ModText));
           Module.FileName := ExtractFileName(ModText);
-          Module.MD5 := StringToMD5('00000000000000000000000000000000');
+          Module.MD5 := StrToMD5('00000000000000000000000000000000');
           Result := (ExtractFilePath(ModText) = '') or not MainModule;
         except
           Result := False;
@@ -918,7 +918,7 @@ var
     If (Module.CheckFlags and CF_FILECRC32) <> 0 then
       Ini.WriteString(CurrentSection,Prefix + GDIN_GD_MOD_CRC32,'$' + IntToHex(Module.CRC32,8));
     If (Module.CheckFlags and CF_FILEMD5) <> 0 then
-      Ini.WriteString(CurrentSection,Prefix + GDIN_GD_MOD_MD5,MD5ToString(Module.MD5));
+      Ini.WriteString(CurrentSection,Prefix + GDIN_GD_MOD_MD5,MD5ToStr(Module.MD5));
   end;
 
   procedure WritePointer(const Prefix: String; Pointer: TPointerData);
@@ -1060,7 +1060,7 @@ var
     If (Module.CheckFlags and CF_FILECRC32) <> 0 then
       Module.CRC32 := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_CRC32,0);
     If (Module.CheckFlags and CF_FILEMD5) <> 0 then
-      Module.MD5 := StringToMD5(Ini.ReadString(Section,Prefix + GDIN_GD_MOD_MD5,'00000000000000000000000000000000'));
+      Module.MD5 := StrToMD5(Ini.ReadString(Section,Prefix + GDIN_GD_MOD_MD5,'00000000000000000000000000000000'));
   end;
 
   procedure ReadPointer(const Prefix: String; var Pointer: TPointerData);

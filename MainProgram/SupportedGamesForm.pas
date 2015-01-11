@@ -104,7 +104,7 @@ try
       If (TempGameData.Modules[i].CheckFlags and CF_FILECRC32) <> 0 then
         AddRow(Format(GDIN_GD_Module,[i]) + GDIN_GD_MOD_CRC32,CRC32ToStr(TempGameData.Modules[i].CRC32));
       If (TempGameData.Modules[i].CheckFlags and CF_FILEMD5) <> 0 then
-        AddRow(Format(GDIN_GD_Module,[i]) + GDIN_GD_MOD_MD5,MD5ToString(TempGameData.Modules[i].MD5));
+        AddRow(Format(GDIN_GD_Module,[i]) + GDIN_GD_MOD_MD5,MD5ToStr(TempGameData.Modules[i].MD5));
     end;
   ListPointerData(GDIN_GD_CCSpeed,TempGameData.CCSpeed);
   ListPointerData(GDIN_GD_CCStatus,TempGameData.CCStatus);

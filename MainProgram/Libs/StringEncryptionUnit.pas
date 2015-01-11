@@ -77,6 +77,7 @@ var
   i:            Integer;
   CacheMatrix:  String;
 begin
+CacheMatrix := '';
 //vytvoøení hlavní matice (pøedpokládá se že je kratší než buffer, pokud je delší, bere se jen potøebná délka)
 While Length(CacheMatrix) < Length(Buffer) do
   begin
@@ -200,7 +201,7 @@ else
   Exit;
 end;
 //zapsání potøebných údají
-Cache := Chr(Byte(Ord(Cache[1]) + VersionBias + Version)) + Cache;
+Cache := Chr(Byte(Integer(Ord(Cache[1])) + VersionBias + Version)) + Cache;
 Cache := Chr(ControlCount(Cache)) + Cache;
 Result := EncryptedChar;
 //pøevedení na hex

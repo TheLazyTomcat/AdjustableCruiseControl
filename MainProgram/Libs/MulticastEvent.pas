@@ -2,9 +2,9 @@
 {                                                                              }
 {   Multicast event handling class                                             }
 {                                                                              }
-{   ©František Milt 2014-02-01                                                 }
+{   ©František Milt 2014-05-07                                                 }
 {                                                                              }
-{   Version 1.0                                                                }
+{   Version 1.0.2                                                              }
 {                                                                              }
 {==============================================================================}
 unit MulticastEvent;
@@ -28,13 +28,12 @@ type
     fMethods: TList;
     Function GetMethods(Index: Integer): TMethod;
     Function GetMethodsCount: Integer;
-  protected
   public
     constructor Create(aOwner: TObject = nil);
     destructor Destroy; override;
     Function IndexOf(const Handler: TEvent): Integer; virtual;
     Function Add(const Handler: TEvent; AllowDuplicity: Boolean = False): Integer; virtual;
-    Function Remove(const Handler: TEvent): Integer; virtual;
+    Function Remove(const Handler: TEvent; RemoveAll: Boolean = True): Integer; virtual;
     procedure Delete(Index: Integer); virtual;
     procedure Clear; virtual;
     procedure Call; virtual;
@@ -51,8 +50,8 @@ type
   TMulticastNotifyEvent = class(TMulticastEvent)
   public
     Function IndexOf(const Handler: TNotifyEvent): Integer; reintroduce;
-    Function Add(Handler: TNotifyEvent; AllowDuplicity: Boolean = False): Integer; reintroduce;
-    Function Remove(const Handler: TNotifyEvent): Integer; reintroduce;
+    Function Add(const Handler: TNotifyEvent; AllowDuplicity: Boolean = False): Integer; reintroduce;
+    Function Remove(const Handler: TNotifyEvent; RemoveAll: Boolean = True): Integer; reintroduce;
     procedure Call(Sender: TObject); reintroduce;
   end;
 
@@ -126,17 +125,19 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TMulticastEvent.Remove(const Handler: TEvent): Integer;
+Function TMulticastEvent.Remove(const Handler: TEvent; RemoveAll: Boolean = True): Integer;
 begin
-Result := IndexOf(Handler);
-If Result >= 0 then Delete(Result);
+repeat
+  Result := IndexOf(Handler);
+  If Result >= 0 then Delete(Result);
+until not RemoveAll or (Result < 0);
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TMulticastEvent.Delete(Index: Integer);
 begin
-Dispose(fMethods[Index]);
+Dispose(PMethod(fMethods[Index]));
 fMethods.Delete(Index);
 end;
 
@@ -146,7 +147,7 @@ procedure TMulticastEvent.Clear;
 var
   i:  Integer;
 begin
-For i := 0 to Pred(fMethods.Count) do Dispose(fMethods[i]);
+For i := 0 to Pred(fMethods.Count) do Dispose(PMethod(fMethods[i]));
 fMethods.Clear;
 end;
 
@@ -175,16 +176,16 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TMulticastNotifyEvent.Add(Handler: TNotifyEvent; AllowDuplicity: Boolean = False): Integer;
+Function TMulticastNotifyEvent.Add(const Handler: TNotifyEvent; AllowDuplicity: Boolean = False): Integer;
 begin
 Result := inherited Add(TEvent(Handler),AllowDuplicity);
 end;
 
 //------------------------------------------------------------------------------
 
-Function TMulticastNotifyEvent.Remove(const Handler: TNotifyEvent): Integer;
+Function TMulticastNotifyEvent.Remove(const Handler: TNotifyEvent; RemoveAll: Boolean = True): Integer;
 begin
-Result := inherited Remove(TEvent(Handler));
+Result := inherited Remove(TEvent(Handler),RemoveAll);
 end;
 
 //------------------------------------------------------------------------------

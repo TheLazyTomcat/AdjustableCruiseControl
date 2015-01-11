@@ -329,16 +329,16 @@ end;
 
 Function RAWINPUT_ALIGN(x: Pointer): Pointer;
 begin
-{$IFDEF WIN64}
-Result := Pointer((NativeInt(x) + SizeOf(QWORD) - 1) and not (SizeOf(QWORD) - 1));
+{$IFDEF x64}
+{%H-}Result := Pointer((NativeInt(x) + SizeOf(QWORD) - 1) and not (SizeOf(QWORD) - 1));
 {$ELSE}
-Result := Pointer((NativeInt(x) + SizeOf(DWORD) - 1) and not (SizeOf(DWORD) - 1));
+{%H-}Result := Pointer((NativeInt(x) + SizeOf(DWORD) - 1) and not (SizeOf(DWORD) - 1));
 {$ENDIF}
 end;
 
 Function NEXTRAWINPUTBLOCK(ptr: PRAWINPUT): PRAWINPUT;
 begin
-Result := PRAWINPUT(RAWINPUT_ALIGN(Pointer(NativeInt(ptr) + ptr^.header.dwSize)));
+{%H-}Result := PRAWINPUT(RAWINPUT_ALIGN(Pointer(NativeInt(ptr) + ptr^.header.dwSize)));
 end;
 
 end.

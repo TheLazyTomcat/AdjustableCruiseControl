@@ -2,14 +2,21 @@
 
 MD5 Hash Calculation
 
-©František Milt 15.9.2013
+©František Milt 2015-01-09
 
-Version 1.2.1
+Version 1.2.2
 
 ===============================================================================}
 unit MD5;
 
 interface
+
+{$IFDEF x64}
+  {$DEFINE PurePascal}
+{$ENDIF}
+
+{$DEFINE LargeBuffer}
+{.$DEFINE UseStringStream}
 
 uses
   Classes;
@@ -29,21 +36,22 @@ const
     PartB:  $EFCDAB89;
     PartC:  $98BADCFE;
     PartD:  $10325476);
+    
+  ZeroMD5: TMD5Hash = (PartA: 0; PartB: 0; PartC: 0; PartD: 0);
 
-Function MD5toString(const Hash: TMD5Hash): String;
-Function StringToMD5(HashString: String): TMD5Hash;
-Function CompareMD5(const Hash1, Hash2: TMD5Hash): Boolean;
+Function MD5toStr(const Hash: TMD5Hash): String;
+Function StrToMD5(HashString: String): TMD5Hash;
+Function SameMD5(Hash1, Hash2: TMD5Hash): Boolean;
 
-Function BufferMD5(const Hash: TMD5Hash; const Buffer; const BuffSize: Integer): TMD5Hash;
-Function LastBufferMD5(const Hash: TMD5Hash; const Buffer; const BuffSize: Integer; Size: Int64 = -1): TMD5Hash;
-Function StreamMD5(const InputStream: TStream): TMD5Hash;
+Function BufferMD5(Hash: TMD5Hash; const Buffer; BuffSize: Integer): TMD5Hash;
+Function LastBufferMD5(Hash: TMD5Hash; const Buffer; BuffSize: Integer; Size: Int64 = -1): TMD5Hash;
+
 Function StringMD5(const Text: String): TMD5Hash;
+
+Function StreamMD5(InputStream: TStream): TMD5Hash;
 Function FileMD5(const FileName: String): TMD5Hash;
 
 implementation
-
-{.$DEFINE LargeBuffers}
-{.$DEFINE UseStringStream}
 
 uses
   Windows, SysUtils, Math;
@@ -51,10 +59,10 @@ uses
 const
   cFAB             = $80;                             // bin 10000000
   cChunkSize       = 64;                              // 512 bits
-{$IFDEF LargeBuffers}
-  cChunksPerBuffer = 16384;                           // =>1MiB BufferSize
+{$IFDEF LargeBuffer}
+  cChunksPerBuffer = 16384;                           // => 1MiB BufferSize
 {$ELSE}
-  cChunksPerBuffer = 64;                              // =>4KiB BufferSize
+  cChunksPerBuffer = 64;                              // => 4KiB BufferSize
 {$ENDIF}
   cBufferSize      = cChunksPerBuffer * cChunkSize;   // size of read buffer
 
@@ -80,7 +88,7 @@ const
     5,  8, 11, 14,  1,  4,  7, 10, 13,  0,  3,  6,  9, 12, 15,  2,
     0,  7, 14,  5, 12,  3, 10,  1,  8, 15,  6, 13,  4, 11,  2,  9);
 
-//------------------------------------------------------------------------------
+//==============================================================================
 
 Function ChunkHash(Hash: TMD5Hash; const Chunk): TMD5Hash;
 var
@@ -89,15 +97,20 @@ var
   FuncResult: LongWord;
   ChunkWords: Array[0..15] of LongWord absolute Chunk;
 
-  Function LeftRotate(Number,Shift: LongWord): LongWord; register
+  Function LeftRotate(Number,Shift: LongWord): LongWord; register; {$IFNDEF PurePascal}assembler;{$ENDIF}
   {$IFDEF PUREPASCAL}
   begin
     Result := (Number shl Shift) or (Number shr (32 - Shift));
   end;
   {$ELSE}
+  {$IFDEF FPC}{$ASMMODE intel}{$ENDIF}
   asm
-    mov CL, DL
-    rol EAX, CL
+  {$IFDEF FPC}
+    MOV EAX, EDX
+  {$ELSE}
+    MOV CL,  DL
+  {$ENDIF}
+    ROL EAX, CL
   end;
   {$ENDIF}
 
@@ -124,20 +137,24 @@ Inc(Result.PartC,Hash.PartC);
 Inc(Result.PartD,Hash.PartD);
 end;
 
-//------------------------------------------------------------------------------
+//==============================================================================
 
-Function MD5toString(const Hash: TMD5Hash): String;
+Function MD5toStr(const Hash: TMD5Hash): String;
 var
   HashArray:  Array[0..15] of Byte absolute Hash;
   i:          Integer;
 begin
-Result := '';
+Result := '00000000000000000000000000000000';
 For i := Low(HashArray) to High(HashArray) do
-  Result:= Result + (IntToHex(HashArray[i],2));
-Result := AnsiLowerCase(Result);
+  begin
+    Result[(i * 2) + 2] := IntToHex(HashArray[i] and $0F,1)[1];
+    Result[(i * 2) + 1] := IntToHex(HashArray[i] shr 4,1)[1];
+  end;
 end;
 
-Function StringToMD5(HashString: String): TMD5Hash;
+//------------------------------------------------------------------------------
+
+Function StrToMD5(HashString: String): TMD5Hash;
 var
   HashArray:  Array[0..15] of Byte absolute Result;
   i:          Integer;
@@ -151,7 +168,9 @@ For i := 0 to 15 do
   HashArray[i] := StrToInt('$' + Copy(HashString,(i * 2) + 1,2));
 end;
 
-Function CompareMD5(const Hash1, Hash2: TMD5Hash): Boolean;
+//------------------------------------------------------------------------------
+
+Function SameMD5(Hash1, Hash2: TMD5Hash): Boolean;
 begin
 Result := (Hash1.PartA = Hash2.PartA) and
           (Hash1.PartB = Hash2.PartB) and
@@ -159,9 +178,9 @@ Result := (Hash1.PartA = Hash2.PartA) and
           (Hash1.PartD = Hash2.PartD);
 end;
 
-//------------------------------------------------------------------------------
+//==============================================================================
 
-Function BufferMD5(const Hash: TMD5Hash; const Buffer; const BuffSize: Integer): TMD5Hash;
+Function BufferMD5(Hash: TMD5Hash; const Buffer; BuffSize: Integer): TMD5Hash;
 type
   TChunkBuffer = Array[0..cChunkSize - 1] of Byte;
   PChunkBuffer = ^TChunkBuffer;
@@ -178,7 +197,9 @@ For i := 1 to (BuffSize div cChunkSize) do
   end;
 end;
 
-Function LastBufferMD5(const Hash: TMD5Hash; const Buffer; const BuffSize: Integer; Size: Int64 = -1): TMD5Hash;
+//------------------------------------------------------------------------------
+
+Function LastBufferMD5(Hash: TMD5Hash; const Buffer; BuffSize: Integer; Size: Int64 = -1): TMD5Hash;
 var
   HelpBuffer: Pointer;
   Chunks:     Integer;
@@ -190,14 +211,37 @@ HelpBuffer := AllocMem(Chunks * cChunkSize);
 try
   CopyMemory(HelpBuffer,@Buffer,BuffSize);
   PByteArray(HelpBuffer)^[BuffSize] := cFAB;
-  PInt64(@PByteArray(HelpBuffer)[(Chunks * cChunkSize) - SizeOf(Int64)])^ := Size * 8;
+  PInt64(Addr(PByteArray(HelpBuffer)^[(Chunks * cChunkSize) - SizeOf(Int64)]))^ := Size * 8;
   Result := BufferMD5(Hash,HelpBuffer^,Chunks * cChunkSize);
 finally
   FreeMem(HelpBuffer,Chunks * cChunkSize);
 end;
 end;
 
-Function StreamMD5(const InputStream: TStream): TMD5Hash;
+//==============================================================================
+
+
+Function StringMD5(const Text: String): TMD5Hash;
+{$IFDEF UseStringStream}
+var
+  StringStream: TStringStream;
+begin
+StringStream := TStringStream.Create(Text);
+try
+  Result := StreamMD5(StringStream);
+finally
+  StringStream.Free;
+end;
+end;
+{$ELSE}
+begin
+Result := LastBufferMD5(InitialMD5,PChar(Text)^,Length(Text) * SizeOf(Char));
+end;
+{$ENDIF}
+
+//==============================================================================
+
+Function StreamMD5(InputStream: TStream): TMD5Hash;
 var
   Buffer: Pointer;
   Readed: Integer;
@@ -222,23 +266,7 @@ If Assigned(InputStream) then
   end;
 end;
 
-Function StringMD5(const Text: String): TMD5Hash;
-{$IFDEF UseStringStream}
-var
-  StringStream: TStringStream;
-begin
-StringStream := TStringStream.Create(Text);
-try
-  Result := StreamMD5(StringStream);
-finally
-  StringStream.Free;
-end;
-end;
-{$ELSE}
-begin
-Result := LastBufferMD5(InitialMD5,PChar(Text)^,Length(Text) * SizeOf(Char));
-end;
-{$ENDIF}
+//------------------------------------------------------------------------------
 
 Function FileMD5(const FileName: String): TMD5Hash;
 var
