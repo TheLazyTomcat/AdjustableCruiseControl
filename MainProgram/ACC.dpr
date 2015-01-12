@@ -11,7 +11,7 @@ uses
   FloatHex in 'Libs\FloatHex.pas',
   DefRegistry in 'Libs\DefRegistry.pas',
   SimpleCompress in 'Libs\SimpleCompress.pas',
-  StringEncryptionUnit in 'Libs\StringEncryptionUnit.pas',  // Old and bad code, later rewrite
+  StringEncryptionUnit in 'Libs\StringEncryptionUnit.pas',
   MulticastEvent in 'Libs\MulticastEvent.pas',
   UtilityWindow in 'Libs\UtilityWindow.pas',
   SimpleTimer in 'Libs\SimpleTimer.pas',
@@ -27,11 +27,12 @@ uses
   ACC_Input in 'ACC_Input.pas',
   ACC_Manager in 'ACC_Manager.pas',
   MainForm in 'MainForm.pas' {fMainForm},
+  MsgForm in 'Libs\Msg\MsgForm.pas' {fMsgForm},
   AboutForm in 'AboutForm.pas' {fAboutForm},
   SettingsForm in 'SettingsForm.pas' {fSettingsForm},
-  MsgForm in 'Libs\Msg\MsgForm.pas' {fMsgForm},             // Old and bad code, later replace
   KeyBindForm in 'KeyBindForm.pas' {fKeyBindForm},
-  SupportedGamesForm in 'SupportedGamesForm.pas' {fSupportedGames};
+  SupportedGamesForm in 'SupportedGamesForm.pas' {fSupportedGamesForm},
+  UpdateForm in 'UpdateForm.pas' {fUpdateForm};
 
 {$R *.res}
 
@@ -47,7 +48,8 @@ try
       Application.CreateForm(TfAboutForm, fAboutForm);
       Application.CreateForm(TfSettingsForm, fSettingsForm);
       Application.CreateForm(TfKeyBindForm, fKeyBindForm);
-      Application.CreateForm(TfSupportedGames, fSupportedGames);
+      Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
+      Application.CreateForm(TfUpdateForm, fUpdateForm);
       ACCManager.Initialize(Application);
       Application.Run;
       ACCManager.Save;

@@ -1,6 +1,6 @@
 object fSettingsForm: TfSettingsForm
-  Left = 740
-  Top = 236
+  Left = 717
+  Top = 230
   BorderStyle = bsDialog
   Caption = 'Settings'
   ClientHeight = 496
@@ -225,8 +225,8 @@ object fSettingsForm: TfSettingsForm
       Width = 177
       Height = 25
       Caption = 'Update games data...'
-      Enabled = False
       TabOrder = 1
+      OnClick = btnUpdateGamesDataClick
     end
   end
   object btnAccept: TButton

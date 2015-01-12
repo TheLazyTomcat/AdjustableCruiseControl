@@ -52,6 +52,7 @@ type
     procedure btnDefaultClick(Sender: TObject);    
     procedure btnExportSettingsClick(Sender: TObject);
     procedure btnImportSettingsClick(Sender: TObject);
+    procedure btnUpdateGamesDataClick(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -73,7 +74,7 @@ implementation
 
 uses
   MainForm, KeyBindForm, SupportedGamesForm, MsgForm,
-  ACC_Common, ACC_Strings, ACC_Input, ACC_Manager;
+  ACC_Common, ACC_Strings, ACC_Input, ACC_Manager, UpdateForm;
 
 
 procedure TfSettingsForm.PrepareBindTable;
@@ -184,7 +185,14 @@ end;
 
 procedure TfSettingsForm.btnSupportedGamesClick(Sender: TObject);
 begin
-fSupportedGames.ShowModal;
+fSupportedGamesForm.ShowModal;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfSettingsForm.btnUpdateGamesDataClick(Sender: TObject);
+begin
+fUpdateForm.ShowModal;
 end;
 
 //------------------------------------------------------------------------------

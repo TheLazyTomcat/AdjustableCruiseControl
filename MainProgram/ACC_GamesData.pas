@@ -87,6 +87,7 @@ type
     Valid:      Boolean;
     NewEntry:   Boolean;
     NewVersion: Boolean;
+    OldVersion: Boolean;
   end;
 
   TGameData = record
@@ -213,7 +214,7 @@ type
     Function LoadFromIni(const FileName: String): Boolean; overload; virtual;
     procedure Load; virtual;
     procedure Save; virtual;
-    procedure CheckForUpdate(OldData: TGamesDataManager); virtual;
+    procedure CheckUpdate(OldData: TGamesDataManager); virtual;
     Function UpdateFrom(UpdateData: TGamesDataManager): Integer; virtual;
     property GameDataPtr[Index: Integer]: PGameData read GetGameDataPtr;
     property GameData[Index: Integer]: TGameData read GetGameData; default;
@@ -1418,7 +1419,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TGamesDataManager.CheckForUpdate(OldData: TGamesDataManager);
+procedure TGamesDataManager.CheckUpdate(OldData: TGamesDataManager);
 var
   i, Index:     Integer;
   GameDataTemp: PGameData;
@@ -1432,6 +1433,7 @@ For i := 0 to Pred(GamesDataCount) do
       begin
         GameDataTemp^.UpdateInfo.NewEntry := False;
         GameDataTemp^.UpdateInfo.NewVersion := GameDataTemp^.Version > OldData[Index].Version;
+        GameDataTemp^.UpdateInfo.OldVersion := GameDataTemp^.Version < OldData[Index].Version;
       end
     else GameDataTemp^.UpdateInfo.NewEntry := True;
     GameDataTemp^.UpdateInfo.Add := GameDataTemp^.UpdateInfo.Valid and

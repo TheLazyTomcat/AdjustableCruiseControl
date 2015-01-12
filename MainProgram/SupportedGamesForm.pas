@@ -8,7 +8,7 @@ uses
   ACC_GamesData;
 
 type
-  TfSupportedGames = class(TForm)
+  TfSupportedGamesForm = class(TForm)
     lbGamesList: TListBox;
     lvGameDetails: TListView;
     gbGameDetails: TGroupBox;
@@ -30,7 +30,7 @@ type
   end;
 
 var
-  fSupportedGames: TfSupportedGames;
+  fSupportedGamesForm: TfSupportedGamesForm;
 
 implementation
 
@@ -40,14 +40,14 @@ uses
   CRC32, MD5,
   ACC_Strings, ACC_Manager;
 
-procedure TfSupportedGames.ClearGameDetails;
+procedure TfSupportedGamesForm.ClearGameDetails;
 begin
 lvGameDetails.Items.Clear;
 end;
 
 //------------------------------------------------------------------------------
 
-procedure TfSupportedGames.FillGameDetails(Index: Integer);
+procedure TfSupportedGamesForm.FillGameDetails(Index: Integer);
 var
   TempGameData:   TGameData;
   FormatSettings: TFormatSettings;
@@ -120,7 +120,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TfSupportedGames.OnBindChange(Sender: TObject);
+procedure TfSupportedGamesForm.OnBindChange(Sender: TObject);
 begin
 fGameIsBinded := ACCManager.ProcessBinder.Binded;
 fBindedGame := ACCManager.ProcessBinder.GameData.Identifier;
@@ -129,7 +129,7 @@ end;
 
 //==============================================================================
 
-procedure TfSupportedGames.FormCreate(Sender: TObject);
+procedure TfSupportedGamesForm.FormCreate(Sender: TObject);
 begin
 fGameIsBinded := False;
 ACCManager.OnBindStateChange.Add(OnBindChange);
@@ -137,7 +137,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TfSupportedGames.FormShow(Sender: TObject);
+procedure TfSupportedGamesForm.FormShow(Sender: TObject);
 var
   i:  Integer;
 begin
@@ -150,7 +150,7 @@ try
 finally
   lbGamesList.Items.EndUpdate;
 end;
-fSupportedGames.Caption := Format(ACCSTR_UI_SUPG_SupportedList,[ACCManager.GamesDataManager.GamesDataCount]);
+fSupportedGamesForm.Caption := Format(ACCSTR_UI_SUPG_SupportedList,[ACCManager.GamesDataManager.GamesDataCount]);
 If lbGamesList.Items.Count > 0 then
   lbGamesList.ItemIndex := 0;
 lbGamesList.OnClick(nil);
@@ -158,7 +158,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TfSupportedGames.lbGamesListClick(Sender: TObject);
+procedure TfSupportedGamesForm.lbGamesListClick(Sender: TObject);
 begin
 If lbGamesList.ItemIndex >= 0 then
   FillGameDetails(lbGamesList.ItemIndex)
@@ -168,7 +168,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TfSupportedGames.lbGamesListDrawItem(Control: TWinControl;
+procedure TfSupportedGamesForm.lbGamesListDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 const
   clSideBar       = $00EFEFEF;
@@ -186,14 +186,13 @@ with lbGamesList.Canvas do
       begin
         Brush.Color := clSideBar;
         Pen.Color := clSideBar;
-        Rectangle(Rect);
       end
     else
       begin
-        Brush.Color := clWindow;
-        Pen.Color := clWindow;
-        Rectangle(Rect);
+        Brush.Color := lbGamesList.Color;
+        Pen.Color := lbGamesList.Color;
       end;
+    Rectangle(Rect);
     If fGameIsBinded and IsEqualGUID(fBindedGame,TempGameData.Identifier) then
       begin
         Brush.Color := clSideBarBinded;

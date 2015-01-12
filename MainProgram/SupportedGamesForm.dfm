@@ -1,6 +1,6 @@
-object fSupportedGames: TfSupportedGames
-  Left = 303
-  Top = 271
+object fSupportedGamesForm: TfSupportedGamesForm
+  Left = 305
+  Top = 211
   BorderStyle = bsDialog
   Caption = 'Supported games'
   ClientHeight = 440
