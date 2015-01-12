@@ -21,7 +21,6 @@ uses
 type
   TProgramParams = record
     InputFile:      String;
-    InputFormat:    Integer;
     OutputFile:     String;
     OutputFormat:   Integer;
     GameIconFiles:  Array of String;
@@ -65,9 +64,6 @@ var
     If GetParamIndex('-i',Index) then
       ProgramParams.InputFile := ExpandFileName(ParamStr(Succ(Index)))
     else Exit;
-    If GetParamIndex('-if',Index) then
-      ProgramParams.InputFormat := ResolveFormat(ParamStr(Succ(Index)))
-    else Exit;
     If GetParamIndex('-o',Index) then
       ProgramParams.OutputFile := ExpandFileName(ParamStr(Succ(Index)))
     else
@@ -82,8 +78,8 @@ var
           For i := Succ(Index) to ParamCount do
             ProgramParams.GameIconFiles[i - Succ(Index)] := ExpandFileName(ParamStr(i));
         end;
-    Result := FileExists(ProgramParams.InputFile) and (ProgramParams.InputFormat >= 0) and
-              (ProgramParams.OutputFormat >= 0) and DirectoryExists(ExtractFileDir(ProgramParams.OutputFile));
+    Result := FileExists(ProgramParams.InputFile) and (ProgramParams.OutputFormat >= 0) and
+              DirectoryExists(ExtractFileDir(ProgramParams.OutputFile));
   end;
 
 //------------------------------------------------------------------------------
@@ -95,15 +91,9 @@ var
     i:            Integer;
   begin
     try
-      Result := False;
       DataManager := TGamesDataManager.Create;
       try
-        case ProgramParams.InputFormat of
-          0,2,3:  If not DataManager.LoadFromIni(ProgramParams.InputFile) then Exit;
-          1,4:    If not DataManager.LoadFromBin(ProgramParams.InputFile) then Exit;
-        else
-          Exit;
-        end;
+        DataManager.LoadFrom(ProgramParams.InputFile);
         If Length(ProgramParams.GameIconFiles) > 0 then
           begin
             IconStream := TMemoryStream.Create;
@@ -149,9 +139,8 @@ else
     WriteLn;
     WriteLn('Usage:');
     WriteLn;
-    WriteLn('GamesDataConverter -i InputFile -if InpuFileFormat [-o OutputFile] -of OtuputFileFormat [-ic GameIconFile_1 [GameIconFile_2 ..]]');
+    WriteLn('GamesDataConverter -i InputFile -of OtuputFileFormat [-o OutputFile] [-ic GameIconFile_1 [GameIconFile_2 ..]]');
     WriteLn;
-    WriteLn(' InputFileFormat - can be one of following: INI, BIN');
     WriteLn('OutputFileFormat - can be one of following: INI, BIN, INI1, INI2, BIN1');
     WriteLn('                   INI maps to INI2; BIN maps to BIN1');
     WriteLn('      OutputFile - when not specified, output file has the same name as input');

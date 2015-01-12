@@ -12,9 +12,9 @@ const
   ACC_VersionLong  = $0002000200000000;
 
   ACC_VersionShortStr = '2.2';
-  ACC_VersionLongStr  = '2.2.0.0';
+  ACC_VersionLongStr  = '2.2.0';
   ACC_VersionFullStr  = ACC_VersionLongStr +
-                        {$IFDEF Delphi}' D'{$ENDIF} +
+                        {$IFDEF Delphi}' D' +{$ENDIF}
                         {$IFDEF x64}' 64b'{$ELSE}' 32b'{$ENDIF};
 
   ACC_TIMER_ID_Splash = 1;
