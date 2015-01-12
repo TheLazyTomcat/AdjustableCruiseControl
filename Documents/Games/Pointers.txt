@@ -1,0 +1,539 @@
+18 Wheels of Steel - Convoy 1.0 EN CD
+
+CCStatus:	prism3d.exe +0x0004bd20 --> +0x000001d8 --> +0x0000037c --> +0x00000169 --> Boolean
+CCSpeed:	prism3d.exe +0x0004bd20 --> +0x000001d8 --> +0x0000037c --> +0x0000016c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels of Steel - Convoy 1.02 EN CD
+
+CCStatus:	prism3d.exe +0x0004bdf0 --> +0x000001d8 --> +0x0000037c --> +0x00000185 --> Boolean
+CCSpeed:	prism3d.exe +0x0004bdf0 --> +0x000001d8 --> +0x0000037c --> +0x00000188 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels of Steel - Haulin 1.0 EN CD
+
+CCStatus:	prism3d.exe +0x0004cbf4 --> +0x000001f4 --> +0x000003c0 --> +0x00000091 --> Boolean
+CCSpeed:	prism3d.exe +0x0004cbf4 --> +0x000001f4 --> +0x000003c0 --> +0x00000094 --> Single (kph)
+TruckSpeed:	prism3d.exe +0x0004cbf4 --> +0x000001f4 --> +0x000003c0 --> +0x00000020 --> +0x00000080 --> +0x000000b0 --> Single (kph * Single @ game.dll +0x00186580)
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels of Steel - Haulin 1.06 EN CD
+
+CCStatus:	prism3d.exe +0x0004cc04 --> +0x000001f4 --> +0x000003c0 --> +0x00000091 --> Boolean
+CCSpeed:	prism3d.exe +0x0004cc04 --> +0x000001f4 --> +0x000003c0 --> +0x00000094 --> Single (kph)
+TruckSpeed:	prism3d.exe +0x0004cc04 --> +0x000001f4 --> +0x000003c0 --> +0x00000020 --> +0x00000084 --> +0x000000b0 --> Single (kph * Single @ game.dll +0x0019a338)
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels of Steel - American Long Haul 1.0 EN
+
+CCStatus:	prism3d.exe +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000091 --> Boolean
+CCSpeed:	prism3d.exe +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000094 --> Single (kph)
+TruckSpeed:	prism3d.exe +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000020 --> +0x00000084 --> +0x000000b0 --> Single (kph * Single @ game.dll +0x001af370)
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels of Steel - American Long Haul 1.01c EN
+
+CCStatus:	prism3d.exe +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000091 --> Boolean
+CCSpeed:	prism3d.exe +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000094 --> Single (kph)
+TruckSpeed:	prism3d.exe +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000020 --> +0x00000084 --> +0x000000b0 --> Single (kph * Single @ game.dll +0x001af370)
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels of Steel - American Long Haul 1.02c EN
+
+CCStatus:	core.dll +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000091 --> Boolean
+CCSpeed:	core.dll +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000094 --> Single (kph)
+TruckSpeed:	core.dll +0x0004bad4 --> +0x000001f4 --> +0x000003b0 --> +0x00000020 --> +0x00000084 --> +0x000000b0 --> Single (kph * Single @ game.dll +0x001af370)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.0 EN Reloaded crack
+
+CCStatus:	game.exe +0x00216804 --> +0x000003d0 --> +0x00000218 --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x00216804 --> +0x000003d0 --> +0x00000218 --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x00216804 --> +0x000001b0 --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.2 EN CD
+
+CCStatus:	game.exe +0x002439dc --> +0x000003c0 --> +0x0000021c --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x002439dc --> +0x000003c0 --> +0x0000021c --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x002439dc --> +0x0000013c --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.3 EN CD
+
+CCStatus:	game.exe +0x00243a2c --> +0x000003c0 --> +0x0000021c --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x00243a2c --> +0x000003c0 --> +0x0000021c --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x00243a2c --> +0x0000013c --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.0 GE CD
+
+CCStatus:	game.exe +0x00217804 --> +0x000003d0 --> +0x00000218 --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x00217804 --> +0x000003d0 --> +0x00000218 --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x00217804 --> +0x000001b0 --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator Gold 1.1 GE CD
+
+CCStatus:	game.exe +0x002449dc --> +0x000003c0 --> +0x0000021c --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x002449dc --> +0x000003c0 --> +0x0000021c --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x002449dc --> +0x0000013c --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.2 GE CD
+
+CCStatus:	game.exe +0x002449dc --> +0x000003c0 --> +0x0000021c --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x002449dc --> +0x000003c0 --> +0x0000021c --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x002449dc --> +0x0000013c --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.3 GE CD
+
+CCStatus:	game.exe +0x00244a2c --> +0x000003c0 --> +0x0000021c --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x00244a2c --> +0x000003c0 --> +0x0000021c --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x00244a2c --> +0x0000013c --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.0 CZ/SK/HU/RO CD
+
+CCStatus:	game.exe +0x0023680c --> +0x000003d0 --> +0x00000218 --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x0023680c --> +0x000003d0 --> +0x00000218 --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x0023680c --> +0x000001b0 --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.2 CZ/SK/HU/RO CD
+
+CCStatus:	game.exe +0x002649cc --> +0x000003c0 --> +0x0000021c --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x002649cc --> +0x000003c0 --> +0x0000021c --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x002649cc --> +0x0000013c --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 1.3 CZ/SK/HU/RO CD
+
+CCStatus:	game.exe +0x00264a2c --> +0x000003c0 --> +0x0000021c --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x00264a2c --> +0x000003c0 --> +0x0000021c --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x00264a2c --> +0x0000013c --> +0x00000058 --> +0x000001cc --> +0x00000020 --> Single (kph / 1,89)
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels Of Steel Extreme Trucker 1.0 EN CD
+
+CCStatus:	game.exe +0x0033aaf8 --> +0x000003f8 --> +0x000001c4 --> +0x00000095 --> Boolean
+CCSpeed:	game.exe +0x0033aaf8 --> +0x000003f8 --> +0x000001c4 --> +0x00000098 --> Single (kph)
+TruckSpeed:	game.exe +0x0033aaf8 --> +0x000003f8 --> +0x00000020 --> +0x00000104 --> +0x000000b0 --> Single (kph / 1,62)
+
+--------------------------------------------------------------------------------------------------------
+
+German Truck Simulator 1.0 GE CD
+
+CCStatus:	game.exe +0x003a0cdc --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x003a0cdc --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph)
+
+--------------------------------------------------------------------------------------------------------
+
+German Truck Simulator 1.02 GE CD
+
+CCStatus:	game.exe +0x003a0e84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x003a0e84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph)
+
+--------------------------------------------------------------------------------------------------------
+
+German Truck Simulator 1.03 GE CD
+
+CCStatus:	game.exe +0x003a1e84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x003a1e84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph)
+
+--------------------------------------------------------------------------------------------------------
+
+German Truck Simulator 1.04 GE CD
+
+CCStatus:	game.exe +0x003a1e84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x003a1e84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph)
+
+--------------------------------------------------------------------------------------------------------
+
+German Truck Simulator - Edition Austria 1.31 GE CD
+
+CCStatus:	game.exe +0x003dd9c4 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x003dd9c4 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph)
+
+--------------------------------------------------------------------------------------------------------
+
+German Truck Simulator - Edition Austria 1.32 GE CD
+
+CCStatus:	game.exe +0x003dd9c4 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x003dd9c4 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph)
+
+--------------------------------------------------------------------------------------------------------
+
+UK Truck Simulator 1.02 EN CD
+
+CCStatus:	game.exe +0x0039ee84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x0039ee84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph / 1,62)
+
+--------------------------------------------------------------------------------------------------------
+
+UK Truck Simulator 1.04 EN CD
+
+CCStatus:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph / 1,62)
+
+--------------------------------------------------------------------------------------------------------
+
+UK Truck Simulator 1.05 EN CD
+
+CCStatus:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph * Single @ game.exe +0x0037cd28)
+
+--------------------------------------------------------------------------------------------------------
+
+UK Truck Simulator 1.06 EN CD
+
+CCStatus:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph / 1,62)
+
+--------------------------------------------------------------------------------------------------------
+
+UK Truck Simulator 1.07 EN CD
+
+CCStatus:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x0039fe84 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph / 1,62)
+
+--------------------------------------------------------------------------------------------------------
+
+UK Truck Simulator 1.32 EN CD
+
+CCStatus:	game.exe +0x003dd9a0 --> +0x000003e8 --> +0x0000022c --> +0x000000cd --> Boolean
+CCSpeed:	game.exe +0x003dd9a0 --> +0x000003e8 --> +0x0000022c --> +0x000000d0 --> Single (kph)
+TruckSpeed:	n/k --> Single (kph / 1,62)
+
+--------------------------------------------------------------------------------------------------------
+
+18 Wheels Of Steel Extreme Trucker 2 1.0 EN CD
+
+CCStatus:	extremetrucker.exe +0x0039c2f8 --> +0x00000594 --> +0x00000550 --> +0x0000003f --> Boolean
+CCSpeed:	extremetrucker.exe +0x0039c2f8 --> +0x00000594 --> +0x00000550 --> +0x00000040 --> Single (kph)
+TruckSpeed:	extremetrucker.exe +0x0039c2f8 --> +0x00000594 --> +0x00000550 --> +0x000001a8 --> +0x000000e4 --> +0x0000001c --> +0x000000b8 --> Single (kph * Single @ extremetrucker.exe +0x00396ccc)
+
+--------------------------------------------------------------------------------------------------------
+
+
+18 Wheels Of Steel Extreme Trucker 2 1.0 EN DD
+
+CCStatus:	extremetrucker.exe +0x003D12F8 --> +0x00000594 --> +0x00000550 --> +0x0000003f --> Boolean
+CCSpeed:	extremetrucker.exe +0x003D12F8 --> +0x00000594 --> +0x00000550 --> +0x00000040 --> Single (kph)
+TruckSpeed:	extremetrucker.exe +0x003D12F8 --> +0x00000594 --> +0x00000550 --> +0x000001a8 --> +0x000000e4 --> +0x0000001c --> +0x000000b8 --> Single (kph * Single @ extremetrucker.exe +0x003cbccc)
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.4.8 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0070f5ac --> +0x000007c4 --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0070f5ac --> +0x000007c4 --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.4.8 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x006F438C --> +0x000007c4 --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x006F438C --> +0x000007c4 --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.4.12 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0070f5ac --> +0x000007c4 --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0070f5ac --> +0x000007c4 --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.4.12 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x006F438C --> +0x000007c4 --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x006F438C --> +0x000007c4 --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.5.2 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x00733D9C --> +0x000007a4 --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00733D9C --> +0x000007a4 --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.5.2 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00716A0C --> +0x000007a4 --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00716A0C --> +0x000007a4 --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.6 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0077421C --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0077421C --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.6 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00757EDC --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00757EDC --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.6.1 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0077421C --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0077421C --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.6.1 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00757EDC --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00757EDC --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.7 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0077529c --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0077529c --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.7 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00757F1C --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00757F1C --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.7.1 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0077529c --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0077529c --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.7.1 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00757F1C --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00757F1C --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.8.2.3 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0077784c --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0077784c --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.8.2.3 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x0075A4CC --> +0x000007ac --> +0x0000012c --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0075A4CC --> +0x000007ac --> +0x0000012c --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.9.3 Multi Steam (public beta)
+
+CCStatus:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.9.4 Multi Steam (public beta)
+
+CCStatus:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.9.5 Multi Steam (public beta)
+
+CCStatus:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.9.6 Multi Steam (public beta)
+
+CCStatus:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0080701C --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.9.22 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0082DA9C --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0082DA9C --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.9.22 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x008116EC --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x008116EC --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.10.1 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x0082DAFC --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0082DAFC --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.10.1 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x0081176c --> +0x000007cc --> +0x0000012c --> +0x00000048 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x0081176c --> +0x000007cc --> +0x0000012c --> +0x0000004c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.11.1 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x00C4DB8C --> +0x000007d4 --> +0x00000134 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00C4DB8C --> +0x000007d4 --> +0x00000134 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.11.1 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00C30D30 --> +0x000007d4 --> +0x00000134 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00C30D30 --> +0x000007d4 --> +0x00000134 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.12.1 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x00c4ebfc --> +0x00000920 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00c4ebfc --> +0x00000920 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.12.1 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00c32db0 --> +0x00000920 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00c32db0 --> +0x00000920 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.13.3 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x00c5b72c --> +0x00000930 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00c5b72c --> +0x00000930 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.13.2(3) Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00c42940 --> +0x00000930 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00c42940 --> +0x00000930 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.13.4 Multi Steam
+
+CCStatus:	eurotrucks2.exe +0x00c42940 --> +0x00000930 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00c42940 --> +0x00000930 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.14.2 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x00c9a094 --> +0x000007b0 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00c9a094 --> +0x000007b0 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.14.2 Multi Steam
+CCStatus:	eurotrucks2.exe +0x00c823a8 --> +0x000007b0 --> +0x0000004c --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00c823a8 --> +0x000007b0 --> +0x00000050 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.15.1 Multi DD & CD
+
+CCStatus:	eurotrucks2.exe +0x00ccb40c --> +0x000007b8 --> +0x00000050 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00ccb40c --> +0x000007b8 --> +0x00000054 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.15.1 Multi Steam
+CCStatus:	eurotrucks2.exe +0x00cb3710 --> +0x000007b8 --> +0x00000050 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00cb3710 --> +0x000007b8 --> +0x00000054 --> Single (kph)
+TruckSpeed:	n/k

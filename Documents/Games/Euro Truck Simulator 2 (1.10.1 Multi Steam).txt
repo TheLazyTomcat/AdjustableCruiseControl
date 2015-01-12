@@ -1,0 +1,8 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+8ef178af   0094ca18   eurotrucks2.exe
+d548ae50   00019d50   steam_api.dll
+1d276c3d   00069808   swopenal32.dll
+d482c9c5   00000058   troubleshoot_dx9.cmd
+1a479559   00000057   troubleshoot_gl.cmd
+251f61b6   00000051   troubleshoot_safe.cmd

@@ -1,0 +1,8 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+dac7e51e   007fa608   eurotrucks2.exe
+994a7e98   00000555   result.ptr
+1d276c3d   00069808   swopenal32.dll
+d482c9c5   00000058   troubleshoot_dx9.cmd
+1a479559   00000057   troubleshoot_gl.cmd
+251f61b6   00000051   troubleshoot_safe.cmd

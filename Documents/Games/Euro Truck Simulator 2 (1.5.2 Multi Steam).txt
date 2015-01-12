@@ -1,0 +1,4 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+B1C1B253   00000000   eurotrucks2.exe
+

@@ -1,0 +1,22 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+bcc3563a   267cf495   base.scs
+b41268a1   003fb318   bin\win_x86\extremetrucker.exe
+72af6c74   0000d30c   ET_manual.htm
+0172f37f   00002130   eula.txt
+65b20c70   00003a6b   images\18 Wheels Extreme logo.jpg
+f0588bdb   0002108f   images\au_screen.jpg
+4f1ee6f1   0003999c   images\bangladesh_screen.jpg
+ccf91d14   000115f8   images\ice_screen.jpg
+127680a9   0002095b   images\logo.png
+cb2cce50   00003546   images\logo_scs_full.png
+9ce96551   000059c5   images\logo_valusoft.png
+d4b17962   00034ec8   images\montana_screen.jpg
+0848758c   00001ed3   images\odraz.jpg
+e536c78b   00001ed3   images\odraz2.jpg
+19624390   00001ec9   images\odraz3.jpg
+22070d16   000081be   images\top1.jpg
+af410c0d   00031d41   images\yungas_screen.jpg
+1006ff45   000005ee   licenses\ode-license-bsd.txt
+6efbdf9c   000005d6   licenses\Xiph.Org-license-bsd.txt
+11ae97d9   00065d9a   uninst.exe

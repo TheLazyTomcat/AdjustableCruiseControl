@@ -1,0 +1,52 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+00a3f261   00085000   alh.exe
+6f72e693   00000039   american long haul website.url
+8e25fa75   155c0e4f   base.scs
+4f1540a0   0000115f   driving.html
+0172f37f   00002130   eula.txt
+c20970b8   000020b5   getting_started.html
+1e868969   00010000   gfxshared.dll
+632fddf4   000006e6   help.css
+00c5384c   000008f4   help.html
+bfb96e6f   000065ad   help_files\hud_left_bottom.png
+29fe316a   00023aa3   help_files\hud_right_bottom.png
+7a0a20d8   00003dbe   help_files\hud_top.png
+82ad8288   00004afe   help_files\hud_top_trailer.png
+5cbbfd52   00004474   help_files\scs.png
+6aeca13e   0005dd94   help_files\title.png
+476c7d82   0000d653   help_files\valusoft.png
+da4f4310   0001e6f1   help_files\wos.png
+f9136fd3   00001347   hud.html
+b3321646   00002800   inpshared.dll
+4cd9b769   0000c000   lib\di8.dll
+8438b2aa   00010000   lib\ds8.dll
+9f362e71   001dd000   lib\game.dll
+63872796   0003a000   lib\gl.dll
+c08226a8   00004e00   lib\loaders.dll
+71625fd2   00020000   libpng13.dll
+1006ff45   000005ee   licenses\ode-license-bsd.txt
+6efbdf9c   000005d6   licenses\xiph.org-license-bsd.txt
+35563170   00055000   msvcr71.dll
+160bbe82   000021c9   notebook.html
+a71f07fe   0000d000   ogg.dll
+f330de0d   0006a000   p3core.dll
+80849c48   0005d000   p3shared.dll
+96719c3f   0004e000   prism3d.exe
+3b43d4ca   0000007e   quality0.cfg
+77b0771e   00000080   quality1.cfg
+3b7b6a4c   00000080   quality2.cfg
+0c27d132   00001b35   readme.txt
+03f2ead8   000007fd   requirements.html
+8c9fdc74   00004000   sndshared.dll
+8958653f   00001c51   specs.settings
+4b180897   00000050   technical support.url
+56e9af4e   0000edaf   uninst.exe
+22e3d652   00015f3d   uninstall.exe
+0efa6cdd   00001b43   uninstall.ini
+293ca1b0   000006d6   upgrades.html
+2e4418a8   00000053   visit scs software website.url
+2c27c0f3   00000031   visit valusoft website.url
+960022a3   00125000   vorbis.dll
+057201bf   00013000   vorbisfile.dll
+dc8a46ce   0000e600   zlib1.dll

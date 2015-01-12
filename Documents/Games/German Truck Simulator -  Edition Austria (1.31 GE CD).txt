@@ -1,0 +1,17 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+b8471075   1722f55c   base.scs
+db8e934b   003de468   bin\win_x86\game.exe
+2ce325c5   000abe68   bin\win_x86\germantrucks.exe
+f19fcf30   00001e00   bin\win_x86\lang_1031.dll
+d03cf519   00000cbe   bin\win_x86\settings.ico
+bd53b8fd   000019fb   eula.txt
+04548ec1   0042626d   GTS_handbuch.pdf
+4a499e37   00000073   langs.settings
+1006ff45   000005ee   licenses\ode-license-bsd.txt
+6efbdf9c   000005d6   licenses\Xiph.Org-license-bsd.txt
+3b43d4ca   0000007e   quality0.cfg
+77b0771e   00000080   quality1.cfg
+3b7b6a4c   00000080   quality2.cfg
+d22fa846   0000252c   specs.settings
+047dce9f   00012748   uninstall.exe

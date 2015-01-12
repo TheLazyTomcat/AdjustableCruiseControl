@@ -1,0 +1,17 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+311617be   15dbfb25   base.scs
+1c6041db   003b44f0   bin\win_x86\game.exe
+7316e46c   0008a4f8   bin\win_x86\germantrucks.exe
+4b1fd982   00002000   bin\win_x86\lang_1031.dll
+d03cf519   00000cbe   bin\win_x86\settings.ico
+b4c66b9d   000019d8   eula.txt
+04548ec1   0042626d   gts_handbuch.pdf
+4a499e37   00000073   langs.settings
+1006ff45   000005ee   licenses\ode-license-bsd.txt
+6efbdf9c   000005d6   licenses\xiph.org-license-bsd.txt
+3b43d4ca   0000007e   quality0.cfg
+77b0771e   00000080   quality1.cfg
+3b7b6a4c   00000080   quality2.cfg
+d22fa846   0000252c   specs.settings
+0522db84   0001169f   uninst.exe

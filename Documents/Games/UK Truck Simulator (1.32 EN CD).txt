@@ -1,0 +1,18 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+6d6cb302   163ed340   base.scs
+e84726c4   003e0268   bin\win_x86\game.exe
+6981bf10   00001a00   bin\win_x86\lang_2057.dll
+7780dfe0   00001650   bin\win_x86\result.ptr
+d03cf519   00000cbe   bin\win_x86\settings.ico
+0e0003e2   000aea68   bin\win_x86\uktrucks.exe
+fcf467ed   000016c0   eula.txt
+9b4a014d   00000073   langs.settings
+1006ff45   000005ee   licenses\ode-license-bsd.txt
+6efbdf9c   000005d6   licenses\Xiph.Org-license-bsd.txt
+1c2d70d8   0000008e   quality0.cfg
+c31d3f8c   00000090   quality1.cfg
+e6913a9e   00000090   quality2.cfg
+32d1fd60   0000252a   specs.settings
+5cf093a3   00987290   UKTS_manual.pdf
+dfd78a65   00011692   uninst.exe

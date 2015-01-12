@@ -1,0 +1,3 @@
+FileCRC32  FileSize   FileName
+---------|----------|----------
+5031b153   00275000   game.exe
