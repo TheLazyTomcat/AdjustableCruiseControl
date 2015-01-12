@@ -3,7 +3,9 @@ program ACC;
 {$INCLUDE ACC_Defs.inc}
 
 uses
+{$IFDEF Delphi}
   FastMM4,
+{$ENDIF}
   Forms,
   CRC32                in 'Libs\CRC32.pas',
   MD5                  in 'Libs\MD5.pas',

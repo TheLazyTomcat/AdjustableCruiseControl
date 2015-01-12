@@ -39,6 +39,7 @@ type
     destructor Destroy; override;
     procedure Initialize(Application: TApplication); virtual;
     procedure BuildInputTriggers; virtual;
+    procedure ExtractGamesData; virtual;
     procedure Load; virtual;
     procedure Save; virtual;
     procedure SetCCSpeed(NewSpeed: Single); virtual;
@@ -62,10 +63,14 @@ var
 implementation
 
 uses
-  Windows,
+  Windows, SysUtils,
   ACC_Strings;
 
+{$R 'Resources\GamesData.res'}
+
 const
+  GamesDataResName = 'GamesData';
+
   ACC_TRIGGER_ArbitraryEngage = 0;
 
   ACC_TRIGGER_IncreaseByStep = 1;
@@ -252,11 +257,32 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TACCManager.ExtractGamesData;
+var
+  ResourceStream: TResourceStream;
+  FileName:       String;
+begin
+ResourceStream := TResourceStream.Create(hInstance,GamesDataResName,RT_RCDATA);
+try
+  FileName := ExtractFilePath(ParamStr(0)) + GamesDataFileBin;
+  If DirectoryExists(ExtractFileDir(FileName)) or CreateDir(ExtractFileDir(FileName)) then
+    ResourceStream.SaveToFile(FileName);
+finally
+  ResourceStream.Free;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TACCManager.Load;
 begin
 If not SettingsManager.LoadFromRegistry then
   SettingsManager.InitSettings;
-GamesDataManager.Load;
+If not GamesDataManager.Load then
+  begin
+    ExtractGamesData;
+    GamesDataManager.Load
+  end;
 fProcessBinder.SetGamesData(GamesDataManager.GamesData);
 fProcessBinder.Start;
 BuildInputTriggers;
