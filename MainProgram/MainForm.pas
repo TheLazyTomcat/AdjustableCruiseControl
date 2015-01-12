@@ -13,56 +13,56 @@ type
     shpTitleBackground: TShape;
     lblGameTitle: TLabel;
     lblGameInfo: TLabel;
+    imgGameIcon: TImage;
+    bvlGameInfo: TBevel;
     grbPreset: TGroupBox;
-    grbUser: TGroupBox;
-    oXPManifest: TXPManifest;
+    btnIncreaseByUnit: TButton;
     btnIncreaseByStep: TButton;
-    btnDecreaseByStep: TButton;
+    btnSetTo: TButton;
     seSpeedArbitrary: TSpinEdit;
-    seSpeedStep: TSpinEdit;
     lblStep: TLabel;
-    seSpeedCity: TSpinEdit;
-    seSpeedRoads: TSpinEdit;
+    seSpeedStep: TSpinEdit;
+    btnDecreaseByStep: TButton;
+    btnDecreaseByUnit: TButton;
     btnSetCity: TButton;
+    seSpeedCity: TSpinEdit;
     btnSetRoads: TButton;
-    sbStatusBar: TStatusBar;
-    seSpeedUser0: TSpinEdit;
+    seSpeedRoads: TSpinEdit;
+    grbUser: TGroupBox;
     btnSetUser0: TButton;
-    seSpeedUser1: TSpinEdit;
+    seSpeedUser0: TSpinEdit;
     btnSetUser1: TButton;
-    seSpeedUser2: TSpinEdit;
+    seSpeedUser1: TSpinEdit;
     btnSetUser2: TButton;
-    seSpeedUser3: TSpinEdit;
+    seSpeedUser2: TSpinEdit;
     btnSetUser3: TButton;
-    seSpeedUser4: TSpinEdit;
+    seSpeedUser3: TSpinEdit;
     btnSetUser4: TButton;
+    seSpeedUser4: TSpinEdit;
     btnSetUser5: TButton;
     seSpeedUser5: TSpinEdit;
-    seSpeedUser6: TSpinEdit;
     btnSetUser6: TButton;
+    seSpeedUser6: TSpinEdit;
     btnSetUser7: TButton;
     seSpeedUser7: TSpinEdit;
-    seSpeedUser8: TSpinEdit;
     btnSetUser8: TButton;
+    seSpeedUser8: TSpinEdit;
     btnSetUser9: TButton;
     seSpeedUser9: TSpinEdit;
     bvlUserSplit: TBevel;
     lblUnits: TLabel;
     cbUnits: TComboBox;
-    btnAbout: TButton;
     btnSettings: TButton;
-    btnIncreaseByUnit: TButton;
-    btnDecreaseByUnit: TButton;
-    btnSetTo: TButton;
-    bvlGameInfo: TBevel;
-    imgGameIcon: TImage;
-    procedure FormShow(Sender: TObject);
+    btnAbout: TButton;
+    sbStatusBar: TStatusBar;
+    oXPManifest: TXPManifest;
     procedure FormCreate(Sender: TObject);
-    procedure btnAboutClick(Sender: TObject);
-    procedure cbUnitsChange(Sender: TObject);
-    procedure seSpeedsChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
-    procedure btnSettingsClick(Sender: TObject);
+    procedure seSpeedsChange(Sender: TObject);
+    procedure cbUnitsChange(Sender: TObject);
+    procedure btnSettingsClick(Sender: TObject);    
+    procedure btnAboutClick(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -104,6 +104,8 @@ else
   end;
 end;
 
+//------------------------------------------------------------------------------
+
 procedure TfMainForm.SpeedsToForm(Sender: TObject);
 var
   i:        Integer;
@@ -128,6 +130,8 @@ finally
 end;
 end;
 
+//------------------------------------------------------------------------------
+
 procedure TfMainForm.KeysToForm;
 var
   i:      Integer;
@@ -147,6 +151,8 @@ For i := 0 to 9 do
   end;
 end;
 
+//------------------------------------------------------------------------------
+
 procedure TfMainForm.SettingsToForm;
 var
   i:  Integer;
@@ -164,10 +170,7 @@ end;
 cbUnits.ItemIndex := Settings.UsedSpeedUnit;
 end;
 
-procedure TfMainForm.FormShow(Sender: TObject);
-begin
-SettingsToForm;
-end;
+//==============================================================================
 
 procedure TfMainForm.FormCreate(Sender: TObject);
 begin
@@ -177,10 +180,22 @@ ACCManager.OnBindStateChange.Add(OnBindStateChange);
 ACCManager.OnSpeedChange := SpeedsToForm;
 end;
 
-procedure TfMainForm.btnAboutClick(Sender: TObject);
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.FormShow(Sender: TObject);
 begin
-fAboutForm.ShowModal;
+SettingsToForm;
 end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.btnSpeedsClick(Sender: TObject);
+begin
+If Sender is TButton then
+  ACCManager.ExecuteTrigger(nil,(Sender as TButton).Tag);
+end;
+
+//------------------------------------------------------------------------------
 
 procedure TfMainForm.seSpeedsChange(Sender: TObject);
 var
@@ -205,11 +220,7 @@ If not fSpeedsChanging then
   end;
 end;
 
-procedure TfMainForm.btnSpeedsClick(Sender: TObject);
-begin
-If Sender is TButton then
-  ACCManager.ExecuteTrigger(nil,(Sender as TButton).Tag);
-end;
+//------------------------------------------------------------------------------
 
 procedure TfMainForm.cbUnitsChange(Sender: TObject);
 begin
@@ -217,9 +228,18 @@ Settings.UsedSpeedUnit := cbUnits.ItemIndex;
 SpeedsToForm(nil);
 end;
 
+//------------------------------------------------------------------------------
+
 procedure TfMainForm.btnSettingsClick(Sender: TObject);
 begin
 fSettingsForm.ShowModal;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.btnAboutClick(Sender: TObject);
+begin
+fAboutForm.ShowModal;
 end;
 
 end.

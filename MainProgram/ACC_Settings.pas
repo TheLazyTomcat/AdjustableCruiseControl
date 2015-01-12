@@ -465,6 +465,7 @@ try
     If Registry.OpenKey(SettingsRegistryKey,True) then
       begin
         ValidateSettings;
+        
         Registry.WriteString(SETN_VAL_REG_ProgramPath,fSettings^.ProgramPath);
         Registry.WriteBool(SETN_VAL_REG_ShowSplashScreen,fSettings^.ShowSplashScreen);
         Registry.WriteBool(SETN_VAL_REG_MinimizeToTray,fSettings^.MinimizeToTray);
@@ -610,6 +611,7 @@ try
   IniFile := TIniFile.Create(FileName);
   try
     ValidateSettings;
+
     IniFile.WriteString(SETN_GRP_General,SETN_VAL_ProgramPath,fSettings^.ProgramPath);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_ShowSplashScreen,fSettings^.ShowSplashScreen);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_MinimizeToTray,fSettings^.MinimizeToTray);

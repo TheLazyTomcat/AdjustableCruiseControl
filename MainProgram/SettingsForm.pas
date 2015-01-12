@@ -56,7 +56,7 @@ type
   private
     { Private declarations }
   protected
-    LocalSettings:  TSettings;
+    fLocalSettings: TSettings;
     procedure PrepareBindTable;
     procedure KeysToForm;
   public
@@ -114,13 +114,13 @@ end;
 
 procedure TfSettingsForm.SettingsToForm;
 begin
-cbShowSplash.Checked := LocalSettings.ShowSplashScreen;
-cbCloseOnGameEnd.Checked := LocalSettings.CloseOnGameEnd;
-cbMinimizeToTray.Checked := LocalSettings.MinimizeToTray;
+cbShowSplash.Checked := fLocalSettings.ShowSplashScreen;
+cbCloseOnGameEnd.Checked := fLocalSettings.CloseOnGameEnd;
+cbMinimizeToTray.Checked := fLocalSettings.MinimizeToTray;
 cbMinimizeToTray.OnClick(nil);
-cbStartMinimized.Checked := LocalSettings.StartMinimized;
-seProcessScanTImer.Value := LocalSettings.ProcessBinderScanInterval;
-seModuleLoadTimer.Value := LocalSettings.ModulesLoadTimeout;
+cbStartMinimized.Checked := fLocalSettings.StartMinimized;
+seProcessScanTImer.Value := fLocalSettings.ProcessBinderScanInterval;
+seModuleLoadTimer.Value := fLocalSettings.ModulesLoadTimeout;
 KeysToForm;
 end;
 
@@ -128,12 +128,12 @@ end;
 
 procedure TfSettingsForm.FormToSettings;
 begin
-LocalSettings.ShowSplashScreen := cbShowSplash.Checked;
-LocalSettings.CloseOnGameEnd := cbCloseOnGameEnd.Checked;
-LocalSettings.MinimizeToTray := cbMinimizeToTray.Checked;
-LocalSettings.StartMinimized := cbStartMinimized.Checked and cbStartMinimized.Enabled;
-LocalSettings.ProcessBinderScanInterval := seProcessScanTImer.Value;
-LocalSettings.ModulesLoadTimeout := seModuleLoadTimer.Value;
+fLocalSettings.ShowSplashScreen := cbShowSplash.Checked;
+fLocalSettings.CloseOnGameEnd := cbCloseOnGameEnd.Checked;
+fLocalSettings.MinimizeToTray := cbMinimizeToTray.Checked;
+fLocalSettings.StartMinimized := cbStartMinimized.Checked and cbStartMinimized.Enabled;
+fLocalSettings.ProcessBinderScanInterval := seProcessScanTImer.Value;
+fLocalSettings.ModulesLoadTimeout := seModuleLoadTimer.Value;
 end;
 
 //==============================================================================
@@ -142,7 +142,7 @@ procedure TfSettingsForm.FormCreate(Sender: TObject);
 begin
 sgBindings.DoubleBuffered := True;
 PrepareBindTable;
-LocalSettingsManager := TSettingsManager.Create(Addr(LocalSettings));
+LocalSettingsManager := TSettingsManager.Create(Addr(fLocalSettings));
 end;
 
 //------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ end;
 
 procedure TfSettingsForm.FormShow(Sender: TObject);
 begin
-LocalSettings := ACC_Settings.Settings;
+fLocalSettings := ACC_Settings.Settings;
 SettingsToForm;
 end;
 
@@ -276,7 +276,7 @@ procedure TfSettingsForm.btnApplyClick(Sender: TObject);
 begin
 FormToSettings;
 LocalSettingsManager.ValidateSettings;
-ACC_Settings.Settings := LocalSettings;
+ACC_Settings.Settings := fLocalSettings;
 fMainForm.SettingsToForm;
 ACCManager.ProcessBinder.UpdateTimerInterval;
 ACCManager.BuildInputTriggers;

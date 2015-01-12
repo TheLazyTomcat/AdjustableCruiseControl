@@ -25,10 +25,10 @@ type
   private
     { Private declarations }
   protected
-    ActionIndex:    Integer;
-    ActionText:     String;
-    Input:          TInput;
-    InputSelected:  Boolean;
+    fActionIndex:   Integer;
+    fActionText:    String;
+    fInput:         TInput;
+    fInputSelected: Boolean;
     procedure OnKeyBind(Sender: TObject; VKey: Word);
   public
     procedure Initialize;
@@ -52,8 +52,8 @@ var
   ConflictIndex:  Integer;
 begin
 ACCManager.InputManager.OnVirtualKeyRelease := nil;
-Input := ACCManager.InputManager.CurrentInput; 
-If fSettingsForm.LocalSettingsManager.InputConflict(Input,ActionIndex,ConflictIndex) then
+fInput := ACCManager.InputManager.CurrentInput;
+If fSettingsForm.LocalSettingsManager.InputConflict(fInput,fActionIndex,ConflictIndex) then
   begin
     lblKeys.Font.Color := clRed;
     lblVirtualKeys.Font.Color := clRed;
@@ -63,19 +63,19 @@ else
   begin
     btnAccept.Enabled := True;
     btnAccept.Visible := True;
-    lblTitle.Caption := Format(ACCSTR_UI_BIND_SelectedKeys,[ActionText]);
+    lblTitle.Caption := Format(ACCSTR_UI_BIND_SelectedKeys,[fActionText]);
   end;
 btnRepeat.Enabled := True;
 btnRepeat.Visible := True;
-lblKeys.Caption := TInputManager.GetInputKeyNames(Input);
-lblVirtualKeys.Caption := Format(ACCSTR_UI_BIND_VirtualKeyCodes,[TInputManager.GetInputKeyNames(Input,True)])
+lblKeys.Caption := TInputManager.GetInputKeyNames(fInput);
+lblVirtualKeys.Caption := Format(ACCSTR_UI_BIND_VirtualKeyCodes,[TInputManager.GetInputKeyNames(fInput,True)])
 end;
 
 //==============================================================================
 
 procedure TfKeyBindForm.Initialize;
 begin
-lblTitle.Caption := Format(ACCSTR_UI_BIND_SelectKeys,[ActionText]);
+lblTitle.Caption := Format(ACCSTR_UI_BIND_SelectKeys,[fActionText]);
 lblKeys.Font.Color := clWindowText;
 lblKeys.Caption := '';
 lblVirtualKeys.Font.Color := clWindowText;
@@ -84,9 +84,9 @@ btnAccept.Enabled := False;
 btnAccept.Visible := False;
 btnRepeat.Enabled := False;
 btnRepeat.Visible := False;
-Input.PrimaryKey := -1;
-Input.ShiftKey := -1;
-InputSelected := False;
+fInput.PrimaryKey := -1;
+fInput.ShiftKey := -1;
+fInputSelected := False;
 ACCManager.InputManager.OnVirtualKeyRelease := OnKeyBind;
 end;
 
@@ -94,11 +94,11 @@ end;
 
 Function TfKeyBindForm.StartBinding(ActionIndex: Integer; out Input: TInput): Boolean;
 begin
-Self.ActionIndex := ActionIndex;
-Self.ActionText := ACCSTR_UI_SET_BIND_InputText(ActionIndex);
+fActionIndex := ActionIndex;
+fActionText := ACCSTR_UI_SET_BIND_InputText(ActionIndex);
 ShowModal;
-Input := Self.Input;
-Result := (Input.PrimaryKey >= 0) and InputSelected;
+Input := fInput;
+Result := (Input.PrimaryKey >= 0) and fInputSelected;
 end;
 
 //==============================================================================
@@ -113,7 +113,7 @@ end;
 
 procedure TfKeyBindForm.btnAcceptClick(Sender: TObject);
 begin
-InputSelected := True;
+fInputSelected := True;
 Close;
 end;
 
@@ -122,7 +122,7 @@ end;
 procedure TfKeyBindForm.btnCancelClick(Sender: TObject);
 begin
 ACCManager.InputManager.OnVirtualKeyRelease := nil;
-InputSelected := False;
+fInputSelected := False;
 Close;
 end;
 
