@@ -37,6 +37,7 @@ object fUpdateForm: TfUpdateForm
     Top = 8
     Width = 473
     Height = 292
+    OnClickCheck = clbUpdateDataClickCheck
     ItemHeight = 48
     Style = lbOwnerDrawFixed
     TabOrder = 0
@@ -48,7 +49,6 @@ object fUpdateForm: TfUpdateForm
     Width = 145
     Height = 25
     Caption = 'Load update file...'
-    Enabled = False
     TabOrder = 2
     OnClick = btnLoadUpdateFileClick
   end
@@ -58,7 +58,6 @@ object fUpdateForm: TfUpdateForm
     Width = 145
     Height = 25
     Caption = 'Make update'
-    Enabled = False
     TabOrder = 3
     OnClick = btnMakeUpdateClick
   end
@@ -110,9 +109,7 @@ object fUpdateForm: TfUpdateForm
       Width = 17
       Height = 17
       Cursor = crHelp
-      Hint = 
-        'Entry is already between supported games, but this is newer vers' +
-        'ion'
+      Hint = 'Newer version of entry that is already between supported games'
       Brush.Color = clLime
       ParentShowHint = False
       Pen.Color = clSilver

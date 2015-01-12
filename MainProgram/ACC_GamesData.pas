@@ -144,6 +144,7 @@ type
 
   TIconList = class(TList)
   private
+    fDefaultIcon: Boolean;
     Function GetListItemPtr(Index: Integer): PIconListItem;
     Function GetListItem(Index: Integer): TIconListItem;
     procedure SetListItem(Index: Integer; Value: TIconListItem);
@@ -158,6 +159,8 @@ type
     Function CountNoDefault: Integer; virtual;
     property ListItemsPtr[Index: Integer]: PIconListItem read GetListItemPtr;
     property ListItems[Index: Integer]: TIconListItem read GetListItem write SetListItem; default;
+  published
+    property DefaultIcon: Boolean read fDefaultIcon write fDefaultIcon;
   end;
 
 {==============================================================================}
@@ -212,6 +215,7 @@ type
     Function LoadFromBin(const FileName: String): Boolean; overload; virtual;
     Function LoadFromIni(const FileName: String; out FileStructure: TFileStructure): Boolean; overload; virtual;
     Function LoadFromIni(const FileName: String): Boolean; overload; virtual;
+    Function LoadFrom(const FileName: String): Boolean; virtual;
     procedure Load; virtual;
     procedure Save; virtual;
     procedure CheckUpdate(OldData: TGamesDataManager); virtual;
@@ -287,6 +291,7 @@ end;
 constructor TIconList.Create;
 begin
 inherited Create;
+fDefaultIcon := True;
 Initialize;
 end;
 
@@ -313,12 +318,15 @@ var
   ResourceStream: TResourceStream;
 begin
 Clear;
-ResourceStream := TResourceStream.Create(hInstance,DefaultGameIconResName,RT_RCDATA);
-try
-  AddItem(DefaultGameIconName,ResourceStream);
-finally
-  ResourceStream.Free;
-end;
+If fDefaultIcon then
+  begin
+    ResourceStream := TResourceStream.Create(hInstance,DefaultGameIconResName,RT_RCDATA);
+    try
+      AddItem(DefaultGameIconName,ResourceStream);
+    finally
+      ResourceStream.Free;
+    end;
+  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -1395,6 +1403,27 @@ var
   FileStructure:  TFileStructure;
 begin
 Result := LoadFromIni(FileName,FileStructure);
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadFrom(const FileName: String): Boolean;
+var
+  FileStream: TFileStream;
+begin
+try
+  FileStream := TFileStream.Create(FileName,fmOpenRead or fmShareDenyWrite);
+  try
+    If ReadIntegerFromStream(FileStream) = ACCBinFileSignature then
+      Result := LoadFromBin(FileName)
+    else
+      Result := LoadFromIni(FileName);
+  finally
+    FileStream.Free;
+  end;
+except
+  Result := False;
+end;
 end;
 
 //------------------------------------------------------------------------------

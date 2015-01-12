@@ -43,6 +43,7 @@ type
   end;
 
   TSettings = record
+    ProgramPath:                String;
     ShowSplashScreen:           Boolean;
     MinimizeToTray:             Boolean;
     StartMinimized:             Boolean;
@@ -171,6 +172,7 @@ const
   SETN_GRP_Speeds     = 'Speeds';
   SETN_GRP_Inputs     = 'Inputs';
 
+  SETN_VAL_ProgramPath          = 'ProgramPath';
   SETN_VAL_ShowSplashScreen     = 'ShowSplashScreen';
   SETN_VAL_MinimizeToTray       = 'MinimizeToTray';
   SETN_VAL_StartMinimized       = 'StartMinimized';
@@ -207,6 +209,7 @@ const
   SETN_VAL_INP_UserVehicle    = 'UserVehicle[%d]';
   SETN_VAL_INP_UserCruise     = 'UserCruise[%d]';
 
+  SETN_VAL_REG_ProgramPath          = SETN_GRP_General + '.' + SETN_VAL_ProgramPath;
   SETN_VAL_REG_ShowSplashScreen     = SETN_GRP_General + '.' + SETN_VAL_ShowSplashScreen;
   SETN_VAL_REG_MinimizeToTray       = SETN_GRP_General + '.' + SETN_VAL_MinimizeToTray;
   SETN_VAL_REG_StartMinimized       = SETN_GRP_General + '.' + SETN_VAL_StartMinimized;
@@ -384,6 +387,7 @@ try
     Registry.RootKey := HKEY_CURRENT_USER;
     If Registry.OpenKeyReadOnly(SettingsRegistryKey) then
       begin
+        fSettings^.ProgramPath := ParamStr(0);
         fSettings^.ShowSplashScreen := Registry.ReadBoolDef(SETN_VAL_REG_ShowSplashScreen,def_Settings.ShowSplashScreen);
         fSettings^.MinimizeToTray := Registry.ReadBoolDef(SETN_VAL_REG_MinimizeToTray,def_Settings.MinimizeToTray);
         fSettings^.StartMinimized := Registry.ReadBoolDef(SETN_VAL_REG_StartMinimized,def_Settings.StartMinimized);
@@ -461,6 +465,7 @@ try
     If Registry.OpenKey(SettingsRegistryKey,True) then
       begin
         ValidateSettings;
+        Registry.WriteString(SETN_VAL_REG_ProgramPath,fSettings^.ProgramPath);
         Registry.WriteBool(SETN_VAL_REG_ShowSplashScreen,fSettings^.ShowSplashScreen);
         Registry.WriteBool(SETN_VAL_REG_MinimizeToTray,fSettings^.MinimizeToTray);
         Registry.WriteBool(SETN_VAL_REG_StartMinimized,fSettings^.StartMinimized);
@@ -533,6 +538,7 @@ begin
 try
   IniFile := TIniFile.Create(FileName);
   try
+    fSettings^.ProgramPath := ParamStr(0);
     fSettings^.ShowSplashScreen := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_ShowSplashScreen,def_Settings.ShowSplashScreen);
     fSettings^.MinimizeToTray := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_MinimizetoTray,def_Settings.MinimizeToTray);
     fSettings^.StartMinimized := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_StartMinimized,def_Settings.StartMinimized);
@@ -604,6 +610,7 @@ try
   IniFile := TIniFile.Create(FileName);
   try
     ValidateSettings;
+    IniFile.WriteString(SETN_GRP_General,SETN_VAL_ProgramPath,fSettings^.ProgramPath);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_ShowSplashScreen,fSettings^.ShowSplashScreen);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_MinimizeToTray,fSettings^.MinimizeToTray);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_StartMinimized,fSettings^.StartMinimized);

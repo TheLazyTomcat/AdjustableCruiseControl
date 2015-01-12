@@ -2,6 +2,8 @@ unit UpdateForm;
 
 interface
 
+{$INCLUDE ACC_Defs.inc}
+
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, CheckLst,
@@ -10,23 +12,24 @@ uses
 type
   TfUpdateForm = class(TForm)
     clbUpdateData: TCheckListBox;
+    lblIcons: TLabel;
+    meIcons: TMemo;
+    bvlVertSplit: TBevel;
     btnLoadUpdateFile: TButton;
     btnMakeUpdate: TButton;
+    gbColorLegend: TGroupBox;
+    shpLegCol_NewEntry: TShape;    
     lblLegTxt_NewEntry: TLabel;
-    shpLegCol_NewEntry: TShape;
     shpLegCol_NewVersion: TShape;
     lblLegTxt_NewVersion: TLabel;
-    shpLegCol_OldVersion: TShape;
-    lblLegTxt_OldVersion: TLabel;
     shpLegCol_CurrentVersion: TShape;
     lblLegTxt_CurrentVersion: TLabel;
-    meIcons: TMemo;
-    lblIcons: TLabel;
-    bvlVertSplit: TBevel;
-    gbColorLegend: TGroupBox;
+    shpLegCol_OldVersion: TShape;
+    lblLegTxt_OldVersion: TLabel;
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);    
+    procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure clbUpdateDataClickCheck(Sender: TObject);    
     procedure clbUpdateDataDrawItem(Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
     procedure btnLoadUpdateFileClick(Sender: TObject);
@@ -48,6 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
+  MsgForm,
   ACC_Manager;
 
 procedure TfUpdateForm.FillList;
@@ -80,6 +84,7 @@ end;
 procedure TfUpdateForm.FormCreate(Sender: TObject);
 begin
 fUpdateDataManager := TGamesDataManager.Create;
+fUpdateDataManager.GameIcons.DefaultIcon := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -87,8 +92,6 @@ end;
 procedure TfUpdateForm.FormShow(Sender: TObject);
 begin
 fUpdateDataManager.Clear;
-fUpdateDataManager.UpdateFrom(ACCManager.GamesDataManager);
-fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
 FillList;
 end;
 
@@ -97,6 +100,13 @@ end;
 procedure TfUpdateForm.FormDestroy(Sender: TObject);
 begin
 fUpdateDataManager.Free;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfUpdateForm.clbUpdateDataClickCheck(Sender: TObject);
+begin
+fUpdateDataManager.GameDataPtr[clbUpdateData.ItemIndex]^.UpdateInfo.Add := clbUpdateData.Checked[clbUpdateData.ItemIndex]; 
 end;
 
 //------------------------------------------------------------------------------
@@ -156,8 +166,8 @@ with clbUpdateData.Canvas do
     TextOut(Rect.Left + 4,Rect.Top + 2,TempGameData.Title);
     Font.Style := [];
     TextOut(Rect.Left + 4,Rect.Top + ((Rect.Bottom - Rect.Top) - TextHeight(TempGameData.Info)) div 2,TempGameData.Info);
-    Font.Name := 'Courier New';
     Font.Color := clGray;
+    Font.Name := 'Courier New';
     TempStr := GUIDToString(TempGameData.Identifier) + ' - version ' + IntToStr(TempGameData.Version);
     TextOut(Rect.Left + 4,Rect.Bottom - 2 - TextHeight(TempStr),TempStr);
     Pen.Color := clHorSplit;
@@ -169,15 +179,36 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TfUpdateForm.btnLoadUpdateFileClick(Sender: TObject);
+var
+  FileName: String;
 begin
-//
+If PromptForFileName(FileName,'Supported files (*.ini,*.gdb,*.ugdb)|*.ini;*.gdb;*.ugdb|All files|*.*','','Load update file',ExtractFileDir(ParamStr(0)),False) then
+  begin
+    If fUpdateDataManager.LoadFrom(FileName) then
+      begin
+        fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
+        FillList;
+      end
+    else ShowErrorMsg('Failed to load selected file.');
+  end;
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TfUpdateForm.btnMakeUpdateClick(Sender: TObject);
+var
+  AddCount: Integer;
 begin
-//
+AddCount := ACCManager.GamesDataManager.UpdateFrom(fUpdateDataManager);
+If AddCount > 0 then
+  begin
+    ShowInfoMsg(IntToStr(AddCount) + ' entries were added to the list of supported games.');
+    ACCManager.ProcessBinder.SetGamesData(ACCManager.GamesDataManager.GamesData);
+    ACCManager.GamesDataManager.Save;
+    fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
+    FillList;
+  end
+else ShowInfoMsg('No entry added.');
 end;
 
 end.
