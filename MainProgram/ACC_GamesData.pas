@@ -10,6 +10,10 @@ uses
   ACC_Common;
 
 const
+  // Default files from which the program will try to load games data
+  GamesDataFileBin = 'Data\GamesData.gdb';
+  GamesDataFileIni = 'Data\GamesData.ini';
+
   // Identifiers used for saving/loading ini file
   GDIN_MainSection = 'GamesData';
   GDIN_Game        = 'Game.%d';
@@ -216,8 +220,8 @@ type
     Function LoadFromIni(const FileName: String; out FileStructure: TFileStructure): Boolean; overload; virtual;
     Function LoadFromIni(const FileName: String): Boolean; overload; virtual;
     Function LoadFrom(const FileName: String): Boolean; virtual;
-    procedure Load; virtual;
-    procedure Save; virtual;
+    Function Load: Boolean; virtual;
+    Function Save: Boolean; virtual;
     procedure CheckUpdate(OldData: TGamesDataManager); virtual;
     Function UpdateFrom(UpdateData: TGamesDataManager): Integer; virtual;
     property GameDataPtr[Index: Integer]: PGameData read GetGameDataPtr;
@@ -245,10 +249,6 @@ const
 
   // Signature of binarz games data file
   ACCBinFileSignature = $64636361;
-
-  // Default files from which the program will try to load games data
-  GamesDataFileBin = 'Data\GamesData.gdb';
-  GamesDataFileIni = 'Data\GamesData.ini';
 
   DefaultGameIconName    = 'default';
   DefaultGameIconResName = 'GI_' + DefaultGameIconName;
@@ -1428,22 +1428,22 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TGamesDataManager.Load;
+Function TGamesDataManager.Load: Boolean;
 begin
 If FileExists(ExtractFilePath(ParamStr(0)) + GamesDataFileIni) then
-  LoadFromIni(ExtractFilePath(ParamStr(0)) + GamesDataFileIni)
+  Result := LoadFromIni(ExtractFilePath(ParamStr(0)) + GamesDataFileIni)
 else
-  LoadFromBin(ExtractFilePath(ParamStr(0)) + GamesDataFileBin);
+  Result := LoadFromBin(ExtractFilePath(ParamStr(0)) + GamesDataFileBin);
 end;
 
 //------------------------------------------------------------------------------
 
-procedure TGamesDataManager.Save;
+Function TGamesDataManager.Save: Boolean;
 begin
 If FileExists(ExtractFilePath(ParamStr(0)) + GamesDataFileIni) then
-  SaveToIni(ExtractFilePath(ParamStr(0)) + GamesDataFileIni,IFS_2_0)
+  Result := SaveToIni(ExtractFilePath(ParamStr(0)) + GamesDataFileIni,IFS_2_0)
 else
-  SaveToBin(ExtractFilePath(ParamStr(0)) + GamesDataFileBin,BFS_1_0);
+  Result := SaveToBin(ExtractFilePath(ParamStr(0)) + GamesDataFileBin,BFS_1_0);
 end;
 
 //------------------------------------------------------------------------------
