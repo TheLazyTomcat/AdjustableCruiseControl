@@ -4,6 +4,10 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 uses
   Messages, Classes,
   UtilityWindow;

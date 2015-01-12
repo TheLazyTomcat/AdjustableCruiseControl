@@ -4,8 +4,12 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 uses
-  Windows, SysUtils, Classes, TlHelp32,
+  Windows, SysUtils, Classes, {$IFDEF FPC}jwaTlHelp32{$ELSE}TlHelp32{$ENDIF},
   UtilityWindow, SimpleTimer,
   ACC_GamesData, ACC_Settings;
 
@@ -76,9 +80,9 @@ type
   public
     constructor Create(GamesDataPtr: PGamesData; GamesDataSync: TMultiReadExclusiveWriteSynchronizer; ControlEvent: THandle);
     destructor Destroy; override;
-  published
     property GameData: TGameData read fGameData;
-    property OnStateChange: TStateChangeEvent read fOnStateChange write fOnStateChange;    
+  published
+    property OnStateChange: TStateChangeEvent read fOnStateChange write fOnStateChange;
   end;
 
 {==============================================================================}
@@ -106,9 +110,9 @@ type
     procedure SetGamesData(GamesData: TGamesData); virtual;
     procedure Start; virtual;
     procedure UpdateTimerInterval; virtual;
+    property GameData: TGameData read fGameData;
   published
     property Binded: Boolean read fBinded;
-    property GameData: TGameData read fGameData;
     property OnStateChange: TNotifyEvent read fOnStateChange write fOnStateChange;
     property OnGameUnbind: TNotifyEvent read fOnGameUnbind write fOnGameUnbind;
   end;
@@ -116,7 +120,7 @@ type
 implementation
 
 uses
-  PSApi,
+  {$IFNDEF FPC}PSApi,{$ENDIF}
   CRC32, MD5,
   ACC_Common;
 
@@ -221,8 +225,8 @@ else
     NewListItem := PProcessListItem(Items[fRealCount]);
     Result := fRealCount;
   end;
-NewListItem.ExecName := Process.szExeFile;
-NewListItem.ProcessID := Process.th32ProcessID;
+NewListItem^.ExecName := Process.szExeFile;
+NewListItem^.ProcessID := Process.th32ProcessID;
 Inc(fRealCount);
 end;
 
@@ -599,7 +603,11 @@ If Assigned(fOnStateChange) then fOnStateChange(Self);
 fControlTimer.Interval := Settings.ProcessBinderScanInterval;
 fControlTimer.Enabled := True;
 fControlTimer.OnTimer(nil);
+{$IFDEF FPC}
+fBinderThread.Start;
+{$ELSE}
 fBinderThread.Resume;
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------

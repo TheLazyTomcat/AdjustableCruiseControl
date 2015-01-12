@@ -4,6 +4,10 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 uses
   Windows, Messages, Classes,
   WinRawInput, UtilityWindow,
@@ -57,7 +61,7 @@ type
     fOnTrigger:             TTriggerEvent;
   protected
     procedure MessageHandler(var Msg: TMessage; var Handled: Boolean); virtual;
-    procedure ProcessRawInput(lParam: lParam; wParam: wParam); virtual;
+    procedure ProcessRawInput(lParam: lParam; {%H-}wParam: wParam); virtual;
     procedure ProcessKeyboardInput(Input: RawKeyboard); virtual;
     procedure ProcessKeyPress(VKey: Word); virtual;
     procedure ProcessKeyRelease(VKey: Word); virtual;
@@ -68,10 +72,10 @@ type
     constructor Create(UtilityWindow: TUtilityWindow);
     destructor Destroy; override;
     procedure AddTrigger(Trigger: Integer; Input: TInput); virtual;
+    property CurrentInput: TInput read fCurrentInput;
   published
     property Active: Boolean read fActive write fActive;
     property DiscernKeyboardSides: Boolean read fDiscernKeyboardSides write fDiscernKeyboardSides;
-    property CurrentInput: TInput read fCurrentInput;
     property TriggerInvoke: TTriggerInvoke read fTriggerInvoke write fTriggerInvoke;
     property OnVirtualKeyPress: TVirtualKeyEvent read fOnVirtualKeyPress write fOnVirtualKeyPress;
     property OnVirtualKeyRelease: TVirtualKeyEvent read fOnVirtualKeyRelease write fOnVirtualKeyRelease;
@@ -159,7 +163,7 @@ If IndexOfInput(Input) < 0 then
         Result := Add(NewItem);
         If Result < 0 then Dispose(NewItem);
       end
-    else PTriggerListItem(Items[Result]).Input := Input;
+    else PTriggerListItem(Items[Result])^.Input := Input;
   end;
 end;
 

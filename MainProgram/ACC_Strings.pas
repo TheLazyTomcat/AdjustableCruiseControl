@@ -4,9 +4,6 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
-uses
-  ACC_Common;
-
 const
   ACCSTR_ApplicationName      = 'Adjustable Cruise Control';
   ACCSTR_ApplicationNameShort = 'ACC';

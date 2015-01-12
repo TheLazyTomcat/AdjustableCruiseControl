@@ -100,6 +100,7 @@ const
 
   // Default program settings
   def_Settings: TSettings = (
+    ProgramPath:                '';
     ShowSplashScreen:           True;
     MinimizeToTray:             True;
     StartMinimized:             False;
@@ -108,6 +109,7 @@ const
     UsedSpeedUnit:              0;
     ProcessBinderScanInterval:  1000;
     ModulesLoadTimeout:         5000;
+    SpeedUnits:                 nil;
     Speeds:(
       Step:       5.0;
       City:       50.0;

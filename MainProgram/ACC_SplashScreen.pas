@@ -4,6 +4,10 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 uses
   Windows, Messages, Forms, Graphics,
   UtilityWindow, SimpleTimer;
@@ -30,6 +34,7 @@ type
   TSplashScreen = class(TObject)
   private
     fApplication:         TApplication;
+    fApplicationHandle:   HWND;
     fLoadCallback:        TLoadCallback;
     fSplashForm:          TSplashForm;
     fAnimationTimer:      TSimpleTimer;
@@ -53,7 +58,7 @@ implementation
 {$R 'Resources\SplashImg.res'}
 
 uses
-  SysUtils, Classes, DateUtils,
+  SysUtils, Classes, DateUtils,{$IFDEF FPC} Controls, InterfaceBase, Win32Extra,{$ENDIF}
   ACC_Common;
 
 const
@@ -122,7 +127,7 @@ fSplashForm.ClientWidth := fSplashBitmap.Width;
 fSplashForm.ClientHeight := fSplashBitmap.Height;
 fSplashForm.ParentWindow := GetDesktopWindow;
 SetWindowLong(fSplashForm.Handle,GWL_EXSTYLE,GetWindowLong(fSplashForm.Handle,GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_TOPMOST or WS_EX_TOOLWINDOW);
-SetWindowLong(fApplication.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.Handle,GWL_EXSTYLE) or WS_EX_TOOLWINDOW);
+SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) or WS_EX_TOOLWINDOW);
 fSplashForm.Show;
 end;
 
@@ -176,7 +181,7 @@ case fAnimationTimer.Tag of
   AnimState_Waiting:  If MilliSecondsBetween(Now,fAnimationTimeStamp) >= LoadTime then
                         begin
                           fApplication.ShowMainForm := True;
-                          SetWindowLong(fApplication.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.Handle,GWL_EXSTYLE) and not WS_EX_TOOLWINDOW);
+                          SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) and not WS_EX_TOOLWINDOW);
                           fApplication.MainForm.Show;
                           fApplication.MainForm.BringToFront;
                           fAnimationTimer.Tag := AnimState_FadeOut;
@@ -198,6 +203,11 @@ constructor TSplashScreen.Create(UtilityWindow: TUtilityWindow; Application: TAp
 begin
 inherited Create;
 fApplication := Application;
+{$IFDEF FPC}
+fApplicationHandle := WidgetSet.AppHandle;
+{$ELSE}
+fApplicationHandle := fApplication.Handle;
+{$ENDIF}
 fLoadCallback := LoadCallback;
 fSplashForm := TSplashForm.CreateNew(nil);
 fAnimationTimer := TSimpleTimer.Create(UtilityWindow,ACC_TIMER_ID_Splash);

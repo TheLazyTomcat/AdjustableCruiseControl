@@ -36,8 +36,8 @@ type
     Function ReadCCStatus(out Value: Boolean): Boolean; virtual;
     Function WriteCCSpeed(Value: Single): Boolean; virtual;
     Function WriteCCStatus(Value: Boolean): Boolean; virtual;
-  published
     property GameData: TGameData read fGameData;
+  published
     property Active: Boolean read fActive;
     property CanReadVehicleSpeed: Boolean read fCanReadVehicleSpeed;
   end;
@@ -72,13 +72,13 @@ Result := False;
 try
   Address := BaseAddress;
   If Length(PointerData.Offsets) > 0 then
-    Address := Pointer(PtrInt(Address) + PointerData.Offsets[0]);
+    Address := {%H-}Pointer(PtrInt(Address) + PointerData.Offsets[0]);
   For i := Succ(Low(PointerData.Offsets)) to High(PointerData.Offsets) do
     begin
-      If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),Temp) then
+      If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),{%H-}Temp) then
         begin
           If Assigned(Address) and (Temp = SizeOf(Pointer)) then
-            Address := Pointer(PtrInt(Address) + PointerData.Offsets[i])
+            Address := {%H-}Pointer(PtrInt(Address) + PointerData.Offsets[i])
           else Exit;
         end
       else Exit;
@@ -99,7 +99,7 @@ begin
 Result := False;
 If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
   begin
-    If WriteProcessMemory(ProcessHandle,ValueAddress,Value,Size,Temp) then
+    If WriteProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
       Result := Temp = Size;
   end;
 end;
@@ -114,7 +114,7 @@ begin
 Result := False;
 If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
   begin
-    If ReadProcessMemory(ProcessHandle,ValueAddress,Value,Size,Temp) then
+    If ReadProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
       Result := Temp = Size;
   end;
 end;

@@ -5,7 +5,7 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Classes, IniFiles, PNGImage,
+  Classes, IniFiles, {$IFNDEF FPC}PNGImage{$ELSE}Graphics{$ENDIF},
   CRC32, MD5, SimpleCompress, FloatHex, StringEncryptionUnit,
   ACC_Common;
 
@@ -135,6 +135,10 @@ const
   ACC_PTR_FLAGS_PointerTypeBitmask = $1FF;
 
 type
+{$IFDEF FPC}
+  TPNGObject = TPortableNetworkGraphic;
+{$ENDIF}
+
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                                   TIconList                                  }
@@ -252,6 +256,14 @@ const
 
   DefaultGameIconName    = 'default';
   DefaultGameIconResName = 'GI_' + DefaultGameIconName;
+
+{$IFDEF FPC}
+Function StrToDateDef(const Str: String; const Default: TDateTime; const FormatSettings: TFormatSettings): TDateTime;
+begin
+If not TryStrToDate(Str,Result,FormatSettings) then
+  Result := Default;
+end;
+{$ENDIF}
 
 
 {==============================================================================}
@@ -474,7 +486,7 @@ var
   TempStr:  UTF8String;
   TempInt:  Integer;
 begin
-Stream.ReadBuffer(TempInt,SizeOf(TempInt));
+Stream.ReadBuffer({%H-}TempInt,SizeOf(TempInt));
 SetLength(TempStr,TempInt);
 Stream.ReadBuffer(PAnsiChar(TempStr)^,TempInt);
 Str := UTF8ToString(TempStr);
@@ -498,7 +510,7 @@ end;
 
 class procedure TGamesDataManager.ReadIntegerFromStream(Stream: TStream; out Value: Integer);
 begin
-Stream.ReadBuffer(Value,SizeOf(Integer));
+Stream.ReadBuffer({%H-}Value,SizeOf(Integer));
 end;
 
 //------------------------------------------------------------------------------
@@ -519,7 +531,7 @@ end;
 
 class procedure TGamesDataManager.ReadInt64FromStream(Stream: TStream; out Value: Int64);
 begin
-Stream.ReadBuffer(Value,SizeOf(Int64));
+Stream.ReadBuffer({%H-}Value,SizeOf(Int64));
 end;
 
 //------------------------------------------------------------------------------
@@ -540,7 +552,7 @@ end;
 
 class procedure TGamesDataManager.ReadFloatFromStream(Stream: TStream; out Value: Single);
 begin
-Stream.ReadBuffer(Value,SizeOf(Single));
+Stream.ReadBuffer({%H-}Value,SizeOf(Single));
 end;
 
 //------------------------------------------------------------------------------
@@ -956,7 +968,7 @@ try
       Ini.WriteString(CurrentSection,GDIN_GD_Descriptor,fGamesData[i].Descriptor);
       Ini.WriteInteger(CurrentSection,GDIN_GD_Version,fGamesData[i].Version);
       Ini.WriteString(CurrentSection,GDIN_GD_Icon,fGamesData[i].Icon);
-      GetLocaleFormatSettings(LOCALE_USER_DEFAULT,FormatSettings);
+      {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
       FormatSettings.DateSeparator := '-';
       FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
       Ini.WriteString(CurrentSection,GDIN_GD_Date,DateToStr(fGamesData[i].Date,FormatSettings));
@@ -1091,9 +1103,10 @@ try
   GameData.Descriptor := Ini.ReadString(Section,GDIN_GD_Descriptor,'');
   GameData.Version := Ini.ReadInteger(Section,GDIN_GD_Version,0);
   GameData.Icon := Ini.ReadString(Section,GDIN_GD_Icon,DefaultGameIconName);
-  GetLocaleFormatSettings(LOCALE_USER_DEFAULT,FormatSettings);
+  {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
   FormatSettings.DateSeparator := '-';
   FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+  StrToDate('2015',FormatSettings);
   GameData.Date := StrToDateDef(Ini.ReadString(Section,GDIN_GD_Date,''),Now,FormatSettings);
   GameData.Author := Ini.ReadString(Section,GDIN_GD_Author,'');
   GameData.Title := Ini.ReadString(Section,GDIN_GD_Title,'');

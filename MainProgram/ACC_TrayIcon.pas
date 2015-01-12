@@ -4,10 +4,13 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 uses
   Windows, Messages, Graphics, Forms, Menus,
-  UtilityWindow,
-  ACC_Common;
+  UtilityWindow;
 
 type
   TNotifyIconData = record
@@ -29,6 +32,7 @@ type
          {guidItem:     TGUID;}
          {hBalloonIcon: HICON});
   end;
+  PNotifyIconData = ^TNotifyIconData;
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -68,6 +72,13 @@ implementation
 uses
   SysUtils, Classes, ShellAPI, ACC_Strings;
 
+{$IFDEF FPC}
+Function Shell_NotifyIcon(dwMessage: DWORD; lpdata: PNotifyIconData): BOOL;
+begin
+Result := ShellAPI.Shell_NotifyIconA(dwMessage,PNOTIFYICONDATAA(lpData));
+end;
+{$ENDIF}
+
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                                  TTrayIcon                                   }
@@ -101,7 +112,7 @@ If Msg.Msg = fMessageID then
   case Msg.LParam of
     WM_RBUTTONDOWN: begin
                       SetForegroundWindow(fApplication.MainForm.Handle);
-                      GetCursorPos(PopupPoint);
+                      GetCursorPos({%H-}PopupPoint);
                       fPopupMenu.Popup(PopupPoint.X,PopupPoint.Y);
                       Handled := True;
                     end;
