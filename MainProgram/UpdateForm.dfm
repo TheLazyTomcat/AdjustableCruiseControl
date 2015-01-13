@@ -159,4 +159,12 @@ object fUpdateForm: TfUpdateForm
       ShowHint = True
     end
   end
+  object diaLoadUpdate: TOpenDialog
+    Filter = 
+      'Supported files (*.ini,*.gdb,*.ugdb)|*.ini;*.gdb;*.ugdb|All file' +
+      's|*.*'
+    Title = 'Load update file'
+    Left = 496
+    Top = 72
+  end
 end

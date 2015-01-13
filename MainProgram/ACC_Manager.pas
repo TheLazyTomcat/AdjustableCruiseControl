@@ -63,7 +63,7 @@ var
 implementation
 
 uses
-  Windows, SysUtils,
+  Windows, SysUtils,{$IFDEF FPC}InterfaceBase,{$ENDIF}
   ACC_Strings;
 
 {$R 'Resources\GamesData.res'}
@@ -89,37 +89,13 @@ const
   ACC_TRIGGER_RoadsCruise  = 17;
 
   ACC_TRIGGER_UserEngage_0 = 100;
-  ACC_TRIGGER_UserEngage_1 = ACC_TRIGGER_UserEngage_0 + 1;
-  ACC_TRIGGER_UserEngage_2 = ACC_TRIGGER_UserEngage_0 + 2;
-  ACC_TRIGGER_UserEngage_3 = ACC_TRIGGER_UserEngage_0 + 3;
-  ACC_TRIGGER_UserEngage_4 = ACC_TRIGGER_UserEngage_0 + 4;
-  ACC_TRIGGER_UserEngage_5 = ACC_TRIGGER_UserEngage_0 + 5;
-  ACC_TRIGGER_UserEngage_6 = ACC_TRIGGER_UserEngage_0 + 6;
-  ACC_TRIGGER_UserEngage_7 = ACC_TRIGGER_UserEngage_0 + 7;
-  ACC_TRIGGER_UserEngage_8 = ACC_TRIGGER_UserEngage_0 + 8;
   ACC_TRIGGER_UserEngage_9 = ACC_TRIGGER_UserEngage_0 + 9;
 
   ACC_TRIGGER_UserVehicle_0 = 200;
-  ACC_TRIGGER_UserVehicle_1 = ACC_TRIGGER_UserVehicle_0 + 1;
-  ACC_TRIGGER_UserVehicle_2 = ACC_TRIGGER_UserVehicle_0 + 2;
-  ACC_TRIGGER_UserVehicle_3 = ACC_TRIGGER_UserVehicle_0 + 3;
-  ACC_TRIGGER_UserVehicle_4 = ACC_TRIGGER_UserVehicle_0 + 4;
-  ACC_TRIGGER_UserVehicle_5 = ACC_TRIGGER_UserVehicle_0 + 5;
-  ACC_TRIGGER_UserVehicle_6 = ACC_TRIGGER_UserVehicle_0 + 6;
-  ACC_TRIGGER_UserVehicle_7 = ACC_TRIGGER_UserVehicle_0 + 7;
-  ACC_TRIGGER_UserVehicle_8 = ACC_TRIGGER_UserVehicle_0 + 8;
   ACC_TRIGGER_UserVehicle_9 = ACC_TRIGGER_UserVehicle_0 + 9;
 
-  ACC_TRIGGER_UserCruise_0  = 300;
-  ACC_TRIGGER_UserCruise_1  = ACC_TRIGGER_UserCruise_0 + 1;
-  ACC_TRIGGER_UserCruise_2  = ACC_TRIGGER_UserCruise_0 + 2;
-  ACC_TRIGGER_UserCruise_3  = ACC_TRIGGER_UserCruise_0 + 3;
-  ACC_TRIGGER_UserCruise_4  = ACC_TRIGGER_UserCruise_0 + 4;
-  ACC_TRIGGER_UserCruise_5  = ACC_TRIGGER_UserCruise_0 + 5;
-  ACC_TRIGGER_UserCruise_6  = ACC_TRIGGER_UserCruise_0 + 6;
-  ACC_TRIGGER_UserCruise_7  = ACC_TRIGGER_UserCruise_0 + 7;
-  ACC_TRIGGER_UserCruise_8  = ACC_TRIGGER_UserCruise_0 + 8;
-  ACC_TRIGGER_UserCruise_9  = ACC_TRIGGER_UserCruise_0 + 9;  
+  ACC_TRIGGER_UserCruise_0 = 300;
+  ACC_TRIGGER_UserCruise_9 = ACC_TRIGGER_UserCruise_0 + 9;
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -136,7 +112,11 @@ begin
 If Settings.MinimizeToTray then
   begin
     TrayIcon.ShowTrayIcon;
+    {$IFDEF FPC}
+    ShowWindow(WidgetSet.AppHandle,SW_HIDE);
+    {$ELSE}
     ShowWindow(fApplication.Handle,SW_HIDE);
+    {$ENDIF}
   end;
 end;
 

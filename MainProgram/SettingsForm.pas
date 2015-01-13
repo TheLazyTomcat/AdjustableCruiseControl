@@ -5,11 +5,14 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, pngimage, ExtCtrls, Spin, Grids,
+  Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, ExtCtrls, Spin, Grids,{$IFNDEF FPC}PNGImage,{$ENDIF}
   ACC_Settings;
 
 type
+
+  { TfSettingsForm }
+
   TfSettingsForm = class(TForm)
     gbGeneral: TGroupBox;
     cbShowSplash: TCheckBox;
@@ -33,7 +36,9 @@ type
     btnAccept: TButton;
     btnApply: TButton;
     btnCancel: TButton;
-    btnDefault: TButton;    
+    diaImportSettings: TOpenDialog;
+    diaExportSettings: TSaveDialog;    
+    btnDefault: TButton;
     btnExportSettings: TButton;
     btnImportSettings: TButton;
     procedure FormCreate(Sender: TObject);
@@ -70,10 +75,14 @@ var
 
 implementation
 
-{$R *.dfm}
+{$IFDEF FPC}
+  {$R *.lfm}
+{$ELSE}
+  {$R *.dfm}
+{$ENDIF}
 
 uses
-  MainForm, KeyBindForm, SupportedGamesForm, MsgForm,
+  MainForm, KeyBindForm, SupportedGamesForm,{$IFNDEF FPC}MsgForm,{$ENDIF}
   ACC_Common, ACC_Strings, ACC_Input, ACC_Manager, UpdateForm;
 
 
@@ -141,6 +150,8 @@ end;
 procedure TfSettingsForm.FormCreate(Sender: TObject);
 begin
 sgBindings.DoubleBuffered := True;
+diaExportSettings.InitialDir := ExtractFileDir(ParamStr(0));
+diaImportSettings.InitialDir := ExtractFileDir(ParamStr(0));
 PrepareBindTable;
 LocalSettingsManager := TSettingsManager.Create(Addr(fLocalSettings));
 end;
@@ -171,14 +182,22 @@ end;
 
 procedure TfSettingsForm.imgHint_PSIClick(Sender: TObject);
 begin
+{$IFDEF FPC}
+Application.MessageBox(ACCSTR_UI_SET_TIH_ProcessScanTimer,'Processes scan interval',MB_ICONINFORMATION);
+{$ELSE}
 ShowInfoMsg(Self,0,ACCSTR_UI_SET_TIH_ProcessScanTimer,'Processes scan interval','','');
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TfSettingsForm.imgHint_MLTClick(Sender: TObject);
 begin
+{$IFDEF FPC}
+Application.MessageBox(ACCSTR_UI_SET_TIH_ModuleLoadTimer,'Modules load timeout',MB_ICONINFORMATION);
+{$ELSE}
 ShowInfoMsg(Self,0,ACCSTR_UI_SET_TIH_ModuleLoadTimer,'Modules load timeout','','');
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -210,12 +229,17 @@ If Sender is TStringGrid then
     begin
       If gdFixed in State then
         begin
+        {$IFDEF FPC}
+          Pen.Style := psSolid;
+          Pen.Color := sgBindings.FixedColor;
+        {$ELSE}
           Pen.Color := BindTable_FixedColorBgr;
+        {$ENDIF}
           Brush.Color := BindTable_FixedColorBgr;
           Rectangle(Rect);
           Pen.Color := BindTable_FixedColor;
           Brush.Color := BindTable_FixedColor;
-          Rectangle(Rect.Left,Rect.Top,Rect.Right,Rect.Top + ((Rect.Bottom - Rect.Top) div 2));
+          Rectangle(Rect.Left,Rect.Top,Rect.Right - 1,Rect.Top + ((Rect.Bottom - Rect.Top) div 2));
         end
       else
         begin
@@ -250,7 +274,7 @@ var
   CursorPos:  TPoint;
   Input:      TInput;
 begin
-GetCursorPos(CursorPos);
+GetCursorPos({%H-}CursorPos);
 If sgBindings.ScreenToClient(CursorPos).Y > sgBindings.RowHeights[0] then
   begin
     CenterFormToForm(fKeyBindForm,Self);
@@ -293,7 +317,11 @@ end;
 
 procedure TfSettingsForm.btnDefaultClick(Sender: TObject);
 begin
-If ShowWarningMsg(Self,1, ACCSTR_UI_SET_DEF_LoadDefaultSettings,'Load default settings','','') then
+{$IFDEF FPC}
+If Application.MessageBox(ACCSTR_UI_SET_DEF_LoadDefaultSettings,'Load default settings',MB_ICONWARNING or MB_YESNO) = IDYES then
+{$ELSE}
+If ShowWarningMsg(Self,1,ACCSTR_UI_SET_DEF_LoadDefaultSettings,'Load default settings','','') then
+{$ENDIF}
   begin
     LocalSettingsManager.InitSettings;
     SettingsToForm;
@@ -303,27 +331,25 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TfSettingsForm.btnExportSettingsClick(Sender: TObject);
-var
-  FileName: String;
 begin
-If PromptForFileName(FileName,'INI files (*.ini)|*.ini','.ini','Exporting program settings',ExtractFileDir(ParamStr(0)),True) then
-  begin
-    LocalSettingsManager.SaveToIni(FileName);
-  end;
+If diaExportSettings.Execute then
+  LocalSettingsManager.SaveToIni(diaExportSettings.FileName);
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TfSettingsForm.btnImportSettingsClick(Sender: TObject);
-var
-  FileName: String;
 begin
-If PromptForFileName(FileName,'INI files (*.ini)|*.ini','.ini','Importing program settings',ExtractFileDir(ParamStr(0)),False) then
+If diaExportSettings.Execute then
   begin
-    If LocalSettingsManager.LoadFromIni(FileName) then
+    If LocalSettingsManager.LoadFromIni(diaExportSettings.FileName) then
       SettingsToForm
     else
+    {$IFDEF FPC}
+      Application.MessageBox('Settings import has failed.','Adjustable Cruise Control',MB_ICONERROR);
+    {$ELSE}
       ShowErrorMsg('Settings import has failed.');
+    {$ENDIF}
   end;
 end;
 

@@ -283,4 +283,17 @@ object fSettingsForm: TfSettingsForm
     TabOrder = 9
     OnClick = btnDefaultClick
   end
+  object diaImportSettings: TOpenDialog
+    Filter = 'INI files (*.ini)|*.ini'
+    Title = 'Importing program settings'
+    Left = 424
+    Top = 104
+  end
+  object diaExportSettings: TSaveDialog
+    DefaultExt = '.ini'
+    Filter = 'INI files (*.ini)|*.ini'
+    Title = 'Exporting program settings'
+    Left = 392
+    Top = 104
+  end
 end

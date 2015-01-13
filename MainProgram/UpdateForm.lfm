@@ -1,0 +1,172 @@
+object fUpdateForm: TfUpdateForm
+  Left = 611
+  Height = 368
+  Top = 355
+  Width = 648
+  BorderStyle = bsDialog
+  Caption = 'Games data update'
+  ClientHeight = 368
+  ClientWidth = 648
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  Position = poOwnerFormCenter
+  LCLVersion = '1.2.6.0'
+  object lblIcons: TLabel
+    Left = 8
+    Height = 13
+    Top = 304
+    Width = 30
+    Caption = 'Icons:'
+    ParentColor = False
+  end
+  object bvlVertSplit: TBevel
+    Left = 488
+    Height = 369
+    Top = 0
+    Width = 9
+    Shape = bsLeftLine
+  end
+  object clbUpdateData: TCheckListBox
+    Left = 8
+    Height = 292
+    Top = 8
+    Width = 473
+    Color = clWindow
+    ItemHeight = 48
+    OnClickCheck = clbUpdateDataClickCheck
+    OnDrawItem = clbUpdateDataDrawItem
+    Style = lbOwnerDrawFixed
+    TabOrder = 0
+  end
+  object btnLoadUpdateFile: TButton
+    Left = 496
+    Height = 25
+    Top = 8
+    Width = 145
+    Caption = 'Load update file...'
+    OnClick = btnLoadUpdateFileClick
+    TabOrder = 2
+  end
+  object btnMakeUpdate: TButton
+    Left = 496
+    Height = 25
+    Top = 40
+    Width = 145
+    Caption = 'Make update'
+    OnClick = btnMakeUpdateClick
+    TabOrder = 3
+  end
+  object meIcons: TMemo
+    Left = 8
+    Height = 41
+    Top = 320
+    Width = 473
+    ReadOnly = True
+    TabOrder = 1
+  end
+  object gbColorLegend: TGroupBox
+    Left = 496
+    Height = 121
+    Top = 240
+    Width = 145
+    Caption = 'Colors'
+    ClientHeight = 103
+    ClientWidth = 141
+    TabOrder = 4
+    object lblLegTxt_CurrentVersion: TLabel
+      Left = 30
+      Height = 13
+      Top = 60
+      Width = 104
+      Caption = 'Current entry version'
+      ParentColor = False
+    end
+    object lblLegTxt_NewEntry: TLabel
+      Left = 30
+      Height = 13
+      Top = 12
+      Width = 50
+      Caption = 'New entry'
+      ParentColor = False
+    end
+    object shpLegCol_NewEntry: TShape
+      Cursor = crHelp
+      Left = 6
+      Height = 17
+      Hint = 'Entry is not yet listed between supported games'
+      Top = 10
+      Width = 17
+      Brush.Color = clBlue
+      ParentShowHint = False
+      Pen.Color = clSilver
+      Pen.Style = psClear
+      ShowHint = True
+    end
+    object shpLegCol_NewVersion: TShape
+      Cursor = crHelp
+      Left = 6
+      Height = 17
+      Hint = 'Newer version of entry that is already between supported games'
+      Top = 34
+      Width = 17
+      Brush.Color = clLime
+      ParentShowHint = False
+      Pen.Color = clSilver
+      Pen.Style = psClear
+      ShowHint = True
+    end
+    object lblLegTxt_NewVersion: TLabel
+      Left = 30
+      Height = 13
+      Top = 36
+      Width = 88
+      Caption = 'New entry version'
+      ParentColor = False
+    end
+    object shpLegCol_OldVersion: TShape
+      Cursor = crHelp
+      Left = 6
+      Height = 17
+      Hint = 'Newer version of this entry is already between supported games'
+      Top = 82
+      Width = 17
+      Brush.Color = clRed
+      ParentShowHint = False
+      Pen.Color = clSilver
+      Pen.Style = psClear
+      ShowHint = True
+    end
+    object lblLegTxt_OldVersion: TLabel
+      Left = 30
+      Height = 13
+      Top = 84
+      Width = 93
+      Caption = 'Older entry version'
+      ParentColor = False
+    end
+    object shpLegCol_CurrentVersion: TShape
+      Cursor = crHelp
+      Left = 6
+      Height = 17
+      Hint = 'Entry with the same identifier and version is already listed between supported games'
+      Top = 58
+      Width = 17
+      Brush.Color = clYellow
+      ParentShowHint = False
+      Pen.Color = clSilver
+      Pen.Style = psClear
+      ShowHint = True
+    end
+  end
+  object diaLoadUpdate: TOpenDialog
+    Title = 'Load update file'
+    Filter = 'Supported files (*.ini,*.gdb,*.ugdb)|*.ini;*.gdb;*.ugdb|All files|*.*'
+    left = 560
+    top = 72
+  end
+end

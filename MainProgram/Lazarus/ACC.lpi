@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="9"/>
+    <PathDelim Value="\"/>
+    <General>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="Adjustable Cruise Control"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <Icon Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+    </i18n>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <AutoIncrementBuild Value="True"/>
+      <MajorVersionNr Value="2"/>
+      <MinorVersionNr Value="2"/>
+      <BuildNr Value="6"/>
+      <Language Value="0405"/>
+      <StringTable Comments="Main program for ACC 2.2.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.2.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.2.0.0"/>
+    </VersionInfo>
+    <BuildModes Count="4">
+      <Item1 Name="Debug_win_x86" Default="True"/>
+      <Item2 Name="Release_win_x86">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="Release\win_x86\ACC"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\Libs;.."/>
+            <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CompilerMessages>
+              <MsgFileName Value=""/>
+            </CompilerMessages>
+            <CustomOptions Value="-dFPC
+-dx86
+-dRelease"/>
+            <CompilerPath Value="$(CompPath)"/>
+          </Other>
+        </CompilerOptions>
+      </Item2>
+      <Item3 Name="Debug_win_x64">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="Debug\win_x64\ACC"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\Libs;.."/>
+            <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <IncludeAssertionCode Value="True"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf2Set"/>
+              <UseHeaptrc Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CompilerMessages>
+              <MsgFileName Value=""/>
+            </CompilerMessages>
+            <CustomOptions Value="-dFPC
+-dx64
+-dDebug"/>
+            <CompilerPath Value="$(CompPath)"/>
+          </Other>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="Release_win_x64">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="Release\win_x64\ACC"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\Libs;.."/>
+            <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="win64"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CompilerMessages>
+              <MsgFileName Value=""/>
+            </CompilerMessages>
+            <CustomOptions Value="-dFPC
+-dx64
+-dRelease"/>
+            <CompilerPath Value="$(CompPath)"/>
+          </Other>
+        </CompilerOptions>
+      </Item4>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+    </RequiredPackages>
+    <Units Count="28">
+      <Unit0>
+        <Filename Value="ACC.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\Libs\CRC32.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CRC32"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\Libs\MD5.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MD5"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\Libs\WinRawInput.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinRawInput"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\Libs\FloatHex.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FloatHex"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="..\Libs\DefRegistry.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DefRegistry"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="..\Libs\MulticastEvent.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MulticastEvent"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\Libs\SimpleCompress.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="SimpleCompress"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\Libs\SimpleTimer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="SimpleTimer"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\Libs\StringEncryptionUnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="StringEncryptionUnit"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\Libs\UtilityWindow.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UtilityWindow"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\ACC_Common.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Common"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\ACC_Strings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Strings"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="..\ACC_TrayIcon.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_TrayIcon"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_GamesData"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\ACC_Input.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Input"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="..\ACC_InstanceControl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_InstanceControl"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="..\ACC_Manager.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Manager"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="..\ACC_MemoryOps.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_MemoryOps"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="..\ACC_ProcessBinder.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_ProcessBinder"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\ACC_Settings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Settings"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="..\ACC_SplashScreen.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_SplashScreen"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="..\MainForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fMainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MainForm"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="..\AboutForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fAboutForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="AboutForm"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="..\SettingsForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fSettingsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SettingsForm"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="..\KeyBindForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+        <UnitName Value="KeyBindForm"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="..\SupportedGamesForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fSupportedGamesForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SupportedGamesForm"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="..\UpdateForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fUpdateForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="UpdateForm"/>
+      </Unit27>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="Debug\win_x86\ACC"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="..\Libs;.."/>
+      <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <IncludeAssertionCode Value="True"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <Checks>
+        <IOChecks Value="True"/>
+        <RangeChecks Value="True"/>
+        <OverflowChecks Value="True"/>
+        <StackChecks Value="True"/>
+      </Checks>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf2Set"/>
+        <UseHeaptrc Value="True"/>
+        <UseExternalDbgSyms Value="True"/>
+      </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CompilerMessages>
+        <MsgFileName Value=""/>
+      </CompilerMessages>
+      <CustomOptions Value="-dFPC
+-dx86
+-dDebug"/>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

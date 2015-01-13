@@ -4,9 +4,6 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
-uses
-  ACC_Common;
-
 const
   ACCSTR_ApplicationName      = 'Adjustable Cruise Control';
   ACCSTR_ApplicationNameShort = 'ACC';
@@ -49,7 +46,11 @@ const
 
   // User interface - About
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';
+{$IFDEF FPC}
+  ACCSTR_UI_CPY_Author         = 'Â© 2013-2015 FrantiÅ¡ek Milt';
+{$ELSE}
   ACCSTR_UI_CPY_Author         = '© 2013-2015 František Milt';
+{$ENDIF}
   ACCSTR_UI_CPY_Copyright      = 'All rights reserved';
 
   // User interface - Settings form - Bindings table

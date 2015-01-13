@@ -30,6 +30,7 @@ type
   TSplashScreen = class(TObject)
   private
     fApplication:         TApplication;
+    fApplicationHandle:   HWND;
     fLoadCallback:        TLoadCallback;
     fSplashForm:          TSplashForm;
     fAnimationTimer:      TSimpleTimer;
@@ -53,7 +54,7 @@ implementation
 {$R 'Resources\SplashImg.res'}
 
 uses
-  SysUtils, Classes, DateUtils,
+  SysUtils, Classes, DateUtils,{$IFDEF FPC} Controls, InterfaceBase, Win32Extra,{$ENDIF}
   ACC_Common;
 
 const
@@ -101,10 +102,24 @@ end;
 procedure TSplashScreen.PrepareSplash;
 var
   ResourceStream: TResourceStream;
+{$IFDEF FPC}
+  MemoryStream:   TMemoryStream;
+{$ENDIF}
 begin
 ResourceStream := TResourceStream.Create(hInstance,'splash_image',RT_RCDATA);
 try
+{$IFDEF FPC}
+  MemoryStream := TMemoryStream.Create;
+  try
+    MemoryStream.CopyFrom(ResourceStream,0);
+    MemoryStream.Position:= 0;
+    fSplashBitmap.LoadFromStream(MemoryStream);
+  finally
+    MemoryStream.Free;
+  end;
+{$ELSE}
   fSplashBitmap.LoadFromStream(ResourceStream);
+{$ENDIF}
 finally
   ResourceStream.Free;
 end;
@@ -115,14 +130,18 @@ fSplashBlendFunction.BlendOp := AC_SRC_OVER;
 fSplashBlendFunction.BlendFlags := 0;
 fSplashBlendFunction.SourceConstantAlpha := 0;
 fSplashBlendFunction.AlphaFormat := AC_SRC_ALPHA;
-fSplashForm.Position := poScreenCenter;
 fSplashForm.BorderStyle := bsNone;
 fSplashForm.FormStyle := fsStayOnTop;
 fSplashForm.ClientWidth := fSplashBitmap.Width;
 fSplashForm.ClientHeight := fSplashBitmap.Height;
 fSplashForm.ParentWindow := GetDesktopWindow;
+fSplashForm.Position := poScreenCenter;
+{$IFDEF FPC}
+fSplashForm.Left := fSplashForm.Monitor.Left + (fSplashForm.Monitor.Width - fSplashForm.ClientWidth) div 2;
+fSplashForm.Top := fSplashForm.Monitor.Top + (fSplashForm.Monitor.Height - fSplashForm.ClientHeight) div 2;
+{$ENDIF}
 SetWindowLong(fSplashForm.Handle,GWL_EXSTYLE,GetWindowLong(fSplashForm.Handle,GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_TOPMOST or WS_EX_TOOLWINDOW);
-SetWindowLong(fApplication.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.Handle,GWL_EXSTYLE) or WS_EX_TOOLWINDOW);
+SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) or WS_EX_TOOLWINDOW);
 fSplashForm.Show;
 end;
 
@@ -176,7 +195,7 @@ case fAnimationTimer.Tag of
   AnimState_Waiting:  If MilliSecondsBetween(Now,fAnimationTimeStamp) >= LoadTime then
                         begin
                           fApplication.ShowMainForm := True;
-                          SetWindowLong(fApplication.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.Handle,GWL_EXSTYLE) and not WS_EX_TOOLWINDOW);
+                          SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) and not WS_EX_TOOLWINDOW);
                           fApplication.MainForm.Show;
                           fApplication.MainForm.BringToFront;
                           fAnimationTimer.Tag := AnimState_FadeOut;
@@ -198,6 +217,11 @@ constructor TSplashScreen.Create(UtilityWindow: TUtilityWindow; Application: TAp
 begin
 inherited Create;
 fApplication := Application;
+{$IFDEF FPC}
+fApplicationHandle := WidgetSet.AppHandle;
+{$ELSE}
+fApplicationHandle := fApplication.Handle;
+{$ENDIF}
 fLoadCallback := LoadCallback;
 fSplashForm := TSplashForm.CreateNew(nil);
 fAnimationTimer := TSimpleTimer.Create(UtilityWindow,ACC_TIMER_ID_Splash);
