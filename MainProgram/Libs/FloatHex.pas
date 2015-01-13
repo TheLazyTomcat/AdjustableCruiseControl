@@ -2,9 +2,9 @@
 
 Floating point numbers <> HexString conversion routines
 
-©František Milt 2015-01-09
+©František Milt 2015-01-14
 
-Version 1.2.2
+Version 1.2.3
 
 ===============================================================================}
 unit FloatHex;
@@ -34,17 +34,23 @@ Function TryHexToExtended(const HexString: String; out Value: Extended): Boolean
 
 Function FloatToHex(Value: Single): String; overload;
 Function FloatToHex(Value: Double): String; overload;
+{$IFNDEF Extended64}
 Function FloatToHex(Value: Extended): String; overload;
+{$ENDIF}
 
 Function HexToFloat(const HexString: String): Double; overload;
 
 Function HexToFloatDef(const HexString: String; const DefaultValue: Single): Single; overload;
 Function HexToFloatDef(const HexString: String; const DefaultValue: Double): Double; overload;
+{$IFNDEF Extended64}
 Function HexToFloatDef(const HexString: String; const DefaultValue: Extended): Extended; overload;
+{$ENDIF}
 
 Function TryHexToFloat(const HexString: String; out Value: Single): Boolean; overload;
 Function TryHexToFloat(const HexString: String; out Value: Double): Boolean; overload;
+{$IFNDEF Extended64}
 Function TryHexToFloat(const HexString: String; out Value: Extended): Boolean; overload;
+{$ENDIF}
 
 implementation
 
@@ -239,10 +245,12 @@ end;
 
 //------------------------------------------------------------------------------
 
+{$IFNDEF Extended64}
 Function FloatToHex(Value: Extended): String;
 begin
 Result := ExtendedToHex(Value);
 end;
+{$ENDIF}
 
 //==============================================================================
 
@@ -267,10 +275,12 @@ end;
 
 //------------------------------------------------------------------------------
 
+{$IFNDEF Extended64}
 Function HexToFloatDef(const HexString: String; const DefaultValue: Extended): Extended;
 begin
 Result := HexToExtendedDef(HexString,DefaultValue);
 end;
+{$ENDIF}
 
 //==============================================================================
 
@@ -288,9 +298,11 @@ end;
 
 //------------------------------------------------------------------------------
 
+{$IFNDEF Extended64}
 Function TryHexToFloat(const HexString: String; out Value: Extended): Boolean;
 begin
 Result := TryHexToExtended(HexString,Value);
 end;
+{$ENDIF}
 
 end.

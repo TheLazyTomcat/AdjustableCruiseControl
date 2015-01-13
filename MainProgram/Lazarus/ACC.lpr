@@ -3,9 +3,6 @@ program ACC;
 {$INCLUDE ..\ACC_Defs.inc}
 
 uses
-  {$IFDEF UNIX}{$IFDEF UseCThreads}
-  cthreads,
-  {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms,
 

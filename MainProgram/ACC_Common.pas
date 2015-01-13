@@ -13,9 +13,10 @@ const
 
   ACC_VersionShortStr = '2.2';
   ACC_VersionLongStr  = '2.2.0';
-  ACC_VersionFullStr  = ACC_VersionLongStr +
-                        {$IFDEF Delphi}' D' +{$ENDIF}
-                        {$IFDEF x64}' 64b'{$ELSE}' 32b'{$ENDIF};
+  ACC_VersionFullStr  = ACC_VersionLongStr
+                        {$IFDEF FPC}+ '  L'{$ELSE}+ '  D'{$ENDIF}
+                        {$IFDEF x64}+ '64'{$ELSE}+ '32'{$ENDIF}
+                        {$IFDEF Debug}+' debug'{$ENDIF};
 
   ACC_TIMER_ID_Splash = 1;
   ACC_TIMER_ID_Binder = 2;
