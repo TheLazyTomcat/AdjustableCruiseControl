@@ -90,7 +90,7 @@ MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
 [Directories]
-OutputDir=
+OutputDir=.\Release\win_x86
 UnitOutputDir=.\DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
@@ -111,7 +111,7 @@ AutoIncBuild=1
 MajorVer=2
 MinorVer=2
 Release=0
-Build=93
+Build=105
 Debug=0
 PreRelease=0
 Special=0
@@ -122,7 +122,7 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=František Milt
 FileDescription=Adjustable Cruise Control Application
-FileVersion=2.2.0.93
+FileVersion=2.2.0.105
 InternalName=ACC 2.2.x
 LegalCopyright=© 2013 - 2015 František Milt
 LegalTrademarks=Adjustable Cruise Control
@@ -140,3 +140,6 @@ Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\DCU
+[HistoryLists\hlOutputDirectorry]
+Count=1
+Item0=.\Release\win_x86

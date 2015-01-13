@@ -4,10 +4,6 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
-{$IFDEF FPC}
-  {$MODE Delphi}
-{$ENDIF}
-
 uses
   Classes, Forms,
   MulticastEvent, UtilityWindow,

@@ -454,7 +454,7 @@ object fAboutForm: TfAboutForm
     Alignment = taCenter
     AutoSize = False
     Caption = 'lblAuthor'
-    Font.Charset = DEFAULT_CHARSET
+    Font.Charset = EASTEUROPE_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
     Font.Name = 'Tahoma'

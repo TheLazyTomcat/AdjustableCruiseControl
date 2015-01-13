@@ -5,8 +5,8 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Spin, XPMan;
+  SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
+  StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF} ;
 
 type
   TfMainForm = class(TForm)
@@ -55,7 +55,9 @@ type
     btnSettings: TButton;
     btnAbout: TButton;
     sbStatusBar: TStatusBar;
+  {$IFNDEF FPC}
     oXPManifest: TXPManifest;
+  {$ENDIF}
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
@@ -79,7 +81,11 @@ var
 
 implementation
 
-{$R *.dfm}
+{$IFDEF FPC}
+  {$R *.lfm}
+{$ELSE}
+  {$R *.dfm}
+{$ENDIF}
 
 uses
   ACC_Manager, ACC_Settings, ACC_Strings, ACC_Input,

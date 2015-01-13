@@ -1,0 +1,64 @@
+object fSupportedGamesForm: TfSupportedGamesForm
+  Left = 305
+  Height = 440
+  Top = 211
+  Width = 960
+  BorderStyle = bsDialog
+  Caption = 'Supported games'
+  ClientHeight = 440
+  ClientWidth = 960
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poOwnerFormCenter
+  LCLVersion = '1.2.6.0'
+  object lbGamesList: TListBox
+    Left = 8
+    Height = 422
+    Top = 8
+    Width = 385
+    Color = clWindow
+    ItemHeight = 38
+    OnClick = lbGamesListClick
+    OnDrawItem = lbGamesListDrawItem
+    Style = lbOwnerDrawFixed
+    TabOrder = 0
+  end
+  object gbGameDetails: TGroupBox
+    Left = 400
+    Height = 425
+    Top = 8
+    Width = 553
+    Caption = 'Details about selected game entry'
+    ClientHeight = 407
+    ClientWidth = 549
+    TabOrder = 1
+    object lvGameDetails: TListView
+      Left = 6
+      Height = 400
+      Top = 3
+      Width = 537
+      Columns = <      
+        item
+          Caption = 'Value'
+          Width = 170
+        end      
+        item
+          Caption = 'Data'
+          Width = 345
+        end>
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      GridLines = True
+      ParentFont = False
+      ReadOnly = True
+      RowSelect = True
+      TabOrder = 0
+      ViewStyle = vsReport
+    end
+  end
+end

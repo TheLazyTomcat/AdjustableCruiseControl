@@ -5,8 +5,8 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, pngimage, ExtCtrls;
+  SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls,
+  ExtCtrls {$IFNDEF FPC}, PNGImage{$ENDIF};
 
 type
   TfAboutForm = class(TForm)
@@ -29,7 +29,11 @@ var
 
 implementation
 
-{$R *.dfm}
+{$IFDEF FPC}
+  {$R *.lfm}
+{$ELSE}
+  {$R *.dfm}
+{$ENDIF}
 
 uses
   ACC_Common, ACC_Strings;

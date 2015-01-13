@@ -4,10 +4,6 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
-{$IFDEF FPC}
-  {$MODE Delphi}
-{$ENDIF}
-
 uses
   Windows, Messages, Forms, Graphics,
   UtilityWindow, SimpleTimer;
@@ -106,10 +102,24 @@ end;
 procedure TSplashScreen.PrepareSplash;
 var
   ResourceStream: TResourceStream;
+{$IFDEF FPC}
+  MemoryStream:   TMemoryStream;
+{$ENDIF}
 begin
 ResourceStream := TResourceStream.Create(hInstance,'splash_image',RT_RCDATA);
 try
+{$IFDEF FPC}
+  MemoryStream := TMemoryStream.Create;
+  try
+    MemoryStream.CopyFrom(ResourceStream,0);
+    MemoryStream.Position:= 0;
+    fSplashBitmap.LoadFromStream(MemoryStream);
+  finally
+    MemoryStream.Free;
+  end;
+{$ELSE}
   fSplashBitmap.LoadFromStream(ResourceStream);
+{$ENDIF}
 finally
   ResourceStream.Free;
 end;
@@ -120,12 +130,16 @@ fSplashBlendFunction.BlendOp := AC_SRC_OVER;
 fSplashBlendFunction.BlendFlags := 0;
 fSplashBlendFunction.SourceConstantAlpha := 0;
 fSplashBlendFunction.AlphaFormat := AC_SRC_ALPHA;
-fSplashForm.Position := poScreenCenter;
 fSplashForm.BorderStyle := bsNone;
 fSplashForm.FormStyle := fsStayOnTop;
 fSplashForm.ClientWidth := fSplashBitmap.Width;
 fSplashForm.ClientHeight := fSplashBitmap.Height;
 fSplashForm.ParentWindow := GetDesktopWindow;
+fSplashForm.Position := poScreenCenter;
+{$IFDEF FPC}
+fSplashForm.Left := fSplashForm.Monitor.Left + (fSplashForm.Monitor.Width - fSplashForm.ClientWidth) div 2;
+fSplashForm.Top := fSplashForm.Monitor.Top + (fSplashForm.Monitor.Height - fSplashForm.ClientHeight) div 2;
+{$ENDIF}
 SetWindowLong(fSplashForm.Handle,GWL_EXSTYLE,GetWindowLong(fSplashForm.Handle,GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_TOPMOST or WS_EX_TOOLWINDOW);
 SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) or WS_EX_TOOLWINDOW);
 fSplashForm.Show;

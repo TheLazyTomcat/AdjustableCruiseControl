@@ -5,11 +5,14 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CheckLst,
-  ACC_GamesData, ExtCtrls;
+  Windows, SysUtils, Variants, Classes, Graphics, Controls,
+  Forms, Dialogs, StdCtrls, CheckLst, ExtCtrls,
+  ACC_GamesData, types;
 
 type
+
+  { TfUpdateForm }
+
   TfUpdateForm = class(TForm)
     clbUpdateData: TCheckListBox;
     lblIcons: TLabel;
@@ -17,6 +20,7 @@ type
     bvlVertSplit: TBevel;
     btnLoadUpdateFile: TButton;
     btnMakeUpdate: TButton;
+    diaLoadUpdate: TOpenDialog;    
     gbColorLegend: TGroupBox;
     shpLegCol_NewEntry: TShape;    
     lblLegTxt_NewEntry: TLabel;
@@ -30,7 +34,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure clbUpdateDataClickCheck(Sender: TObject);    
-    procedure clbUpdateDataDrawItem(Control: TWinControl; Index: Integer;
+    procedure clbUpdateDataDrawItem({%H-}Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
     procedure btnLoadUpdateFileClick(Sender: TObject);
     procedure btnMakeUpdateClick(Sender: TObject);
@@ -48,11 +52,20 @@ var
 
 implementation
 
-{$R *.dfm}
+{$IFDEF FPC}
+  {$R *.lfm}
+{$ELSE}
+  {$R *.dfm}
+{$ENDIF}
 
 uses
-  MsgForm,
+  {$IFNDEF FPC}MsgForm,{$ELSE}LCLType,{$ENDIF}
   ACC_Manager;
+
+{$IFDEF FPC}
+const
+  clbCheckAreaWidth = 16;
+{$ENDIF}
 
 procedure TfUpdateForm.FillList;
 var
@@ -83,6 +96,7 @@ end;
 
 procedure TfUpdateForm.FormCreate(Sender: TObject);
 begin
+diaLoadUpdate.InitialDir := ExtractFileDir(ParamStr(0));
 fUpdateDataManager := TGamesDataManager.Create;
 fUpdateDataManager.GameIcons.DefaultIcon := False;
 end;
@@ -105,7 +119,17 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TfUpdateForm.clbUpdateDataClickCheck(Sender: TObject);
+{$IFDEF FPC}
+var
+  CursorPos:  TPoint;
 begin
+GetCursorPos({%H-}CursorPos);
+If (clbUpdateData.ScreenToClient(CursorPos).x > clbCheckAreaWidth) and
+   (clbUpdateData.ScreenToClient(CursorPos).x <= clbUpdateData.ItemHeight) then
+   clbUpdateData.Checked[clbUpdateData.ItemIndex] := not clbUpdateData.Checked[clbUpdateData.ItemIndex];
+{$ELSE}
+begin
+{$ENDIF}
 fUpdateDataManager.GameDataPtr[clbUpdateData.ItemIndex]^.UpdateInfo.Add := clbUpdateData.Checked[clbUpdateData.ItemIndex]; 
 end;
 
@@ -121,13 +145,40 @@ const
   clSelected       = $00E0E0E0;
   clHorSplit       = clSilver;
   StateBarWidth    = 10;
+{$IFDEF FPC}
+  BoxSize          = 12;
+{$ENDIF}
 var
   TempGameData: TGameData;
   TempStr:      String;
+{$IFDEF FPC}
+  CheckRect:    TRect;
+  BoxRect:      TRect;
+{$ENDIF}
 begin
 TempGameData := fUpdateDataManager.GameData[Index];
 with clbUpdateData.Canvas do
   begin
+  {$IFDEF FPC}
+    CheckRect := Classes.Rect(Rect.Left,Rect.Top,Rect.Left + clbCheckAreaWidth,Rect.Bottom);
+    Rect.Left := Rect.Left + clbCheckAreaWidth;
+    Brush.Color := clbUpdateData.Color;
+    Pen.Color := clbUpdateData.Color;
+    Rectangle(CheckRect);
+    BoxRect.Left := CheckRect.Left + (CheckRect.Right - CheckRect.Left - BoxSize) div 2;
+    BoxRect.Top := CheckRect.Top + (CheckRect.Bottom - CheckRect.Top - BoxSize) div 2;
+    BoxRect.Right := BoxRect.Left + BoxSize;
+    BoxRect.Bottom := BoxRect.Top + BoxSize;
+    Brush.Color := $00F3F3F3;
+    Pen.Color := clGray;
+    Rectangle(BoxRect);
+    If clbUpdateData.Checked[Index] then
+      begin
+        Brush.Color := clLime;
+        Pen.Color := clLime;
+        Rectangle(BoxRect.Left + 3,BoxRect.Top + 3,BoxRect.Right - 3,BoxRect.Bottom - 3);
+      end;
+  {$ENDIF}
     If odSelected in State then
       begin
         Brush.Color := clSelected;
@@ -173,24 +224,31 @@ with clbUpdateData.Canvas do
     Pen.Color := clHorSplit;
     MoveTo(0,Rect.Bottom - 1);
     LineTo(Rect.Right - StateBarWidth,Rect.Bottom - 1);
+  {$IFDEF FPC}
+    Rect.Left := Rect.Left - clbCheckAreaWidth;
+  {$ENDIF}
+    If odFocused in State then DrawFocusRect(Rect);
   end;
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TfUpdateForm.btnLoadUpdateFileClick(Sender: TObject);
-var
-  FileName: String;
 begin
-If PromptForFileName(FileName,'Supported files (*.ini,*.gdb,*.ugdb)|*.ini;*.gdb;*.ugdb|All files|*.*','','Load update file',ExtractFileDir(ParamStr(0)),False) then
-  begin
-    If fUpdateDataManager.LoadFrom(FileName) then
-      begin
-        fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
-        FillList;
-      end
-    else ShowErrorMsg('Failed to load selected file.');
-  end;
+If diaLoadUpdate.Execute then
+    begin
+      If fUpdateDataManager.LoadFrom(diaLoadUpdate.FileName) then
+        begin
+          fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
+          FillList;
+        end
+      else
+      {$IFDEF FPC}
+        Application.MessageBox('Failed to load selected file.','Adjustable Cruise Control',MB_ICONERROR);
+      {$ELSE}
+        ShowErrorMsg('Failed to load selected file.');
+      {$ENDIF}
+    end;
 end;
 
 //------------------------------------------------------------------------------
@@ -202,13 +260,22 @@ begin
 AddCount := ACCManager.GamesDataManager.UpdateFrom(fUpdateDataManager);
 If AddCount > 0 then
   begin
+  {$IFDEF FPC}
+    Application.MessageBox(PChar(IntToStr(AddCount) + ' entries were added to the list of supported games.'),'Adjustable Cruise Control',MB_ICONINFORMATION);
+  {$ELSE}
     ShowInfoMsg(IntToStr(AddCount) + ' entries were added to the list of supported games.');
+  {$ENDIF}
     ACCManager.ProcessBinder.SetGamesData(ACCManager.GamesDataManager.GamesData);
     ACCManager.GamesDataManager.Save;
     fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
     FillList;
   end
-else ShowInfoMsg('No entry added.');
+else
+{$IFDEF FPC}
+  Application.MessageBox('No entry added.','Adjustable Cruise Control',MB_ICONINFORMATION);
+{$ELSE}
+  ShowInfoMsg('No entry added.');
+{$ENDIF}
 end;
 
 end.

@@ -5,8 +5,8 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls,
+  SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
+  StdCtrls,
   ACC_Settings;
 
 type
@@ -29,7 +29,7 @@ type
     fActionText:    String;
     fInput:         TInput;
     fInputSelected: Boolean;
-    procedure OnKeyBind(Sender: TObject; VKey: Word);
+    procedure OnKeyBind(Sender: TObject; {%H-}VKey: Word);
   public
     procedure Initialize;
     Function StartBinding(ActionIndex: Integer; out Input: TInput): Boolean;
@@ -40,7 +40,11 @@ var
 
 implementation
 
-{$R *.dfm}
+{$IFDEF FPC}
+  {$R *.lfm}
+{$ELSE}
+  {$R *.dfm}
+{$ENDIF}
 
 uses
   SettingsForm,

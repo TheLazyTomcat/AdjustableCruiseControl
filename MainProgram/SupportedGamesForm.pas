@@ -2,9 +2,11 @@ unit SupportedGamesForm;
 
 interface
 
+{$INCLUDE ACC_Defs.inc}
+
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, ComCtrls, StdCtrls, Grids,
+  Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
+  ExtCtrls, ComCtrls, StdCtrls, Grids,
   ACC_GamesData;
 
 type
@@ -15,7 +17,7 @@ type
     procedure FormCreate(Sender: TObject);    
     procedure FormShow(Sender: TObject);
     procedure lbGamesListClick(Sender: TObject);
-    procedure lbGamesListDrawItem(Control: TWinControl; Index: Integer;
+    procedure lbGamesListDrawItem({%H-}Control: TWinControl; Index: Integer;
       Rect: TRect; State: TOwnerDrawState);
   private
     { Private declarations }
@@ -34,9 +36,14 @@ var
 
 implementation
 
-{$R *.dfm}
+{$IFDEF FPC}
+  {$R *.lfm}
+{$ELSE}
+  {$R *.dfm}
+{$ENDIF}
 
 uses
+  {$IFDEF FPC}LCLType,{$ENDIF}
   CRC32, MD5,
   ACC_Strings, ACC_Manager;
 
@@ -79,7 +86,7 @@ lvGameDetails.Items.BeginUpdate;
 try
   lvGameDetails.Items.Clear;
   TempGameData := ACCManager.GamesDataManager.GameData[Index];
-  GetLocaleFormatSettings(LOCALE_USER_DEFAULT,FormatSettings);
+  {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
   FormatSettings.DecimalSeparator := '.';
   FormatSettings.DateSeparator := '-';
   FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
@@ -182,7 +189,7 @@ begin
 TempGameData := ACCManager.GamesDataManager.GameData[Index];
 with lbGamesList.Canvas do
   begin
-    If odSelected in State then
+    If (odSelected in State) then
       begin
         Brush.Color := clSideBar;
         Pen.Color := clSideBar;
@@ -218,6 +225,7 @@ with lbGamesList.Canvas do
     lbGamesList.Canvas.Draw(Rect.Left + LeftBarWidth + 2,
       Rect.Top + (Rect.Bottom - Rect.Top - DefIconSize) div 2,
       ACCManager.GamesDataManager.GameIcons.GetIcon(TempGameData.Icon));
+    If (odFocused in State) then DrawFocusRect(Rect);
   end;
 end;
 

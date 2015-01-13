@@ -4,10 +4,6 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
-{$IFDEF FPC}
-  {$MODE Delphi}
-{$ENDIF}
-
 uses
   Windows, SysUtils, Classes, {$IFDEF FPC}jwaTlHelp32{$ELSE}TlHelp32{$ENDIF},
   UtilityWindow, SimpleTimer,
@@ -575,6 +571,11 @@ begin
 fControlTimer.Enabled := False;
 fBinderThread.Terminate;
 SetEvent(fControlEvent);
+{$IFDEF FPC}
+fBinderThread.Start;
+{$ELSE}
+fBinderThread.Resume;
+{$ENDIF}
 fBinderThread.WaitFor;
 fBinderThread.Free;
 CloseHandle(fControlEvent);
