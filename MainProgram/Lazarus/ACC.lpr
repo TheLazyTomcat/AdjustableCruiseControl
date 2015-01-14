@@ -4,6 +4,9 @@ program ACC;
 
 uses
   Interfaces, // this includes the LCL widgetset
+{$IFDEF Debug}
+  SysUtils,
+{$ENDIF}
   Forms,
 
   CRC32,
@@ -39,6 +42,10 @@ uses
 {$R *.res}
 
 begin
+{$IFDEF Debug}
+If FileExists('heap.trc') then DeleteFile('heap.trc');
+SetHeapTraceOutput('heap.trc');
+{$ENDIF}
 ACCManager := TACCManager.Create;
 try
   If ACCManager.InstanceControl.FirstInstance then
