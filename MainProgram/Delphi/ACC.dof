@@ -111,7 +111,7 @@ AutoIncBuild=1
 MajorVer=2
 MinorVer=2
 Release=0
-Build=105
+Build=107
 Debug=0
 PreRelease=0
 Special=0
@@ -122,13 +122,13 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=František Milt
 FileDescription=Adjustable Cruise Control Application
-FileVersion=2.2.0.105
+FileVersion=2.2.0.107
 InternalName=ACC 2.2.x
 LegalCopyright=© 2013 - 2015 František Milt
 LegalTrademarks=Adjustable Cruise Control
 OriginalFilename=ACC.exe
 ProductName=Adjustable Cruise Control
-ProductVersion=2.2.0.0
+ProductVersion=2.2.0
 Comments=Main program for ACC 2.2.x
 [HistoryLists\hlConditionals]
 Count=2

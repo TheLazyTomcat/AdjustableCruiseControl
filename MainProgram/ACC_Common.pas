@@ -16,7 +16,7 @@ const
   ACC_VersionFullStr  = ACC_VersionLongStr
                         {$IFDEF FPC}+ '  L'{$ELSE}+ '  D'{$ENDIF}
                         {$IFDEF x64}+ '64'{$ELSE}+ '32'{$ENDIF}
-                        {$IFDEF Debug}+' debug'{$ENDIF};
+                        {$IFDEF Debug}+ ' debug'{$ENDIF};
 
   ACC_TIMER_ID_Splash = 1;
   ACC_TIMER_ID_Binder = 2;

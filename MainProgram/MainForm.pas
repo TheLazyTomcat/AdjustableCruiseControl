@@ -6,9 +6,77 @@ interface
 
 uses
   SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF} ;
+  StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF};
 
 type
+
+  { TfMainForm }
+{$IFDEF FPC}
+  TfMainForm = class(TForm)
+    shpTitleBackground: TShape;
+    lblGameTitle: TLabel;
+    lblGameInfo: TLabel;
+    imgGameIcon: TImage;
+    bvlGameInfo: TBevel;
+    grbPreset: TGroupBox;
+    btnIncreaseByUnit: TButton;
+    btnIncreaseByStep: TButton;
+    btnSetTo: TButton;
+    seSpeedArbitrary: TFloatSpinEdit;
+    lblStep: TLabel;
+    seSpeedStep: TFloatSpinEdit;
+    btnDecreaseByStep: TButton;
+    btnDecreaseByUnit: TButton;
+    btnSetCity: TButton;
+    seSpeedCity: TFloatSpinEdit;
+    btnSetRoads: TButton;
+    seSpeedRoads: TFloatSpinEdit;
+    grbUser: TGroupBox;
+    btnSetUser0: TButton;
+    seSpeedUser0: TFloatSpinEdit;
+    btnSetUser1: TButton;
+    seSpeedUser1: TFloatSpinEdit;
+    btnSetUser2: TButton;
+    seSpeedUser2: TFloatSpinEdit;
+    btnSetUser3: TButton;
+    seSpeedUser3: TFloatSpinEdit;
+    btnSetUser4: TButton;
+    seSpeedUser4: TFloatSpinEdit;
+    btnSetUser5: TButton;
+    seSpeedUser5: TFloatSpinEdit;
+    btnSetUser6: TButton;
+    seSpeedUser6: TFloatSpinEdit;
+    btnSetUser7: TButton;
+    seSpeedUser7: TFloatSpinEdit;
+    btnSetUser8: TButton;
+    seSpeedUser8: TFloatSpinEdit;
+    btnSetUser9: TButton;
+    seSpeedUser9: TFloatSpinEdit;
+    bvlUserSplit: TBevel;
+    lblUnits: TLabel;
+    cbUnits: TComboBox;
+    btnSettings: TButton;
+    btnAbout: TButton;
+    sbStatusBar: TStatusBar;
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnSpeedsClick(Sender: TObject);
+    procedure seSpeedsChange(Sender: TObject);
+    procedure cbUnitsChange(Sender: TObject);
+    procedure btnSettingsClick(Sender: TObject);    
+    procedure btnAboutClick(Sender: TObject);
+  private
+    { Private declarations }
+  protected
+    fSpeedsChanging:  Boolean;
+    procedure OnBindStateChange(Sender: TObject);
+    procedure SpeedsToForm(Sender: TObject);
+    procedure KeysToForm;
+  public
+    procedure SettingsToForm;
+  end;
+
+{$ELSE}
   TfMainForm = class(TForm)
     shpTitleBackground: TShape;
     lblGameTitle: TLabel;
@@ -27,7 +95,7 @@ type
     btnSetCity: TButton;
     seSpeedCity: TSpinEdit;
     btnSetRoads: TButton;
-    seSpeedRoads: TSpinEdit;
+    seSpeedRoads: TSpinEdit;    
     grbUser: TGroupBox;
     btnSetUser0: TButton;
     seSpeedUser0: TSpinEdit;
@@ -55,9 +123,7 @@ type
     btnSettings: TButton;
     btnAbout: TButton;
     sbStatusBar: TStatusBar;
-  {$IFNDEF FPC}
-    oXPManifest: TXPManifest;
-  {$ENDIF}
+    oXPManifest: TXPManifest;  
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
@@ -75,6 +141,7 @@ type
   public
     procedure SettingsToForm;
   end;
+{$ENDIF}
 
 var
   fMainForm: TfMainForm;
@@ -115,13 +182,28 @@ end;
 procedure TfMainForm.SpeedsToForm(Sender: TObject);
 var
   i:        Integer;
-  SpinEdit: TSpinEdit;
   Coef:     Single;
+{$IFDEF FPC}
+  SpinEdit: TFloatSpinEdit;
+{$ELSE}
+  SpinEdit: TSpinEdit;
+{$ENDIF}
 begin
 fSpeedsChanging := True;
 try
   Coef := Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient;
   If Coef = 0 then Coef := 1;
+{$IFDEF FPC}
+  seSpeedArbitrary.Value := Settings.Speeds.Arbitrary / Coef;
+  seSpeedStep.Value := Settings.Speeds.Step / Coef;
+  seSpeedCity.Value := Settings.Speeds.City / Coef;
+  seSpeedRoads.Value := Settings.Speeds.Roads / Coef;
+  For i := 0 to 9 do
+    begin
+      SpinEdit := FindComponent('seSpeedUser' + IntToStr(i)) as TFloatSpinEdit;
+      If Assigned(SpinEdit) then SpinEdit.Value := Settings.Speeds.User[i] / Coef;
+    end;
+{$ELSE}
   seSpeedArbitrary.Value := Round(Settings.Speeds.Arbitrary / Coef);
   seSpeedStep.Value := Round(Settings.Speeds.Step / Coef);
   seSpeedCity.Value := Round(Settings.Speeds.City / Coef);
@@ -131,6 +213,7 @@ try
       SpinEdit := FindComponent('seSpeedUser' + IntToStr(i)) as TSpinEdit;
       If Assigned(SpinEdit) then SpinEdit.Value := Round(Settings.Speeds.User[i] / Coef);
     end;
+{$ENDIF}
 finally
   fSpeedsChanging := False;
 end;
@@ -206,15 +289,25 @@ end;
 procedure TfMainForm.seSpeedsChange(Sender: TObject);
 var
   Coef:     Single;
+{$IFDEF FPC}
+  SpinEdit: TFloatSpinEdit;
+{$ELSE}
   SpinEdit: TSpinEdit;
+{$ENDIF}
 begin
 If not fSpeedsChanging then
   begin
     Coef := Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient;
     If Coef = 0 then Coef := 1;
+  {$IFDEF FPC}
+    If Sender is TFloatSpinEdit then
+      begin
+        SpinEdit := Sender as TFloatSpinEdit;
+  {$ELSE}
     If Sender is TSpinEdit then
       begin
         SpinEdit := Sender as TSpinEdit;
+  {$ENDIF}
         case SpinEdit.Tag of
             -1: Settings.Speeds.Arbitrary := SpinEdit.Value * Coef;
             -2: Settings.Speeds.Step := SpinEdit.Value * Coef;
