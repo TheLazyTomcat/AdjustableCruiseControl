@@ -140,8 +140,7 @@ object fMainForm: TfMainForm
       Width = 209
       Height = 21
       Caption = 'btnIncreaseByStep'
-      TabOrder = 0
-      TabStop = False
+      TabOrder = 1
       OnClick = btnSpeedsClick
     end
     object btnDecreaseByStep: TButton
@@ -151,8 +150,7 @@ object fMainForm: TfMainForm
       Width = 209
       Height = 21
       Caption = 'btnDecreaseByStep'
-      TabOrder = 3
-      TabStop = False
+      TabOrder = 5
       OnClick = btnSpeedsClick
     end
     object seSpeedArbitrary: TSpinEdit
@@ -161,10 +159,9 @@ object fMainForm: TfMainForm
       Top = 76
       Width = 49
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
-      TabOrder = 1
+      TabOrder = 3
       Value = 0
       OnChange = seSpeedsChange
     end
@@ -174,10 +171,9 @@ object fMainForm: TfMainForm
       Top = 76
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 99
       MinValue = 0
-      TabOrder = 2
+      TabOrder = 4
       Value = 0
       OnChange = seSpeedsChange
     end
@@ -187,10 +183,9 @@ object fMainForm: TfMainForm
       Top = 160
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
-      TabOrder = 5
+      TabOrder = 8
       Value = 0
       OnChange = seSpeedsChange
     end
@@ -200,10 +195,9 @@ object fMainForm: TfMainForm
       Top = 188
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 99
       MinValue = 0
-      TabOrder = 7
+      TabOrder = 10
       Value = 0
       OnChange = seSpeedsChange
     end
@@ -214,8 +208,7 @@ object fMainForm: TfMainForm
       Width = 161
       Height = 21
       Caption = 'btnSetCity'
-      TabOrder = 4
-      TabStop = False
+      TabOrder = 7
       OnClick = btnSpeedsClick
     end
     object btnSetRoads: TButton
@@ -225,8 +218,7 @@ object fMainForm: TfMainForm
       Width = 161
       Height = 21
       Caption = 'btnSetRoads'
-      TabOrder = 6
-      TabStop = False
+      TabOrder = 9
       OnClick = btnSpeedsClick
     end
     object btnIncreaseByUnit: TButton
@@ -236,8 +228,7 @@ object fMainForm: TfMainForm
       Width = 209
       Height = 21
       Caption = 'btnIncreaseByUnit'
-      TabOrder = 8
-      TabStop = False
+      TabOrder = 0
       OnClick = btnSpeedsClick
     end
     object btnDecreaseByUnit: TButton
@@ -247,8 +238,7 @@ object fMainForm: TfMainForm
       Width = 209
       Height = 21
       Caption = 'btnDecreaseByUnit'
-      TabOrder = 9
-      TabStop = False
+      TabOrder = 6
       OnClick = btnSpeedsClick
     end
     object btnSetTo: TButton
@@ -257,8 +247,7 @@ object fMainForm: TfMainForm
       Width = 57
       Height = 21
       Caption = 'btnSetTo'
-      TabOrder = 10
-      TabStop = False
+      TabOrder = 2
       OnClick = btnSpeedsClick
     end
   end
@@ -281,7 +270,6 @@ object fMainForm: TfMainForm
       Top = 24
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 1
@@ -296,7 +284,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser0'
       TabOrder = 0
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object seSpeedUser1: TSpinEdit
@@ -305,7 +292,6 @@ object fMainForm: TfMainForm
       Top = 57
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 3
@@ -320,7 +306,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser1'
       TabOrder = 2
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object seSpeedUser2: TSpinEdit
@@ -329,7 +314,6 @@ object fMainForm: TfMainForm
       Top = 90
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 5
@@ -344,7 +328,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser2'
       TabOrder = 4
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object seSpeedUser3: TSpinEdit
@@ -353,7 +336,6 @@ object fMainForm: TfMainForm
       Top = 123
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 7
@@ -368,7 +350,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser3'
       TabOrder = 6
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object seSpeedUser4: TSpinEdit
@@ -377,7 +358,6 @@ object fMainForm: TfMainForm
       Top = 156
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 9
@@ -392,7 +372,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser4'
       TabOrder = 8
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object btnSetUser5: TButton
@@ -403,7 +382,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser5'
       TabOrder = 10
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object seSpeedUser5: TSpinEdit
@@ -412,7 +390,6 @@ object fMainForm: TfMainForm
       Top = 24
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 11
@@ -425,7 +402,6 @@ object fMainForm: TfMainForm
       Top = 57
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 13
@@ -440,7 +416,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser6'
       TabOrder = 12
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object btnSetUser7: TButton
@@ -451,7 +426,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser7'
       TabOrder = 14
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object seSpeedUser7: TSpinEdit
@@ -460,7 +434,6 @@ object fMainForm: TfMainForm
       Top = 90
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 15
@@ -473,7 +446,6 @@ object fMainForm: TfMainForm
       Top = 123
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 17
@@ -488,7 +460,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser8'
       TabOrder = 16
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object btnSetUser9: TButton
@@ -499,7 +470,6 @@ object fMainForm: TfMainForm
       Height = 21
       Caption = 'btnSetUser9'
       TabOrder = 18
-      TabStop = False
       OnClick = btnSpeedsClick
     end
     object seSpeedUser9: TSpinEdit
@@ -508,7 +478,6 @@ object fMainForm: TfMainForm
       Top = 156
       Width = 41
       Height = 22
-      TabStop = False
       MaxValue = 999
       MinValue = 0
       TabOrder = 19
@@ -541,7 +510,6 @@ object fMainForm: TfMainForm
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 2
-    TabStop = False
     OnChange = cbUnitsChange
   end
   object btnAbout: TButton
@@ -551,7 +519,6 @@ object fMainForm: TfMainForm
     Height = 21
     Caption = 'About...'
     TabOrder = 4
-    TabStop = False
     OnClick = btnAboutClick
   end
   object btnSettings: TButton
@@ -561,7 +528,6 @@ object fMainForm: TfMainForm
     Height = 21
     Caption = 'Settings...'
     TabOrder = 3
-    TabStop = False
     OnClick = btnSettingsClick
   end
   object oXPManifest: TXPManifest

@@ -205,7 +205,10 @@ case fAnimationTimer.Tag of
   AnimState_FadeOut:  If ProgressFadeOut then
                         fAnimationTimer.Tag := AnimState_Done;
 {---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   }
-  AnimState_Done:     fAnimationTimer.Enabled := False;
+  AnimState_Done:     begin
+                        fAnimationTimer.Enabled := False;
+                        fSplashForm.Close;
+                      end;
 end;
 end;
 

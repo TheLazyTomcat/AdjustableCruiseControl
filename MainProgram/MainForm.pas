@@ -274,6 +274,7 @@ end;
 procedure TfMainForm.FormShow(Sender: TObject);
 begin
 SettingsToForm;
+btnAbout.SetFocus;
 end;
 
 //------------------------------------------------------------------------------

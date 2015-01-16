@@ -262,7 +262,7 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Height = 25
     Caption = 'Export settings...'
-    TabOrder = 7
+    TabOrder = 8
     OnClick = btnExportSettingsClick
   end
   object btnImportSettings: TButton
@@ -271,7 +271,7 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Height = 25
     Caption = 'Import settings...'
-    TabOrder = 8
+    TabOrder = 9
     OnClick = btnImportSettingsClick
   end
   object btnDefault: TButton
@@ -280,7 +280,7 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Height = 25
     Caption = 'Load default settings'
-    TabOrder = 9
+    TabOrder = 7
     OnClick = btnDefaultClick
   end
   object diaImportSettings: TOpenDialog

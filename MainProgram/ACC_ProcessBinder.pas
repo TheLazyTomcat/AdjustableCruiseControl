@@ -235,7 +235,7 @@ var
 begin
 fRealCount := 0;
 ProcessEntry.dwSize := SizeOf(ProcessEntry);
-SnapshotHandle := CreateToolHelp32Snapshot(TH32CS_SNAPPROCESS,0);
+SnapshotHandle := CreateToolHelp32Snapshot(TH32CS_SNAPPROCESS{$IFDEF x64} or TH32CS_SNAPMODULE32{$ENDIF},0);
 If SnapshotHandle <> INVALID_HANDLE_VALUE then
   begin
     If Process32First(SnapshotHandle,ProcessEntry) then

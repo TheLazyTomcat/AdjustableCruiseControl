@@ -131,13 +131,15 @@ procedure TfSupportedGamesForm.OnBindChange(Sender: TObject);
 begin
 fGameIsBinded := ACCManager.ProcessBinder.Binded;
 fBindedGame := ACCManager.ProcessBinder.GameData.Identifier;
-lbGamesList.Repaint;
+lbGamesList.Invalidate;
 end;
 
 //==============================================================================
 
 procedure TfSupportedGamesForm.FormCreate(Sender: TObject);
 begin
+lbGamesList.DoubleBuffered := True;
+lvGameDetails.DoubleBuffered := True;
 fGameIsBinded := False;
 ACCManager.OnBindStateChange.Add(OnBindChange);
 end;
@@ -185,48 +187,58 @@ const
   LeftBarWidth    = 6;
 var
   TempGameData: TGameData;
+  WorkBitmap:   TBitmap; // maybe use blobal object?
+  WorkRect:     TRect;
 begin
 TempGameData := ACCManager.GamesDataManager.GameData[Index];
-with lbGamesList.Canvas do
-  begin
-    If (odSelected in State) then
-      begin
-        Brush.Color := clSideBar;
-        Pen.Color := clSideBar;
-      end
-    else
-      begin
-        Brush.Color := lbGamesList.Color;
-        Pen.Color := lbGamesList.Color;
-      end;
-    Rectangle(Rect);
-    If fGameIsBinded and IsEqualGUID(fBindedGame,TempGameData.Identifier) then
-      begin
-        Brush.Color := clSideBarBinded;
-        Pen.Color := clSideBarBinded;
-      end
-    else
-      begin
-        Brush.Color := clSideBar;
-        Pen.Color := clSideBar;
-      end;
-    Rectangle(Rect.Left,Rect.Top,Rect.Left + LeftBarWidth,Rect.Bottom);
-    Brush.Style := bsClear;
-    Font := lbGamesList.Font;
-    Font.Style := [fsBold];
-    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 6,
-            Rect.Top + 4,TempGameData.Title);
-    Font.Style := [];
-    TextOut(Rect.Left + LeftBarWidth + DefIconSize + 6,
-            Rect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
-    Pen.Color := clHorSplit;
-    MoveTo(Rect.Left,Rect.Bottom - 1);
-    LineTo(Rect.Right,Rect.Bottom - 1);
-    lbGamesList.Canvas.Draw(Rect.Left + LeftBarWidth + 2,
-      Rect.Top + (Rect.Bottom - Rect.Top - DefIconSize) div 2,
-      ACCManager.GamesDataManager.GameIcons.GetIcon(TempGameData.Icon));
-    If (odFocused in State) then DrawFocusRect(Rect);
-  end;
+WorkBitmap := TBitmap.Create;
+try
+  WorkBitmap.Width := Rect.Right - Rect.Left;
+  WorkBitmap.Height := Rect.Bottom - Rect.Top;
+  WorkRect := Classes.Rect(0,0,WorkBitmap.Width,WorkBitmap.Height);
+  with WorkBitmap.Canvas do
+    begin
+      If (odSelected in State) then
+        begin
+          Brush.Color := clSideBar;
+          Pen.Color := clSideBar;
+        end
+      else
+        begin
+          Brush.Color := lbGamesList.Color;
+          Pen.Color := lbGamesList.Color;
+        end;
+      Rectangle(WorkRect);
+      If fGameIsBinded and IsEqualGUID(fBindedGame,TempGameData.Identifier) then
+        begin
+          Brush.Color := clSideBarBinded;
+          Pen.Color := clSideBarBinded;
+        end
+      else
+        begin
+          Brush.Color := clSideBar;
+          Pen.Color := clSideBar;
+        end;
+      Rectangle(WorkRect.Left,WorkRect.Top,WorkRect.Left + LeftBarWidth,WorkRect.Bottom);
+      Brush.Style := bsClear;
+      Font := lbGamesList.Font;
+      Font.Style := [fsBold];
+      TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
+              WorkRect.Top + 4,TempGameData.Title);
+      Font.Style := [];
+      TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
+              WorkRect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
+      Pen.Color := clHorSplit;
+      MoveTo(WorkRect.Left,WorkRect.Bottom - 1);
+      LineTo(WorkRect.Right,WorkRect.Bottom - 1);
+      Draw(WorkRect.Left + LeftBarWidth + 2,WorkRect.Top + (WorkRect.Bottom - WorkRect.Top - DefIconSize) div 2,
+           ACCManager.GamesDataManager.GameIcons.GetIcon(TempGameData.Icon));
+    end;
+  lbGamesList.Canvas.Draw(Rect.Left,Rect.Top,WorkBitmap);
+  If (odFocused in State) then lbGamesList.Canvas.DrawFocusRect(Rect);
+finally
+  WorkBitmap.Free;
+end;
 end;
 
 end.
