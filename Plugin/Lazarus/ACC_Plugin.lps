@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Debug_x86"/>
+    <Units Count="5">
+      <Unit0>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Plugin"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="0"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="13"/>
+        <CursorPos X="60" Y="16"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\..\MainProgram\Libs\DefRegistry.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DefRegistry"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="20"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\..\MainProgram\Libs\FloatHex.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="FloatHex"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="20"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\MainProgram\ACC_Settings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Settings"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="20"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="SCS_Telemetry_Condensed"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="154"/>
+        <CursorPos X="88" Y="167"/>
+        <UsageCount Value="20"/>
+      </Unit4>
+    </Units>
+    <CustomDefines Count="5">
+      <Define0 Value="FPC"/>
+      <Define1 Value="Release"/>
+      <Define2 Value="Debug"/>
+      <Define3 Value="x86"/>
+      <Define4 Value="x64"/>
+    </CustomDefines>
+    <General>
+      <ActiveWindowIndexAtStart Value="0"/>
+    </General>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="47" Column="55" TopLine="11"/>
+      </Position1>
+      <Position2>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="6" Column="10" TopLine="1"/>
+      </Position2>
+      <Position3>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="7" Column="12" TopLine="1"/>
+      </Position3>
+      <Position4>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="16" Column="51" TopLine="3"/>
+      </Position4>
+    </JumpHistory>
+  </ProjectSession>
+  <EditorMacros Count="0"/>
+</CONFIG>

@@ -4,6 +4,98 @@ interface
 
 {$INCLUDE ACC_Defs.inc}
 
+const
+  // Registry key path used for program settings storing
+  SettingsRegistryKey = '\Software\NcS Soft\Adjustable Cruise Control 2';
+  
+//------------------------------------------------------------------------------  
+  
+  // Names of individual settings values and groups
+  SETN_GRP_General    = 'General';
+  SETN_GRP_Timers     = 'Timers';
+  SETN_GRP_SpeedUnits = 'SpeedUnits';
+  SETN_GRP_Speeds     = 'Speeds';
+  SETN_GRP_Inputs     = 'Inputs';
+
+  SETN_VAL_ProgramPath          = 'ProgramPath';
+  SETN_VAL_ShowSplashScreen     = 'ShowSplashScreen';
+  SETN_VAL_MinimizeToTray       = 'MinimizeToTray';
+  SETN_VAL_StartMinimized       = 'StartMinimized';
+  SETN_VAL_CloseOnGameEnd       = 'CloseOnGameEnd';
+  SETN_VAL_DiscernKeyboardSides = 'DiscernKeyboardSides';
+  SETN_VAL_UsedSpeedUnit        = 'UsedSpeedUnit';
+
+  SETN_VAL_TMR_ProcessBinderScanInterval = 'ProcessBinderScanInterval';
+  SETN_VAL_TMR_ModulesLoadTimeout        = 'ModulesLoadTimeout';
+
+  SETN_VAL_SPU_Count       = 'SpeedUnits';
+  SETN_VAL_SPU_Name        = 'SpeedUnit[%d].Name';
+  SETN_VAL_SPU_Coefficient = 'SpeedUnit[%d].Coefficient';
+
+  SETN_VAL_SPD_Step      = 'Step';
+  SETN_VAL_SPD_City      = 'City';
+  SETN_VAL_SPD_Roads     = 'Roads';
+  SETN_VAL_SPD_Arbitrary = 'Arbitrary';
+  SETN_VAL_SPD_User      = 'User[%d]';
+
+  SETN_VAL_INP_IncreaseByStep = 'IncreaseByStep';
+  SETN_VAL_INP_DecreaseByStep = 'DecreaseByStep';
+  SETN_VAL_INP_IncreaseByUnit = 'IncreaseByUnit';
+  SETN_VAL_INP_DecreaseByUnit = 'DecreaseByUnit';
+  SETN_VAL_INP_IncreaseStep   = 'IncreaseStep';
+  SETN_VAL_INP_DecreaseStep   = 'DecreaseStep';
+  SETN_VAL_INP_CityEngage     = 'CityEngage';
+  SETN_VAL_INP_CityVehicle    = 'CityVehicle';
+  SETN_VAL_INP_CityCruise     = 'CityCruise';
+  SETN_VAL_INP_RoadsEngage    = 'RoadsEngage';
+  SETN_VAL_INP_RoadsVehicle   = 'RoadsVehicle';
+  SETN_VAL_INP_RoadsCruise    = 'RoadsCruise';
+  SETN_VAL_INP_UserEngage     = 'UserEngage[%d]';
+  SETN_VAL_INP_UserVehicle    = 'UserVehicle[%d]';
+  SETN_VAL_INP_UserCruise     = 'UserCruise[%d]';
+
+  SETN_VAL_REG_ProgramPath          = SETN_GRP_General + '.' + SETN_VAL_ProgramPath;
+  SETN_VAL_REG_ShowSplashScreen     = SETN_GRP_General + '.' + SETN_VAL_ShowSplashScreen;
+  SETN_VAL_REG_MinimizeToTray       = SETN_GRP_General + '.' + SETN_VAL_MinimizeToTray;
+  SETN_VAL_REG_StartMinimized       = SETN_GRP_General + '.' + SETN_VAL_StartMinimized;
+  SETN_VAL_REG_CloseOnGameEnd       = SETN_GRP_General + '.' + SETN_VAL_CloseOnGameEnd;
+  SETN_VAL_REG_DiscernKeyboardSides = SETN_GRP_General + '.' + SETN_VAL_DiscernKeyboardSides;
+  SETN_VAL_REG_UsedSpeedUnit        = SETN_GRP_General + '.' + SETN_VAL_UsedSpeedUnit;
+
+  SETN_VAL_TMR_REG_ProcessBinderScanInterval = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ProcessBinderScanInterval;
+  SETN_VAL_TMR_REG_ModulesLoadTimeout        = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ModulesLoadTimeout;
+
+  SETN_VAL_REG_SPU_Count       = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Count;
+  SETN_VAL_REG_SPU_Name        = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Name;
+  SETN_VAL_REG_SPU_Coefficient = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Coefficient;
+
+  SETN_VAL_REG_SPD_Step      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Step;
+  SETN_VAL_REG_SPD_City      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_City;
+  SETN_VAL_REG_SPD_Roads     = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Roads;
+  SETN_VAL_REG_SPD_Arbitrary = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Arbitrary;
+  SETN_VAL_REG_SPD_User      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_User;
+
+  SETN_VAL_REG_INP_IncreaseByStep = SETN_GRP_Inputs + '.' + SETN_VAL_INP_IncreaseByStep;
+  SETN_VAL_REG_INP_DecreaseByStep = SETN_GRP_Inputs + '.' + SETN_VAL_INP_DecreaseByStep;
+  SETN_VAL_REG_INP_IncreaseByUnit = SETN_GRP_Inputs + '.' + SETN_VAL_INP_IncreaseByUnit;
+  SETN_VAL_REG_INP_DecreaseByUnit = SETN_GRP_Inputs + '.' + SETN_VAL_INP_DecreaseByUnit;
+  SETN_VAL_REG_INP_IncreaseStep   = SETN_GRP_Inputs + '.' + SETN_VAL_INP_IncreaseStep;
+  SETN_VAL_REG_INP_DecreaseStep   = SETN_GRP_Inputs + '.' + SETN_VAL_INP_DecreaseStep;
+  SETN_VAL_REG_INP_CityEngage     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_CityEngage;
+  SETN_VAL_REG_INP_CityVehicle    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_CityVehicle;
+  SETN_VAL_REG_INP_CityCruise     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_CityCruise;
+  SETN_VAL_REG_INP_RoadsEngage    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_RoadsEngage;
+  SETN_VAL_REG_INP_RoadsVehicle   = SETN_GRP_Inputs + '.' + SETN_VAL_INP_RoadsVehicle;
+  SETN_VAL_REG_INP_RoadsCruise    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_RoadsCruise;
+  SETN_VAL_REG_INP_UserEngage     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserEngage;
+  SETN_VAL_REG_INP_UserVehicle    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserVehicle;
+  SETN_VAL_REG_INP_UserCruise     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserCruise;
+
+  setn_suf_PrimaryKey = '.PrimaryKey';
+  setn_suf_ShiftKey   = '.ShiftKey';
+  
+//------------------------------------------------------------------------------  
+
 type
   // Structures used to hold program settings
   TSpeedUnit = record
@@ -93,11 +185,6 @@ uses
   DefRegistry, FloatHex;  
 
 const
-  // Registry key path used for program settings storing
-  SettingsRegistryKey = '\Software\NcS Soft\Adjustable Cruise Control 2';
-
-//------------------------------------------------------------------------------  
-
   // Default program settings
   def_Settings: TSettings = (
     ProgramPath:                '';
@@ -164,92 +251,6 @@ const
     (Name: 'km/h'; Coefficient: 1.0),
     (Name: 'mph';  Coefficient: 1.609344),
     (Name: 'm/s';  Coefficient: 3.6));
-
-//------------------------------------------------------------------------------
-
-  // Names of individual settings values and groups
-  SETN_GRP_General    = 'General';
-  SETN_GRP_Timers     = 'Timers';
-  SETN_GRP_SpeedUnits = 'SpeedUnits';
-  SETN_GRP_Speeds     = 'Speeds';
-  SETN_GRP_Inputs     = 'Inputs';
-
-  SETN_VAL_ProgramPath          = 'ProgramPath';
-  SETN_VAL_ShowSplashScreen     = 'ShowSplashScreen';
-  SETN_VAL_MinimizeToTray       = 'MinimizeToTray';
-  SETN_VAL_StartMinimized       = 'StartMinimized';
-  SETN_VAL_CloseOnGameEnd       = 'CloseOnGameEnd';
-  SETN_VAL_DiscernKeyboardSides = 'DiscernKeyboardSides';
-  SETN_VAL_UsedSpeedUnit        = 'UsedSpeedUnit';
-
-  SETN_VAL_TMR_ProcessBinderScanInterval = 'ProcessBinderScanInterval';
-  SETN_VAL_TMR_ModulesLoadTimeout        = 'ModulesLoadTimeout';
-
-  SETN_VAL_SPU_Count       = 'SpeedUnits';
-  SETN_VAL_SPU_Name        = 'SpeedUnit[%d].Name';
-  SETN_VAL_SPU_Coefficient = 'SpeedUnit[%d].Coefficient';
-
-  SETN_VAL_SPD_Step      = 'Step';
-  SETN_VAL_SPD_City      = 'City';
-  SETN_VAL_SPD_Roads     = 'Roads';
-  SETN_VAL_SPD_Arbitrary = 'Arbitrary';
-  SETN_VAL_SPD_User      = 'User[%d]';
-
-  SETN_VAL_INP_IncreaseByStep = 'IncreaseByStep';
-  SETN_VAL_INP_DecreaseByStep = 'DecreaseByStep';
-  SETN_VAL_INP_IncreaseByUnit = 'IncreaseByUnit';
-  SETN_VAL_INP_DecreaseByUnit = 'DecreaseByUnit';
-  SETN_VAL_INP_IncreaseStep   = 'IncreaseStep';
-  SETN_VAL_INP_DecreaseStep   = 'DecreaseStep';
-  SETN_VAL_INP_CityEngage     = 'CityEngage';
-  SETN_VAL_INP_CityVehicle    = 'CityVehicle';
-  SETN_VAL_INP_CityCruise     = 'CityCruise';
-  SETN_VAL_INP_RoadsEngage    = 'RoadsEngage';
-  SETN_VAL_INP_RoadsVehicle   = 'RoadsVehicle';
-  SETN_VAL_INP_RoadsCruise    = 'RoadsCruise';
-  SETN_VAL_INP_UserEngage     = 'UserEngage[%d]';
-  SETN_VAL_INP_UserVehicle    = 'UserVehicle[%d]';
-  SETN_VAL_INP_UserCruise     = 'UserCruise[%d]';
-
-  SETN_VAL_REG_ProgramPath          = SETN_GRP_General + '.' + SETN_VAL_ProgramPath;
-  SETN_VAL_REG_ShowSplashScreen     = SETN_GRP_General + '.' + SETN_VAL_ShowSplashScreen;
-  SETN_VAL_REG_MinimizeToTray       = SETN_GRP_General + '.' + SETN_VAL_MinimizeToTray;
-  SETN_VAL_REG_StartMinimized       = SETN_GRP_General + '.' + SETN_VAL_StartMinimized;
-  SETN_VAL_REG_CloseOnGameEnd       = SETN_GRP_General + '.' + SETN_VAL_CloseOnGameEnd;
-  SETN_VAL_REG_DiscernKeyboardSides = SETN_GRP_General + '.' + SETN_VAL_DiscernKeyboardSides;
-  SETN_VAL_REG_UsedSpeedUnit        = SETN_GRP_General + '.' + SETN_VAL_UsedSpeedUnit;
-
-  SETN_VAL_TMR_REG_ProcessBinderScanInterval = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ProcessBinderScanInterval;
-  SETN_VAL_TMR_REG_ModulesLoadTimeout        = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ModulesLoadTimeout;
-
-  SETN_VAL_REG_SPU_Count       = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Count;
-  SETN_VAL_REG_SPU_Name        = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Name;
-  SETN_VAL_REG_SPU_Coefficient = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Coefficient;
-
-  SETN_VAL_REG_SPD_Step      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Step;
-  SETN_VAL_REG_SPD_City      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_City;
-  SETN_VAL_REG_SPD_Roads     = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Roads;
-  SETN_VAL_REG_SPD_Arbitrary = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Arbitrary;
-  SETN_VAL_REG_SPD_User      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_User;
-
-  SETN_VAL_REG_INP_IncreaseByStep = SETN_GRP_Inputs + '.' + SETN_VAL_INP_IncreaseByStep;
-  SETN_VAL_REG_INP_DecreaseByStep = SETN_GRP_Inputs + '.' + SETN_VAL_INP_DecreaseByStep;
-  SETN_VAL_REG_INP_IncreaseByUnit = SETN_GRP_Inputs + '.' + SETN_VAL_INP_IncreaseByUnit;
-  SETN_VAL_REG_INP_DecreaseByUnit = SETN_GRP_Inputs + '.' + SETN_VAL_INP_DecreaseByUnit;
-  SETN_VAL_REG_INP_IncreaseStep   = SETN_GRP_Inputs + '.' + SETN_VAL_INP_IncreaseStep;
-  SETN_VAL_REG_INP_DecreaseStep   = SETN_GRP_Inputs + '.' + SETN_VAL_INP_DecreaseStep;
-  SETN_VAL_REG_INP_CityEngage     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_CityEngage;
-  SETN_VAL_REG_INP_CityVehicle    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_CityVehicle;
-  SETN_VAL_REG_INP_CityCruise     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_CityCruise;
-  SETN_VAL_REG_INP_RoadsEngage    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_RoadsEngage;
-  SETN_VAL_REG_INP_RoadsVehicle   = SETN_GRP_Inputs + '.' + SETN_VAL_INP_RoadsVehicle;
-  SETN_VAL_REG_INP_RoadsCruise    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_RoadsCruise;
-  SETN_VAL_REG_INP_UserEngage     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserEngage;
-  SETN_VAL_REG_INP_UserVehicle    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserVehicle;
-  SETN_VAL_REG_INP_UserCruise     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserCruise;
-
-  setn_suf_PrimaryKey = '.PrimaryKey';
-  setn_suf_ShiftKey   = '.ShiftKey';
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
