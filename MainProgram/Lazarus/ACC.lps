@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <BuildModes Active="Release_win_x64"/>
+    <BuildModes Active="Release_win_x86"/>
     <Units Count="39">
       <Unit0>
         <Filename Value="ACC.lpr"/>
@@ -11,7 +11,7 @@
         <UnitName Value="ACC"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="45"/>
+        <TopLine Value="4"/>
         <CursorPos X="8" Y="9"/>
         <UsageCount Value="39"/>
         <Loaded Value="True"/>
@@ -111,8 +111,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Common"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="6"/>
-        <CursorPos X="39" Y="19"/>
+        <TopLine Value="1"/>
+        <CursorPos X="95" Y="14"/>
         <UsageCount Value="39"/>
       </Unit11>
       <Unit12>
@@ -138,7 +138,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_GamesData"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1486"/>
+        <TopLine Value="214"/>
         <CursorPos X="1" Y="1"/>
         <UsageCount Value="39"/>
       </Unit14>
@@ -182,13 +182,10 @@
         <Filename Value="..\ACC_ProcessBinder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_ProcessBinder"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="227"/>
         <CursorPos X="105" Y="238"/>
         <UsageCount Value="39"/>
-        <Loaded Value="True"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\ACC_Settings.pas"/>
@@ -215,10 +212,14 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="16" Y="270"/>
+        <CursorPos X="24" Y="1"/>
         <UsageCount Value="39"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit22>
       <Unit23>
         <Filename Value="..\AboutForm.pas"/>
@@ -239,13 +240,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="SettingsForm"/>
-        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="245"/>
         <CursorPos X="1" Y="267"/>
         <UsageCount Value="39"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\KeyBindForm.pas"/>

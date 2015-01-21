@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <BuildModes Active="Debug_x86"/>
+    <BuildModes Active="Debug_win_x86"/>
     <Units Count="5">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>

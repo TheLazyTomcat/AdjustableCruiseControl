@@ -3,7 +3,6 @@ program GamesDataConverter;
 {$APPTYPE CONSOLE}
 
 uses
-  FastMM4,
   SysUtils,
   Classes,
   

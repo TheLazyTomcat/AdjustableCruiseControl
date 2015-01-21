@@ -340,7 +340,7 @@ end;
 
 procedure TfSettingsForm.btnImportSettingsClick(Sender: TObject);
 begin
-If diaExportSettings.Execute then
+If diaImportSettings.Execute then
   begin
     If LocalSettingsManager.LoadFromIni(diaExportSettings.FileName) then
       SettingsToForm

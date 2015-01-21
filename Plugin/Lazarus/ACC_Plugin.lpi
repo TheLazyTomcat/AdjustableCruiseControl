@@ -26,8 +26,8 @@
       <StringTable Comments="Starter plugin for ACC 2.2.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Starter Plugin" InternalName="ACC 2.2.x Starter Plugin" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control Starter Plugin" OriginalFilename="ACC_Plugin.dll" ProductName="Adjustable Cruise Control Starter Plugin" ProductVersion="1.0.0.0"/>
     </VersionInfo>
     <BuildModes Count="4">
-      <Item1 Name="Debug_x86" Default="True"/>
-      <Item2 Name="Release_x86">
+      <Item1 Name="Debug_win_x86" Default="True"/>
+      <Item2 Name="Release_win_x86">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -68,7 +68,7 @@
           </Other>
         </CompilerOptions>
       </Item2>
-      <Item3 Name="Debug_x64">
+      <Item3 Name="Debug_win_x64">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
@@ -117,7 +117,7 @@
           </Other>
         </CompilerOptions>
       </Item3>
-      <Item4 Name="Release_x64">
+      <Item4 Name="Release_win_x64">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
