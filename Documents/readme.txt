@@ -11,9 +11,9 @@ Description
 Adjustable Cruise Control (ACC) is an application that allows you to set cruise 
 control system speed in supported games to a predefined value by pressing 
 selected key or keys combination, effectively expanding cruise control for a new
-feature. It is intended only for trucking games developed by SCS Software.         
- 
- 
+feature. It is intended only for trucking games developed by SCS Software.
+
+
 
 Supported games
 ------------------------------

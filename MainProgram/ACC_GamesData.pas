@@ -1113,7 +1113,6 @@ try
   {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
   FormatSettings.DateSeparator := '-';
   FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
-  StrToDate('2015',FormatSettings);
   GameData.Date := StrToDateDef(Ini.ReadString(Section,GDIN_GD_Date,''),Now,FormatSettings);
   GameData.Author := Ini.ReadString(Section,GDIN_GD_Author,'');
   GameData.Title := Ini.ReadString(Section,GDIN_GD_Title,'');
