@@ -1,3 +1,10 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 unit ACC_Strings;
 
 interface
@@ -47,7 +54,7 @@ const
   // User interface - About
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';
 {$IFDEF FPC}
-  ACCSTR_UI_CPY_Author         = 'Â© 2013-2015 FrantiÅ¡ek Milt';
+  ACCSTR_UI_CPY_Author         = ' © 2013-2015 Franti ¡ek Milt';
 {$ELSE}
   ACCSTR_UI_CPY_Author         = '© 2013-2015 František Milt';
 {$ENDIF}

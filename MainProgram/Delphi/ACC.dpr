@@ -3,11 +3,7 @@ program ACC;
 {$INCLUDE ..\ACC_Defs.inc}
 
 uses
-  FastMM4         in '..\Libs\FastMM\FastMM4.pas',
-  FastMM4Messages in '..\Libs\FastMM\FastMM4Messages.pas',
-
   Forms,
-
   CRC32                in '..\Libs\CRC32.pas',
   MD5                  in '..\Libs\MD5.pas',
   WinRawInput          in '..\Libs\WinRawInput.pas',
@@ -49,13 +45,13 @@ try
       Application.Initialize;
       Application.Title := 'Adjustable Cruise Control';
       Application.CreateForm(TfMainForm, fMainForm);
-  Application.CreateForm(TfMsgForm, fMsgForm);
-  Application.CreateForm(TfAboutForm, fAboutForm);
-  Application.CreateForm(TfSettingsForm, fSettingsForm);
-  Application.CreateForm(TfKeyBindForm, fKeyBindForm);
-  Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
-  Application.CreateForm(TfUpdateForm, fUpdateForm);
-  ACCManager.Initialize(Application);
+      Application.CreateForm(TfMsgForm, fMsgForm);
+      Application.CreateForm(TfAboutForm, fAboutForm);
+      Application.CreateForm(TfSettingsForm, fSettingsForm);
+      Application.CreateForm(TfKeyBindForm, fKeyBindForm);
+      Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
+      Application.CreateForm(TfUpdateForm, fUpdateForm);
+      ACCManager.Initialize(Application);
       Application.Run;
       ACCManager.Save;
     end;
