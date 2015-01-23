@@ -1,4 +1,4 @@
---------------------------------------------------------------------------------
+﻿--------------------------------------------------------------------------------
                        Adjustable Cruise Control - source
 --------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ Exception being following folders and their entire content:
   Attribution-ShareAlike 4.0 (CC BY-SA 4.0) license. You can find full legal 
   code in file CC_BY-SA_4.0.txt or on web page
   http://creativecommons.org/licenses/by-sa/4.0/legalcode. Short wersion is 
-  available on web page http://creativecommons.org/licenses/by-sa/4.0/
+  available on web page http://creativecommons.org/licenses/by-sa/4.0/.
 
 
 

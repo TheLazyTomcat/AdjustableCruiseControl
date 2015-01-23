@@ -54,7 +54,7 @@ const
   // User interface - About
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';
 {$IFDEF FPC}
-  ACCSTR_UI_CPY_Author         = ' © 2013-2015 Franti ¡ek Milt';
+  ACCSTR_UI_CPY_Author         = #194 + #169 + '2013-2015 Franti' + #197 + #161 + 'ek Milt';
 {$ELSE}
   ACCSTR_UI_CPY_Author         = '© 2013-2015 František Milt';
 {$ENDIF}

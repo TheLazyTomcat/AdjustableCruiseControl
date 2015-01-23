@@ -1,3 +1,5 @@
+@echo off
+
 rd MainProgram\Delphi\Release\win_x86\Data /S /Q
 del MainProgram\Delphi\Release\win_x86\ACC.exe /S /Q
 
