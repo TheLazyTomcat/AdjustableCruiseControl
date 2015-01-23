@@ -84,7 +84,7 @@ type
   TPointerData = record
     Flags:        LongWord;
     ModuleIndex:  Integer;
-    Offsets:      Array of PtrInt;
+    Offsets:      Array of Int64;
     Coefficient:  Single;
   end;
 
@@ -646,7 +646,7 @@ var
         iTempStr := '$' + IntToHex(Pointer.Flags and ACC_PTR_FLAGS_PointerTypeBitmask,3) + '@' +
                     '$' + IntToHex(Pointer.ModuleIndex,1) + '+';
         For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
-          iTempStr := iTempStr + '$' + IntToHex(Pointer.Offsets[ii],SizeOf(PtrInt) * 2) + '>';
+          iTempStr := iTempStr + '$' + IntToHex(Pointer.Offsets[ii],16) + '>';
         iTempStr := iTempStr + SingleToHex(Pointer.Coefficient);
         Ini.WriteString(CurrentSection,ValueName,iTempStr);
       end
@@ -960,7 +960,7 @@ var
         Ini.WriteInteger(CurrentSection,Prefix + GDIN_GD_VAL_Offsets,Length(Pointer.Offsets));
         For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
           Ini.WriteString(CurrentSection,Prefix + Format(GDIN_GD_VAL_Offset,[ii]),'$' +
-                                         IntToHex(Pointer.Offsets[ii],SizeOf(PtrInt) * 2));
+                                         IntToHex(Pointer.Offsets[ii],16));
         Ini.WriteString(CurrentSection,Prefix + GDIN_GD_VAL_Coefficient,'$' + SingleToHex(Pointer.Coefficient));
       end;
   end;
