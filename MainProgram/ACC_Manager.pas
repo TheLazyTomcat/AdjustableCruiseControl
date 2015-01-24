@@ -322,7 +322,8 @@ end;
 
 procedure TACCManager.ExecuteTrigger(Sender: TObject; Trigger: Integer);
 var
-  TempSpeed: Single;
+  TempSpeed:  Single;
+  TempState:  Boolean;
 begin
 case Trigger of
   ACC_TRIGGER_ArbitraryEngage:  //----------------------------------------------
@@ -385,11 +386,12 @@ case Trigger of
       end;
   ACC_TRIGGER_UserCruise_0..    //----------------------------------------------
   ACC_TRIGGER_UserCruise_9:
-    If fMemoryOperator.ReadCCSpeed(TempSpeed) then
-      begin
-        Settings.Speeds.User[Trigger - ACC_TRIGGER_UserCruise_0] := TempSpeed;
-        If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-      end;
+    If fMemoryOperator.ReadCCStatus(TempState) then
+      If TempState and fMemoryOperator.ReadCCSpeed(TempSpeed) then
+        begin
+          Settings.Speeds.User[Trigger - ACC_TRIGGER_UserCruise_0] := TempSpeed;
+          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+        end;
 end;
 end;
 
