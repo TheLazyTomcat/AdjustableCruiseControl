@@ -354,13 +354,14 @@ Licencing
 ------------------------------
 This program is licensed under the terms of Mozilla Public License Version 2.0. 
 You can find full text of this license in file license.txt or on web page 
-https://www.mozilla.org/MPL/2.0/.     
+https://www.mozilla.org/MPL/2.0/.
 
 
 
 Authors, contacts
 ------------------------------
 František Milt, frantisek.milt@gmail.com
+Adam fojtík, adam.fojtik.af@gmail.com
 
 
 

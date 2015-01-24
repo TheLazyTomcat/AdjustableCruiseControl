@@ -98,7 +98,7 @@ type
     fBinded:        Boolean;
     fControlTimer:  TSimpleTimer;
     fGamesDataSync: TMultiReadExclusiveWriteSynchronizer;
-    fGamesData:     TGamesData;
+    fGamesDataPtr:  PGamesData;
     fControlEvent:  THandle;
     fBinderThread:  TBinderThread;
     fGameData:      TGameData;
@@ -566,8 +566,9 @@ fControlTimer := TSimpleTimer.Create(UtilityWindow,ACC_TIMER_ID_Binder);
 fControlTimer.Tag := 0;
 fControlTimer.OnTimer := OnTimer;
 fGamesDataSync := TMultiReadExclusiveWriteSynchronizer.Create;
+New(fGamesDataPtr);
 fControlEvent := CreateEvent(nil,False,False,nil);
-fBinderThread := TBinderThread.Create(Addr(fGamesData),fGamesDataSync,fControlEvent);
+fBinderThread := TBinderThread.Create(fGamesDataPtr,fGamesDataSync,fControlEvent);
 fBinderThread.OnStateChange := OnThreadStateChange;
 end;
 
@@ -586,6 +587,7 @@ fBinderThread.Resume;
 fBinderThread.WaitFor;
 fBinderThread.Free;
 CloseHandle(fControlEvent);
+Dispose(fGamesDataPtr);
 fGamesDataSync.Free;
 fControlTimer.Free;
 inherited;
@@ -597,7 +599,7 @@ procedure TProcessBinder.SetGamesData(GamesData: TGamesData);
 begin
 fGamesDataSync.BeginWrite;
 try
-  fGamesData := GamesData;
+  fGamesDataPtr^ := GamesData;
 finally
   fGamesDataSync.EndWrite;
 end;

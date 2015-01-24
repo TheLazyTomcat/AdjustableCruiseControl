@@ -1,0 +1,1 @@
+Do not use resources build by windres in Delphi.
