@@ -101,6 +101,7 @@ Partially supported games:
   Euro Truck Simulator 2 1.15.1 Multi (DD & CD version)
   Euro Truck Simulator 2 1.15.1 Multi (Steam version)
   Euro Truck Simulator 2 1.15.1 Multi 64bit (Steam version)
+  Euro Truck Simulator 2 1.16.0.3 Multi 64bit (Steam public beta)
 
 
 
@@ -360,8 +361,8 @@ https://www.mozilla.org/MPL/2.0/.
 
 Authors, contacts
 ------------------------------
-Franti≈°ek Milt, frantisek.milt@gmail.com
-Adam fojt√≠k, adam.fojtik.af@gmail.com
+Franti °ek Milt, frantisek.milt@gmail.com
+Adam fojt ≠k, adam.fojtik.af@gmail.com
 
 
 
@@ -373,4 +374,4 @@ Forum thread: http://forum.scssoft.com/viewtopic.php?f=34&t=40826
 
 Copyright
 ------------------------------
-¬©2013-2015 Franti≈°ek Milt, all rights reserved
+ ©2013-2015 Franti °ek Milt, all rights reserved

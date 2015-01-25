@@ -4,7 +4,7 @@ object fMainForm: TfMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Adjustable Cruise Control'
-  ClientHeight = 306
+  ClientHeight = 307
   ClientWidth = 584
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -55,7 +55,7 @@ object fMainForm: TfMainForm
   OnShow = FormShow
   DesignSize = (
     584
-    306)
+    307)
   PixelsPerInch = 96
   TextHeight = 13
   object shpTitleBackground: TShape
@@ -487,7 +487,7 @@ object fMainForm: TfMainForm
   end
   object sbStatusBar: TStatusBar
     Left = 0
-    Top = 287
+    Top = 288
     Width = 584
     Height = 19
     Font.Charset = DEFAULT_CHARSET

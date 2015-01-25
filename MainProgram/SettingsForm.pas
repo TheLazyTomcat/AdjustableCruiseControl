@@ -342,7 +342,7 @@ procedure TfSettingsForm.btnImportSettingsClick(Sender: TObject);
 begin
 If diaImportSettings.Execute then
   begin
-    If LocalSettingsManager.LoadFromIni(diaExportSettings.FileName) then
+    If LocalSettingsManager.LoadFromIni(diaImportSettings.FileName) then
       SettingsToForm
     else
     {$IFDEF FPC}

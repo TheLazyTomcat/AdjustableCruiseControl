@@ -98,8 +98,8 @@ const
   SETN_VAL_REG_INP_UserVehicle    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserVehicle;
   SETN_VAL_REG_INP_UserCruise     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserCruise;
 
-  setn_suf_PrimaryKey = '.PrimaryKey';
-  setn_suf_ShiftKey   = '.ShiftKey';
+  SETN_SUF_PrimaryKey = '.PrimaryKey';
+  SETN_SUF_ShiftKey   = '.ShiftKey';
   
 //------------------------------------------------------------------------------  
 
@@ -386,8 +386,8 @@ var
 
   Function ReadInput(Reg: TDefRegistry; const ValueName: String; Default: TInput): TInput;
   begin
-    Result.PrimaryKey := Reg.ReadIntegerDef(ValueName + setn_suf_PrimaryKey,Default.PrimaryKey);
-    Result.ShiftKey := Reg.ReadIntegerDef(ValueName + setn_suf_ShiftKey,Default.ShiftKey);
+    Result.PrimaryKey := Reg.ReadIntegerDef(ValueName + SETN_SUF_PrimaryKey,Default.PrimaryKey);
+    Result.ShiftKey := Reg.ReadIntegerDef(ValueName + SETN_SUF_ShiftKey,Default.ShiftKey);
   end;
 
 begin
@@ -463,8 +463,8 @@ var
 
   procedure WriteInput(Reg: TDefRegistry; const ValueName: String; Input: TInput);
   begin
-    Reg.WriteInteger(ValueName + setn_suf_PrimaryKey,Input.PrimaryKey);
-    Reg.WriteInteger(ValueName + setn_suf_ShiftKey,Input.ShiftKey);
+    Reg.WriteInteger(ValueName + SETN_SUF_PrimaryKey,Input.PrimaryKey);
+    Reg.WriteInteger(ValueName + SETN_SUF_ShiftKey,Input.ShiftKey);
   end;
 
 begin
@@ -541,8 +541,8 @@ var
 
   Function ReadInput(Ini: TIniFile; const Section, ValueName: String; Default: TInput): TInput;
   begin
-    Result.PrimaryKey := Ini.ReadInteger(Section,ValueName + setn_suf_PrimaryKey,Default.PrimaryKey);
-    Result.ShiftKey := Ini.ReadInteger(Section,ValueName + setn_suf_ShiftKey,Default.ShiftKey);
+    Result.PrimaryKey := Ini.ReadInteger(Section,ValueName + SETN_SUF_PrimaryKey,Default.PrimaryKey);
+    Result.ShiftKey := Ini.ReadInteger(Section,ValueName + SETN_SUF_ShiftKey,Default.ShiftKey);
   end;
 
 begin
@@ -612,8 +612,8 @@ var
 
   procedure WriteInput(Ini: TIniFile; const Section, ValueName: String; Input: TInput);
   begin
-    Ini.WriteInteger(Section,ValueName + setn_suf_PrimaryKey,Input.PrimaryKey);
-    Ini.WriteInteger(Section,ValueName + setn_suf_ShiftKey,Input.ShiftKey);
+    Ini.WriteInteger(Section,ValueName + SETN_SUF_PrimaryKey,Input.PrimaryKey);
+    Ini.WriteInteger(Section,ValueName + SETN_SUF_ShiftKey,Input.ShiftKey);
   end;
 
 begin

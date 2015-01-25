@@ -1,0 +1,105 @@
+This document describes internal structure of GDB and UGDB files used for data
+storage in Adjustable Cruise Control 2.2+ application.
+
+[]   denotes a field with variable size.
+<xx> marks a field that is present only if some conditions (referenced by
+     enclosed number) are met
+
+
+
+Primitives
+------------------------------
+This file format is binary, so everything is stored in its binary form.
+All numbers are stored with little endianity (least significant byte first).
+Strings are stored as a two fields. First field is length of the string in
+bytes, and second is the string itself (variable length array of bytes) without
+the terminating zero. Stored strings are always UTF8 encoded.
+
+String storing:
+
+    4B    32bit int       Length of the string in bytes
+    []    Array of bytes  String itself, UTF8 encoded, without terminating zero
+
+
+
+Genereal file structure
+------------------------------
+
+    4B    32bit uint    File signature
+    4B    32bit uint    File structure
+    []                  Data
+
+File signature must be equal to 0x64636361 ("accd" when read as text), otherwise
+such file should be considered corrupted or of different type.
+File structure is a number that identifies how the Data block looks like and how
+it should be read. So when reading (U)GDB file, you should first read this
+number and based on its value select proper reading procedure for the rest of
+the file. Currently, only one structure is implemented - number 0x00010000.
+
+
+
+Data block structure (0x00010000)
+------------------------------
+Data block in this structure can be divided into two parts. First contains game
+icons and second actual games data.
+
+First part (icons) has this structure:
+
+    4B    32bit int       Number of stored icons (length of the following array)
+    []    Array of...
+      begin
+        []  String        Icon identifier
+        4B  32bit uint    Size of icon image in bytes
+        []  Icon          Icon image
+      end;
+
+Icon image is actually a complete PNG file - you can read it as if it were
+normal PNG file.
+
+
+Second part (games data) has following structure:
+
+    4B    32bit int         Number of stored entries (length of the following array)
+    []    Array of entries
+
+Each entry is a complete stream (with header and footer) compressed by ZLIB.
+Internal (uncompressed) structure of each entry is as follows (for details about
+meaning of individual fields, refer to "GamesData fields.txt" file):
+
+    4B    TProtocol (32bit uint)    Protocol
+    16B   TGUID                     Identifier (GUID)
+    []    String                    Descriptor
+    4B    32bit uint                Version
+    []    String                    Icon (can be empty)
+    8B    64bit unix timestamp      Date of creation
+    []    String                    Author
+    []    String                    Title
+    []    String                    Info
+    []    String                    Extended title
+    4B    32bit int                 Number of stored modules (length of the following array)
+    []    Array of
+      begin
+        4B    32bit uint                Check flags
+        []    String                    File name (without path)
+   <01> 8B    64bit int                 Size of the file
+   <02> 4B    TCRC32                    CRC32 checksum
+   <03> 16B   TMD5Hash                  MD5 hash
+      end;
+    []    Pointer entry             Pointer entry for CC speed (following structure applies to all pointer entries)
+      begin
+        4B    32bit int                 Flags
+        4B    32bit int                 Module index
+        4B    32bit int                 Number of stored pointer offsets (length of the following array)
+        []    Array of Int64            Array of pointer offsets
+        4B    32bit float               Coefficient
+      end;
+    []    Pointer entry             Pointer entry for CC status
+    []    Pointer entry             Pointer entry for truck speed
+    4B    32bit int                 Number of other pointer entries (length of the following array)
+    []    Array of (Pointer entry)
+
+
+Optional fields:
+  01 - present only when CF_FILESIZE flag is set in check flags
+  02 - present only when CF_FILECRC32 flag is set in check flags
+  03 - present only when CF_FILEMD5 flag is set in check flags

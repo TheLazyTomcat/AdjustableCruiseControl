@@ -1,12 +1,12 @@
 object fMainForm: TfMainForm
   Left = 627
-  Height = 306
+  Height = 311
   Top = 154
   Width = 632
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Adjustable Cruise Control'
-  ClientHeight = 306
+  ClientHeight = 311
   ClientWidth = 632
   Color = clBtnFace
   Font.Color = clWindowText
@@ -519,7 +519,7 @@ object fMainForm: TfMainForm
   object sbStatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 283
+    Top = 288
     Width = 632
     Panels = <    
       item
