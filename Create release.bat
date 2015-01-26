@@ -7,8 +7,8 @@ mkdir .\Release\D32
 mkdir .\Release\L32
 mkdir .\Release\L64
 
-copy .\Documents\readme.txt .\Release\readme.txt
-copy .\Documents\license.txt .\Release\license.txt
+copy .\Documents\program_readme.txt .\Release\readme.txt
+copy .\Documents\program_license.txt .\Release\license.txt
 
 copy .\MainProgram\Delphi\Release\win_x86\ACC.exe .\Release\D32\ACC.exe
 copy .\Plugin\Delphi\Release\win_x86\ACC_Plugin.dll .\Release\D32\ACC_Plugin.dll
