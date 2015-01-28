@@ -346,6 +346,7 @@ var
   i:  Integer;
 begin
 fSettings^ := def_Settings;
+fSettings^.ProgramPath := ParamStr(0);
 SetLength(fSettings^.SpeedUnits,Length(def_SpeedUnits));
 For i := Low(def_SpeedUnits) to High(def_SpeedUnits) do
   fSettings^.SpeedUnits[i] := def_SpeedUnits[i];
