@@ -1221,10 +1221,16 @@ class Function TGamesDataManager.IsValid(GameData: TGameData): Boolean;
 var
   i:  Integer;
 
-  Function CheckModule(Module: TModuleData; MainModule: Boolean): Boolean;
+  Function CheckModule(Module: TModuleData): Boolean;
   begin
     Result := (Module.CheckFlags <> CF_NONE) and (Module.FileName <> '') and
-              ((ExtractFilePath(Module.FileName) = '') or not MainModule);
+              (ExtractFilePath(Module.FileName) = '');
+    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
+      Result := Result and (Module.Size > 0);
+    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
+      Result := Result and (Module.CRC32 <> 0);
+    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
+      Result := Result and not SameMD5(Module.MD5,ZeroMD5);
   end;
 
   Function CheckPointer(Pointer: TPointerData): Boolean;
@@ -1238,7 +1244,7 @@ Result := GameData.Protocol <> cInvalidProtocolVersion;
 Result := Result and not IsEqualGUID(GameData.Identifier,StringToGUID('{00000000-0000-0000-0000-000000000000}'));
 Result := Result and (Length(GameData.Modules) > 0);
 For i := Low(GameData.Modules) to High(GameData.Modules) do
-  Result := Result and CheckModule(GameData.Modules[i],i = Low(GameData.Modules));
+  Result := Result and CheckModule(GameData.Modules[i]);
 Result := Result and CheckPointer(GameData.CCSpeed) and CheckPointer(GameData.CCStatus);
 For i := Low(GameData.Values) to High(GameData.Values) do
   Result := Result and CheckPointer(GameData.Values[i]);

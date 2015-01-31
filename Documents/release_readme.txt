@@ -135,10 +135,12 @@ build. But If you want to use ACC in 64bit game, you must use L64 build.
 Use D32 build only when you have problems with Lxx builds. But note that the 
 plugin has different rules given by its nature (dynamically loaded library).
 Following table should help you decide which build of a program and plugin to 
-choose (E = program, P = plugin):
+choose:
 
-|=======================||=======|=======|=======||=======|=======|=======|
-|   OS and Game bits    || D32 E | L32 E | L64 E || D32 P | L32 P | L64 P |
+                        ||=======================||=======================|
+                        ||        Program        ||        Plugin         |
+|=======================||-------|-------|-------||-------|-------|-------|
+|   OS and Game bits    ||  D32  |  L32  |  L64  ||  D32  |  L32  |  L64  |
 |=======================||=======|=======|=======||=======|=======|=======|
 | 32bit OS + 32bit Game ||   *   |   *!  |   -   ||   *   |   *!  |   -   |
 |-----------------------||-------|-------|-------||-------|-------|-------|
@@ -194,6 +196,7 @@ How to use the program
 For the program to work, let it run in the background while playing the game.
 It does not matter whether you start the program before you start the game or
 when the game is already running.
+
 If you do not want to run the program manually or via batch every time you start
 the game, you can use Starter Plugin - it will automatically execute the program 
 at the start of the game. Just follow steps described in "Installation" section.
@@ -203,6 +206,19 @@ keyboard bindings - program does not block binded keys (or combinations) in
 game, nor does it check whether some binding is already used in the game. You 
 should be cautious when assigning keys so you don't assign the same binding 
 in the program and in the game. 
+
+And now about how to install games data update, follow these steps:
+  - download update file (*.INI,*.GDB or *.UGBD) - they are available on a forum 
+    linked further in this socument
+  - start the program, open settings window and click on "Update games data..." 
+    button
+  - in newly opened window, click on "Load update file..." button and then
+    select and open the update file you have downloaded
+  - select loaded entries you want to add from a listing on the left side 
+    (you can select only some of them) and then click on "Make update" button;
+    you can also add/replace newer entries by older if you want to, as all 
+    marked entries from opened file will be forcibly added
+  - now you can delete the update file if you do not want to archive it 
 
 
 
@@ -234,15 +250,6 @@ glimpse and also describes how to use some of the features.
   into notification area", "Run the program minimized" and also "Close the 
   program on game end". This way, program will be executed by the plugin at
   start of the game, and when the game closes, the program ends itself.
-
-* How to install games data update:
-    - start the program, open settings window and click on "Update games 
-      data..." button
-    - in newly opened window, click on "Load update file..." button and then
-      select and open the update file
-    - select loaded entries you want to add from a listing on the left side 
-      (you can select only some of them) and then click on "Make update" button
-    - done 
 
 
 

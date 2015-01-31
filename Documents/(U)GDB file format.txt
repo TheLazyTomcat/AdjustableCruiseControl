@@ -64,7 +64,7 @@ Second part (games data) has following structure:
 
 Each entry is a complete stream (with header and footer) compressed by ZLIB.
 Internal (uncompressed) structure of each entry is as follows (for details about
-meaning of individual fields, refer to "GamesData fields.txt" file):
+meaning of individual fields, refer to "GamesData INI 2.0.txt" file):
 
     4B    TProtocol (32bit uint)    Protocol
     16B   TGUID                     Identifier (GUID)
