@@ -40,16 +40,18 @@ const
   ACCSTR_UI_GAM_NoGameInfo  = 'No further informations';
 
   // User interface - buttons
-  ACCSTR_UI_BTN_IncreaseByUnit = 'Increase by unit [%s]';
-  ACCSTR_UI_BTN_DecreaseByUnit = 'Decrease by unit [%s]';
-  ACCSTR_UI_BTN_IncreaseByStep = 'Increase by step [%s]';
-  ACCSTR_UI_BTN_DecreaseByStep = 'Decrease by step [%s]';
+  ACCSTR_UI_BTN_Keys = ' [%s]';
+
+  ACCSTR_UI_BTN_IncreaseByUnit = 'Increase by unit';
+  ACCSTR_UI_BTN_DecreaseByUnit = 'Decrease by unit';
+  ACCSTR_UI_BTN_IncreaseByStep = 'Increase by step';
+  ACCSTR_UI_BTN_DecreaseByStep = 'Decrease by step';
   ACCSTR_UI_BTN_SetToArbitrary = 'Set to...';
 
-  ACCSTR_UI_BTN_SetToCity  = 'City [%s]';
-  ACCSTR_UI_BTN_SetToRoads = 'Roads [%s]';
+  ACCSTR_UI_BTN_SetToCity  = 'City';
+  ACCSTR_UI_BTN_SetToRoads = 'Roads';
 
-  ACCSTR_UI_BTN_SetToUser = '[%s]'; 
+  ACCSTR_UI_BTN_SetToUser = 'User %d';
 
   // User interface - About
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';
@@ -82,6 +84,8 @@ const
   ACCSTR_UI_SET_BIND_UserEngage  = 'Set CC to User %d speed';
   ACCSTR_UI_SET_BIND_UserVehicle = 'Vehicle -> User %d speed';
   ACCSTR_UI_SET_BIND_UserCruise  = 'CC -> User %d speed';
+
+  ACCSTR_UI_SET_BIND_ClearBinding = 'Are you sure you want to clear binding for action "%s"?';
 
   Function ACCSTR_UI_SET_BIND_InputText(Index: Integer): String;
 

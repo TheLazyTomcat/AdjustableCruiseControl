@@ -223,20 +223,34 @@ end;
 
 procedure TfMainForm.KeysToForm;
 var
-  i:      Integer;
-  Button: TButton;
+  i:          Integer;
+  UserButton: TButton;
+
+  procedure SetButtonCaption(Button: TButton; const Text: String; const KeysStr: String; NoText: Boolean = False);
+  begin
+    If KeysStr <> '' then
+      begin
+        If NoText then
+          Button.Caption := Format(ACCSTR_UI_BTN_Keys,[KeysStr])
+        else
+          Button.Caption := Text + Format(ACCSTR_UI_BTN_Keys,[KeysStr]);
+      end
+    else
+      Button.Caption := Text;
+  end;
+
 begin
-btnIncreaseByUnit.Caption := Format(ACCSTR_UI_BTN_IncreaseByUnit,[TInputManager.GetInputKeyNames(Settings.Inputs.IncreaseByUnit)]);
-btnIncreaseByStep.Caption := Format(ACCSTR_UI_BTN_IncreaseByStep,[TInputManager.GetInputKeyNames(Settings.Inputs.IncreaseByStep)]);
+SetButtonCaption(btnIncreaseByUnit,ACCSTR_UI_BTN_IncreaseByUnit,TInputManager.GetInputKeyNames(Settings.Inputs.IncreaseByUnit));
+SetButtonCaption(btnIncreaseByStep,ACCSTR_UI_BTN_IncreaseByStep,TInputManager.GetInputKeyNames(Settings.Inputs.IncreaseByStep));
 btnSetTo.Caption := ACCSTR_UI_BTN_SetToArbitrary;
-btnDecreaseByStep.Caption := Format(ACCSTR_UI_BTN_DecreaseByStep,[TInputManager.GetInputKeyNames(Settings.Inputs.DecreaseByStep)]);
-btnDecreaseByUnit.Caption := Format(ACCSTR_UI_BTN_DecreaseByUnit,[TInputManager.GetInputKeyNames(Settings.Inputs.DecreaseByUnit)]);
-btnSetCity.Caption := Format(ACCSTR_UI_BTN_SetToCity,[TInputManager.GetInputKeyNames(Settings.Inputs.CityEngage)]);
-btnSetRoads.Caption := Format(ACCSTR_UI_BTN_SetToRoads,[TInputManager.GetInputKeyNames(Settings.Inputs.RoadsEngage)]);
+SetButtonCaption(btnDecreaseByStep,ACCSTR_UI_BTN_DecreaseByStep,TInputManager.GetInputKeyNames(Settings.Inputs.DecreaseByStep));
+SetButtonCaption(btnDecreaseByUnit,ACCSTR_UI_BTN_DecreaseByUnit,TInputManager.GetInputKeyNames(Settings.Inputs.DecreaseByUnit));
+SetButtonCaption(btnSetCity,ACCSTR_UI_BTN_SetToCity,TInputManager.GetInputKeyNames(Settings.Inputs.CityEngage));
+SetButtonCaption(btnSetRoads,ACCSTR_UI_BTN_SetToRoads,TInputManager.GetInputKeyNames(Settings.Inputs.RoadsEngage));
 For i := 0 to 9 do
   begin
-    Button := FindComponent('btnSetUser' + IntToStr(i)) as TButton;
-    Button.Caption := Format(ACCSTR_UI_BTN_SetToUser,[TInputManager.GetInputKeyNames(Settings.Inputs.UserEngage[i])]);
+    UserButton := FindComponent('btnSetUser' + IntToStr(i)) as TButton;
+    SetButtonCaption(UserButton,Format(ACCSTR_UI_BTN_SetToUser,[i]),TInputManager.GetInputKeyNames(Settings.Inputs.UserEngage[i]),True);
   end;
 end;
 

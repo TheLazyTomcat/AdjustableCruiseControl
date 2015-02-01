@@ -16,6 +16,9 @@ uses
   WinRawInput, UtilityWindow,
   ACC_Settings;
 
+const
+  InvalidInput: TInput = (PrimaryKey: -1; ShiftKey: -1);  
+
 type
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -37,6 +40,7 @@ type
     Function IndexOfTrigger(Trigger: Integer): Integer; virtual;
     Function IndexOfInput(Input: TInput): Integer; virtual;
     Function AddTrigger(Trigger: Integer; Input: TInput): Integer; virtual;
+    procedure DeleteTrigger(Index: Integer); virtual;
     property Triggers[Index: Integer]: Integer read GetTrigger; default;
   end;
 
@@ -50,12 +54,15 @@ type
   TTriggerEvent = procedure(Sender: TObject; Trigger: Integer) of object;
 
   TTriggerInvoke = (tiNone,tiOnPress,tiOnRelease);
+  TOperationMode = (omProcess,omTrigger,omBinding);
+
+  TOperationModes = set of TOperationMode;
 
   TInputManager = class(TObject)
   private
     fUtilityWindow:         TUtilityWindow;
     fTriggersList:          TTriggersList;
-    fActive:                Boolean;
+    fMode:                  TOperationModes;
     fDiscernKeyboardSides:  Boolean;
     fCurrentInput:          TInput;
     fTriggerInvoke:         TTriggerInvoke;
@@ -72,12 +79,13 @@ type
   public
     class Function GetVirtualKeyName(VirtualKey: Word; NumberForUnknown: Boolean = False): String; virtual;
     class Function GetInputKeyNames(Input: TInput; VKOnly: Boolean = False): String; virtual;
+    class Function InputIsValid(Input: TInput): Boolean; virtual;
     constructor Create(UtilityWindow: TUtilityWindow);
     destructor Destroy; override;
     procedure AddTrigger(Trigger: Integer; Input: TInput); virtual;
     property CurrentInput: TInput read fCurrentInput;
   published
-    property Active: Boolean read fActive write fActive;
+    property Mode: TOperationModes read fMode write fMode;
     property DiscernKeyboardSides: Boolean read fDiscernKeyboardSides write fDiscernKeyboardSides;
     property TriggerInvoke: TTriggerInvoke read fTriggerInvoke write fTriggerInvoke;
     property OnVirtualKeyPress: TVirtualKeyEvent read fOnVirtualKeyPress write fOnVirtualKeyPress;
@@ -160,14 +168,35 @@ If IndexOfInput(Input) < 0 then
   begin
     If Result < 0 then
       begin
-        New(NewItem);
-        NewItem^.Trigger := Trigger;
-        NewItem^.Input := Input;
-        Result := Add(NewItem);
-        If Result < 0 then Dispose(NewItem);
+        If TInputManager.InputIsValid(Input) then
+          begin
+            New(NewItem);
+            NewItem^.Trigger := Trigger;
+            NewItem^.Input := Input;
+            Result := Add(NewItem);
+            If Result < 0 then Dispose(NewItem);
+          end;
       end
-    else PTriggerListItem(Items[Result])^.Input := Input;
+    else
+      begin
+        If TInputManager.InputIsValid(Input) then
+          PTriggerListItem(Items[Result])^.Input := Input
+        else
+          DeleteTrigger(Result);
+      end
   end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TTriggersList.DeleteTrigger(Index: Integer);
+begin
+If (Index >= 0) and (Index < Count) then
+  begin
+    Dispose(PTriggerListItem(Items[Index]));
+    Delete(Index);
+  end
+else raise Exception.CreateFmt('TTriggersList.DeleteTrigger: Index (%d) out of bounds.',[Index]);
 end;
 
 {==============================================================================}
@@ -184,7 +213,7 @@ procedure TInputManager.MessageHandler(var Msg: TMessage; var Handled: Boolean);
 begin
 If Msg.Msg = WM_INPUT then
   begin
-    ProcessRawInput(Msg.LParam,Msg.WParam);
+    If fMode <> [] then ProcessRawInput(Msg.LParam,Msg.WParam);
     Handled := True;
   end;
 end;
@@ -291,9 +320,13 @@ end;
 
 Function TInputManager.InvokeTrigger: Integer;
 begin
-Result := fTriggersList.IndexOfInput(fCurrentInput);
-If Result >= 0 then
-  If Assigned(fOnTrigger) then fOnTrigger(Self,fTriggersList[Result]);
+If omTrigger in fMode then
+  begin
+    Result := fTriggersList.IndexOfInput(fCurrentInput);
+    If Result >= 0 then
+      If Assigned(fOnTrigger) then fOnTrigger(Self,fTriggersList[Result]);
+  end
+else Result := -1;
 end;
 
 {------------------------------------------------------------------------------}
@@ -330,18 +363,29 @@ end;
 
 class Function TInputManager.GetInputKeyNames(Input: TInput; VKOnly: Boolean = False): String;
 begin
-If Input.ShiftKey >= 0 then
+If InputIsValid(Input) then
   begin
+    If Input.ShiftKey >= 0 then
+      begin
+        If VKOnly then
+          Result := '0x' + IntToHex(Byte(Input.ShiftKey),2) + ' + '
+        else
+          Result := GetVirtualKeyName(Input.ShiftKey,True) + ' + ';
+      end
+    else Result := '';
     If VKOnly then
-      Result := '0x' + IntToHex(Byte(Input.ShiftKey),2) + ' + '
+      Result := Result + '0x' + IntToHex(Byte(Input.PrimaryKey),2)
     else
-      Result := GetVirtualKeyName(Input.ShiftKey,True) + ' + ';
+      Result := Result + GetVirtualKeyName(Input.PrimaryKey,True);
   end
 else Result := '';
-If VKOnly then
-  Result := Result + '0x' + IntToHex(Byte(Input.PrimaryKey),2)
-else
-  Result := Result + GetVirtualKeyName(Input.PrimaryKey,True);
+end;
+
+//------------------------------------------------------------------------------
+
+class Function TInputManager.InputIsValid(Input: TInput): Boolean;
+begin
+Result := (Input.PrimaryKey >= 0);
 end;
 
 //------------------------------------------------------------------------------
@@ -354,7 +398,7 @@ inherited Create;
 fUtilityWindow := UtilityWindow;
 fUtilityWindow.OnMessage.Add(MessageHandler);
 fTriggersList := TTriggersList.Create;
-fActive := False;
+fMode := [omProcess];
 fDiscernKeyboardSides := False;
 fCurrentInput.PrimaryKey := -1;
 fCurrentInput.ShiftKey := -1;
@@ -386,8 +430,7 @@ end;
 
 procedure TInputManager.AddTrigger(Trigger: Integer; Input: TInput);
 begin
-If Input.PrimaryKey >= 0 then
-  fTriggersList.AddTrigger(Trigger,Input);
+fTriggersList.AddTrigger(Trigger,Input);
 end;
 
 end.

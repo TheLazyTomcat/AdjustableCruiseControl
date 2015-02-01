@@ -102,6 +102,10 @@ Partially supported games:
   Euro Truck Simulator 2 1.15.1 Multi (Steam version)
   Euro Truck Simulator 2 1.15.1 Multi 64bit (Steam version)
   Euro Truck Simulator 2 1.16.0.3 Multi 64bit (Steam public beta)
+  Euro Truck Simulator 2 1.16.2 Multi (DD & CD version)
+  Euro Truck Simulator 2 1.16.2 Multi 64bit (DD & CD version)
+  Euro Truck Simulator 2 1.16.2 Multi (Steam version)
+  Euro Truck Simulator 2 1.16.2 Multi 64bit (Steam version)
 
 
 
@@ -216,8 +220,9 @@ And now about how to install games data update, follow these steps:
     select and open the update file you have downloaded
   - select loaded entries you want to add from a listing on the left side 
     (you can select only some of them) and then click on "Make update" button;
-    you can also add/replace newer entries by older if you want to, as all 
+    you can also add/replace newer entries by older ones if you want to, as all 
     marked entries from opened file will be forcibly added
+  - check in the listing of supported games whether new entries were added
   - now you can delete the update file if you do not want to archive it 
 
 

@@ -5,21 +5,26 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
-  StdCtrls,
+  Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
+  ExtCtrls, StdCtrls,
   ACC_Settings;
 
 type
+
+  { TfKeyBindForm }
+
   TfKeyBindForm = class(TForm)
     bvlBorder: TBevel;
     lblTitle: TLabel;
     lblKeys: TLabel;
     lblVirtualKeys: TLabel;
     btnAccept: TButton;
+    btnClear: TButton;    
     btnCancel: TButton;
-    btnRepeat: TButton;    
+    btnRepeat: TButton;
     procedure FormShow(Sender: TObject);
-    procedure btnAcceptClick(Sender: TObject);    
+    procedure btnAcceptClick(Sender: TObject);
+    procedure btnClearClick(Sender: TObject);        
     procedure btnCancelClick(Sender: TObject);
     procedure btnRepeatClick(Sender: TObject);
   private
@@ -47,7 +52,7 @@ implementation
 {$ENDIF}
 
 uses
-  SettingsForm,
+  SettingsForm,{$IFNDEF FPC}MsgForm,{$ENDIF}
   ACC_Strings, ACC_Input, ACC_Manager;
   
 
@@ -55,6 +60,7 @@ procedure TfKeyBindForm.OnKeyBind(Sender: TObject; VKey: Word);
 var
   ConflictIndex:  Integer;
 begin
+ACCManager.InputManager.Mode := ACCManager.InputManager.Mode - [omBinding];
 ACCManager.InputManager.OnVirtualKeyRelease := nil;
 fInput := ACCManager.InputManager.CurrentInput;
 If fSettingsForm.LocalSettingsManager.InputConflict(fInput,fActionIndex,ConflictIndex) then
@@ -92,6 +98,7 @@ fInput.PrimaryKey := -1;
 fInput.ShiftKey := -1;
 fInputSelected := False;
 ACCManager.InputManager.OnVirtualKeyRelease := OnKeyBind;
+ACCManager.InputManager.Mode := ACCManager.InputManager.Mode + [omBinding];
 end;
 
 //------------------------------------------------------------------------------
@@ -102,7 +109,7 @@ fActionIndex := ActionIndex;
 fActionText := ACCSTR_UI_SET_BIND_InputText(ActionIndex);
 ShowModal;
 Input := fInput;
-Result := (Input.PrimaryKey >= 0) and fInputSelected;
+Result := fInputSelected;
 end;
 
 //==============================================================================
@@ -123,8 +130,26 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TfKeyBindForm.btnClearClick(Sender: TObject);
+begin
+{$IFDEF FPC}
+If Application.MessageBox(PChar(Format(ACCSTR_UI_SET_BIND_ClearBinding,[fActionText])),'Clear binding',MB_ICONWARNING or MB_YESNO) = IDYES then
+{$ELSE}
+If ShowWarningMsg(Self,1,Format(ACCSTR_UI_SET_BIND_ClearBinding,[fActionText]),'Clear binding','','') then
+{$ENDIF}
+  begin
+    fInput := InvalidInput;
+    fInputSelected := True;
+    Close;
+  end
+else ActiveControl := nil;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TfKeyBindForm.btnCancelClick(Sender: TObject);
 begin
+ACCManager.InputManager.Mode := ACCManager.InputManager.Mode - [omBinding];
 ACCManager.InputManager.OnVirtualKeyRelease := nil;
 fInputSelected := False;
 Close;

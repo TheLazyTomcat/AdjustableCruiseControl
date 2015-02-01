@@ -82,8 +82,8 @@ implementation
 {$ENDIF}
 
 uses
-  MainForm, KeyBindForm, SupportedGamesForm,{$IFNDEF FPC}MsgForm,{$ENDIF}
-  ACC_Common, ACC_Strings, ACC_Input, ACC_Manager, UpdateForm;
+  MainForm, KeyBindForm, SupportedGamesForm, UpdateForm,{$IFNDEF FPC}MsgForm,{$ENDIF}
+  ACC_Common, ACC_Strings, ACC_Input, ACC_Manager;
 
 
 procedure TfSettingsForm.PrepareBindTable;

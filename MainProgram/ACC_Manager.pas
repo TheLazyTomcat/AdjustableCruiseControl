@@ -135,13 +135,13 @@ If ProcessBinder.Binded then
   begin
     TrayIcon.SetTipText(ACCSTR_TI_DefaultTipText + sLineBreak + ProcessBinder.GameData.ExtendedTitle);
     fMemoryOperator.Activate(ProcessBinder.GameData);
-    fInputManager.Active := True;
+    fInputManager.Mode := fInputManager.Mode + [omTrigger];
   end
 else
   begin
     TrayIcon.SetTipText(ACCSTR_TI_DefaultTipText);
     fMemoryOperator.Deactivate;
-    fInputManager.Active := False;
+    fInputManager.Mode := fInputManager.Mode - [omTrigger];
   end;
 fOnBindStateChange.Call(Self);
 end;
