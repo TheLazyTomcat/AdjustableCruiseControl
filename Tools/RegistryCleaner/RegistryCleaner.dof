@@ -111,7 +111,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=0
 Release=0
-Build=5
+Build=6
 Debug=0
 PreRelease=0
 Special=0
@@ -120,16 +120,16 @@ DLL=0
 Locale=1029
 CodePage=1250
 [Version Info Keys]
-CompanyName=
-FileDescription=
-FileVersion=1.0.0.5
-InternalName=
-LegalCopyright=
-LegalTrademarks=
-OriginalFilename=
-ProductName=
+CompanyName=František Milt
+FileDescription=Registry Cleaner Application
+FileVersion=1.0.0.6
+InternalName=Registry Cleaner
+LegalCopyright=© 2015 František Milt
+LegalTrademarks=Registry Cleaner
+OriginalFilename=RegistryCleaner.exe
+ProductName=Registry Cleaner
 ProductVersion=1.0.0.0
-Comments=
+Comments=Utility designed for a registry cleanup from programs settings
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
