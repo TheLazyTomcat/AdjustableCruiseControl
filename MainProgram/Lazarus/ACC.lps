@@ -216,7 +216,7 @@
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="24" Y="1"/>
+        <CursorPos X="1" Y="2"/>
         <UsageCount Value="45"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -252,13 +252,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="KeyBindForm"/>
-        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="105"/>
         <CursorPos X="1" Y="120"/>
         <UsageCount Value="45"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\SupportedGamesForm.pas"/>
@@ -378,27 +375,11 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="5" HistoryIndex="4">
+    <JumpHistory Count="1" HistoryIndex="0">
       <Position1>
         <Filename Value="ACC.lpr"/>
         <Caret Line="43" Column="31" TopLine="42"/>
       </Position1>
-      <Position2>
-        <Filename Value="..\KeyBindForm.pas"/>
-        <Caret Line="1" Column="1" TopLine="115"/>
-      </Position2>
-      <Position3>
-        <Filename Value="..\KeyBindForm.pas"/>
-        <Caret Line="17" Column="1" TopLine="8"/>
-      </Position3>
-      <Position4>
-        <Filename Value="..\KeyBindForm.pas"/>
-        <Caret Line="135" Column="9" TopLine="123"/>
-      </Position4>
-      <Position5>
-        <Filename Value="..\KeyBindForm.pas"/>
-        <Caret Line="8" Column="85" TopLine="1"/>
-      </Position5>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>

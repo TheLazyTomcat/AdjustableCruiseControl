@@ -54,7 +54,7 @@ type
   TTriggerEvent = procedure(Sender: TObject; Trigger: Integer) of object;
 
   TTriggerInvoke = (tiNone,tiOnPress,tiOnRelease);
-  TOperationMode = (omProcess,omTrigger,omBinding);
+  TOperationMode = (omProcess,omProcessPress,omProcessRelease,omTrigger,omBinding);
 
   TOperationModes = set of TOperationMode;
 
@@ -293,26 +293,32 @@ end;
 
 procedure TInputManager.ProcessKeyPress(VKey: Word);
 begin
-If fCurrentInput.PrimaryKey <> VKey then
+If omProcessPress in fMode then
   begin
-    fCurrentInput.ShiftKey := fCurrentInput.PrimaryKey;
-    fCurrentInput.PrimaryKey := VKey;
+    If fCurrentInput.PrimaryKey <> VKey then
+      begin
+        fCurrentInput.ShiftKey := fCurrentInput.PrimaryKey;
+        fCurrentInput.PrimaryKey := VKey;
+      end;
+    If Assigned(fOnVirtualKeyPress) and (omBinding in fMode) then fOnVirtualKeyPress(Self,VKey);
+    If fTriggerInvoke = tiOnPress then InvokeTrigger;
   end;
-If Assigned(fOnVirtualKeyPress) then fOnVirtualKeyPress(Self,VKey);
-If fTriggerInvoke = tiOnPress then InvokeTrigger;
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TInputManager.ProcessKeyRelease(VKey: Word);
 begin
-If Assigned(fOnVirtualKeyRelease) then fOnVirtualKeyRelease(Self,VKey);
-If fTriggerInvoke = tiOnRelease then InvokeTrigger;
-If fCurrentInput.ShiftKey = VKey then fCurrentInput.ShiftKey := -1;
-If fCurrentInput.PrimaryKey = VKey then
+If omProcessRelease in fMode then
   begin
-    fCurrentInput.PrimaryKey := fCurrentInput.ShiftKey;
-    fCurrentInput.ShiftKey := -1;
+    If Assigned(fOnVirtualKeyRelease) and (omBinding in fMode) then fOnVirtualKeyRelease(Self,VKey);
+    If fTriggerInvoke = tiOnRelease then InvokeTrigger;
+    If fCurrentInput.ShiftKey = VKey then fCurrentInput.ShiftKey := -1;
+    If fCurrentInput.PrimaryKey = VKey then
+      begin
+        fCurrentInput.PrimaryKey := fCurrentInput.ShiftKey;
+        fCurrentInput.ShiftKey := -1;
+      end;
   end;
 end;
 
@@ -398,7 +404,7 @@ inherited Create;
 fUtilityWindow := UtilityWindow;
 fUtilityWindow.OnMessage.Add(MessageHandler);
 fTriggersList := TTriggersList.Create;
-fMode := [omProcess];
+fMode := [omProcess,omProcessPress,omProcessRelease];
 fDiscernKeyboardSides := False;
 fCurrentInput.PrimaryKey := -1;
 fCurrentInput.ShiftKey := -1;

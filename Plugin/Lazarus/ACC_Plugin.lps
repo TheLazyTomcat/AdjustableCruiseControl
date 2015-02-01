@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <BuildModes Active="Debug_win_x86"/>
+    <BuildModes Active="Release_win_x86"/>
     <Units Count="5">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
@@ -12,8 +12,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="13"/>
-        <CursorPos X="60" Y="16"/>
+        <TopLine Value="37"/>
+        <CursorPos X="13" Y="41"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -64,7 +64,7 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="4" HistoryIndex="3">
+    <JumpHistory Count="7" HistoryIndex="6">
       <Position1>
         <Filename Value="ACC_Plugin.lpr"/>
         <Caret Line="47" Column="55" TopLine="11"/>
@@ -81,6 +81,18 @@
         <Filename Value="ACC_Plugin.lpr"/>
         <Caret Line="16" Column="51" TopLine="3"/>
       </Position4>
+      <Position5>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="58" Column="53" TopLine="19"/>
+      </Position5>
+      <Position6>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="42" Column="32" TopLine="30"/>
+      </Position6>
+      <Position7>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="41" Column="11" TopLine="35"/>
+      </Position7>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>
