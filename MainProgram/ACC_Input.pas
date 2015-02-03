@@ -38,7 +38,7 @@ type
   public
     procedure Clear; override;
     Function IndexOfTrigger(Trigger: Integer): Integer; virtual;
-    Function IndexOfInput(Input: TInput): Integer; virtual;
+    Function IndexOfInput(Input: TInput; ReqShiftKey: Boolean = True): Integer; virtual;
     Function AddTrigger(Trigger: Integer; Input: TInput): Integer; virtual;
     procedure DeleteTrigger(Index: Integer); virtual;
     property Triggers[Index: Integer]: Integer read GetTrigger; default;
@@ -60,15 +60,16 @@ type
 
   TInputManager = class(TObject)
   private
-    fUtilityWindow:         TUtilityWindow;
-    fTriggersList:          TTriggersList;
-    fMode:                  TOperationModes;
-    fDiscernKeyboardSides:  Boolean;
-    fCurrentInput:          TInput;
-    fTriggerInvoke:         TTriggerInvoke;
-    fOnVirtualKeyPress:     TVirtualKeyEvent;
-    fOnVirtualKeyRelease:   TVirtualKeyEvent;
-    fOnTrigger:             TTriggerEvent;
+    fUtilityWindow:           TUtilityWindow;
+    fTriggersList:            TTriggersList;
+    fMode:                    TOperationModes;
+    fDiscernKeyboardSides:    Boolean;
+    fCurrentInput:            TInput;
+    fTriggerInvoke:           TTriggerInvoke;
+    fSoftKeyComboRecognition: Boolean;
+    fOnVirtualKeyPress:       TVirtualKeyEvent;
+    fOnVirtualKeyRelease:     TVirtualKeyEvent;
+    fOnTrigger:               TTriggerEvent;
   protected
     procedure MessageHandler(var Msg: TMessage; var Handled: Boolean); virtual;
     procedure ProcessRawInput(lParam: lParam; {%H-}wParam: wParam); virtual;
@@ -88,6 +89,7 @@ type
     property Mode: TOperationModes read fMode write fMode;
     property DiscernKeyboardSides: Boolean read fDiscernKeyboardSides write fDiscernKeyboardSides;
     property TriggerInvoke: TTriggerInvoke read fTriggerInvoke write fTriggerInvoke;
+    property SoftKeyComboRecognition: Boolean read fSoftKeyComboRecognition write fSoftKeyComboRecognition; 
     property OnVirtualKeyPress: TVirtualKeyEvent read fOnVirtualKeyPress write fOnVirtualKeyPress;
     property OnVirtualKeyRelease: TVirtualKeyEvent read fOnVirtualKeyRelease write fOnVirtualKeyRelease;
     property OnTrigger: TTriggerEvent read fOnTrigger write fOnTrigger;
@@ -144,7 +146,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TTriggersList.IndexOfInput(Input: TInput): Integer;
+Function TTriggersList.IndexOfInput(Input: TInput; ReqShiftKey: Boolean = True): Integer;
 var
   TempItemPtr:  PTriggerListItem;
 begin
@@ -154,6 +156,9 @@ For Result := 0 to Pred(Count) do
     If (TempItemPtr^.Input.PrimaryKey = Input.PrimaryKey) and
        (TempItemPtr^.Input.ShiftKey = Input.ShiftKey) then Exit;
   end;
+If not ReqShiftKey then
+  For Result := 0 to Pred(Count) do
+    If PTriggerListItem(Items[Result])^.Input.PrimaryKey = Input.PrimaryKey then Exit;
 Result := -1;
 end;
 
@@ -328,7 +333,7 @@ Function TInputManager.InvokeTrigger: Integer;
 begin
 If omTrigger in fMode then
   begin
-    Result := fTriggersList.IndexOfInput(fCurrentInput);
+    Result := fTriggersList.IndexOfInput(fCurrentInput,not fSoftKeyComboRecognition);
     If Result >= 0 then
       If Assigned(fOnTrigger) then fOnTrigger(Self,fTriggersList[Result]);
   end
@@ -409,6 +414,7 @@ fDiscernKeyboardSides := False;
 fCurrentInput.PrimaryKey := -1;
 fCurrentInput.ShiftKey := -1;
 fTriggerInvoke := tiOnPress;
+fSoftKeyComboRecognition := True;
 // Register raw input for keyboard
 New(RawInputDevice);
 try

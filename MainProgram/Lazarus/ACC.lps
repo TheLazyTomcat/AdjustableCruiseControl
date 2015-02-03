@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <BuildModes Active="Release_win_x64"/>
+    <BuildModes Active="Debug_win_x86"/>
     <Units Count="39">
       <Unit0>
         <Filename Value="ACC.lpr"/>

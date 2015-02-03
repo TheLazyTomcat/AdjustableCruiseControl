@@ -173,6 +173,7 @@ fProcessBinder.OnGameUnbind := ProcessBinder_OnGameUnbind;
 fMemoryOperator := TMemoryOperator.Create;
 fInputManager := TInputManager.Create(fUtilityWindow);
 fInputManager.DiscernKeyboardSides := Settings.DiscernKeyboardSides;
+fInputManager.SoftKeyComboRecognition := Settings.SoftKeyComboRecognition;
 fInputManager.OnTrigger := ExecuteTrigger;
 end;
 
