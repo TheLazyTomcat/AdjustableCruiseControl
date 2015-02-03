@@ -226,6 +226,8 @@ type
     procedure Clear; virtual;
     Function SaveToBin(const FileName: String; FileStructure: TFileStructure): Boolean; virtual;
     Function SaveToIni(const FileName: String; FileStructure: TFileStructure): Boolean; virtual;
+    Function LoadFromBin(Stream: TStream; out FileStructure: TFileStructure): Boolean; overload; virtual;
+    Function LoadFromBin(Stream: TStream): Boolean; overload; virtual;
     Function LoadFromBin(const FileName: String; out FileStructure: TFileStructure): Boolean; overload; virtual;
     Function LoadFromBin(const FileName: String): Boolean; overload; virtual;
     Function LoadFromIni(const FileName: String; out FileStructure: TFileStructure): Boolean; overload; virtual;
@@ -1355,6 +1357,37 @@ end;
 
 //------------------------------------------------------------------------------
 
+Function TGamesDataManager.LoadFromBin(Stream: TStream; out FileStructure: TFileStructure): Boolean;
+begin
+try
+  If ReadIntegerFromStream(Stream) <> ACCBinFileSignature then Abort;
+  FileStructure := ReadIntegerFromStream(Stream);
+  If SupportsBinFileStructure(FileStructure) then
+    begin
+      Clear;
+      case FileStructure of
+        BFS_1_0:  Result := LoadFromBin_Struct00010000(Stream);
+      else
+        Result := False;
+      end;
+    end
+  else Result := False;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadFromBin(Stream: TStream): Boolean;
+var
+  FileStructure:  TFileStructure;
+begin
+Result := LoadFromBin(Stream,FileStructure);
+end;
+
+//------------------------------------------------------------------------------
+
 Function TGamesDataManager.LoadFromBin(const FileName: String; out FileStructure: TFileStructure): Boolean;
 var
   FileStream: TMemoryStream;
@@ -1363,18 +1396,7 @@ try
   FileStream := TMemoryStream.Create;
   try
     FileStream.LoadFromFile(FileName);
-    If ReadIntegerFromStream(FileStream) <> ACCBinFileSignature then Abort;
-    FileStructure := ReadIntegerFromStream(FileStream);
-    If SupportsBinFileStructure(FileStructure) then
-      begin
-        Clear;
-        case FileStructure of
-          BFS_1_0:  Result := LoadFromBin_Struct00010000(FileStream);
-        else
-          Result := False;
-        end;
-      end
-    else Result := False;
+    Result := LoadFromBin(FileStream,FileStructure);
   finally
     FileStream.Free;
   end;
