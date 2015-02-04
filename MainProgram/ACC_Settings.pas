@@ -24,13 +24,14 @@ const
   SETN_GRP_Speeds     = 'Speeds';
   SETN_GRP_Inputs     = 'Inputs';
 
-  SETN_VAL_ProgramPath          = 'ProgramPath';
-  SETN_VAL_ShowSplashScreen     = 'ShowSplashScreen';
-  SETN_VAL_MinimizeToTray       = 'MinimizeToTray';
-  SETN_VAL_StartMinimized       = 'StartMinimized';
-  SETN_VAL_CloseOnGameEnd       = 'CloseOnGameEnd';
-  SETN_VAL_DiscernKeyboardSides = 'DiscernKeyboardSides';
-  SETN_VAL_UsedSpeedUnit        = 'UsedSpeedUnit';
+  SETN_VAL_ProgramPath             = 'ProgramPath';
+  SETN_VAL_ShowSplashScreen        = 'ShowSplashScreen';
+  SETN_VAL_MinimizeToTray          = 'MinimizeToTray';
+  SETN_VAL_StartMinimized          = 'StartMinimized';
+  SETN_VAL_CloseOnGameEnd          = 'CloseOnGameEnd';
+  SETN_VAL_DiscernKeyboardSides    = 'DiscernKeyboardSides';
+  SETN_VAL_SoftKeyComboRecognition = 'SoftKeyComboRecognition';  
+  SETN_VAL_UsedSpeedUnit           = 'UsedSpeedUnit';
 
   SETN_VAL_TMR_ProcessBinderScanInterval = 'ProcessBinderScanInterval';
   SETN_VAL_TMR_ModulesLoadTimeout        = 'ModulesLoadTimeout';
@@ -61,13 +62,14 @@ const
   SETN_VAL_INP_UserVehicle    = 'UserVehicle[%d]';
   SETN_VAL_INP_UserCruise     = 'UserCruise[%d]';
 
-  SETN_VAL_REG_ProgramPath          = SETN_GRP_General + '.' + SETN_VAL_ProgramPath;
-  SETN_VAL_REG_ShowSplashScreen     = SETN_GRP_General + '.' + SETN_VAL_ShowSplashScreen;
-  SETN_VAL_REG_MinimizeToTray       = SETN_GRP_General + '.' + SETN_VAL_MinimizeToTray;
-  SETN_VAL_REG_StartMinimized       = SETN_GRP_General + '.' + SETN_VAL_StartMinimized;
-  SETN_VAL_REG_CloseOnGameEnd       = SETN_GRP_General + '.' + SETN_VAL_CloseOnGameEnd;
-  SETN_VAL_REG_DiscernKeyboardSides = SETN_GRP_General + '.' + SETN_VAL_DiscernKeyboardSides;
-  SETN_VAL_REG_UsedSpeedUnit        = SETN_GRP_General + '.' + SETN_VAL_UsedSpeedUnit;
+  SETN_VAL_REG_ProgramPath             = SETN_GRP_General + '.' + SETN_VAL_ProgramPath;
+  SETN_VAL_REG_ShowSplashScreen        = SETN_GRP_General + '.' + SETN_VAL_ShowSplashScreen;
+  SETN_VAL_REG_MinimizeToTray          = SETN_GRP_General + '.' + SETN_VAL_MinimizeToTray;
+  SETN_VAL_REG_StartMinimized          = SETN_GRP_General + '.' + SETN_VAL_StartMinimized;
+  SETN_VAL_REG_CloseOnGameEnd          = SETN_GRP_General + '.' + SETN_VAL_CloseOnGameEnd;
+  SETN_VAL_REG_DiscernKeyboardSides    = SETN_GRP_General + '.' + SETN_VAL_DiscernKeyboardSides;
+  SETN_VAL_REG_SoftKeyComboRecognition = SETN_GRP_General + '.' + SETN_VAL_SoftKeyComboRecognition;
+  SETN_VAL_REG_UsedSpeedUnit           = SETN_GRP_General + '.' + SETN_VAL_UsedSpeedUnit;
 
   SETN_VAL_TMR_REG_ProcessBinderScanInterval = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ProcessBinderScanInterval;
   SETN_VAL_TMR_REG_ModulesLoadTimeout        = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ModulesLoadTimeout;
@@ -148,6 +150,7 @@ type
     StartMinimized:             Boolean;
     CloseOnGameEnd:             Boolean;
     DiscernKeyboardSides:       Boolean;
+    SoftKeyComboRecognition:    Boolean;
     UsedSpeedUnit:              Integer;    
     ProcessBinderScanInterval:  Integer;
     ModulesLoadTimeout:         Integer;
@@ -200,6 +203,7 @@ const
     StartMinimized:             False;
     CloseOnGameEnd:             False;
     DiscernKeyboardSides:       False;
+    SoftKeyComboRecognition:    True;
     UsedSpeedUnit:              0;
     ProcessBinderScanInterval:  1000;
     ModulesLoadTimeout:         5000;
@@ -404,6 +408,7 @@ try
         fSettings^.StartMinimized := Registry.ReadBoolDef(SETN_VAL_REG_StartMinimized,def_Settings.StartMinimized);
         fSettings^.CloseOnGameEnd := Registry.ReadBoolDef(SETN_VAL_REG_CloseOnGameEnd,def_Settings.CloseOnGameEnd);
         fSettings^.DiscernKeyboardSides := Registry.ReadBoolDef(SETN_VAL_REG_DiscernKeyboardSides,def_Settings.DiscernKeyboardSides);
+        fSettings^.SoftKeyComboRecognition := Registry.ReadBoolDef(SETN_VAL_REG_SoftKeyComboRecognition,def_Settings.SoftKeyComboRecognition);
         fSettings^.UsedSpeedUnit := Registry.ReadIntegerDef(SETN_VAL_REG_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
 
         fSettings^.ProcessBinderScanInterval := Registry.ReadIntegerDef(SETN_VAL_TMR_REG_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
@@ -483,6 +488,7 @@ try
         Registry.WriteBool(SETN_VAL_REG_StartMinimized,fSettings^.StartMinimized);
         Registry.WriteBool(SETN_VAL_REG_CloseOnGameEnd,fSettings^.CloseOnGameEnd);
         Registry.WriteBool(SETN_VAL_REG_DiscernKeyboardSides,fSettings^.DiscernKeyboardSides);
+        Registry.WriteBool(SETN_VAL_REG_SoftKeyComboRecognition,fSettings^.SoftKeyComboRecognition);
         Registry.WriteInteger(SETN_VAL_REG_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
 
         Registry.WriteInteger(SETN_VAL_TMR_REG_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);
@@ -556,6 +562,7 @@ try
     fSettings^.StartMinimized := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_StartMinimized,def_Settings.StartMinimized);
     fSettings^.CloseOnGameEnd := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_CloseOnGameEnd,def_Settings.CloseOnGameEnd);
     fSettings^.DiscernKeyboardSides := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_DiscernKeyboardSides,def_Settings.DiscernKeyboardSides);
+    fSettings^.SoftKeyComboRecognition := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_SoftKeyComboRecognition,def_Settings.SoftKeyComboRecognition);
     fSettings^.UsedSpeedUnit := IniFile.ReadInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
 
     fSettings^.ProcessBinderScanInterval := IniFile.ReadInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
@@ -628,7 +635,8 @@ try
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_MinimizeToTray,fSettings^.MinimizeToTray);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_StartMinimized,fSettings^.StartMinimized);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_CloseOnGameEnd,fSettings^.CloseOnGameEnd);
-    IniFile.WriteBool(SETN_GRP_General,SETN_VAL_DiscernKeyboardSides,fSettings^.DiscernKeyboardSides);    
+    IniFile.WriteBool(SETN_GRP_General,SETN_VAL_DiscernKeyboardSides,fSettings^.DiscernKeyboardSides);
+    IniFile.WriteBool(SETN_GRP_General,SETN_VAL_SoftKeyComboRecognition,fSettings^.SoftKeyComboRecognition);
     IniFile.WriteInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
 
     IniFile.WriteInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);

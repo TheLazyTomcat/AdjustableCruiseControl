@@ -47,6 +47,7 @@ type
     procedure Initialize(Application: TApplication); virtual;
     procedure BuildInputTriggers; virtual;
     procedure ExtractGamesData; virtual;
+    procedure UpdateFromInternalGamesData; virtual;
     procedure Load; virtual;
     procedure Save; virtual;
     procedure SetCCSpeed(NewSpeed: Single); virtual;
@@ -173,6 +174,7 @@ fProcessBinder.OnGameUnbind := ProcessBinder_OnGameUnbind;
 fMemoryOperator := TMemoryOperator.Create;
 fInputManager := TInputManager.Create(fUtilityWindow);
 fInputManager.DiscernKeyboardSides := Settings.DiscernKeyboardSides;
+fInputManager.SoftKeyComboRecognition := Settings.SoftKeyComboRecognition;
 fInputManager.OnTrigger := ExecuteTrigger;
 end;
 
@@ -261,6 +263,35 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TACCManager.UpdateFromInternalGamesData;
+var
+  ResourceStream:     TResourceStream;
+  UpdateDataManager:  TGamesDataManager;
+  i:                  Integer;
+begin
+ResourceStream := TResourceStream.Create(hInstance,GamesDataResName,RT_RCDATA);
+try
+  UpdateDataManager := TGamesDataManager.Create;
+  try
+    UpdateDataManager.LoadFromBin(ResourceStream);
+    UpdateDataManager.CheckUpdate(fGamesDataManager);
+    For i := 0 to Pred(UpdateDataManager.GamesDataCount) do
+      If UpdateDataManager[i].UpdateInfo.Add then
+        begin
+          fGamesDataManager.UpdateFrom(UpdateDataManager);
+          fGamesDataManager.Save;
+          Break;
+        end;
+  finally
+    UpdateDataManager.Free;
+  end;
+finally
+  ResourceStream.Free;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TACCManager.Load;
 begin
 If not SettingsManager.LoadFromRegistry then
@@ -268,8 +299,9 @@ If not SettingsManager.LoadFromRegistry then
 If not GamesDataManager.Load then
   begin
     ExtractGamesData;
-    GamesDataManager.Load
-  end;
+    GamesDataManager.Load;
+  end
+else UpdateFromInternalGamesData;
 fProcessBinder.SetGamesData(GamesDataManager.GamesData);
 fProcessBinder.Start;
 BuildInputTriggers;
