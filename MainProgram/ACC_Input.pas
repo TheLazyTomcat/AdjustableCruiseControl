@@ -49,9 +49,10 @@ type
 {                                 TInputManager                                }
 {------------------------------------------------------------------------------}
 {==============================================================================}
+  TTriggerCaller = (tcUnknown,tcUI,tcInput);
 
   TVirtualKeyEvent = procedure(Sender: TObject; VirtualKey: Word) of object;
-  TTriggerEvent = procedure(Sender: TObject; Trigger: Integer) of object;
+  TTriggerEvent = procedure(Sender: TObject; Trigger: Integer; Caller: TTriggerCaller) of object;
 
   TTriggerInvoke = (tiNone,tiOnPress,tiOnRelease);
   TOperationMode = (omProcess,omProcessPress,omProcessRelease,omTrigger,omBinding);
@@ -89,7 +90,7 @@ type
     property Mode: TOperationModes read fMode write fMode;
     property DiscernKeyboardSides: Boolean read fDiscernKeyboardSides write fDiscernKeyboardSides;
     property TriggerInvoke: TTriggerInvoke read fTriggerInvoke write fTriggerInvoke;
-    property SoftKeyComboRecognition: Boolean read fSoftKeyComboRecognition write fSoftKeyComboRecognition; 
+    property SoftKeyComboRecognition: Boolean read fSoftKeyComboRecognition write fSoftKeyComboRecognition;
     property OnVirtualKeyPress: TVirtualKeyEvent read fOnVirtualKeyPress write fOnVirtualKeyPress;
     property OnVirtualKeyRelease: TVirtualKeyEvent read fOnVirtualKeyRelease write fOnVirtualKeyRelease;
     property OnTrigger: TTriggerEvent read fOnTrigger write fOnTrigger;
@@ -335,7 +336,7 @@ If omTrigger in fMode then
   begin
     Result := fTriggersList.IndexOfInput(fCurrentInput,not fSoftKeyComboRecognition);
     If Result >= 0 then
-      If Assigned(fOnTrigger) then fOnTrigger(Self,fTriggersList[Result]);
+      If Assigned(fOnTrigger) then fOnTrigger(Self,fTriggersList[Result],tcInput);
   end
 else Result := -1;
 end;

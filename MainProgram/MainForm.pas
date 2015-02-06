@@ -296,7 +296,7 @@ end;
 procedure TfMainForm.btnSpeedsClick(Sender: TObject);
 begin
 If Sender is TButton then
-  ACCManager.ExecuteTrigger(nil,(Sender as TButton).Tag);
+  ACCManager.ExecuteTrigger(nil,(Sender as TButton).Tag,tcUI);
 end;
 
 //------------------------------------------------------------------------------
