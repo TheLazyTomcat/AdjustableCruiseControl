@@ -1,4 +1,4 @@
-﻿library ACC_Plugin;
+library ACC_Plugin;
 
 uses
   Windows,
