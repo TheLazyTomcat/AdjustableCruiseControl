@@ -30,7 +30,8 @@ const
   SETN_VAL_StartMinimized          = 'StartMinimized';
   SETN_VAL_CloseOnGameEnd          = 'CloseOnGameEnd';
   SETN_VAL_DiscernKeyboardSides    = 'DiscernKeyboardSides';
-  SETN_VAL_SoftKeyComboRecognition = 'SoftKeyComboRecognition';  
+  SETN_VAL_SoftKeyComboRecognition = 'SoftKeyComboRecognition';
+  SETN_VAL_GameActiveForTrigger    = 'GameActiveForTrigger';
   SETN_VAL_UsedSpeedUnit           = 'UsedSpeedUnit';
 
   SETN_VAL_TMR_ProcessBinderScanInterval = 'ProcessBinderScanInterval';
@@ -69,6 +70,7 @@ const
   SETN_VAL_REG_CloseOnGameEnd          = SETN_GRP_General + '.' + SETN_VAL_CloseOnGameEnd;
   SETN_VAL_REG_DiscernKeyboardSides    = SETN_GRP_General + '.' + SETN_VAL_DiscernKeyboardSides;
   SETN_VAL_REG_SoftKeyComboRecognition = SETN_GRP_General + '.' + SETN_VAL_SoftKeyComboRecognition;
+  SETN_VAL_REG_GameActiveForTrigger    = SETN_GRP_General + '.' + SETN_VAL_GameActiveForTrigger;
   SETN_VAL_REG_UsedSpeedUnit           = SETN_GRP_General + '.' + SETN_VAL_UsedSpeedUnit;
 
   SETN_VAL_TMR_REG_ProcessBinderScanInterval = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ProcessBinderScanInterval;
@@ -151,6 +153,7 @@ type
     CloseOnGameEnd:             Boolean;
     DiscernKeyboardSides:       Boolean;
     SoftKeyComboRecognition:    Boolean;
+    GameActiveForTrigger:       Boolean;
     UsedSpeedUnit:              Integer;    
     ProcessBinderScanInterval:  Integer;
     ModulesLoadTimeout:         Integer;
@@ -204,6 +207,7 @@ const
     CloseOnGameEnd:             False;
     DiscernKeyboardSides:       False;
     SoftKeyComboRecognition:    True;
+    GameActiveForTrigger:       True;
     UsedSpeedUnit:              0;
     ProcessBinderScanInterval:  1000;
     ModulesLoadTimeout:         5000;
@@ -409,6 +413,7 @@ try
         fSettings^.CloseOnGameEnd := Registry.ReadBoolDef(SETN_VAL_REG_CloseOnGameEnd,def_Settings.CloseOnGameEnd);
         fSettings^.DiscernKeyboardSides := Registry.ReadBoolDef(SETN_VAL_REG_DiscernKeyboardSides,def_Settings.DiscernKeyboardSides);
         fSettings^.SoftKeyComboRecognition := Registry.ReadBoolDef(SETN_VAL_REG_SoftKeyComboRecognition,def_Settings.SoftKeyComboRecognition);
+        fSettings^.GameActiveForTrigger := Registry.ReadBoolDef(SETN_VAL_REG_GameActiveForTrigger,def_Settings.GameActiveForTrigger);
         fSettings^.UsedSpeedUnit := Registry.ReadIntegerDef(SETN_VAL_REG_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
 
         fSettings^.ProcessBinderScanInterval := Registry.ReadIntegerDef(SETN_VAL_TMR_REG_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
@@ -489,6 +494,7 @@ try
         Registry.WriteBool(SETN_VAL_REG_CloseOnGameEnd,fSettings^.CloseOnGameEnd);
         Registry.WriteBool(SETN_VAL_REG_DiscernKeyboardSides,fSettings^.DiscernKeyboardSides);
         Registry.WriteBool(SETN_VAL_REG_SoftKeyComboRecognition,fSettings^.SoftKeyComboRecognition);
+        Registry.WriteBool(SETN_VAL_REG_GameActiveForTrigger,fSettings^.GameActiveForTrigger);
         Registry.WriteInteger(SETN_VAL_REG_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
 
         Registry.WriteInteger(SETN_VAL_TMR_REG_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);
@@ -563,6 +569,7 @@ try
     fSettings^.CloseOnGameEnd := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_CloseOnGameEnd,def_Settings.CloseOnGameEnd);
     fSettings^.DiscernKeyboardSides := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_DiscernKeyboardSides,def_Settings.DiscernKeyboardSides);
     fSettings^.SoftKeyComboRecognition := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_SoftKeyComboRecognition,def_Settings.SoftKeyComboRecognition);
+    fSettings^.GameActiveForTrigger := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_GameActiveForTrigger,def_Settings.GameActiveForTrigger);
     fSettings^.UsedSpeedUnit := IniFile.ReadInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
 
     fSettings^.ProcessBinderScanInterval := IniFile.ReadInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
@@ -637,6 +644,7 @@ try
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_CloseOnGameEnd,fSettings^.CloseOnGameEnd);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_DiscernKeyboardSides,fSettings^.DiscernKeyboardSides);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_SoftKeyComboRecognition,fSettings^.SoftKeyComboRecognition);
+    IniFile.WriteBool(SETN_GRP_General,SETN_VAL_GameActiveForTrigger,fSettings^.GameActiveForTrigger);
     IniFile.WriteInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
 
     IniFile.WriteInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);

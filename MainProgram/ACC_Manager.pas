@@ -52,7 +52,8 @@ type
     procedure Save; virtual;
     procedure SetCCSpeed(NewSpeed: Single); virtual;
     procedure IncreaseCCSpeed(Increment: Single); virtual;
-    procedure ExecuteTrigger(Sender: TObject; Trigger: Integer); virtual;
+    Function GameActive: Boolean; virtual;
+    procedure ExecuteTrigger(Sender: TObject; Trigger: Integer; Caller: TTriggerCaller); virtual;
   published
     property OnBindStateChange: TMulticastNotifyEvent read fOnBindStateChange;  
     property InstanceControl: TInstanceControl read fInstanceControl;
@@ -352,79 +353,94 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TACCManager.ExecuteTrigger(Sender: TObject; Trigger: Integer);
+Function TACCManager.GameActive: Boolean;
+var
+  WindowPID:  LongWord;
+begin
+If fProcessBinder.Binded then
+  begin
+    GetWindowThreadProcessID(GetForegroundWindow,{%H-}WindowPID);
+    Result := WindowPID = fProcessBinder.GameData.ProcessInfo.ProcessID;
+  end
+else Result := False;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TACCManager.ExecuteTrigger(Sender: TObject; Trigger: Integer; Caller: TTriggerCaller);
 var
   TempSpeed:  Single;
   TempState:  Boolean;
 begin
-case Trigger of
-  ACC_TRIGGER_ArbitraryEngage:  //----------------------------------------------
-    SetCCSpeed(Settings.Speeds.Arbitrary);
-  ACC_TRIGGER_IncreaseByStep:   //----------------------------------------------
-    IncreaseCCSpeed(Settings.Speeds.Step);
-  ACC_TRIGGER_DecreaseByStep:   //----------------------------------------------
-    IncreaseCCSpeed(-Settings.Speeds.Step);
-  ACC_TRIGGER_IncreaseByUnit:   //----------------------------------------------
-    IncreaseCCSpeed(Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient);
-  ACC_TRIGGER_DecreaseByUnit:   //----------------------------------------------
-    IncreaseCCSpeed(-Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient);
-  ACC_TRIGGER_IncreaseStep:     //----------------------------------------------
-    begin
-      Settings.Speeds.Step := Settings.Speeds.Step + Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient;
-      If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-    end;
-  ACC_TRIGGER_DecreaseStep:     //----------------------------------------------
-    begin
-      Settings.Speeds.Step := Settings.Speeds.Step - Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient;
-      If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-    end;
-  ACC_TRIGGER_CityEngage:       //----------------------------------------------
-    SetCCSpeed(Settings.Speeds.City);
-  ACC_TRIGGER_CityVehicle:      //----------------------------------------------
-    If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
+If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
+  case Trigger of
+    ACC_TRIGGER_ArbitraryEngage:  //--------------------------------------------
+      SetCCSpeed(Settings.Speeds.Arbitrary);
+    ACC_TRIGGER_IncreaseByStep:   //--------------------------------------------
+      IncreaseCCSpeed(Settings.Speeds.Step);
+    ACC_TRIGGER_DecreaseByStep:   //--------------------------------------------
+      IncreaseCCSpeed(-Settings.Speeds.Step);
+    ACC_TRIGGER_IncreaseByUnit:   //--------------------------------------------
+      IncreaseCCSpeed(Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient);
+    ACC_TRIGGER_DecreaseByUnit:   //--------------------------------------------
+      IncreaseCCSpeed(-Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient);
+    ACC_TRIGGER_IncreaseStep:     //--------------------------------------------
       begin
-        Settings.Speeds.City := TempSpeed;
+        Settings.Speeds.Step := Settings.Speeds.Step + Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient;
         If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
       end;
-  ACC_TRIGGER_CityCruise:       //----------------------------------------------
-    If fMemoryOperator.ReadCCSpeed(TempSpeed) then
+    ACC_TRIGGER_DecreaseStep:     //--------------------------------------------
       begin
-        Settings.Speeds.City := TempSpeed;
+        Settings.Speeds.Step := Settings.Speeds.Step - Settings.SpeedUnits[Settings.UsedSpeedUnit].Coefficient;
         If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
       end;
-  ACC_TRIGGER_RoadsEngage:      //----------------------------------------------
-    SetCCSpeed(Settings.Speeds.Roads);
-  ACC_TRIGGER_RoadsVehicle:     //----------------------------------------------
-    If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
-      begin
-        Settings.Speeds.Roads := TempSpeed;
-        If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-      end;
-  ACC_TRIGGER_RoadsCruise:      //----------------------------------------------
-    If fMemoryOperator.ReadCCSpeed(TempSpeed) then
-      begin
-        Settings.Speeds.Roads := TempSpeed;
-        If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-      end;
-  ACC_TRIGGER_UserEngage_0..    //----------------------------------------------
-  ACC_TRIGGER_UserEngage_9:
-    SetCCSpeed(Settings.Speeds.User[Trigger - ACC_TRIGGER_UserEngage_0]);
-  ACC_TRIGGER_UserVehicle_0..   //----------------------------------------------
-  ACC_TRIGGER_UserVehicle_9:
-    If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
-      begin
-        Settings.Speeds.User[Trigger - ACC_TRIGGER_UserVehicle_0] := TempSpeed;
-        If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-      end;
-  ACC_TRIGGER_UserCruise_0..    //----------------------------------------------
-  ACC_TRIGGER_UserCruise_9:
-    If fMemoryOperator.ReadCCStatus(TempState) then
-      If TempState and fMemoryOperator.ReadCCSpeed(TempSpeed) then
+    ACC_TRIGGER_CityEngage:       //--------------------------------------------
+      SetCCSpeed(Settings.Speeds.City);
+    ACC_TRIGGER_CityVehicle:      //--------------------------------------------
+      If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
         begin
-          Settings.Speeds.User[Trigger - ACC_TRIGGER_UserCruise_0] := TempSpeed;
+          Settings.Speeds.City := TempSpeed;
           If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
         end;
-end;
+    ACC_TRIGGER_CityCruise:       //--------------------------------------------
+      If fMemoryOperator.ReadCCSpeed(TempSpeed) then
+        begin
+          Settings.Speeds.City := TempSpeed;
+          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+        end;
+    ACC_TRIGGER_RoadsEngage:      //--------------------------------------------
+      SetCCSpeed(Settings.Speeds.Roads);
+    ACC_TRIGGER_RoadsVehicle:     //--------------------------------------------
+      If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
+        begin
+          Settings.Speeds.Roads := TempSpeed;
+          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+        end;
+    ACC_TRIGGER_RoadsCruise:      //--------------------------------------------
+      If fMemoryOperator.ReadCCSpeed(TempSpeed) then
+        begin
+          Settings.Speeds.Roads := TempSpeed;
+          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+        end;
+    ACC_TRIGGER_UserEngage_0..    //--------------------------------------------
+    ACC_TRIGGER_UserEngage_9:
+      SetCCSpeed(Settings.Speeds.User[Trigger - ACC_TRIGGER_UserEngage_0]);
+    ACC_TRIGGER_UserVehicle_0..   //--------------------------------------------
+    ACC_TRIGGER_UserVehicle_9:
+      If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
+        begin
+          Settings.Speeds.User[Trigger - ACC_TRIGGER_UserVehicle_0] := TempSpeed;
+          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+        end;
+    ACC_TRIGGER_UserCruise_0..    //--------------------------------------------
+    ACC_TRIGGER_UserCruise_9:
+      If fMemoryOperator.ReadCCStatus(TempState) then
+        If TempState and fMemoryOperator.ReadCCSpeed(TempSpeed) then
+          begin
+            Settings.Speeds.User[Trigger - ACC_TRIGGER_UserCruise_0] := TempSpeed;
+            If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+          end;
+  end;
 end;
 
 end.
