@@ -2,7 +2,7 @@
 
 pushd .
 
-cd Plugin\Delphi
+cd ..\Plugin\Delphi
 dcc32.exe -Q -B ACC_Plugin.dpr
 
 cd ..\Lazarus

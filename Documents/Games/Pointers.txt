@@ -586,3 +586,35 @@ Euro Truck Simulator 2 1.16.2 Multi Steam 64b [CRC32: 9005E736]
 CCStatus:	eurotrucks2.exe +0x010FC4B8 --> +0x00000C38 --> +0x00000060 --> Boolean
 CCSpeed:	eurotrucks2.exe +0x010FC4B8 --> +0x00000C38 --> +0x00000064 --> Single (kph)
 TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Trucks & Trailers 1.0 Multi CD [CRC32: 12ddb8e8]
+CCStatus:	trucks_n_trailers.exe +0x00450954 --> +0x00000730 --> +0x0000003f --> Boolean
+CCSpeed:	trucks_n_trailers.exe +0x00450954 --> +0x00000730 --> +0x00000040 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Scania Truck Driving Simulator 1.1 Multi DD & CD [CRC32: 21347bcd]
+CCStatus:	scania_truck_driving_simulator.exe +0x005847ac --> +0x000008f8 --> +0x00000030 --> Boolean
+CCSpeed:	scania_truck_driving_simulator.exe +0x005847ac --> +0x000008f8 --> +0x00000034 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Scania Truck Driving Simulator 1.6.1 Multi DD & CD [CRC32: e302fe34]
+CCStatus:	scania_truck_driving_simulator.exe +0x0059a7bc --> +0x000008a0 --> +0x00000034 --> Boolean
+CCSpeed:	scania_truck_driving_simulator.exe +0x0059a7bc --> +0x000008a0 --> +0x00000038 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Scania Truck Driving Simulator 1.6.1 Multi Steam [CRC32: 9ef80891]
+CCStatus:	scania_truck_driving_simulator.exe +0x0059626c --> +0x000008a0 --> +0x00000034 --> Boolean
+CCSpeed:	scania_truck_driving_simulator.exe +0x0059626c --> +0x000008a0 --> +0x00000038 --> Single (kph)
+TruckSpeed:	n/k

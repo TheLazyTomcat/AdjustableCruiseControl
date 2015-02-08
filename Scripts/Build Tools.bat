@@ -2,7 +2,7 @@
 
 pushd .
 
-cd Tools\GamesDataConverter
+cd ..\Tools\GamesDataConverter
 dcc32.exe -Q -B GamesDataConverter.dpr
 
 cd ..\RegistryCleaner

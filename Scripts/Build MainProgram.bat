@@ -2,7 +2,7 @@
 
 pushd .
 
-cd MainProgram\Delphi
+cd ..\MainProgram\Delphi
 dcc32.exe -Q -B ACC.dpr
 
 cd ..\Lazarus
