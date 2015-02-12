@@ -14,6 +14,27 @@ refer to ./Documents/readme.txt file.
 
 
 
+Libraries and components
+----------------------------------------
+
+PNGDelphi
+
+  This library adds support for PNG images to older versions of Delphi, in this
+  case into Delphi 7.
+  If you have newer versions of Delphi, you won't need this library as it is 
+  integral part of the Delphi. In that case, remove or rename CFG files 
+  mentioned further, so they are not used during batch compilation.
+  After installing it, edit following files and change path that is stored in 
+  them so it leads to a place were you have installed this library:
+
+    ./MainProgram/Delphi/dcc32.cfg
+    ./Tools/GamesDataConverter/dcc32.cfg
+    ./Tools/SplashPreprocessor/dcc32.cfg
+
+  Source for this library is in the file ./MainProgram/Libs/PNGDelphi.zip.
+
+
+
 Licensing
 ----------------------------------------
 Everything (source codes, executables/binaries, configurations, etc.), with few 
