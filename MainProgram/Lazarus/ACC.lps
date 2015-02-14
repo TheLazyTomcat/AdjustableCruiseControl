@@ -164,13 +164,10 @@
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Manager"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="349"/>
         <CursorPos X="54" Y="362"/>
         <UsageCount Value="45"/>
-        <Loaded Value="True"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
@@ -215,6 +212,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
@@ -377,15 +375,11 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="1" HistoryIndex="0">
       <Position1>
         <Filename Value="ACC.lpr"/>
         <Caret Line="43" Column="31" TopLine="42"/>
       </Position1>
-      <Position2>
-        <Filename Value="..\ACC_Manager.pas"/>
-        <Caret Line="206" Column="1" TopLine="1"/>
-      </Position2>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>

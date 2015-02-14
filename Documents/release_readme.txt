@@ -2,7 +2,7 @@
 
                             Adjustable Cruise Control
 
-                                 version 2.2.x
+                                 version 2.2.1
 
 ================================================================================
 
@@ -106,6 +106,10 @@ Partially supported games:
   Euro Truck Simulator 2 1.16.2 Multi 64bit (DD & CD version)
   Euro Truck Simulator 2 1.16.2 Multi (Steam version)
   Euro Truck Simulator 2 1.16.2 Multi 64bit (Steam version)
+  Trucks & Trailers 1.0 Multi (CD version)
+  Scania Truck Driving Simulator 1.1 Multi (DD & CD version)
+  Scania Truck Driving Simulator 1.6.1 Multi (DD & CD version)
+  Scania Truck Driving Simulator 1.6.1 Multi (Steam version)
 
 
 

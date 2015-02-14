@@ -170,13 +170,8 @@ fSettingsManager := TSettingsManager.Create(Addr(ACC_Settings.Settings));
 fSplashScreen := nil;
 fGamesDataManager := TGamesDataManager.Create;
 fProcessBinder := TProcessBinder.Create(fUtilityWindow);
-fProcessBinder.OnStateChange := ProcessBinder_OnStateChange;
-fProcessBinder.OnGameUnbind := ProcessBinder_OnGameUnbind;
 fMemoryOperator := TMemoryOperator.Create;
 fInputManager := TInputManager.Create(fUtilityWindow);
-fInputManager.DiscernKeyboardSides := Settings.DiscernKeyboardSides;
-fInputManager.SoftKeyComboRecognition := Settings.SoftKeyComboRecognition;
-fInputManager.OnTrigger := ExecuteTrigger;
 end;
 
 //------------------------------------------------------------------------------
@@ -304,7 +299,12 @@ If not GamesDataManager.Load then
   end
 else UpdateFromInternalGamesData;
 fProcessBinder.SetGamesData(GamesDataManager.GamesData);
+fProcessBinder.OnStateChange := ProcessBinder_OnStateChange;
+fProcessBinder.OnGameUnbind := ProcessBinder_OnGameUnbind;
 fProcessBinder.Start;
+fInputManager.DiscernKeyboardSides := Settings.DiscernKeyboardSides;
+fInputManager.SoftKeyComboRecognition := Settings.SoftKeyComboRecognition;
+fInputManager.OnTrigger := ExecuteTrigger;
 BuildInputTriggers;
 end;
 
