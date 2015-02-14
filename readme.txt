@@ -61,6 +61,10 @@ You can get actual copies of Telemetry Library on these git repositories:
 https://bitbucket.org/ncs-sniper/adjustablecruisecontrol
 https://github.com/ncs-sniper/AdjustableCruiseControl
 
+Note - master branch does not contain binaries anymore (to keep size of the repo
+       down), they are now in a branch called "bin" (this branch will not be 
+       updated so often).
+
 
 
 Authors, contacts
