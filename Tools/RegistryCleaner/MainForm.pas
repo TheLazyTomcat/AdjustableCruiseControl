@@ -100,28 +100,25 @@ var
   Subkeys:  TStringList;
   i:        Integer;
 begin
+fRegistry.OpenKey(REG_BaseKey,False);
 leBaseKey.Text := REG_RootName + REG_BaseKey;
 lvKeys.Items.BeginUpdate;
 try
   lvKeys.Clear;
-  If fRegistry.OpenKey(REG_BaseKey,False) then
-    begin
-      Subkeys := TStringList.Create;
-      try
-        fRegistry.GetKeyNames(SubKeys);
-        For i := 0 to Pred(Subkeys.Count) do
+  Subkeys := TStringList.Create;
+  try
+    fRegistry.GetKeyNames(SubKeys);
+    For i := 0 to Pred(Subkeys.Count) do
+      begin
+        with lvKeys.Items.Add do
           begin
-            with lvKeys.Items.Add do
-              begin
-                Caption := GetProgramName(SubKeys[i]);
-                SubItems.Add(fRegistry.CurrentPath + REG_Delimiter + SubKeys[i]);
-              end;
+            Caption := GetProgramName(SubKeys[i]);
+            SubItems.Add(SubKeys[i]);
           end;
-      finally
-        Subkeys.Free;
       end;
-      fRegistry.CloseKey;
-    end;
+  finally
+    Subkeys.Free;
+  end;
 finally
   lvKeys.Items.EndUpdate;
 end;
@@ -146,7 +143,7 @@ end;
 
 procedure TfMainForm.FormResize(Sender: TObject);
 begin
-lvKeys.Columns[0].Width := Trunc(lvKeys.Width * 0.4);
+lvKeys.Columns[0].Width := Trunc(lvKeys.Width * 0.5);
 lvKeys.Columns[1].Width := lvKeys.Width - lvKeys.Columns[0].Width - 25;
 end;
 
@@ -191,7 +188,7 @@ var
   FileName: String;
 begin
 If PromptForFileName(FileName,'REG files (*.reg)|*.reg','.reg','Save registry key',ParamStr(0),True) then
-  ExportRegistryKey(FileName,REG_RootName + REG_Delimiter + lvKeys.Items[lvKeys.ItemIndex].SubItems[0]);
+  ExportRegistryKey(FileName,REG_RootName + REG_BaseKey + REG_Delimiter + lvKeys.Items[lvKeys.ItemIndex].SubItems[0]);
 end;
 
 //------------------------------------------------------------------------------

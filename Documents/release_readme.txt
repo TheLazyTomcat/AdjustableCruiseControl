@@ -161,7 +161,7 @@ choose:
 - you cannot use this build (it will not work)
 ! you are recommended to use this build
 
-Plugin and program are compatible in all its versions, meaning you can use 
+Plugin and program are compatible in all their versions, meaning you can use 
 plugin from different build than the program and they will work together.
 
 Installation itself is very easy, just extract ACC.EXE from build you have 
@@ -355,6 +355,24 @@ or reads current ones).
 
 And finally, settings of the program is stored in windows registry, key
 "HKEY_CURRENT_USER\Software\NcS Soft\Adjustable Cruise Control 2".
+
+
+
+Changelog
+------------------------------    
+2.2.0 -> 2.2.1  
+  - added an option to clear key binding, which disables selected function
+  - added soft key combination recognition (binded key is recognized even when 
+    other keys are pressed at the same time as long as it is not one of binded
+    combinations)
+  - added automatic update from internal games data at the start of the program
+    (it is no longer needed to delete games data from previous installation when 
+    updating program binary)
+  - program can now optionally check whether game is active when a trigger is 
+    executed and can stop execution when it isn't (on by default)
+  - plugin now reports errors into game log
+  - added Registry Cleaner tool to the release
+  - number of small code corrections
 
 
 

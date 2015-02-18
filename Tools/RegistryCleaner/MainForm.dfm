@@ -1,7 +1,7 @@
 object fMainForm: TfMainForm
   Left = 457
   Top = 148
-  Width = 792
+  Width = 648
   Height = 378
   Caption = 'Registry Cleaner'
   Color = clBtnFace
@@ -805,24 +805,24 @@ object fMainForm: TfMainForm
   OnDestroy = FormDestroy
   OnResize = FormResize
   DesignSize = (
-    784
+    640
     344)
   PixelsPerInch = 96
   TextHeight = 13
   object lvKeys: TListView
     Left = 8
     Top = 56
-    Width = 769
+    Width = 625
     Height = 281
     Anchors = [akLeft, akTop, akRight, akBottom]
     Columns = <
       item
         Caption = 'Program'
-        Width = 305
+        Width = 300
       end
       item
         Caption = 'Key'
-        Width = 440
+        Width = 300
       end>
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -838,7 +838,7 @@ object fMainForm: TfMainForm
   object leBaseKey: TLabeledEdit
     Left = 8
     Top = 24
-    Width = 489
+    Width = 345
     Height = 22
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
@@ -856,7 +856,7 @@ object fMainForm: TfMainForm
     TabOrder = 1
   end
   object btnDeleteBaseKey: TButton
-    Left = 648
+    Left = 504
     Top = 24
     Width = 129
     Height = 21
@@ -866,7 +866,7 @@ object fMainForm: TfMainForm
     OnClick = btnDeleteBaseKeyClick
   end
   object btnBackupBaseKey: TButton
-    Left = 504
+    Left = 360
     Top = 24
     Width = 137
     Height = 21
