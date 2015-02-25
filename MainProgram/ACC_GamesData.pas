@@ -217,6 +217,7 @@ type
   public
     class Function SupportsBinFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsIniFileStructure(FileStructure: TFileStructure): Boolean; virtual;
+    class Function SupportsProtocolVersion(ProtocolVersion: TProtocolVersion): Boolean; virtual;
     class Function IsValid(GameData: TGameData): Boolean; virtual;    
     class Function TruckSpeedSupported(const GameData: TGameData): Boolean; virtual;
     constructor Create;
@@ -259,6 +260,10 @@ const
   // Supported gamesdata file structures
   SupportedBinFileStructure: Array[0..0] of TFileStructure = (BFS_1_0);
   SupportedIniFileStructure: Array[0..1] of TFileStructure = (IFS_1_0,IFS_2_0);
+
+  // Supported protocols
+  // Note that protocol affects the entire program, not just games data
+  SupportedProtocolVersions: Array[0..0] of TProtocolVersion = (0);
 
   // Signature of binarz games data file
   ACCBinFileSignature = $64636361;
@@ -791,7 +796,7 @@ var
 begin
 try
   Result := False;
-  GameData.Protocol := 0;
+  GameData.Protocol := SupportedProtocolVersions[Low(SupportedProtocolVersions)];
   If CreateGUID(GameData.Identifier) <> S_OK then
     GameData.Identifier := StringToGUID('{00000000-0000-0000-0000-000000000000}');
   GameData.Descriptor := Decrypt(Ini.ReadString(Section,GDIN_GD_LEG_Identificator,''));
@@ -1219,6 +1224,21 @@ end;
 
 //------------------------------------------------------------------------------
 
+class Function TGamesDataManager.SupportsProtocolVersion(ProtocolVersion: TProtocolVersion): Boolean;
+var
+  i:  Integer;
+begin
+Result := False;
+For i := Low(SupportedProtocolVersions) to High(SupportedProtocolVersions) do
+  If SupportedProtocolVersions[i] = ProtocolVersion then
+    begin
+      Result := True;
+      Break;
+    end;
+end;
+
+//------------------------------------------------------------------------------
+
 class Function TGamesDataManager.IsValid(GameData: TGameData): Boolean;
 var
   i:  Integer;
@@ -1242,7 +1262,7 @@ var
   end;
 
 begin
-Result := GameData.Protocol <> cInvalidProtocolVersion;
+Result := SupportsProtocolVersion(GameData.Protocol);
 Result := Result and not IsEqualGUID(GameData.Identifier,StringToGUID('{00000000-0000-0000-0000-000000000000}'));
 Result := Result and (Length(GameData.Modules) > 0);
 For i := Low(GameData.Modules) to High(GameData.Modules) do
