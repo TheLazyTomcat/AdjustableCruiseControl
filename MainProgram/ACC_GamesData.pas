@@ -137,7 +137,7 @@ const
   IFS_1_0 = $00010000;
   IFS_2_0 = $00020000;
 
-  cInvalidProtocolVersion = TProtocolVersion(-1);
+  InvalidProtocolVersion = TProtocolVersion(-1);
 
   ACC_PTR_FLAGS_PointerTypeBitmask = $1FF;
 
@@ -218,7 +218,7 @@ type
     class Function SupportsBinFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsIniFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsProtocolVersion(ProtocolVersion: TProtocolVersion): Boolean; virtual;
-    class Function IsValid(GameData: TGameData): Boolean; virtual;    
+    class Function IsValid(GameData: TGameData): Boolean; virtual;
     class Function TruckSpeedSupported(const GameData: TGameData): Boolean; virtual;
     constructor Create;
     destructor Destroy; override;
@@ -238,6 +238,9 @@ type
     Function Save: Boolean; virtual;
     procedure CheckUpdate(OldData: TGamesDataManager); virtual;
     Function UpdateFrom(UpdateData: TGamesDataManager): Integer; virtual;
+    Function AddGameData(GameData: TGameData): Integer; virtual;
+    Function RemoveGameData(Identifier: TGUID): Integer; virtual;
+    procedure DeleteGameData(Index: Integer); virtual;
     property GameDataPtr[Index: Integer]: PGameData read GetGameDataPtr;
     property GameData[Index: Integer]: TGameData read GetGameData; default;
   published
@@ -263,7 +266,7 @@ const
 
   // Supported protocols
   // Note that protocol affects the entire program, not just games data
-  SupportedProtocolVersions: Array[0..0] of TProtocolVersion = (0);
+  SupportedProtocolVersions: Array[0..1] of TProtocolVersion = (0,1);
 
   // Signature of binarz games data file
   ACCBinFileSignature = $64636361;
@@ -822,7 +825,6 @@ try
       GameData.TruckSpeed.Coefficient := 0;
     end;
   i := 0;
-  SetLength(GameData.Values,0);
   while Ini.ValueExists(Section,Format(GDIN_GD_LEG_Special,[i])) do
     begin
       SetLength(GameData.Values,Length(GameData.Values) + 1);
@@ -848,9 +850,9 @@ try
     begin
       If LoadItemFromIni_Struct00010000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
         If IsValid(TempGameData) then
-          begin
-            SetLength(fGamesData,Length(fGamesData) + 1);
-            fGamesData[High(fGamesData)] := TempGameData;
+          case TempGameData.Protocol of
+            0:  AddGameData(TempGameData);
+            1:  RemoveGameData(TempGameData.Identifier);
           end;
       Inc(Index);
     end;
@@ -1112,7 +1114,7 @@ var
 
 begin
 try
-  GameData.Protocol := Ini.ReadInteger(Section,GDIN_GD_Protocol,Integer(cInvalidProtocolVersion));
+  GameData.Protocol := Ini.ReadInteger(Section,GDIN_GD_Protocol,Integer(InvalidProtocolVersion));
   GameData.Identifier := StringToGUID(Ini.ReadString(Section,GDIN_GD_Identifier,'{00000000-0000-0000-0000-000000000000}'));
   GameData.Descriptor := Ini.ReadString(Section,GDIN_GD_Descriptor,'');
   GameData.Version := Ini.ReadInteger(Section,GDIN_GD_Version,0);
@@ -1155,9 +1157,9 @@ try
   For i := 1 to ReadIntegerFromStream(Stream) do
     If LoadItemFromBin_Struct00010000(Stream,Stream.Position,TempGameData) then
       If IsValid(TempGameData) then
-        begin
-          SetLength(fGamesData,Length(fGamesData) + 1);
-          fGamesData[High(fGamesData)] := TempGameData
+        case TempGameData.Protocol of
+          0:  AddGameData(TempGameData);
+          1:  RemoveGameData(TempGameData.Identifier);
         end;
   Result := True;
 except
@@ -1178,9 +1180,9 @@ try
     begin
       If LoadItemFromIni_Struct00020000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
         If IsValid(TempGameData) then
-          begin
-            SetLength(fGamesData,Length(fGamesData) + 1);
-            fGamesData[High(fGamesData)] := TempGameData;
+          case TempGameData.Protocol of
+            0:  AddGameData(TempGameData);
+            1:  RemoveGameData(TempGameData.Identifier);
           end;
       Inc(Index);
     end;
@@ -1521,6 +1523,7 @@ var
   i, Index:     Integer;
   GameDataTemp: PGameData;
 begin
+{$IFDEF DevMsgs}{$MESSAGE 'Implement protocols'}{$ENDIF}
 For i := 0 to Pred(GamesDataCount) do
   begin
     GameDataTemp := GameDataPtr[i];
@@ -1556,11 +1559,48 @@ If UpdateData.GamesDataCount > 0 then
           fGamesData[Index] := UpdateData[i]
         else
           begin
+            {$IFDEF DevMsgs}{$MESSAGE 'Implement protocols'}{$ENDIF}
             SetLength(fGamesData,Length(fGamesData) + 1);
             fGamesData[High(fGamesData)] := UpdateData[i];
           end;
         Inc(Result);
       end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.AddGameData(GameData: TGameData): Integer;
+begin
+If IsValid(GameData) and not GameListed(GameData.Identifier) then
+  begin
+    SetLength(fGamesData,Length(fGamesData) + 1);
+    fGamesData[High(fGamesData)] := GameData;
+    Result := High(fGamesData);
+  end
+else Result := -1;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.RemoveGameData(Identifier: TGUID): Integer;
+begin
+Result := IndexOf(Identifier);
+If Result >= 0 then DeleteGameData(Result);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.DeleteGameData(Index: Integer);
+var
+  i:  Integer;
+begin
+If (Index >= Low(fGamesData)) and (Index <= High(fGamesData)) then
+  begin
+    For i := Index to Pred(High(fGamesData)) do
+      fGamesData[Index] := fGamesData[Index + 1];
+    SetLength(fGamesData,Length(fGamesData) - 1);
+  end
+else raise Exception.CreateFmt('TGamesDataManager.DeleteGameData: Index (%d) out of bounds.',[Index]);
 end;
 
 end.
