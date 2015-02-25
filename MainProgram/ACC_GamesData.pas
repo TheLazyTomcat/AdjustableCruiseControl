@@ -205,15 +205,15 @@ type
     class Function ReadFloatFromStream(Stream: TStream): Single; overload; virtual;
     procedure SaveIcons(Stream: TStream); virtual;
     procedure LoadIcons(Stream: TStream); virtual;
-    Function SaveToIni_Struct00010000(Ini: TIniFile): Boolean; virtual;
-    Function LoadItemFromIni_Struct00010000(Ini: TIniFile; Section: String; out GameData: TGameData): Boolean;
-    Function LoadFromIni_Struct00010000(Ini: TIniFile): Boolean; virtual;
+    Function SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
+    Function LoadItemFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
+    Function LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToBin_Struct00010000(Stream: TStream): Boolean; virtual;
-    Function SaveToIni_Struct00020000(Ini: TIniFile): Boolean; virtual;
+    Function SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
     Function LoadItemFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean;
-    Function LoadItemFromIni_Struct00020000(Ini: TIniFile; Section: String; out GameData: TGameData): Boolean;
+    Function LoadItemFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
     Function LoadFromBin_Struct00010000(Stream: TStream): Boolean; virtual;
-    Function LoadFromIni_Struct00020000(Ini: TIniFile): Boolean; virtual;
+    Function LoadFromIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
   public
     class Function SupportsBinFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsIniFileStructure(FileStructure: TFileStructure): Boolean; virtual;
@@ -625,7 +625,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.SaveToIni_Struct00010000(Ini: TIniFile): Boolean;
+Function TGamesDataManager.SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean;
 var
   CurrentSection: String;
   TempStr:        String;
@@ -685,7 +685,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadItemFromIni_Struct00010000(Ini: TIniFile; Section: String; out GameData: TGameData): Boolean;
+Function TGamesDataManager.LoadItemFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
 var
   i:        Integer;
   TempStr:  String;
@@ -832,7 +832,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadFromIni_Struct00010000(Ini: TIniFile): Boolean;
+Function TGamesDataManager.LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean;
 var
   Index:        Integer;
   TempGameData: TGameData;
@@ -933,7 +933,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.SaveToIni_Struct00020000(Ini: TIniFile): Boolean;
+Function TGamesDataManager.SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean;
 var
   CurrentSection: String;
   FormatSettings: TFormatSettings;
@@ -1076,7 +1076,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadItemFromIni_Struct00020000(Ini: TIniFile; Section: String; out GameData: TGameData): Boolean;
+Function TGamesDataManager.LoadItemFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
 var
   FormatSettings: TFormatSettings;
   i:              Integer;
@@ -1162,7 +1162,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadFromIni_Struct00020000(Ini: TIniFile): Boolean;
+Function TGamesDataManager.LoadFromIni_Struct00020000(Ini: TCustomIniFile): Boolean;
 var
   Index:        Integer;
   TempGameData: TGameData;
@@ -1333,11 +1333,11 @@ end;
 
 Function TGamesDataManager.SaveToIni(const FileName: String; FileStructure: TFileStructure): Boolean;
 var
-  IniFile:  TIniFile;
+  IniFile:  TMemIniFile;
 begin
 If SupportsIniFileStructure(FileStructure) then
   try
-    IniFile := TIniFile.Create(FileName);
+    IniFile := TMemIniFile.Create(FileName);
     try
       IniFile.WriteString(GDIN_MainSection,GDIN_MS_FileStructure,'$' + IntToHex(FileStructure,8));
       case FileStructure of
@@ -1346,6 +1346,7 @@ If SupportsIniFileStructure(FileStructure) then
       else
         Result := False;
       end;
+      IniFile.UpdateFile;
     finally
       IniFile.Free;
     end;
@@ -1418,10 +1419,10 @@ end;
 
 Function TGamesDataManager.LoadFromIni(const FileName: String; out FileStructure: TFileStructure): Boolean;
 var
-  IniFile:  TIniFile;
+  IniFile:  TMemIniFile;
 begin
 try
-  IniFile := TIniFile.Create(FileName);
+  IniFile := TMemIniFile.Create(FileName);
   try
     FileStructure := TFileStructure(IniFile.ReadInteger(GDIN_MainSection,GDIN_MS_FileStructure,Integer(InvalidFileStructure)));
     If SupportsIniFileStructure(FileStructure) then
