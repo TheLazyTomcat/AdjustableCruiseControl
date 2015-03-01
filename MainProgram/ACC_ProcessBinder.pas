@@ -304,9 +304,9 @@ var
   begin
     fGamesDataSync.BeginRead;
     try
-      For Result := Low(fGamesDataPtr^) to High(fGamesDataPtr^) do
-        If Length(fGamesDataPtr^[Result].Modules) > 0 then
-          If AnsiSameText(ProcessName,fGamesDataPtr^[Result].Modules[0].FileName) then Exit;
+      For Result := Low(fGamesDataPtr^.Entries) to High(fGamesDataPtr^.Entries) do
+        If Length(fGamesDataPtr^.Entries[Result].Modules) > 0 then
+          If AnsiSameText(ProcessName,fGamesDataPtr^.Entries[Result].Modules[0].FileName) then Exit;
       Result := -1;
     finally
       fGamesDataSync.EndRead;
@@ -422,13 +422,13 @@ If SnapshotHandle <> INVALID_HANDLE_VALUE then
 try
   fGamesDataSync.BeginRead;
   try
-    For i := Low(fGamesDataPtr^) to High(fGamesDataPtr^) do
-      If (Length(fGamesDataPtr^[i].Modules) > 0) and (Length(ProcessModules) > 0) then
-        If AnsiSameText(fGamesDataPtr^[i].Modules[0].FileName,ProcessModules[0].FileName) then
+    For i := Low(fGamesDataPtr^.Entries) to High(fGamesDataPtr^.Entries) do
+      If (Length(fGamesDataPtr^.Entries[i].Modules) > 0) and (Length(ProcessModules) > 0) then
+        If AnsiSameText(fGamesDataPtr^.Entries[i].Modules[0].FileName,ProcessModules[0].FileName) then
           begin
-            If CheckGame(fGamesDataPtr^[i],ProcessModules) then
+            If CheckGame(fGamesDataPtr^.Entries[i],ProcessModules) then
               begin
-                fGameData := fGamesDataPtr^[i];
+                fGameData := fGamesDataPtr^.Entries[i];
                   fGameData.ProcessInfo.ProcessID := fPossibleGameProcess.ProcessID;
                 fWaitObjects.GameProcess := OpenProcess(PROCESS_VM_READ or PROCESS_VM_WRITE or PROCESS_VM_OPERATION or $00100000{SYNCHRONIZE},False,fGameData.ProcessInfo.ProcessID);
                 fGameData.ProcessInfo.ProcessHandle := fWaitObjects.GameProcess;

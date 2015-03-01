@@ -278,9 +278,9 @@ AddCount := ACCManager.GamesDataManager.UpdateFrom(fUpdateDataManager);
 If AddCount > 0 then
   begin
   {$IFDEF FPC}
-    Application.MessageBox(PChar(IntToStr(AddCount) + ' entries were added to the list of supported games.'),'Adjustable Cruise Control',MB_ICONINFORMATION);
+    Application.MessageBox(PChar(IntToStr(AddCount) + ' change(s) was made in the list of supported games.'),'Adjustable Cruise Control',MB_ICONINFORMATION);
   {$ELSE}
-    ShowInfoMsg(IntToStr(AddCount) + ' entries were added to the list of supported games.');
+    ShowInfoMsg(IntToStr(AddCount) + ' change(s) was made in the list of supported games.');
   {$ENDIF}
     ACCManager.ProcessBinder.SetGamesData(ACCManager.GamesDataManager.GamesData);
     ACCManager.GamesDataManager.Save;
@@ -289,9 +289,9 @@ If AddCount > 0 then
   end
 else
 {$IFDEF FPC}
-  Application.MessageBox('No entry added.','Adjustable Cruise Control',MB_ICONINFORMATION);
+  Application.MessageBox('No change was made.','Adjustable Cruise Control',MB_ICONINFORMATION);
 {$ELSE}
-  ShowInfoMsg('No entry added.');
+  ShowInfoMsg('No change was made.');
 {$ENDIF}
 end;
 

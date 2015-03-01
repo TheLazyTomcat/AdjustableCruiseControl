@@ -122,7 +122,10 @@ type
   end;
   PGameData = ^TGameData;
 
-  TGamesData = Array of TGameData;
+  TGamesData = record
+    Entries:  Array of TGameData;
+    Hidden:   Array of TGUID;
+  end;
   PGamesData = ^TGamesData;
 
   TFileStructure = LongWord;
@@ -205,15 +208,18 @@ type
     class Function ReadFloatFromStream(Stream: TStream): Single; overload; virtual;
     procedure SaveIcons(Stream: TStream); virtual;
     procedure LoadIcons(Stream: TStream); virtual;
+    procedure SaveEntryToIni_Struct00010000(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
+    procedure SaveEntryToIni_Struct00020000(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
+    procedure SaveEntryToBin_Struct00010000(Stream: TStream; Position: Int64; const GameData: TGameData); virtual;
+    Function LoadEntryFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
+    Function LoadEntryFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
+    Function LoadEntryFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean; virtual;
     Function SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
-    Function LoadItemFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
-    Function LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
-    Function SaveToBin_Struct00010000(Stream: TStream): Boolean; virtual;
     Function SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
-    Function LoadItemFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean;
-    Function LoadItemFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
-    Function LoadFromBin_Struct00010000(Stream: TStream): Boolean; virtual;
+    Function SaveToBin_Struct00010000(Stream: TStream): Boolean; virtual;
+    Function LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
     Function LoadFromIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
+    Function LoadFromBin_Struct00010000(Stream: TStream): Boolean; virtual;
   public
     class Function SupportsBinFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsIniFileStructure(FileStructure: TFileStructure): Boolean; virtual;
@@ -241,11 +247,13 @@ type
     Function AddGameData(GameData: TGameData): Integer; virtual;
     Function RemoveGameData(Identifier: TGUID): Integer; virtual;
     procedure DeleteGameData(Index: Integer); virtual;
+    Function IsHidden(Identifier: TGUID): Boolean; virtual;
+    Function HideGameData(Identifier: TGUID): Integer; virtual;
+    property GamesData: TGamesData read fGamesData;
     property GameDataPtr[Index: Integer]: PGameData read GetGameDataPtr;
     property GameData[Index: Integer]: TGameData read GetGameData; default;
   published
     property GamesDataCount: Integer read GetGamesDataCount;
-    property GamesData: TGamesData read fGamesData;
     property GameIcons: TIconList read fGameIcons;
   end;
 
@@ -266,7 +274,13 @@ const
 
   // Supported protocols
   // Note that protocol affects the entire program, not just games data
-  SupportedProtocolVersions: Array[0..1] of TProtocolVersion = (0,1);
+  PROTOCOL_NORMAL  = 0;
+  PROTOCOL_HIDDEN  = 1;
+  PROTOCOL_HIDE    = 2;
+  PROTOCOL_UPDHIDE = 3;
+
+  SupportedProtocolVersions: Array[0..3] of TProtocolVersion = (
+    PROTOCOL_NORMAL,PROTOCOL_HIDDEN,PROTOCOL_HIDE,PROTOCOL_UPDHIDE);
 
   // Signature of binarz games data file
   ACCBinFileSignature = $64636361;
@@ -458,15 +472,15 @@ end;
 
 Function TGamesDataManager.GetGamesDataCount: Integer;
 begin
-Result := Length(fGamesData);
+Result := Length(fGamesData.Entries);
 end;
 
 //------------------------------------------------------------------------------
 
 Function TGamesDataManager.GetGameDataPtr(Index: Integer): PGameData;
 begin
-If (Index >= Low(fGamesData)) and (Index <= High(fGamesData)) then
-  Result := Addr(fGamesData[Index])
+If (Index >= Low(fGamesData.Entries)) and (Index <= High(fGamesData.Entries)) then
+  Result := Addr(fGamesData.Entries[Index])
 else
   raise Exception.Create('TGamesDataManager.GetGamesDataPtr: Index (' + IntToStr(Index) + ') out of bounds.');
 end;
@@ -475,8 +489,8 @@ end;
 
 Function TGamesDataManager.GetGameData(Index: Integer): TGameData;
 begin
-If (Index >= Low(fGamesData)) and (Index <= High(fGamesData)) then
-  Result := fGamesData[Index]
+If (Index >= Low(fGamesData.Entries)) and (Index <= High(fGamesData.Entries)) then
+  Result := fGamesData.Entries[Index]
 else
   raise Exception.Create('TGamesDataManager.GetGamesData(Index): Index (' + IntToStr(Index) + ') out of bounds.');
 end;
@@ -633,11 +647,10 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean;
+procedure TGamesDataManager.SaveEntryToIni_Struct00010000(Ini: TCustomIniFile; Section: String; const GameData: TGameData);
 var
-  CurrentSection: String;
-  TempStr:        String;
-  i,j:            Integer;
+  TempStr:  String;
+  i:        Integer;
 
   procedure AddModuleToStr(var Str: String; Module: TModuleData);
   begin
@@ -658,42 +671,160 @@ var
         For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
           iTempStr := iTempStr + '$' + IntToHex(Pointer.Offsets[ii],16) + '>';
         iTempStr := iTempStr + SingleToHex(Pointer.Coefficient);
-        Ini.WriteString(CurrentSection,ValueName,iTempStr);
+        Ini.WriteString(Section,ValueName,iTempStr);
       end
-    else Ini.WriteString(CurrentSection,ValueName,'0');
+    else Ini.WriteString(Section,ValueName,'0');
   end;
 
 begin
+Ini.WriteString(Section,GDIN_GD_LEG_Identificator,GameData.Descriptor);
+Ini.WriteString(Section,GDIN_GD_LEG_GameInfo,GameData.Title + '&&' + GameData.Info);
+
+TempStr := '$0^';
+For i := Low(GameData.Modules) to High(GameData.Modules) do
+  begin
+    AddModuleToStr(TempStr,GameData.Modules[i]);
+    If i < High(GameData.Modules) then TempStr := TempStr + '&';
+  end;
+Ini.WriteString(Section,GDIN_GD_LEG_Process,TempStr);
+
+WritePointer(GDIN_GD_CCStatus,GameData.CCStatus);
+WritePointer(GDIN_GD_CCSpeed,GameData.CCSpeed);
+WritePointer(GDIN_GD_TruckSpeed,GameData.TruckSpeed);
+For i := Low(GameData.Values) to High(GameData.Values) do
+  WritePointer(Format(GDIN_GD_LEG_Special,[i]),GameData.Values[i]);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.SaveEntryToIni_Struct00020000(Ini: TCustomIniFile; Section: String; const GameData: TGameData);
+var
+  FormatSettings: TFormatSettings;
+  i:              Integer;
+  
+  procedure WriteModule(const Prefix: String; Module: TModuleData);
+  begin
+    Ini.WriteString(Section,Prefix + GDIN_GD_MOD_CheckFlags,'$' + IntToHex(Module.CheckFlags,8));
+      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_FileName,Module.FileName);
+    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
+      Ini.WriteInteger(Section,Prefix + GDIN_GD_MOD_Size,Module.Size);
+    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
+      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_CRC32,'$' + IntToHex(Module.CRC32,8));
+    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
+      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_MD5,MD5ToStr(Module.MD5));
+  end;
+
+  procedure WritePointer(const Prefix: String; Pointer: TPointerData);
+  var
+    ii: Integer;
+  begin
+    If Pointer.ModuleIndex >= 0 then
+      begin
+        Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Flags,'$' + IntToHex(Pointer.Flags,8));
+        Ini.WriteInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,Pointer.ModuleIndex);
+        Ini.WriteInteger(Section,Prefix + GDIN_GD_VAL_Offsets,Length(Pointer.Offsets));
+        For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
+          Ini.WriteString(Section,Prefix + Format(GDIN_GD_VAL_Offset,[ii]),'$' +
+                                         IntToHex(Pointer.Offsets[ii],16));
+        Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Coefficient,'$' + SingleToHex(Pointer.Coefficient));
+      end;
+  end;
+
+begin
+Ini.WriteInteger(Section,GDIN_GD_Protocol,GameData.Protocol);
+Ini.WriteString(Section,GDIN_GD_Identifier,GUIDToString(GameData.Identifier));
+Ini.WriteString(Section,GDIN_GD_Descriptor,GameData.Descriptor);
+Ini.WriteInteger(Section,GDIN_GD_Version,GameData.Version);
+Ini.WriteString(Section,GDIN_GD_Icon,GameData.Icon);
+{%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
+FormatSettings.DateSeparator := '-';
+FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+Ini.WriteString(Section,GDIN_GD_Date,DateToStr(GameData.Date,FormatSettings));
+Ini.WriteString(Section,GDIN_GD_Author,GameData.Author);
+Ini.WriteString(Section,GDIN_GD_Title,GameData.Title);
+Ini.WriteString(Section,GDIN_GD_Info,GameData.Info);
+Ini.WriteString(Section,GDIN_GD_ExtendedTitle,GameData.ExtendedTitle);
+
+Ini.WriteInteger(Section,GDIN_GD_Modules,Length(GameData.Modules));
+For i := Low(GameData.Modules) to High(GameData.Modules) do
+  WriteModule(Format(GDIN_GD_Module,[i]),GameData.Modules[i]);
+
+WritePointer(GDIN_GD_CCSpeed,GameData.CCSpeed);
+WritePointer(GDIN_GD_CCStatus,GameData.CCStatus);
+WritePointer(GDIN_GD_TruckSpeed,GameData.TruckSpeed);
+Ini.WriteInteger(Section,GDIN_GD_Values,Length(GameData.Values));
+For i := Low(GameData.Values) to High(GameData.Values) do
+  WritePointer(Format(GDIN_GD_Value,[i]),GameData.Values[i]);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.SaveEntryToBin_Struct00010000(Stream: TStream; Position: Int64; const GameData: TGameData);
+var
+  EntryStream:  TMemoryStream;
+  i:            Integer;
+
+  procedure WriteModule(EnStream: TStream; Module: TModuleData);
+  begin
+    WriteIntegerToStream(EnStream,Module.CheckFlags);
+    WriteStringToStream(EnStream,Module.FileName);
+    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
+      WriteInt64ToStream(EnStream,Module.Size);
+    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
+      EnStream.WriteBuffer(Module.CRC32,SizeOf(TCRC32));
+    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
+      EnStream.WriteBuffer(Module.MD5,SizeOf(TMD5Hash));
+  end;
+
+  procedure WritePointer(EnStream: TStream; Pointer: TPointerData);
+  var
+    ii: Integer;
+  begin
+    WriteIntegerToStream(EnStream,Pointer.Flags);
+    WriteIntegerToStream(EnStream,Pointer.ModuleIndex);
+    WriteIntegerToStream(EnStream,Length(Pointer.Offsets));
+    For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
+      WriteInt64ToStream(EnStream,Pointer.Offsets[ii]);
+    WriteFloatToStream(EnStream,Pointer.Coefficient);
+  end;
+
+begin
+Stream.Seek(Position,soBeginning);
+EntryStream := TMemoryStream.Create;
 try
-  For i := Low(fGamesData) to High(fGamesData) do
-    begin
-      CurrentSection := Format(GDIN_Game,[i]);
-      Ini.WriteString(CurrentSection,GDIN_GD_LEG_Identificator,fGamesData[i].Descriptor);
-      Ini.WriteString(CurrentSection,GDIN_GD_LEG_GameInfo,fGamesData[i].Title + '&&' + fGamesData[i].Info);
+  WriteIntegerToStream(EntryStream,GameData.Protocol);
+  EntryStream.WriteBuffer(GameData.Identifier,SizeOf(TGUID));
+  WriteStringToStream(EntryStream,GameData.Descriptor);
+  WriteIntegerToStream(EntryStream,GameData.Version);
+  WriteStringToStream(EntryStream,GameData.Icon);
+  WriteInt64ToStream(EntryStream,DateTimeToUnix(GameData.Date));
+  WriteStringToStream(EntryStream,GameData.Author);
+  WriteStringToStream(EntryStream,GameData.Title);
+  WriteStringToStream(EntryStream,GameData.Info);
+  WriteStringToStream(EntryStream,GameData.ExtendedTitle);
 
-      TempStr := '$0^';
-      For j := Low(fGamesData[i].Modules) to High(fGamesData[i].Modules) do
-        begin
-          AddModuleToStr(TempStr,fGamesData[i].Modules[j]);
-          If j < High(fGamesData[i].Modules) then TempStr := TempStr + '&';
-        end;
-      Ini.WriteString(CurrentSection,GDIN_GD_LEG_Process,TempStr);
+  WriteIntegerToStream(EntryStream,Length(GameData.Modules));
+  For i := Low(GameData.Modules) to High(GameData.Modules) do
+    WriteModule(EntryStream,GameData.Modules[i]);
 
-      WritePointer(GDIN_GD_CCStatus,fGamesData[i].CCStatus);
-      WritePointer(GDIN_GD_CCSpeed,fGamesData[i].CCSpeed);
-      WritePointer(GDIN_GD_TruckSpeed,fGamesData[i].TruckSpeed);
-      For j := Low(fGamesData[i].Values) to High(fGamesData[i].Values) do
-        WritePointer(Format(GDIN_GD_LEG_Special,[j]),fGamesData[i].Values[j]);
-    end;
-  Result := True;  
-except
-  Result := False;
+  WritePointer(EntryStream,GameData.CCSpeed);
+  WritePointer(EntryStream,GameData.CCStatus);
+  WritePointer(EntryStream,GameData.TruckSpeed);
+  WriteIntegerToStream(EntryStream,Length(GameData.Values));
+  For i := Low(GameData.Values) to High(GameData.Values) do
+    WritePointer(EntryStream,GameData.Values[i]);
+
+  ZCompressStream(EntryStream);
+  WriteIntegerToStream(Stream,EntryStream.Size);
+  Stream.CopyFrom(EntryStream,0);
+finally
+  EntryStream.Free;
 end;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadItemFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
+Function TGamesDataManager.LoadEntryFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
 var
   i:        Integer;
   TempStr:  String;
@@ -839,171 +970,62 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean;
+Function TGamesDataManager.LoadEntryFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
 var
-  Index:        Integer;
-  TempGameData: TGameData;
-begin
-try
-  Index := 0;
-  while Ini.SectionExists(Format(GDIN_Game,[Index])) do
-    begin
-      If LoadItemFromIni_Struct00010000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
-        If IsValid(TempGameData) then
-          case TempGameData.Protocol of
-            0:  AddGameData(TempGameData);
-            1:  RemoveGameData(TempGameData.Identifier);
-          end;
-      Inc(Index);
-    end;
-  Result := True;
-except
-  Result := False;
-end;
-end;
-
-//------------------------------------------------------------------------------
-
-Function TGamesDataManager.SaveToBin_Struct00010000(Stream: TStream): Boolean;
-var
-  EntryStream:  TMemoryStream;
-  i,j:          Integer;
-
-  procedure WriteModule(EnStream: TStream; Module: TModuleData);
-  begin
-    WriteIntegerToStream(EnStream,Module.CheckFlags);
-    WriteStringToStream(EnStream,Module.FileName);
-    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
-      WriteInt64ToStream(EnStream,Module.Size);
-    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
-      EnStream.WriteBuffer(Module.CRC32,SizeOf(TCRC32));
-    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
-      EnStream.WriteBuffer(Module.MD5,SizeOf(TMD5Hash));
-  end;
-
-  procedure WritePointer(EnStream: TStream; Pointer: TPointerData);
-  var
-    ii: Integer;
-  begin
-    WriteIntegerToStream(EnStream,Pointer.Flags);
-    WriteIntegerToStream(EnStream,Pointer.ModuleIndex);
-    WriteIntegerToStream(EnStream,Length(Pointer.Offsets));
-    For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
-      WriteInt64ToStream(EnStream,Pointer.Offsets[ii]);
-    WriteFloatToStream(EnStream,Pointer.Coefficient);
-  end;
-
-begin
-try
-  EntryStream := TMemoryStream.Create;
-  try
-    SaveIcons(Stream);
-    WriteIntegerToStream(Stream,Length(fGamesData));
-    For i := Low(fGamesData) to High(fGamesData) do
-      begin
-        EntryStream.Clear;
-
-        WriteIntegerToStream(EntryStream,fGamesData[i].Protocol);
-        EntryStream.WriteBuffer(fGamesData[i].Identifier,SizeOf(TGUID));
-        WriteStringToStream(EntryStream,fGamesData[i].Descriptor);
-        WriteIntegerToStream(EntryStream,fGamesData[i].Version);
-        WriteStringToStream(EntryStream,fGamesData[i].Icon);
-        WriteInt64ToStream(EntryStream,DateTimeToUnix(fGamesData[i].Date));
-        WriteStringToStream(EntryStream,fGamesData[i].Author);
-        WriteStringToStream(EntryStream,fGamesData[i].Title);
-        WriteStringToStream(EntryStream,fGamesData[i].Info);
-        WriteStringToStream(EntryStream,fGamesData[i].ExtendedTitle);
-
-        WriteIntegerToStream(EntryStream,Length(fGamesData[i].Modules));
-        For j := Low(fGamesData[i].Modules) to High(fGamesData[i].Modules) do
-          WriteModule(EntryStream,fGamesData[i].Modules[j]);
-
-        WritePointer(EntryStream,fGamesData[i].CCSpeed);
-        WritePointer(EntryStream,fGamesData[i].CCStatus);
-        WritePointer(EntryStream,fGamesData[i].TruckSpeed);
-        WriteIntegerToStream(EntryStream,Length(fGamesData[i].Values));
-        For j := Low(fGamesData[i].Values) to High(fGamesData[i].Values) do
-          WritePointer(EntryStream,fGamesData[i].Values[j]);
-
-        ZCompressStream(EntryStream);
-        WriteIntegerToStream(Stream,EntryStream.Size);
-        Stream.CopyFrom(EntryStream,0);
-      end;
-    Result := True;
-  finally
-    EntryStream.Free;
-  end;
-except
-  Result := False;
-end;
-end;
-
-//------------------------------------------------------------------------------
-
-Function TGamesDataManager.SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean;
-var
-  CurrentSection: String;
   FormatSettings: TFormatSettings;
-  i,j:            Integer;
+  i:              Integer;
 
-  procedure WriteModule(const Prefix: String; Module: TModuleData);
+  procedure ReadModule(const Prefix: String; var Module: TModuleData);
   begin
-    Ini.WriteString(CurrentSection,Prefix + GDIN_GD_MOD_CheckFlags,'$' + IntToHex(Module.CheckFlags,8));
-      Ini.WriteString(CurrentSection,Prefix + GDIN_GD_MOD_FileName,Module.FileName);
+    Module.CheckFlags := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_CheckFlags,CF_NONE);
+    Module.FileName := Ini.ReadString(Section,Prefix + GDIN_GD_MOD_FileName,'');
     If (Module.CheckFlags and CF_FILESIZE) <> 0 then
-      Ini.WriteInteger(CurrentSection,Prefix + GDIN_GD_MOD_Size,Module.Size);
+      Module.Size := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_Size,0);
     If (Module.CheckFlags and CF_FILECRC32) <> 0 then
-      Ini.WriteString(CurrentSection,Prefix + GDIN_GD_MOD_CRC32,'$' + IntToHex(Module.CRC32,8));
+      Module.CRC32 := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_CRC32,0);
     If (Module.CheckFlags and CF_FILEMD5) <> 0 then
-      Ini.WriteString(CurrentSection,Prefix + GDIN_GD_MOD_MD5,MD5ToStr(Module.MD5));
+      Module.MD5 := StrToMD5(Ini.ReadString(Section,Prefix + GDIN_GD_MOD_MD5,'00000000000000000000000000000000'));
   end;
 
-  procedure WritePointer(const Prefix: String; Pointer: TPointerData);
+  procedure ReadPointer(const Prefix: String; var Pointer: TPointerData);
   var
     ii: Integer;
   begin
-    If Pointer.ModuleIndex >= 0 then
-      begin
-        Ini.WriteString(CurrentSection,Prefix + GDIN_GD_VAL_Flags,'$' + IntToHex(Pointer.Flags,8));
-        Ini.WriteInteger(CurrentSection,Prefix + GDIN_GD_VAL_ModuleIndex,Pointer.ModuleIndex);
-        Ini.WriteInteger(CurrentSection,Prefix + GDIN_GD_VAL_Offsets,Length(Pointer.Offsets));
-        For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
-          Ini.WriteString(CurrentSection,Prefix + Format(GDIN_GD_VAL_Offset,[ii]),'$' +
-                                         IntToHex(Pointer.Offsets[ii],16));
-        Ini.WriteString(CurrentSection,Prefix + GDIN_GD_VAL_Coefficient,'$' + SingleToHex(Pointer.Coefficient));
-      end;
+    Pointer.Flags := Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Flags,CF_NONE);
+    Pointer.ModuleIndex := Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,-1);
+    SetLength(Pointer.Offsets,Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Offsets,0));
+    For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
+      Pointer.Offsets[ii] := Ini.ReadInteger(Section,Prefix + Format(GDIN_GD_VAL_Offset,[ii]),0);
+    Pointer.Coefficient := HexToSingle(Ini.ReadString(Section,Prefix + GDIN_GD_VAL_Coefficient,'0'));
   end;
 
 begin
 try
-  For i := Low(fGamesData) to High(fGamesData) do
-    begin
-      CurrentSection := Format(GDIN_Game,[i]);
-      Ini.WriteInteger(CurrentSection,GDIN_GD_Protocol,fGamesData[i].Protocol);
-      Ini.WriteString(CurrentSection,GDIN_GD_Identifier,GUIDToString(fGamesData[i].Identifier));
-      Ini.WriteString(CurrentSection,GDIN_GD_Descriptor,fGamesData[i].Descriptor);
-      Ini.WriteInteger(CurrentSection,GDIN_GD_Version,fGamesData[i].Version);
-      Ini.WriteString(CurrentSection,GDIN_GD_Icon,fGamesData[i].Icon);
-      {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
-      FormatSettings.DateSeparator := '-';
-      FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
-      Ini.WriteString(CurrentSection,GDIN_GD_Date,DateToStr(fGamesData[i].Date,FormatSettings));
-      Ini.WriteString(CurrentSection,GDIN_GD_Author,fGamesData[i].Author);
-      Ini.WriteString(CurrentSection,GDIN_GD_Title,fGamesData[i].Title);
-      Ini.WriteString(CurrentSection,GDIN_GD_Info,fGamesData[i].Info);
-      Ini.WriteString(CurrentSection,GDIN_GD_ExtendedTitle,fGamesData[i].ExtendedTitle);
+  GameData.Protocol := Ini.ReadInteger(Section,GDIN_GD_Protocol,Integer(InvalidProtocolVersion));
+  GameData.Identifier := StringToGUID(Ini.ReadString(Section,GDIN_GD_Identifier,'{00000000-0000-0000-0000-000000000000}'));
+  GameData.Descriptor := Ini.ReadString(Section,GDIN_GD_Descriptor,'');
+  GameData.Version := Ini.ReadInteger(Section,GDIN_GD_Version,0);
+  GameData.Icon := Ini.ReadString(Section,GDIN_GD_Icon,DefaultGameIconName);
+  {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
+  FormatSettings.DateSeparator := '-';
+  FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+  GameData.Date := StrToDateDef(Ini.ReadString(Section,GDIN_GD_Date,''),Now,FormatSettings);
+  GameData.Author := Ini.ReadString(Section,GDIN_GD_Author,'');
+  GameData.Title := Ini.ReadString(Section,GDIN_GD_Title,'');
+  GameData.Info := Ini.ReadString(Section,GDIN_GD_Info,'');
+  GameData.ExtendedTitle := Ini.ReadString(Section,GDIN_GD_ExtendedTitle,'');
 
-      Ini.WriteInteger(CurrentSection,GDIN_GD_Modules,Length(fGamesData[i].Modules));
-      For j := Low(fGamesData[i].Modules) to High(fGamesData[i].Modules) do
-        WriteModule(Format(GDIN_GD_Module,[j]),fGamesData[i].Modules[j]);
+  SetLength(GameData.Modules,Ini.ReadInteger(Section,GDIN_GD_Modules,0));
+  For i := Low(GameData.Modules) to High(GameData.Modules) do
+    ReadModule(Format(GDIN_GD_Module,[i]),GameData.Modules[i]);
 
-      WritePointer(GDIN_GD_CCSpeed,fGamesData[i].CCSpeed);
-      WritePointer(GDIN_GD_CCStatus,fGamesData[i].CCStatus);
-      WritePointer(GDIN_GD_TruckSpeed,fGamesData[i].TruckSpeed);
-      Ini.WriteInteger(CurrentSection,GDIN_GD_Values,Length(fGamesData[i].Values));
-      For j := Low(fGamesData[i].Values) to High(fGamesData[i].Values) do
-        WritePointer(Format(GDIN_GD_Value,[j]),fGamesData[i].Values[j]);
-    end;
+  ReadPointer(GDIN_GD_CCSpeed,GameData.CCSpeed);
+  ReadPointer(GDIN_GD_CCStatus,GameData.CCStatus);
+  ReadPointer(GDIN_GD_TruckSpeed,GameData.TruckSpeed);
+  SetLength(GameData.Values,Ini.ReadInteger(Section,GDIN_GD_Values,0));
+  For i := Low(GameData.Values) to High(GameData.Values) do
+    ReadPointer(Format(GDIN_GD_Value,[i]),GameData.Values[i]);
+
   Result := True;
 except
   Result := False;
@@ -1012,7 +1034,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadItemFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean;
+Function TGamesDataManager.LoadEntryFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean;
 var
   EntryStream:  TMemoryStream;
   i:            Integer;
@@ -1083,62 +1105,13 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadItemFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
+Function TGamesDataManager.SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean;
 var
-  FormatSettings: TFormatSettings;
-  i:              Integer;
-
-  procedure ReadModule(const Prefix: String; var Module: TModuleData);
-  begin
-    Module.CheckFlags := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_CheckFlags,CF_NONE);
-    Module.FileName := Ini.ReadString(Section,Prefix + GDIN_GD_MOD_FileName,'');
-    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
-      Module.Size := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_Size,0);
-    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
-      Module.CRC32 := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_CRC32,0);
-    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
-      Module.MD5 := StrToMD5(Ini.ReadString(Section,Prefix + GDIN_GD_MOD_MD5,'00000000000000000000000000000000'));
-  end;
-
-  procedure ReadPointer(const Prefix: String; var Pointer: TPointerData);
-  var
-    ii: Integer;
-  begin
-    Pointer.Flags := Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Flags,CF_NONE);
-    Pointer.ModuleIndex := Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,-1);
-    SetLength(Pointer.Offsets,Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Offsets,0));
-    For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
-      Pointer.Offsets[ii] := Ini.ReadInteger(Section,Prefix + Format(GDIN_GD_VAL_Offset,[ii]),0);
-    Pointer.Coefficient := HexToSingle(Ini.ReadString(Section,Prefix + GDIN_GD_VAL_Coefficient,'0'));
-  end;
-
+  i:  Integer;
 begin
 try
-  GameData.Protocol := Ini.ReadInteger(Section,GDIN_GD_Protocol,Integer(InvalidProtocolVersion));
-  GameData.Identifier := StringToGUID(Ini.ReadString(Section,GDIN_GD_Identifier,'{00000000-0000-0000-0000-000000000000}'));
-  GameData.Descriptor := Ini.ReadString(Section,GDIN_GD_Descriptor,'');
-  GameData.Version := Ini.ReadInteger(Section,GDIN_GD_Version,0);
-  GameData.Icon := Ini.ReadString(Section,GDIN_GD_Icon,DefaultGameIconName);
-  {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
-  FormatSettings.DateSeparator := '-';
-  FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
-  GameData.Date := StrToDateDef(Ini.ReadString(Section,GDIN_GD_Date,''),Now,FormatSettings);
-  GameData.Author := Ini.ReadString(Section,GDIN_GD_Author,'');
-  GameData.Title := Ini.ReadString(Section,GDIN_GD_Title,'');
-  GameData.Info := Ini.ReadString(Section,GDIN_GD_Info,'');
-  GameData.ExtendedTitle := Ini.ReadString(Section,GDIN_GD_ExtendedTitle,'');
-
-  SetLength(GameData.Modules,Ini.ReadInteger(Section,GDIN_GD_Modules,0));
-  For i := Low(GameData.Modules) to High(GameData.Modules) do
-    ReadModule(Format(GDIN_GD_Module,[i]),GameData.Modules[i]);
-
-  ReadPointer(GDIN_GD_CCSpeed,GameData.CCSpeed);
-  ReadPointer(GDIN_GD_CCStatus,GameData.CCStatus);
-  ReadPointer(GDIN_GD_TruckSpeed,GameData.TruckSpeed);
-  SetLength(GameData.Values,Ini.ReadInteger(Section,GDIN_GD_Values,0));
-  For i := Low(GameData.Values) to High(GameData.Values) do
-    ReadPointer(Format(GDIN_GD_Value,[i]),GameData.Values[i]);
-
+  For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
+    SaveEntryToIni_Struct00010000(Ini,Format(GDIN_Game,[i]),fGamesData.Entries[i]);
   Result := True;
 except
   Result := False;
@@ -1147,20 +1120,79 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.LoadFromBin_Struct00010000(Stream: TStream): Boolean;
+Function TGamesDataManager.SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean;
 var
-  i:            Integer;
+  i:          Integer;
+  TempEntry:  TGameData;
+begin
+try
+  For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
+    SaveEntryToIni_Struct00020000(Ini,Format(GDIN_Game,[i]),fGamesData.Entries[i]);
+  FillChar({%H-}TempEntry,SizeOf(TempEntry),0);
+  TempEntry.Protocol := PROTOCOL_HIDDEN;
+  TempEntry.TruckSpeed.ModuleIndex := -1;
+  For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
+    begin
+      TempEntry.Identifier := fGamesData.Hidden[i];
+      SaveEntryToIni_Struct00020000(Ini,Format(GDIN_Game,[i + Length(fGamesData.Entries)]),TempEntry);
+    end;
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.SaveToBin_Struct00010000(Stream: TStream): Boolean;
+var
+  i:          Integer;
+  TempEntry:  TGameData;
+begin
+try
+  SaveIcons(Stream);
+  WriteIntegerToStream(Stream,Length(fGamesData.Entries) + Length(fGamesData.Hidden));
+  For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
+    SaveEntryToBin_Struct00010000(Stream,Stream.Position,fGamesData.Entries[i]);
+  FillChar({%H-}TempEntry,SizeOf(TempEntry),0);
+  TempEntry.Protocol := PROTOCOL_HIDDEN;
+  TempEntry.TruckSpeed.ModuleIndex := -1;
+  For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
+    begin
+      TempEntry.Identifier := fGamesData.Hidden[i];
+      SaveEntryToBin_Struct00010000(Stream,Stream.Position,TempEntry);
+    end;
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean;
+var
+  Index:        Integer;
   TempGameData: TGameData;
 begin
 try
-  LoadIcons(Stream);
-  For i := 1 to ReadIntegerFromStream(Stream) do
-    If LoadItemFromBin_Struct00010000(Stream,Stream.Position,TempGameData) then
-      If IsValid(TempGameData) then
-        case TempGameData.Protocol of
-          0:  AddGameData(TempGameData);
-          1:  RemoveGameData(TempGameData.Identifier);
-        end;
+  Index := 0;
+  while Ini.SectionExists(Format(GDIN_Game,[Index])) do
+    begin
+      If LoadEntryFromIni_Struct00010000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
+        If IsValid(TempGameData) then
+          case TempGameData.Protocol of
+            PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
+                                AddGameData(TempGameData);
+            PROTOCOL_HIDDEN:  HideGameData(TempGameData.Identifier);
+            PROTOCOL_HIDE:    HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+            PROTOCOL_UPDHIDE: begin
+                                HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+                                AddGameData(TempGameData);
+                              end;
+          end;
+      Inc(Index);
+    end;
   Result := True;
 except
   Result := False;
@@ -1178,14 +1210,48 @@ try
   Index := 0;
   while Ini.SectionExists(Format(GDIN_Game,[Index])) do
     begin
-      If LoadItemFromIni_Struct00020000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
+      If LoadEntryFromIni_Struct00020000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
         If IsValid(TempGameData) then
           case TempGameData.Protocol of
-            0:  AddGameData(TempGameData);
-            1:  RemoveGameData(TempGameData.Identifier);
+            PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
+                                AddGameData(TempGameData);
+            PROTOCOL_HIDDEN:  HideGameData(TempGameData.Identifier);
+            PROTOCOL_HIDE:    HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+            PROTOCOL_UPDHIDE: begin
+                                HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+                                AddGameData(TempGameData);
+                              end;
           end;
       Inc(Index);
     end;
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadFromBin_Struct00010000(Stream: TStream): Boolean;
+var
+  i:            Integer;
+  TempGameData: TGameData;
+begin
+try
+  LoadIcons(Stream);
+  For i := 1 to ReadIntegerFromStream(Stream) do
+    If LoadEntryFromBin_Struct00010000(Stream,Stream.Position,TempGameData) then
+      If IsValid(TempGameData) then
+        case TempGameData.Protocol of
+          PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
+                              AddGameData(TempGameData);
+          PROTOCOL_HIDDEN:  HideGameData(TempGameData.Identifier);
+          PROTOCOL_HIDE:    HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+          PROTOCOL_UPDHIDE: begin
+                              HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+                              AddGameData(TempGameData);
+                            end;
+        end;
   Result := True;
 except
   Result := False;
@@ -1265,13 +1331,28 @@ var
 
 begin
 Result := SupportsProtocolVersion(GameData.Protocol);
-Result := Result and not IsEqualGUID(GameData.Identifier,StringToGUID('{00000000-0000-0000-0000-000000000000}'));
-Result := Result and (Length(GameData.Modules) > 0);
-For i := Low(GameData.Modules) to High(GameData.Modules) do
-  Result := Result and CheckModule(GameData.Modules[i]);
-Result := Result and CheckPointer(GameData.CCSpeed) and CheckPointer(GameData.CCStatus);
-For i := Low(GameData.Values) to High(GameData.Values) do
-  Result := Result and CheckPointer(GameData.Values[i]);
+case GameData.Protocol of
+  PROTOCOL_NORMAL:
+      begin
+        Result := Result and not IsEqualGUID(GameData.Identifier,StringToGUID('{00000000-0000-0000-0000-000000000000}'));
+        Result := Result and (Length(GameData.Modules) > 0);
+        For i := Low(GameData.Modules) to High(GameData.Modules) do
+          Result := Result and CheckModule(GameData.Modules[i]);
+        Result := Result and CheckPointer(GameData.CCSpeed) and CheckPointer(GameData.CCStatus);
+        For i := Low(GameData.Values) to High(GameData.Values) do
+          Result := Result and CheckPointer(GameData.Values[i]);
+      end;
+  PROTOCOL_HIDDEN:
+      Result := Result and not IsEqualGUID(GameData.Identifier,StringToGUID('{00000000-0000-0000-0000-000000000000}'));
+  PROTOCOL_HIDE,
+  PROTOCOL_UPDHIDE:
+      begin
+        Result := Result and not IsEqualGUID(GameData.Identifier,StringToGUID('{00000000-0000-0000-0000-000000000000}'));
+        Result := Result and (Length(GameData.Modules) > 0);
+      end;
+else
+  Result := False;
+end;
 end;
 
 //------------------------------------------------------------------------------
@@ -1287,7 +1368,8 @@ end;
 constructor TGamesDataManager.Create;
 begin
 inherited;
-SetLength(fGamesData,0);
+SetLength(fGamesData.Entries,0);
+SetLength(fGamesData.Hidden,0);
 fGameIcons := TIconList.Create;
 end;
 
@@ -1303,8 +1385,8 @@ end;
 
 Function TGamesDataManager.IndexOf(Identifier: TGUID): Integer;
 begin
-For Result := Low(fGamesData) to High(fGamesData) do
-  If IsEqualGUID(fGamesData[Result].Identifier,Identifier) then Exit;
+For Result := Low(fGamesData.Entries) to High(fGamesData.Entries) do
+  If IsEqualGUID(fGamesData.Entries[Result].Identifier,Identifier) then Exit;
 Result := -1;
 end;
 
@@ -1319,7 +1401,8 @@ end;
 
 procedure TGamesDataManager.Clear;
 begin
-SetLength(fGamesData,0);
+SetLength(fGamesData.Entries,0);
+SetLength(fGamesData.Hidden,0);
 fGameIcons.Initialize;
 end;
 
@@ -1523,19 +1606,42 @@ var
   i, Index:     Integer;
   GameDataTemp: PGameData;
 begin
-{$IFDEF DevMsgs}{$MESSAGE 'Implement protocols'}{$ENDIF}
 For i := 0 to Pred(GamesDataCount) do
   begin
     GameDataTemp := GameDataPtr[i];
     GameDataTemp^.UpdateInfo.Valid := IsValid(GameDataTemp^);
-    Index := OldData.IndexOf(GameDataTemp^.Identifier);
-    If Index >= 0 then
-      begin
-        GameDataTemp^.UpdateInfo.NewEntry := False;
-        GameDataTemp^.UpdateInfo.NewVersion := GameDataTemp^.Version > OldData[Index].Version;
-        GameDataTemp^.UpdateInfo.OldVersion := GameDataTemp^.Version < OldData[Index].Version;
-      end
-    else GameDataTemp^.UpdateInfo.NewEntry := True;
+    GameDataTemp^.UpdateInfo.NewEntry := False;
+    GameDataTemp^.UpdateInfo.NewVersion := False;
+    GameDataTemp^.UpdateInfo.OldVersion := False;
+    case GameDataTemp^.Protocol of
+      PROTOCOL_NORMAL:
+        If not OldData.IsHidden(GameDataTemp^.Identifier) then
+          begin
+            Index := OldData.IndexOf(GameDataTemp^.Identifier);
+            If Index >= 0 then
+              begin
+                GameDataTemp^.UpdateInfo.NewEntry := False;
+                GameDataTemp^.UpdateInfo.NewVersion := GameDataTemp^.Version > OldData[Index].Version;
+                GameDataTemp^.UpdateInfo.OldVersion := GameDataTemp^.Version < OldData[Index].Version;
+              end
+            else GameDataTemp^.UpdateInfo.NewEntry := True;
+          end;
+      PROTOCOL_HIDDEN,
+      PROTOCOL_HIDE:
+        GameDataTemp^.UpdateInfo.Valid := False;
+      PROTOCOL_UPDHIDE:
+        begin
+          try
+            Index := OldData.IndexOf(StringToGUID(GameDataTemp^.Modules[0].FileName));
+          except
+            Index := -1;
+          end;
+          If Index >= 0 then
+            GameDataTemp^.UpdateInfo.NewEntry := True
+          else
+            GameDataTemp^.UpdateInfo.NewEntry := False;
+        end;
+    end;
     GameDataTemp^.UpdateInfo.Add := GameDataTemp^.UpdateInfo.Valid and
                                    (GameDataTemp^.UpdateInfo.NewEntry or
                                     GameDataTemp^.UpdateInfo.NewVersion);
@@ -1554,16 +1660,21 @@ If UpdateData.GamesDataCount > 0 then
   For i := 0 to Pred(UpdateData.GamesDataCount) do
     If UpdateData[i].UpdateInfo.Add then
       begin
-        Index := IndexOf(UpdateData[i].Identifier);
-        If Index >= 0 then
-          fGamesData[Index] := UpdateData[i]
-        else
-          begin
-            {$IFDEF DevMsgs}{$MESSAGE 'Implement protocols'}{$ENDIF}
-            SetLength(fGamesData,Length(fGamesData) + 1);
-            fGamesData[High(fGamesData)] := UpdateData[i];
-          end;
-        Inc(Result);
+        case UpdateData[i].Protocol of
+          PROTOCOL_NORMAL:
+            If not IsHidden(UpdateData[i].Identifier) then
+              begin
+                Index := IndexOf(UpdateData[i].Identifier);
+                If Index >= 0 then fGamesData.Entries[Index] := UpdateData[i]
+                  else AddGameData(UpdateData[i]);
+                Inc(Result);
+              end;
+          PROTOCOL_HIDDEN,
+          PROTOCOL_HIDE:;   // do nothing
+          PROTOCOL_UPDHIDE:
+            If HideGameData(StringToGUID(UpdateData[i].Modules[0].FileName)) > 0 then
+              Inc(Result);
+        end;
       end;
 end;
 
@@ -1573,9 +1684,9 @@ Function TGamesDataManager.AddGameData(GameData: TGameData): Integer;
 begin
 If IsValid(GameData) and not GameListed(GameData.Identifier) then
   begin
-    SetLength(fGamesData,Length(fGamesData) + 1);
-    fGamesData[High(fGamesData)] := GameData;
-    Result := High(fGamesData);
+    SetLength(fGamesData.Entries,Length(fGamesData.Entries) + 1);
+    fGamesData.Entries[High(fGamesData.Entries)] := GameData;
+    Result := High(fGamesData.Entries);
   end
 else Result := -1;
 end;
@@ -1594,13 +1705,41 @@ procedure TGamesDataManager.DeleteGameData(Index: Integer);
 var
   i:  Integer;
 begin
-If (Index >= Low(fGamesData)) and (Index <= High(fGamesData)) then
+If (Index >= Low(fGamesData.Entries)) and (Index <= High(fGamesData.Entries)) then
   begin
-    For i := Index to Pred(High(fGamesData)) do
-      fGamesData[Index] := fGamesData[Index + 1];
-    SetLength(fGamesData,Length(fGamesData) - 1);
+    For i := Index to Pred(High(fGamesData.Entries)) do
+      fGamesData.Entries[Index] := fGamesData.Entries[Index + 1];
+    SetLength(fGamesData.Entries,Length(fGamesData.Entries) - 1);
   end
 else raise Exception.CreateFmt('TGamesDataManager.DeleteGameData: Index (%d) out of bounds.',[Index]);
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.IsHidden(Identifier: TGUID): Boolean;
+var
+  i:  Integer;
+begin
+Result := False;
+For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
+  If IsEqualGUID(fGamesData.Hidden[i],Identifier) then
+    begin
+      Result := True;
+      Break;
+    end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.HideGameData(Identifier: TGUID): Integer;
+begin
+Result := IndexOf(Identifier);
+If Result >= 0 then DeleteGameData(Result);
+If not IsHidden(Identifier) then
+  begin
+    SetLength(fGamesData.Hidden,Length(fGamesData.Hidden) + 1);
+    fGamesData.Hidden[High(fGamesData.Hidden)] := Identifier;
+  end;
 end;
 
 end.
