@@ -283,6 +283,7 @@ If AddCount > 0 then
     ShowInfoMsg(IntToStr(AddCount) + ' change(s) was made in the list of supported games.');
   {$ENDIF}
     ACCManager.ProcessBinder.SetGamesData(ACCManager.GamesDataManager.GamesData);
+    ACCManager.ProcessBinder.Rebind;
     ACCManager.GamesDataManager.Save;
     fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
     FillList;
