@@ -57,7 +57,7 @@ type
 {==============================================================================}
   TBinderState = (bsSearching, bsModulesWaiting, bsBinded);
 
-  TStateChangeEvent = procedure(Sender: TObject; NewState: TBinderState) of object;
+  TStateChangeEvent = procedure(Sender: TObject; NewState: TBinderState; Rebinding: Boolean) of object;
 
   TWaitObjects = packed record
     GameProcess:  THandle;
@@ -75,18 +75,22 @@ type
     fPossibleGameProcess: TProcessListItem;
     fWaitObjects:         TWaitObjects;
     fOnStateChange:       TStateChangeEvent;
+    fRebind:              LongBool;
+    fRebinding:           Boolean;
+    procedure SetRebind(Value: LongBool);
   protected
     procedure sync_StateChange; virtual;
     procedure SwapProcessLists; virtual;
     Function SearchForRunningGame: Boolean; virtual;
     Function CheckModulesAndBind: Boolean; virtual;
+    procedure DoRebind; virtual;    
     procedure Execute; override;
   public
     constructor Create(GamesDataPtr: PGamesData; GamesDataSync: TMultiReadExclusiveWriteSynchronizer; ControlEvent: THandle);
     destructor Destroy; override;
-    procedure Rebind; virtual;
     property GameData: TGameData read fGameData;
   published
+    property Rebind: LongBool write SetRebind;
     property OnStateChange: TStateChangeEvent read fOnStateChange write fOnStateChange;
   end;
 
@@ -104,12 +108,11 @@ type
     fControlEvent:  THandle;
     fBinderThread:  TBinderThread;
     fGameData:      TGameData;
-    fRebinding:     Boolean;    
     fOnStateChange: TNotifyEvent;
     fOnGameUnbind:  TNotifyEvent;
   protected
     procedure OnTimer(Sender: TObject); virtual;
-    procedure OnThreadStateChange(Sender: TObject; NewState: TBinderState); virtual;
+    procedure OnThreadStateChange(Sender: TObject; NewState: TBinderState; Rebinding: Boolean); virtual;
   public
     constructor Create(UtilityWindow: TUtilityWindow);
     destructor Destroy; override;
@@ -285,12 +288,21 @@ end;
 {==============================================================================}
 
 {------------------------------------------------------------------------------}
+{   TBinderThread // Private methods                                           }
+{------------------------------------------------------------------------------}
+
+procedure TBinderThread.SetRebind(Value: LongBool);
+begin
+InterlockedExchange(Integer(fRebind),Integer(Value));
+end;
+
+{------------------------------------------------------------------------------}
 {   TBinderThread // Protected methods                                         }
 {------------------------------------------------------------------------------}
 
 procedure TBinderThread.sync_StateChange;
 begin
-If Assigned(fOnStateChange) then fOnStateChange(Self,fState);
+If Assigned(fOnStateChange) then fOnStateChange(Self,fState,fRebinding);
 end;
 
 //------------------------------------------------------------------------------
@@ -458,41 +470,64 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TBinderThread.DoRebind;
+begin
+If fState = bsBinded then
+  begin
+    fState := bsSearching;
+    fRebinding := True;
+    try
+      Synchronize(sync_StateChange);
+    finally
+      fRebinding := False;
+    end;
+    CloseHandle(fWaitObjects.GameProcess);
+    fWaitObjects.GameProcess := INVALID_HANDLE_VALUE;
+    fCurrentProcessList.Invalidate;
+    SetEvent(fWaitObjects.ControlEvent);
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TBinderThread.Execute;
 begin
 while not Terminated do
-  case fState of
-    bsSearching:      begin
-                        WaitForSingleObject(fWaitObjects.ControlEvent,10000);
-                        If not Terminated then
-                          begin
-                            SwapProcessLists;
-                            fCurrentProcessList.Fill;
-                            fCurrentProcessList.Compare(fOldProcessList);
-                            If SearchForRunningGame then
-                              Synchronize(sync_StateChange);
-                          end;
-                      end;
-    bsModulesWaiting: begin
-                        WaitForSingleObject(fWaitObjects.ControlEvent,30000);
-                        If not Terminated then
-                          begin
-                            If CheckModulesAndBind then fState := bsBinded
-                              else fState := bsSearching;
-                            Synchronize(sync_StateChange);
-                          end;  
-                      end;
-    bsBinded:         If WaitForMultipleObjects(2,Addr(fWaitObjects),False,10000) = WAIT_OBJECT_0 then
-                        begin
+  begin
+    If InterlockedExchange(Integer(fRebind),0) <> 0 then DoRebind;
+    case fState of
+      bsSearching:      begin
+                          WaitForSingleObject(fWaitObjects.ControlEvent,10000);
                           If not Terminated then
                             begin
-                              fState := bsSearching;
+                              SwapProcessLists;
+                              fCurrentProcessList.Fill;
+                              fCurrentProcessList.Compare(fOldProcessList);
+                              If SearchForRunningGame then
+                                Synchronize(sync_StateChange);
+                            end;
+                        end;
+      bsModulesWaiting: begin
+                          WaitForSingleObject(fWaitObjects.ControlEvent,30000);
+                          If not Terminated then
+                            begin
+                              If CheckModulesAndBind then fState := bsBinded
+                                else fState := bsSearching;
                               Synchronize(sync_StateChange);
                             end;
-                          CloseHandle(fWaitObjects.GameProcess);
-                          fWaitObjects.GameProcess := INVALID_HANDLE_VALUE;
-                          fCurrentProcessList.Invalidate;
                         end;
+      bsBinded:         If WaitForMultipleObjects(2,Addr(fWaitObjects),False,10000) = WAIT_OBJECT_0 then
+                          begin
+                            If not Terminated then
+                              begin
+                                fState := bsSearching;
+                                Synchronize(sync_StateChange);
+                              end;
+                            CloseHandle(fWaitObjects.GameProcess);
+                            fWaitObjects.GameProcess := INVALID_HANDLE_VALUE;
+                            fCurrentProcessList.Invalidate;
+                        end;
+    end;
   end;
 end;
 
@@ -511,6 +546,8 @@ fWaitObjects.ControlEvent := ControlEvent;
 fWaitObjects.GameProcess := INVALID_HANDLE_VALUE;
 fOldProcessList := TProcessList.Create;
 fCurrentProcessList := TProcessList.Create;
+fRebind := False;
+fRebinding := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -520,20 +557,6 @@ begin
 fOldProcessList.Free;
 fCurrentProcessList.Free;
 inherited;
-end;
-
-//------------------------------------------------------------------------------
-
-procedure TBinderThread.Rebind;
-begin
-If fState = bsBinded then
-  begin
-    fState := bsSearching;  
-    Synchronize(sync_StateChange);
-    CloseHandle(fWaitObjects.GameProcess);
-    fWaitObjects.GameProcess := INVALID_HANDLE_VALUE;
-    fCurrentProcessList.Invalidate;
-  end;
 end;
 
 {==============================================================================}
@@ -553,7 +576,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TProcessBinder.OnThreadStateChange(Sender: TObject; NewState: TBinderState);
+procedure TProcessBinder.OnThreadStateChange(Sender: TObject; NewState: TBinderState; Rebinding: Boolean);
 var
   CallUnbindEvent:  Boolean;
 begin
@@ -561,7 +584,7 @@ case NewState of
   bsSearching:      begin
                       fControlTimer.Interval := Settings.ProcessBinderScanInterval;
                       fControlTimer.Tag := 0;
-                      CallUnbindEvent := fBinded and not fRebinding;
+                      CallUnbindEvent := fBinded and not Rebinding;
                       fBinded := False;
                       If Assigned(fOnStateChange) then fOnStateChange(Self);
                       If CallUnbindEvent and Assigned(fOnGameUnbind) then fOnGameUnbind(Self);
@@ -595,7 +618,6 @@ fControlTimer.OnTimer := OnTimer;
 fGamesDataSync := TMultiReadExclusiveWriteSynchronizer.Create;
 New(fGamesDataPtr);
 fControlEvent := CreateEvent(nil,False,False,nil);
-fRebinding := False;
 fBinderThread := TBinderThread.Create(fGamesDataPtr,fGamesDataSync,fControlEvent);
 fBinderThread.OnStateChange := OnThreadStateChange;
 end;
@@ -668,22 +690,8 @@ end;
 
 procedure TProcessBinder.Rebind;
 begin
-fRebinding := True;
-try
-  fBinderThread.Suspend;
-  try
-    fBinderThread.Rebind;
-    SetEvent(fControlEvent);
-  finally
-    {$IFDEF FPC}
-    fBinderThread.Start;
-    {$ELSE}
-    fBinderThread.Resume;
-    {$ENDIF}
-  end;
-finally
-  fRebinding := False;
-end;
+fBinderThread.Rebind := True;
+SetEvent(fControlEvent);
 end;
 
 end.

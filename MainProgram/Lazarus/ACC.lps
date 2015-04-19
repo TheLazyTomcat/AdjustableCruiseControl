@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <BuildModes Active="Debug_win_x86"/>
+    <BuildModes Active="Release_win_x86"/>
     <Units Count="40">
       <Unit0>
         <Filename Value="ACC.lpr"/>
@@ -137,7 +137,6 @@
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_GamesData"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1144"/>
@@ -221,10 +220,11 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="2"/>
+        <TopLine Value="334"/>
+        <CursorPos X="1" Y="349"/>
         <UsageCount Value="57"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -394,11 +394,11 @@
     <JumpHistory Count="2" HistoryIndex="1">
       <Position1>
         <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="668" Column="1" TopLine="672"/>
+        <Caret Line="1131" Column="17" TopLine="1118"/>
       </Position1>
       <Position2>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1131" Column="17" TopLine="1118"/>
+        <Filename Value="..\MainForm.pas"/>
+        <Caret Line="2" Column="1" TopLine="1"/>
       </Position2>
     </JumpHistory>
   </ProjectSession>
