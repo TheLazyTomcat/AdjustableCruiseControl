@@ -25,7 +25,7 @@ PNGDelphi
   integral part of the Delphi. In that case, remove or rename CFG files 
   mentioned further, so they are not used during batch compilation.
   After installing it, edit following files and change path that is stored in 
-  them so it leads to a place were you have installed this library:
+  them so it leads to a place where you have installed this library:
 
     ./MainProgram/Delphi/dcc32.cfg
     ./Tools/GamesDataConverter/dcc32.cfg

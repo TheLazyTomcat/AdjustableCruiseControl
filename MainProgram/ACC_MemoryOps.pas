@@ -250,7 +250,11 @@ Function TMemoryOperator.ReadVehicleSpeed(out Value: Single): Boolean;
 begin
 If fActive and fCanReadVehicleSpeed then
   begin
-    Result := ReadFloat(PTR_IDX_TruckSpeed,Value);
+    If (fGameData.TruckSpeed.Flags and PTRFLAG_TELEMETRY_TRUCK_SPEED) <> 0 then
+      begin
+        {$IFDEF DevMsgs}{$MESSAGE 'implement reading by plugin'}{$ENDIF}
+      end
+    else Result := ReadFloat(PTR_IDX_TruckSpeed,Value);
   end
 else Result := False;
 end;

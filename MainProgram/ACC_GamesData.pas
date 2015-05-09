@@ -140,6 +140,8 @@ const
   IFS_1_0 = $00010000;
   IFS_2_0 = $00020000;
 
+  PTRFLAG_TELEMETRY_TRUCK_SPEED = $1;
+
   InvalidProtocolVersion = TProtocolVersion(-1);
 
   ACC_PTR_FLAGS_PointerTypeBitmask = $1FF;
@@ -1359,8 +1361,9 @@ end;
 
 class Function TGamesDataManager.TruckSpeedSupported(const GameData: TGameData): Boolean;
 begin
-Result := (GameData.TruckSpeed.ModuleIndex >= Low(GameData.Modules)) and
-          (GameData.TruckSpeed.ModuleIndex <= High(GameData.Modules));
+Result := ((GameData.TruckSpeed.Flags and PTRFLAG_TELEMETRY_TRUCK_SPEED) <> 0) or
+          ((GameData.TruckSpeed.ModuleIndex >= Low(GameData.Modules)) and
+          (GameData.TruckSpeed.ModuleIndex <= High(GameData.Modules)));
 end;
 
 //------------------------------------------------------------------------------

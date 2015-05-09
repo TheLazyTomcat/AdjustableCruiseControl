@@ -217,7 +217,7 @@ in the program and in the game.
 
 And now about how to install games data update, follow these steps:
   - download update file (*.INI,*.GDB or *.UGBD) - they are available on a forum 
-    linked further in this socument
+    linked further in this document
   - start the program, open settings window and click on "Update games data..." 
     button
   - in newly opened window, click on "Load update file..." button and then
