@@ -703,13 +703,13 @@ ConflictingInputIndex := -1;
 For i := 0 to 41 do
   begin
     TempInput := GetInput(i);
-    If (TempInput.PrimaryKey = Input.PrimaryKey) and (TempInput.ShiftKey = Input.ShiftKey) then
+    If (i <> InputIndex) and (TempInput.PrimaryKey = Input.PrimaryKey) and (TempInput.ShiftKey = Input.ShiftKey) then
       begin
         ConflictingInputIndex := i;
         Break;
       end;
   end;
-Result := (ConflictingInputIndex >= 0) and (ConflictingInputIndex <> InputIndex);
+Result := (ConflictingInputIndex >= 0);
 end;
 
 end.

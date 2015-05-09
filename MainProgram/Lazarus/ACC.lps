@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Debug_win_x86"/>
-    <Units Count="46">
+    <Units Count="47">
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -12,9 +12,9 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="37"/>
+        <TopLine Value="22"/>
         <CursorPos X="12" Y="20"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -22,9 +22,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="CRC32"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="238"/>
+        <TopLine Value="127"/>
         <CursorPos X="23" Y="158"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\Libs\MD5.pas"/>
@@ -33,7 +33,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="243"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\Libs\WinRawInput.pas"/>
@@ -42,7 +42,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\Libs\FloatHex.pas"/>
@@ -51,7 +51,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="241"/>
         <CursorPos X="10" Y="37"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\Libs\DefRegistry.pas"/>
@@ -60,7 +60,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\Libs\MulticastEvent.pas"/>
@@ -69,7 +69,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\Libs\SimpleCompress.pas"/>
@@ -78,7 +78,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\Libs\SimpleTimer.pas"/>
@@ -87,7 +87,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\Libs\StringEncryptionUnit.pas"/>
@@ -96,7 +96,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\Libs\UtilityWindow.pas"/>
@@ -105,48 +105,45 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\ACC_Common.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Common"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="7"/>
-        <CursorPos X="95" Y="14"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="59"/>
+        <CursorPos X="31" Y="22"/>
+        <UsageCount Value="65"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\ACC_Strings.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Strings"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="46"/>
+        <TopLine Value="115"/>
         <CursorPos X="1" Y="57"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\ACC_TrayIcon.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_TrayIcon"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="58"/>
-        <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="170"/>
+        <CursorPos X="1" Y="217"/>
+        <UsageCount Value="65"/>
       </Unit13>
       <Unit14>
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_GamesData"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1558"/>
-        <CursorPos X="44" Y="1571"/>
-        <UsageCount Value="57"/>
-        <Bookmarks Count="4">
-          <Item0 X="1" Y="888" ID="1"/>
-          <Item1 X="1" Y="1201" ID="2"/>
-          <Item2 X="1" Y="1230" ID="3"/>
-          <Item3 X="1" Y="276" ID="5"/>
+        <TopLine Value="1594"/>
+        <CursorPos X="29" Y="1607"/>
+        <UsageCount Value="65"/>
+        <Bookmarks Count="1">
+          <Item0 X="28" Y="1352" ID="2"/>
         </Bookmarks>
       </Unit14>
       <Unit15>
@@ -154,63 +151,63 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Input"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="277"/>
-        <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="297"/>
+        <CursorPos X="89" Y="123"/>
+        <UsageCount Value="65"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\ACC_InstanceControl.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_InstanceControl"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="85"/>
+        <TopLine Value="78"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Manager"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="196"/>
+        <TopLine Value="409"/>
         <CursorPos X="6" Y="299"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_MemoryOps"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="242"/>
-        <CursorPos X="13" Y="254"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="212"/>
+        <CursorPos X="101" Y="141"/>
+        <UsageCount Value="65"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_ProcessBinder"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="227"/>
-        <CursorPos X="105" Y="238"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="672"/>
+        <CursorPos X="61" Y="184"/>
+        <UsageCount Value="65"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\ACC_Settings.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Settings"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="324"/>
+        <CursorPos X="13" Y="337"/>
+        <UsageCount Value="65"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\ACC_SplashScreen.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_SplashScreen"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="217"/>
-        <CursorPos X="43" Y="210"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="232"/>
+        <CursorPos X="27" Y="122"/>
+        <UsageCount Value="65"/>
       </Unit21>
       <Unit22>
         <Filename Value="..\MainForm.pas"/>
@@ -222,7 +219,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="334"/>
         <CursorPos X="1" Y="349"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit22>
       <Unit23>
         <Filename Value="..\AboutForm.pas"/>
@@ -232,9 +229,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="AboutForm"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="25"/>
+        <TopLine Value="1"/>
         <CursorPos X="1" Y="46"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit23>
       <Unit24>
         <Filename Value="..\SettingsForm.pas"/>
@@ -244,9 +241,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="SettingsForm"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="245"/>
+        <TopLine Value="331"/>
         <CursorPos X="1" Y="267"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\KeyBindForm.pas"/>
@@ -256,9 +253,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="KeyBindForm"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="105"/>
+        <TopLine Value="59"/>
         <CursorPos X="1" Y="120"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\SupportedGamesForm.pas"/>
@@ -268,9 +265,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="SupportedGamesForm"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="220"/>
+        <TopLine Value="33"/>
         <CursorPos X="53" Y="236"/>
-        <UsageCount Value="57"/>
+        <UsageCount Value="65"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -280,16 +277,16 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="UpdateForm"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="250"/>
-        <CursorPos X="1" Y="257"/>
-        <UsageCount Value="57"/>
+        <TopLine Value="275"/>
+        <CursorPos X="69" Y="290"/>
+        <UsageCount Value="65"/>
       </Unit27>
       <Unit28>
         <Filename Value="D:\Lazarus\lcl\include\control.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="3632"/>
         <CursorPos X="1" Y="3645"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit28>
       <Unit29>
         <Filename Value="D:\Lazarus\lcl\intfgraphics.pas"/>
@@ -297,7 +294,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="5747"/>
         <CursorPos X="1" Y="5765"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit29>
       <Unit30>
         <Filename Value="D:\Lazarus\lcl\checklst.pas"/>
@@ -305,14 +302,14 @@
         <WindowIndex Value="0"/>
         <TopLine Value="135"/>
         <CursorPos X="6" Y="153"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit30>
       <Unit31>
         <Filename Value="D:\Lazarus\lcl\include\customlistbox.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="550"/>
         <CursorPos X="1" Y="565"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit31>
       <Unit32>
         <Filename Value="D:\Lazarus\lcl\stdctrls.pp"/>
@@ -320,7 +317,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1445"/>
         <CursorPos X="11" Y="1540"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit32>
       <Unit33>
         <Filename Value="D:\Lazarus\lcl\widgetset\wschecklst.pp"/>
@@ -328,7 +325,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="104"/>
         <CursorPos X="43" Y="48"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit33>
       <Unit34>
         <Filename Value="D:\Lazarus\lcl\widgetset\wsstdctrls.pp"/>
@@ -336,14 +333,14 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="372"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit34>
       <Unit35>
         <Filename Value="D:\Lazarus\lcl\include\wincontrol.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="6342"/>
         <CursorPos X="1" Y="6356"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit35>
       <Unit36>
         <Filename Value="D:\Lazarus\lcl\interfaces\win32\win32wsstdctrls.pp"/>
@@ -351,21 +348,21 @@
         <WindowIndex Value="0"/>
         <TopLine Value="158"/>
         <CursorPos X="1" Y="686"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit36>
       <Unit37>
         <Filename Value="D:\Lazarus\lcl\include\rasterimage.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="404"/>
         <CursorPos X="1" Y="417"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit37>
       <Unit38>
         <Filename Value="D:\Lazarus\lcl\include\bitmap.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="121"/>
         <CursorPos X="1" Y="143"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit38>
       <Unit39>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\packages\fcl-base\src\inifiles.pp"/>
@@ -373,35 +370,35 @@
         <WindowIndex Value="0"/>
         <TopLine Value="464"/>
         <CursorPos X="19" Y="464"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit39>
       <Unit40>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\classesh.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="918"/>
         <CursorPos X="66" Y="928"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit40>
       <Unit41>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\inc\objpash.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="179"/>
         <CursorPos X="23" Y="192"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit41>
       <Unit42>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\streams.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="532"/>
         <CursorPos X="3" Y="538"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit42>
       <Unit43>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\filutilh.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="71"/>
         <CursorPos X="10" Y="84"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit43>
       <Unit44>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\win\sysutils.pp"/>
@@ -409,7 +406,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="240"/>
         <CursorPos X="3" Y="248"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit44>
       <Unit45>
         <Filename Value="..\Libs\WndAlloc.pas"/>
@@ -418,8 +415,15 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="28"/>
       </Unit45>
+      <Unit46>
+        <Filename Value="..\ACC_Defs.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="13"/>
+      </Unit46>
     </Units>
     <CustomDefines Count="5">
       <Define0 Value="FPC"/>

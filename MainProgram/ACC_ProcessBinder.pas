@@ -164,7 +164,7 @@ begin
 If (Index >= 0) and (Index < fRealCount) then
   Result := Items[Index]
 else
-  raise Exception.Create('TProcessList.GetItemPtr: Index (' + IntToStr(Index) + ') out of bounds.');
+  raise Exception.CreateFmt('TProcessList.GetItemPtr: Index (%d) out of bounds.',[Index]);
 end;
 
 //------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ begin
 If (Index >= 0) and (Index < fRealCount) then
   PProcessListItem(Items[Index])^ := Value
 else
-  raise Exception.Create('TProcessList.SetItem: Index (' + IntToStr(Index) + ') out of bounds.');
+  raise Exception.CreateFmt('TProcessList.SetItem: Index (%d) out of bounds.',[Index]);
 end;
 
 {------------------------------------------------------------------------------}

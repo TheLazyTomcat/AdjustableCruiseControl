@@ -79,13 +79,13 @@ Result := False;
 try
   Address := BaseAddress;
   If Length(PointerData.Offsets) > 0 then
-    Address := {%H-}Pointer(PtrInt(Address) + PointerData.Offsets[0]);
+    Address := {%H-}Pointer(PtrUInt(Address) + PointerData.Offsets[0]);
   For i := Succ(Low(PointerData.Offsets)) to High(PointerData.Offsets) do
     begin
       If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),{%H-}Temp) then
         begin
           If Assigned(Address) and (Temp = SizeOf(Pointer)) then
-            Address := {%H-}Pointer(PtrInt(Address) + PointerData.Offsets[i])
+            Address := {%H-}Pointer(PtrUInt(Address) + PointerData.Offsets[i])
           else Exit;
         end
       else Exit;
@@ -138,7 +138,7 @@ else
   If (Index >= Low(fGameData.Values)) and (Index <= High(fGameData.Values)) then
     Result := fGameData.Values[Index]
   else
-    raise Exception.Create('TMemoryOperator.PointerDataByIndex: Index (' + IntToStr(Index) + ') out of bounds.');
+    raise Exception.CreateFmt('TMemoryOperator.PointerDataByIndex: Index (%d) out of bounds.',[Index]);
 end;
 end;
 
