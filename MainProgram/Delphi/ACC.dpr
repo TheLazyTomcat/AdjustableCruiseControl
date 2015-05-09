@@ -12,6 +12,7 @@ uses
   SimpleCompress       in '..\Libs\SimpleCompress.pas',
   StringEncryptionUnit in '..\Libs\StringEncryptionUnit.pas',
   MulticastEvent       in '..\Libs\MulticastEvent.pas',
+  WndAlloc             in '..\Libs\WndAlloc.pas',
   UtilityWindow        in '..\Libs\UtilityWindow.pas',
   SimpleTimer          in '..\Libs\SimpleTimer.pas',
 
@@ -35,6 +36,7 @@ uses
   SupportedGamesForm in '..\SupportedGamesForm.pas' {fSupportedGamesForm},
   UpdateForm         in '..\UpdateForm.pas' {fUpdateForm};
 
+
 {$R *.res}
 
 begin
@@ -45,13 +47,13 @@ try
       Application.Initialize;
       Application.Title := 'Adjustable Cruise Control';
       Application.CreateForm(TfMainForm, fMainForm);
-      Application.CreateForm(TfMsgForm, fMsgForm);
-      Application.CreateForm(TfAboutForm, fAboutForm);
-      Application.CreateForm(TfSettingsForm, fSettingsForm);
-      Application.CreateForm(TfKeyBindForm, fKeyBindForm);
-      Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
-      Application.CreateForm(TfUpdateForm, fUpdateForm);
-      ACCManager.Initialize(Application);
+  Application.CreateForm(TfMsgForm, fMsgForm);
+  Application.CreateForm(TfAboutForm, fAboutForm);
+  Application.CreateForm(TfSettingsForm, fSettingsForm);
+  Application.CreateForm(TfKeyBindForm, fKeyBindForm);
+  Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
+  Application.CreateForm(TfUpdateForm, fUpdateForm);
+  ACCManager.Initialize(Application);
       Application.Run;
       ACCManager.Save;
     end;

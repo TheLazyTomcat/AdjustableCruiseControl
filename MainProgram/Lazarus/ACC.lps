@@ -4,15 +4,16 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Debug_win_x86"/>
-    <Units Count="45">
+    <Units Count="46">
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="45"/>
-        <CursorPos X="1" Y="64"/>
+        <TopLine Value="37"/>
+        <CursorPos X="12" Y="20"/>
         <UsageCount Value="57"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -110,13 +111,10 @@
         <Filename Value="..\ACC_Common.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Common"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
         <TopLine Value="7"/>
         <CursorPos X="95" Y="14"/>
         <UsageCount Value="57"/>
-        <Loaded Value="True"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\ACC_Strings.pas"/>
@@ -140,7 +138,6 @@
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_GamesData"/>
-        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1558"/>
         <CursorPos X="44" Y="1571"/>
@@ -151,7 +148,6 @@
           <Item2 X="1" Y="1230" ID="3"/>
           <Item3 X="1" Y="276" ID="5"/>
         </Bookmarks>
-        <Loaded Value="True"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\ACC_Input.pas"/>
@@ -184,12 +180,10 @@
         <Filename Value="..\ACC_MemoryOps.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_MemoryOps"/>
-        <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="242"/>
         <CursorPos X="13" Y="254"/>
         <UsageCount Value="57"/>
-        <Loaded Value="True"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
@@ -225,13 +219,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
-        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="334"/>
         <CursorPos X="1" Y="349"/>
         <UsageCount Value="57"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit22>
       <Unit23>
         <Filename Value="..\AboutForm.pas"/>
@@ -288,13 +279,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="UpdateForm"/>
-        <EditorIndex Value="9"/>
         <WindowIndex Value="0"/>
         <TopLine Value="250"/>
         <CursorPos X="1" Y="257"/>
         <UsageCount Value="57"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit27>
       <Unit28>
         <Filename Value="D:\Lazarus\lcl\include\control.inc"/>
@@ -389,12 +377,10 @@
       </Unit39>
       <Unit40>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\classesh.inc"/>
-        <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="918"/>
         <CursorPos X="66" Y="928"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit40>
       <Unit41>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\inc\objpash.inc"/>
@@ -405,32 +391,35 @@
       </Unit41>
       <Unit42>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\streams.inc"/>
-        <EditorIndex Value="6"/>
         <WindowIndex Value="0"/>
         <TopLine Value="532"/>
         <CursorPos X="3" Y="538"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit42>
       <Unit43>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\sysutils\filutilh.inc"/>
-        <EditorIndex Value="7"/>
         <WindowIndex Value="0"/>
         <TopLine Value="71"/>
         <CursorPos X="10" Y="84"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit43>
       <Unit44>
         <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\win\sysutils.pp"/>
         <UnitName Value="sysutils"/>
-        <EditorIndex Value="8"/>
         <WindowIndex Value="0"/>
         <TopLine Value="240"/>
         <CursorPos X="3" Y="248"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit44>
+      <Unit45>
+        <Filename Value="..\Libs\WndAlloc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WndAlloc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="20"/>
+      </Unit45>
     </Units>
     <CustomDefines Count="5">
       <Define0 Value="FPC"/>
@@ -442,124 +431,7 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="29" HistoryIndex="28">
-      <Position1>
-        <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\classesh.inc"/>
-        <Caret Line="924" Column="3" TopLine="911"/>
-      </Position1>
-      <Position2>
-        <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\streams.inc"/>
-        <Caret Line="538" Column="3" TopLine="532"/>
-      </Position2>
-      <Position3>
-        <Filename Value="..\UpdateForm.pas"/>
-        <Caret Line="257" Column="1" TopLine="250"/>
-      </Position3>
-      <Position4>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1570" Column="1" TopLine="1557"/>
-      </Position4>
-      <Position5>
-        <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\streams.inc"/>
-        <Caret Line="538" Column="3" TopLine="532"/>
-      </Position5>
-      <Position6>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1571" Column="1" TopLine="1560"/>
-      </Position6>
-      <Position7>
-        <Filename Value="..\UpdateForm.pas"/>
-        <Caret Line="257" Column="1" TopLine="250"/>
-      </Position7>
-      <Position8>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1570" Column="1" TopLine="1560"/>
-      </Position8>
-      <Position9>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1571" Column="74" TopLine="1560"/>
-      </Position9>
-      <Position10>
-        <Filename Value="..\UpdateForm.pas"/>
-        <Caret Line="257" Column="1" TopLine="250"/>
-      </Position10>
-      <Position11>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1570" Column="1" TopLine="1560"/>
-      </Position11>
-      <Position12>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1572" Column="27" TopLine="1560"/>
-      </Position12>
-      <Position13>
-        <Filename Value="..\UpdateForm.pas"/>
-        <Caret Line="257" Column="1" TopLine="250"/>
-      </Position13>
-      <Position14>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1571" Column="1" TopLine="1560"/>
-      </Position14>
-      <Position15>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1572" Column="1" TopLine="1560"/>
-      </Position15>
-      <Position16>
-        <Filename Value="..\UpdateForm.pas"/>
-        <Caret Line="257" Column="1" TopLine="250"/>
-      </Position16>
-      <Position17>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1571" Column="1" TopLine="1560"/>
-      </Position17>
-      <Position18>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1572" Column="1" TopLine="1560"/>
-      </Position18>
-      <Position19>
-        <Filename Value="..\UpdateForm.pas"/>
-        <Caret Line="257" Column="1" TopLine="250"/>
-      </Position19>
-      <Position20>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1571" Column="1" TopLine="1560"/>
-      </Position20>
-      <Position21>
-        <Filename Value="D:\Lazarus\fpc\2.6.4\source\rtl\objpas\classes\streams.inc"/>
-        <Caret Line="538" Column="3" TopLine="532"/>
-      </Position21>
-      <Position22>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1566" Column="31" TopLine="1563"/>
-      </Position22>
-      <Position23>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="244" Column="43" TopLine="233"/>
-      </Position23>
-      <Position24>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1572" Column="1" TopLine="1557"/>
-      </Position24>
-      <Position25>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1573" Column="40" TopLine="1557"/>
-      </Position25>
-      <Position26>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1572" Column="1" TopLine="1557"/>
-      </Position26>
-      <Position27>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1573" Column="1" TopLine="1557"/>
-      </Position27>
-      <Position28>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1566" Column="32" TopLine="1557"/>
-      </Position28>
-      <Position29>
-        <Filename Value="..\ACC_GamesData.pas"/>
-        <Caret Line="1570" Column="1" TopLine="1564"/>
-      </Position29>
-    </JumpHistory>
+    <JumpHistory Count="0" HistoryIndex="-1"/>
   </ProjectSession>
   <Debugging>
     <Watches Count="5">

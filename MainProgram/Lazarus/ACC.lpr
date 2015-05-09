@@ -17,6 +17,7 @@ uses
   SimpleCompress,
   StringEncryptionUnit,
   MulticastEvent,
+  WndAlloc,
   UtilityWindow,
   SimpleTimer,
 
