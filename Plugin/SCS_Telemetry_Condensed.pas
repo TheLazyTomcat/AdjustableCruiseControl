@@ -2,7 +2,7 @@ unit SCS_Telemetry_Condensed;
 
 {==============================================================================}
 {  SCS Telemetry API headers condenser, version 1.0a                           }
-{  Condensed on: Friday 2014-11-07 21:04:26                                    }
+{  Condensed on: Monday 2015-05-11 16:32:54                                    }
 {==============================================================================}
 
 interface
@@ -13,15 +13,13 @@ interface
   {$DEFINE SCS_ARCHITECTURE_x86}
 {$ENDIF}
 
-{.$DEFINE AssertTypeSize}
-
 {$IFDEF Debug}
   {$DEFINE AssertTypeSize}
-{$ENDIF}
-
-{$IFDEF Release}
+{$ELSE}
   {$UNDEF AssertTypeSize}
 {$ENDIF}
+
+{.$DEFINE AssertTypeSize}
 
 {=== scssdk.pas ===============================================================}
 (**
@@ -162,9 +160,10 @@ Function TelemetryStringToAPIString(const Str: TelemetryString): scs_string_t;
 procedure APIStringFree(var Str: scs_string_t);
 Function TelemetryStringDecode(const Str: TelemetryString): String;
 Function TelemetryStringEncode(const Str: String): TelemetryString;
+Function APIString(const Str: TelemetryString): scs_string_t; overload;
 
 // Routines replacing some of the C macros functionality.
-Function SCSCheckSize(ActualSize,{%H-}Expected32,{%H-}Expected64: Cardinal): Boolean;
+Function SCSCheckSize(ActualSize, {%H-}Expected32,{%H-}Expected64: Cardinal): Boolean;
 
 Function SCSMakeVersion(Major, Minor: scs_u16_t): scs_u32_t;
 Function SCSGetMajorVersion(Version: scs_u32_t): scs_u16_t;
@@ -274,7 +273,7 @@ type
  *)
   scs_value_euler_t = Record
     (**
-     * @name Heading.
+     * @brief Heading.
      *
      * Stored in unit range where <0,1) corresponds to <0,360).
      *
@@ -284,7 +283,7 @@ type
      *)
     heading:  scs_float_t;
     (**
-     * @name Pitch
+     * @brief Pitch
      *
      * Stored in unit range where <-0.25,0.25> corresponds to <-90,90>.
      *
@@ -294,7 +293,7 @@ type
      *)
     pitch:    scs_float_t;
     (**
-     * @name Rool
+     * @brief Rool
      *
      * Stored in unit range where <-0.5,0.5> corresponds to <-180,180>.
      *
@@ -397,7 +396,7 @@ type
 (**
  * @name Telemetry event types.
  *)
-//{
+//@{
 const
 (**
  * @brief Used to mark invalid value of event type.
@@ -581,7 +580,7 @@ type
 (**
  * @name Telemetry channel flags.
  *)
-//{
+//@{
 const
 (**
  * @brief No specific flags.
@@ -693,6 +692,7 @@ type
  * initialization.
  *)
 //scs_telemetry_init_params_t = Record
+//  procedure method_indicating_this_is_not_a_c_struct;
 //end;
 //see further
 
@@ -813,6 +813,7 @@ const
  * @li fuel_capacity
  * @li fuel_warning_factor
  * @li adblue_capacity
+ * @li ablue_warning_factor 
  * @li air_pressure_warning
  * @li air_pressure_emergency
  * @li oil_pressure_warning
@@ -936,6 +937,14 @@ const
   SCS_TELEMETRY_CONFIG_ATTRIBUTE_adblue_capacity = TelemetryString('adblue.capacity');
 
 (**
+ * @brief Fraction of the adblue capacity bellow which
+ * is activated the adblue warning.
+ *
+ * Type: float
+ *)
+  SCS_TELEMETRY_CONFIG_ATTRIBUTE_adblue_warning_factor = TelemetryString('adblue.warning.factor');
+
+(**
  * @brief Pressure of the air in the tank bellow which
  * the warning activates.
  *
@@ -994,6 +1003,13 @@ const
   SCS_TELEMETRY_CONFIG_ATTRIBUTE_reverse_gear_count = TelemetryString('gears.reverse');
 
 (**
+ * @brief Differential ratio of the truck.
+ *
+ * Type: float
+ *)
+  SCS_TELEMETRY_CONFIG_ATTRIBUTE_differential_ratio = TelemetryString('differential.ratio');
+
+(**
  * @brief Number of steps in the retarder.
  *
  * Set to zero if retarder is not mounted to the truck.
@@ -1001,6 +1017,20 @@ const
  * Type: u32
  *)
   SCS_TELEMETRY_CONFIG_ATTRIBUTE_retarder_step_count = TelemetryString('retarder.steps');
+
+(**
+ * @brief Forward transmission ratios.
+ *
+ * Type: indexed float
+ *)
+  SCS_TELEMETRY_CONFIG_ATTRIBUTE_forward_ratio = TelemetryString('forward.ratio');
+
+(**
+ * @brief Reverse transmission ratios.
+ *
+ * Type: indexed float
+ *)
+  SCS_TELEMETRY_CONFIG_ATTRIBUTE_reverse_ratio = TelemetryString('reverse.ratio');
 
 (**
  * @brief Position of the cabin in the vehicle space.
@@ -1463,6 +1493,17 @@ const
  *)
   SCS_TELEMETRY_TRUCK_CHANNEL_engine_gear                 = TelemetryString('truck.engine.gear');
 
+(**
+ * @brief Gear currently displayed on dashboard.
+ *
+ * @li >0 - Forwad gears
+ * @li 0 - Neutral
+ * @li <0 - Reverse gears
+ *
+ * Type: s32
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_displayed_gear              = TelemetryString('truck.displayed.gear');
+
 // Driving
 
 (**
@@ -1657,6 +1698,13 @@ const
  * Type: float
  *)
   SCS_TELEMETRY_TRUCK_CHANNEL_fuel_average_consumption    = TelemetryString('truck.fuel.consumption.average');
+
+(**
+ * @brief Estimated range of truck with current amount of fuel in km
+ *
+ * Type: float
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_fuel_range                  = TelemetryString('truck.fuel.range');
 
 (**
  * @brief Amount of AdBlue in liters
@@ -1910,6 +1958,34 @@ const
  *)
   SCS_TELEMETRY_TRUCK_CHANNEL_odometer                    = TelemetryString('truck.odometer');
 
+(**
+ * @brief The value of truck's navigation distance (in meters).
+ *
+ * This is the value used by the advisor.
+ *
+ * Type: float
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_distance         = TelemetryString('truck.navigation.distance');
+
+(**
+ * @brief The value of truck's navigation eta (in second).
+ *
+ * This is the value used by the advisor.
+ *
+ * Type: float
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_time             = TelemetryString('truck.navigation.time');
+
+(**
+ * @brief The value of truck's navigation speed limit (in m/s).
+ *
+ * This is the value used by the advisor and respects the
+ * current state of the "Route Advisor speed limit" option.
+ *
+ * Type: float
+ *)
+  SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit      = TelemetryString('truck.navigation.speed.limit');
+
 // Wheels.
 
 (**
@@ -2042,6 +2118,11 @@ const
  *        (e.g. after completion of quick job)
  * 1.09 - added time and job related info
  * 1.10 - added information about liftable axes
+ * 1.11 - u32 channels can provide u64 as documented, added displayed_gear channel, increased
+ *        maximal number of supported wheel channels to 14
+ * 1.12 - added information about transmission (differential_ratio, forward_ratio, reverse_ratio),
+ *        navigation channels (navigation_distance, navigation_time, navigation_speed_limit)
+ *        and adblue related data are now provided.
  *)
 //@{
 const
@@ -2056,7 +2137,9 @@ const
   SCS_TELEMETRY_EUT2_GAME_VERSION_1_08    = (1 shl 16) or 8   {0x00010008};	// Patch 1.9
   SCS_TELEMETRY_EUT2_GAME_VERSION_1_09    = (1 shl 16) or 9   {0x00010009};	// Patch 1.14 beta
   SCS_TELEMETRY_EUT2_GAME_VERSION_1_10    = (1 shl 16) or 10  {0x0001000A};	// Patch 1.14
-  SCS_TELEMETRY_EUT2_GAME_VERSION_CURRENT = SCS_TELEMETRY_EUT2_GAME_VERSION_1_10;
+  SCS_TELEMETRY_EUT2_GAME_VERSION_1_11    = (1 shl 16) or 11  {0x0001000B};
+  SCS_TELEMETRY_EUT2_GAME_VERSION_1_12    = (1 shl 16) or 12  {0x0001000C};	// Patch 1.17
+  SCS_TELEMETRY_EUT2_GAME_VERSION_CURRENT = SCS_TELEMETRY_EUT2_GAME_VERSION_1_12;
 //@}
 
 // Game specific units.
@@ -2069,10 +2152,6 @@ const
 // scssdk_telemetry_trailer_common_channels.h are supported
 // with following exceptions and limitations as of v1.00:
 //
-// @li Adblue related channels are not supported.
-// @li The fuel_average_consumption is currently mostly static and depends
-//     on presence of the trailer and skills of the driver instead
-//     of the workload of the engine.
 // @li Rolling rotation of trailer wheels is determined from linear
 //     movement.
 // @li The pressures, temperatures and voltages are not simulated.
@@ -2144,6 +2223,13 @@ Result := UTF8Encode(Str);
 {$ELSE}
 Result := AnsiToUTF8(Str);
 {$ENDIF}
+end;
+
+//------------------------------------------------------------------------------
+
+Function APIString(const Str: TelemetryString): scs_string_t;
+begin
+Result := scs_string_t(PAnsiChar(Str));
 end;
 
 //------------------------------------------------------------------------------

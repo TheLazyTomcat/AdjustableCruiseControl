@@ -21,7 +21,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="18"/>
+      <BuildNr Value="34"/>
       <Language Value="0405"/>
       <StringTable Comments="Starter plugin for ACC 2.2.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Starter Plugin" InternalName="ACC 2.2.x Starter Plugin" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control Starter Plugin" OriginalFilename="ACC_Plugin.dll" ProductName="Adjustable Cruise Control Starter Plugin" ProductVersion="1.0.0.0"/>
     </VersionInfo>
@@ -167,7 +167,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="5">
+    <Units Count="6">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -193,6 +193,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="SCS_Telemetry_Condensed"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="..\ACC_PluginManager.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_PluginManager"/>
+      </Unit5>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
