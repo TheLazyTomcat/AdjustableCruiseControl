@@ -60,7 +60,7 @@ implementation
 
 uses
   {$IFNDEF FPC}MsgForm,{$ELSE}LCLType,{$ENDIF}
-  ACC_Manager;
+  ACC_Common, ACC_Manager;
 
 {$IFDEF FPC}
 const
@@ -254,7 +254,11 @@ procedure TfUpdateForm.btnLoadUpdateFileClick(Sender: TObject);
 begin
 If diaLoadUpdate.Execute then
     begin
+      {$IFDEF FPC}
+      If fUpdateDataManager.LoadFrom(UTF8ToString(diaLoadUpdate.FileName)) then
+      {$ELSE}
       If fUpdateDataManager.LoadFrom(diaLoadUpdate.FileName) then
+      {$ENDIF}
         begin
           fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
           FillList;

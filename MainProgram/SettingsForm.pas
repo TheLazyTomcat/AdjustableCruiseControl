@@ -328,7 +328,11 @@ end;
 procedure TfSettingsForm.btnExportSettingsClick(Sender: TObject);
 begin
 If diaExportSettings.Execute then
+{$IFDEF FPC}
+  LocalSettingsManager.SaveToIni(UTF8ToString(diaExportSettings.FileName));
+{$ELSE}
   LocalSettingsManager.SaveToIni(diaExportSettings.FileName);
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -337,12 +341,15 @@ procedure TfSettingsForm.btnImportSettingsClick(Sender: TObject);
 begin
 If diaImportSettings.Execute then
   begin
+    {$IFDEF FPC}
+    If LocalSettingsManager.LoadFromIni(UTF8ToString(diaImportSettings.FileName)) then
+      SettingsToForm
+    else
+      Application.MessageBox('Settings import has failed.','Adjustable Cruise Control',MB_ICONERROR);
+    {$ELSE}
     If LocalSettingsManager.LoadFromIni(diaImportSettings.FileName) then
       SettingsToForm
     else
-    {$IFDEF FPC}
-      Application.MessageBox('Settings import has failed.','Adjustable Cruise Control',MB_ICONERROR);
-    {$ELSE}
       ShowErrorMsg('Settings import has failed.');
     {$ENDIF}
   end;
