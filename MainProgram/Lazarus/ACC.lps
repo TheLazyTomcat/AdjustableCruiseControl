@@ -13,7 +13,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="18" Y="37"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -23,7 +23,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="127"/>
         <CursorPos X="23" Y="158"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\Libs\MD5.pas"/>
@@ -32,7 +32,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="243"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\Libs\WinRawInput.pas"/>
@@ -41,7 +41,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\Libs\FloatHex.pas"/>
@@ -50,7 +50,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="241"/>
         <CursorPos X="10" Y="37"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\Libs\DefRegistry.pas"/>
@@ -59,7 +59,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\Libs\MulticastEvent.pas"/>
@@ -68,7 +68,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\Libs\SimpleCompress.pas"/>
@@ -77,7 +77,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\Libs\SimpleTimer.pas"/>
@@ -86,7 +86,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\Libs\StringEncryptionUnit.pas"/>
@@ -95,7 +95,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\Libs\UtilityWindow.pas"/>
@@ -104,7 +104,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\ACC_Common.pas"/>
@@ -113,7 +113,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="41"/>
         <CursorPos X="22" Y="47"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\ACC_Strings.pas"/>
@@ -122,7 +122,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="115"/>
         <CursorPos X="1" Y="57"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\ACC_TrayIcon.pas"/>
@@ -131,19 +131,19 @@
         <WindowIndex Value="0"/>
         <TopLine Value="170"/>
         <CursorPos X="1" Y="217"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit13>
       <Unit14>
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_GamesData"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1579"/>
-        <CursorPos X="29" Y="1607"/>
-        <UsageCount Value="90"/>
-        <Bookmarks Count="1">
-          <Item0 X="28" Y="1352" ID="2"/>
-        </Bookmarks>
+        <TopLine Value="1354"/>
+        <CursorPos X="75" Y="1367"/>
+        <UsageCount Value="91"/>
+        <Loaded Value="True"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\ACC_Input.pas"/>
@@ -152,7 +152,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="297"/>
         <CursorPos X="89" Y="123"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\ACC_InstanceControl.pas"/>
@@ -161,22 +161,17 @@
         <WindowIndex Value="0"/>
         <TopLine Value="78"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Manager"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="211"/>
-        <CursorPos X="56" Y="216"/>
-        <UsageCount Value="90"/>
-        <Bookmarks Count="2">
-          <Item0 X="8" Y="184" ID="1"/>
-          <Item1 X="7" Y="569" ID="2"/>
-        </Bookmarks>
+        <TopLine Value="557"/>
+        <CursorPos X="7" Y="569"/>
+        <UsageCount Value="91"/>
         <Loaded Value="True"/>
       </Unit17>
       <Unit18>
@@ -186,7 +181,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="2"/>
         <CursorPos X="1" Y="15"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
@@ -195,7 +190,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="672"/>
         <CursorPos X="61" Y="184"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\ACC_Settings.pas"/>
@@ -204,7 +199,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="324"/>
         <CursorPos X="13" Y="337"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\ACC_SplashScreen.pas"/>
@@ -213,7 +208,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="232"/>
         <CursorPos X="27" Y="122"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit21>
       <Unit22>
         <Filename Value="..\MainForm.pas"/>
@@ -222,11 +217,11 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="344"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit22>
@@ -240,7 +235,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="46"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit23>
       <Unit24>
         <Filename Value="..\SettingsForm.pas"/>
@@ -252,7 +247,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="333"/>
         <CursorPos X="81" Y="345"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\KeyBindForm.pas"/>
@@ -264,7 +259,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="59"/>
         <CursorPos X="1" Y="120"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\SupportedGamesForm.pas"/>
@@ -276,7 +271,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="33"/>
         <CursorPos X="53" Y="236"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -288,7 +283,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="49"/>
         <CursorPos X="15" Y="63"/>
-        <UsageCount Value="90"/>
+        <UsageCount Value="91"/>
       </Unit27>
       <Unit28>
         <Filename Value="..\Libs\WndAlloc.pas"/>
@@ -297,7 +292,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="54"/>
       </Unit28>
       <Unit29>
         <Filename Value="..\Libs\WMC\WinMsgCommClient.pas"/>
@@ -306,7 +301,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="44"/>
+        <UsageCount Value="45"/>
       </Unit29>
       <Unit30>
         <Filename Value="..\Libs\WMC\WinMsgComm.pas"/>
@@ -315,7 +310,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="44"/>
+        <UsageCount Value="45"/>
       </Unit30>
       <Unit31>
         <Filename Value="..\ACC_PluginComm.pas"/>
@@ -324,7 +319,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="10"/>
         <CursorPos X="21" Y="25"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="23"/>
       </Unit31>
       <Unit32>
         <Filename Value="D:\Lazarus\lcl\include\control.inc"/>
@@ -471,7 +466,7 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="6" HistoryIndex="5">
+    <JumpHistory Count="9" HistoryIndex="8">
       <Position1>
         <Filename Value="..\MainForm.pas"/>
         <Caret Line="365" Column="48" TopLine="340"/>
@@ -496,6 +491,18 @@
         <Filename Value="..\MainForm.pas"/>
         <Caret Line="388" Column="1" TopLine="388"/>
       </Position6>
+      <Position7>
+        <Filename Value="..\ACC_Manager.pas"/>
+        <Caret Line="216" Column="56" TopLine="211"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\ACC_Manager.pas"/>
+        <Caret Line="184" Column="8" TopLine="171"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <Caret Line="149" Column="3" TopLine="129"/>
+      </Position9>
     </JumpHistory>
   </ProjectSession>
   <Debugging>

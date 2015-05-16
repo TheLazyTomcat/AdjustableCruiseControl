@@ -142,11 +142,11 @@ const
   IFS_1_0 = $00010000;
   IFS_2_0 = $00020000;
 
-  PTRFLAG_TELEMETRY_TRUCK_SPEED = $1;
-
   InvalidProtocolVersion = TProtocolVersion(-1);
 
   ACC_PTR_FLAGS_PointerTypeBitmask = $1FF;
+
+  ACC_PTR_FLAGS_TelemetryTruckSpeed = $200;
 
 type
 {$IFDEF FPC}
@@ -1364,7 +1364,7 @@ class Function TGamesDataManager.TruckSpeedSupported(const GameData: TGameData):
 begin
 If (GameData.TruckSpeed.ModuleIndex >= Low(GameData.Modules)) and
    (GameData.TruckSpeed.ModuleIndex <= High(GameData.Modules)) then Result := ssrDirect
-  else If (GameData.TruckSpeed.Flags and PTRFLAG_TELEMETRY_TRUCK_SPEED) <> 0 then Result := ssrPlugin
+  else If (GameData.TruckSpeed.Flags and ACC_PTR_FLAGS_TelemetryTruckSpeed) <> 0 then Result := ssrPlugin
     else Result := ssrNone;
 end;
 
