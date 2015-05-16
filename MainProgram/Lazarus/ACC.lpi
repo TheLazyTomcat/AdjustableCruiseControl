@@ -19,7 +19,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="3"/>
-      <BuildNr Value="80"/>
+      <BuildNr Value="84"/>
       <Language Value="0405"/>
       <StringTable Comments="Main program for ACC 2.3.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.3.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.3.0"/>
     </VersionInfo>
@@ -34,7 +34,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\Libs;.."/>
+            <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -76,7 +76,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\Libs;.."/>
+            <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -126,7 +126,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\Libs;.."/>
+            <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -173,7 +173,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="29">
+    <Units Count="32">
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -337,6 +337,21 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="WndAlloc"/>
       </Unit28>
+      <Unit29>
+        <Filename Value="..\Libs\WMC\WinMsgCommClient.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinMsgCommClient"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="..\Libs\WMC\WinMsgComm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinMsgComm"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="..\ACC_PluginComm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_PluginComm"/>
+      </Unit31>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -347,7 +362,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\Libs;.."/>
+      <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
       <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>

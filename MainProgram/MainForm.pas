@@ -53,11 +53,18 @@ type
     btnSetUser9: TButton;
     seSpeedUser9: TFloatSpinEdit;
     bvlUserSplit: TBevel;
+    grbSpeedLimit: TGroupBox;
+    btnSetToLimit: TButton;
+    btnKeepOnLimit: TButton;
+    lblActionOnZero: TLabel;
+    cbActionOnZero: TComboBox;
+    seSpeedLimitDefault: TFloatSpinEdit;
     lblUnits: TLabel;
     cbUnits: TComboBox;
     btnSettings: TButton;
     btnAbout: TButton;
     sbStatusBar: TStatusBar;
+    procedure cbActionOnZeroChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
@@ -69,6 +76,7 @@ type
     { Private declarations }
   protected
     fSpeedsChanging:  Boolean;
+    procedure OnPluginStateChange(Sender: TObject);
     procedure OnBindStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
     procedure KeysToForm;
@@ -118,24 +126,32 @@ type
     btnSetUser9: TButton;
     seSpeedUser9: TSpinEdit;
     bvlUserSplit: TBevel;
+    grbSpeedLimit: TGroupBox;
+    btnSetToLimit: TButton;
+    btnKeepOnLimit: TButton;
+    lblActionOnZero: TLabel;    
+    cbActionOnZero: TComboBox;
+    seSpeedLimitDefault: TSpinEdit;
     lblUnits: TLabel;
     cbUnits: TComboBox;
     btnSettings: TButton;
     btnAbout: TButton;
+    oXPManifest: TXPManifest;
     sbStatusBar: TStatusBar;
-    oXPManifest: TXPManifest;  
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
     procedure seSpeedsChange(Sender: TObject);
+    procedure cbActionOnZeroChange(Sender: TObject);    
     procedure cbUnitsChange(Sender: TObject);
-    procedure btnSettingsClick(Sender: TObject);    
+    procedure btnSettingsClick(Sender: TObject);
     procedure btnAboutClick(Sender: TObject);
   private
     { Private declarations }
   protected
     fSpeedsChanging:  Boolean;
     procedure OnBindStateChange(Sender: TObject);
+    procedure OnPluginStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
     procedure KeysToForm;
   public
@@ -155,7 +171,7 @@ implementation
 {$ENDIF}
 
 uses
-  ACC_Manager, ACC_Settings, ACC_Strings, ACC_Input,
+  ACC_Manager, ACC_Settings, ACC_Strings, ACC_Input, ACC_PluginComm,
   AboutForm, SettingsForm;
 
 procedure TfMainForm.OnBindStateChange(Sender: TObject);
@@ -174,6 +190,25 @@ else
     lblGameTitle.Caption := ACCSTR_UI_GAM_NoGameTitle;
     lblGameInfo.Caption := ACCSTR_UI_GAM_NoGameInfo;
     sbStatusBar.Panels[0].Text := ACCSTR_UI_STB_NoGameProcess;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.OnPluginStateChange(Sender: TObject);
+begin
+If ACCManager.PluginOnline then
+  begin
+    sbStatusBar.Panels[1].Text := ACCSTR_UI_STB_PluginOnline;
+    If (ACCManager.PluginFeatures and WMC_PF_Limit) <> 0 then
+      grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionNormal
+    else
+      grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionUnsupported;
+  end
+else
+  begin
+    sbStatusBar.Panels[1].Text := ACCSTR_UI_STB_PluginOffline;
+    grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionInactive;
   end;
 end;
 
@@ -203,6 +238,7 @@ try
       SpinEdit := FindComponent('seSpeedUser' + IntToStr(i)) as TFloatSpinEdit;
       If Assigned(SpinEdit) then SpinEdit.Value := Settings.Speeds.User[i] / Coef;
     end;
+  seSpeedLimitDefault.Value := Settings.Speeds.LimitDefault / Coef;  
 {$ELSE}
   seSpeedArbitrary.Value := Round(Settings.Speeds.Arbitrary / Coef);
   seSpeedStep.Value := Round(Settings.Speeds.Step / Coef);
@@ -213,6 +249,7 @@ try
       SpinEdit := FindComponent('seSpeedUser' + IntToStr(i)) as TSpinEdit;
       If Assigned(SpinEdit) then SpinEdit.Value := Round(Settings.Speeds.User[i] / Coef);
     end;
+  seSpeedLimitDefault.Value := Round(Settings.Speeds.LimitDefault / Coef);
 {$ENDIF}
 finally
   fSpeedsChanging := False;
@@ -252,6 +289,8 @@ For i := 0 to 9 do
     UserButton := FindComponent('btnSetUser' + IntToStr(i)) as TButton;
     SetButtonCaption(UserButton,Format(ACCSTR_UI_BTN_SetToUser,[i]),TInputManager.GetInputKeyNames(Settings.Inputs.UserEngage[i]),True);
   end;
+SetButtonCaption(btnSetToLimit,ACCSTR_UI_SET_BIND_SetToLimit,TInputManager.GetInputKeyNames(Settings.Inputs.SetToLimit));
+SetButtonCaption(btnKeepOnLimit,ACCSTR_UI_SET_BIND_KeepOnLimit,TInputManager.GetInputKeyNames(Settings.Inputs.KeepOnLimit));
 end;
 
 //------------------------------------------------------------------------------
@@ -271,16 +310,22 @@ finally
   cbUnits.Items.EndUpdate;
 end;
 cbUnits.ItemIndex := Settings.UsedSpeedUnit;
+cbActionOnZero.ItemIndex := Settings.ZeroLimitAction; 
 end;
 
 //==============================================================================
 
 procedure TfMainForm.FormCreate(Sender: TObject);
+var
+  i:  Integer;
 begin
 sbStatusBar.DoubleBuffered := True;
 fSpeedsChanging := False;
+For i := Low(ACCSTR_UI_LIM_ActionsOnZeroLimit) to High(ACCSTR_UI_LIM_ActionsOnZeroLimit) do
+  cbActionOnZero.Items.Add(ACCSTR_UI_LIM_ActionsOnZeroLimit[i]);
 ACCManager.OnBindStateChange.Add(OnBindStateChange);
 ACCManager.OnSpeedChange := SpeedsToForm;
+ACCManager.OnPluginStateChange := OnPluginStateChange;
 end;
 
 //------------------------------------------------------------------------------
@@ -288,6 +333,7 @@ end;
 procedure TfMainForm.FormShow(Sender: TObject);
 begin
 SettingsToForm;
+OnPluginStateChange(nil);
 btnAbout.SetFocus;
 end;
 
@@ -328,10 +374,18 @@ If not fSpeedsChanging then
             -2: Settings.Speeds.Step := SpinEdit.Value * Coef;
             -3: Settings.Speeds.City := SpinEdit.Value * Coef;
             -4: Settings.Speeds.Roads := SpinEdit.Value * Coef;
+            -5: Settings.Speeds.LimitDefault := SpinEdit.Value * Coef;
           0..9: Settings.Speeds.User[SpinEdit.Tag] := SpinEdit.Value * Coef;
         end;
       end;
   end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.cbActionOnZeroChange(Sender: TObject);
+begin
+Settings.ZeroLimitAction := cbActionOnZero.ItemIndex;
 end;
 
 //------------------------------------------------------------------------------

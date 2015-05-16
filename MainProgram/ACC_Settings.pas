@@ -12,6 +12,9 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 const
+  // Number of inputs stored in the settings
+  InputCount = 44;
+
   // Registry key path used for program settings storing
   SettingsRegistryKey = '\Software\NcS Soft\Adjustable Cruise Control 2';
   
@@ -33,6 +36,7 @@ const
   SETN_VAL_SoftKeyComboRecognition = 'SoftKeyComboRecognition';
   SETN_VAL_GameActiveForTrigger    = 'GameActiveForTrigger';
   SETN_VAL_UsedSpeedUnit           = 'UsedSpeedUnit';
+  SETN_VAL_ZeroLimitAction         = 'ZeroLimitAction';
 
   SETN_VAL_TMR_ProcessBinderScanInterval = 'ProcessBinderScanInterval';
   SETN_VAL_TMR_ModulesLoadTimeout        = 'ModulesLoadTimeout';
@@ -41,11 +45,12 @@ const
   SETN_VAL_SPU_Name        = 'SpeedUnit[%d].Name';
   SETN_VAL_SPU_Coefficient = 'SpeedUnit[%d].Coefficient';
 
-  SETN_VAL_SPD_Step      = 'Step';
-  SETN_VAL_SPD_City      = 'City';
-  SETN_VAL_SPD_Roads     = 'Roads';
-  SETN_VAL_SPD_Arbitrary = 'Arbitrary';
-  SETN_VAL_SPD_User      = 'User[%d]';
+  SETN_VAL_SPD_Step         = 'Step';
+  SETN_VAL_SPD_City         = 'City';
+  SETN_VAL_SPD_Roads        = 'Roads';
+  SETN_VAL_SPD_Arbitrary    = 'Arbitrary';
+  SETN_VAL_SPD_User         = 'User[%d]';
+  SETN_VAL_SPD_LimitDefault = 'LimitDefault';
 
   SETN_VAL_INP_IncreaseByStep = 'IncreaseByStep';
   SETN_VAL_INP_DecreaseByStep = 'DecreaseByStep';
@@ -62,6 +67,8 @@ const
   SETN_VAL_INP_UserEngage     = 'UserEngage[%d]';
   SETN_VAL_INP_UserVehicle    = 'UserVehicle[%d]';
   SETN_VAL_INP_UserCruise     = 'UserCruise[%d]';
+  SETN_VAL_INP_SetToLimit     = 'SetToLimit';
+  SETN_VAL_INP_KeepOnLimit    = 'KeepOnLimit';
 
   SETN_VAL_REG_ProgramPath             = SETN_GRP_General + '.' + SETN_VAL_ProgramPath;
   SETN_VAL_REG_ShowSplashScreen        = SETN_GRP_General + '.' + SETN_VAL_ShowSplashScreen;
@@ -72,6 +79,7 @@ const
   SETN_VAL_REG_SoftKeyComboRecognition = SETN_GRP_General + '.' + SETN_VAL_SoftKeyComboRecognition;
   SETN_VAL_REG_GameActiveForTrigger    = SETN_GRP_General + '.' + SETN_VAL_GameActiveForTrigger;
   SETN_VAL_REG_UsedSpeedUnit           = SETN_GRP_General + '.' + SETN_VAL_UsedSpeedUnit;
+  SETN_VAL_REG_ZeroLimitAction         = SETN_GRP_General + '.' + SETN_VAL_ZeroLimitAction;
 
   SETN_VAL_TMR_REG_ProcessBinderScanInterval = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ProcessBinderScanInterval;
   SETN_VAL_TMR_REG_ModulesLoadTimeout        = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ModulesLoadTimeout;
@@ -80,11 +88,12 @@ const
   SETN_VAL_REG_SPU_Name        = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Name;
   SETN_VAL_REG_SPU_Coefficient = SETN_GRP_SpeedUnits + '.' + SETN_VAL_SPU_Coefficient;
 
-  SETN_VAL_REG_SPD_Step      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Step;
-  SETN_VAL_REG_SPD_City      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_City;
-  SETN_VAL_REG_SPD_Roads     = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Roads;
-  SETN_VAL_REG_SPD_Arbitrary = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Arbitrary;
-  SETN_VAL_REG_SPD_User      = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_User;
+  SETN_VAL_REG_SPD_Step         = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Step;
+  SETN_VAL_REG_SPD_City         = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_City;
+  SETN_VAL_REG_SPD_Roads        = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Roads;
+  SETN_VAL_REG_SPD_Arbitrary    = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_Arbitrary;
+  SETN_VAL_REG_SPD_User         = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_User;
+  SETN_VAL_REG_SPD_LimitDefault = SETN_GRP_Speeds + '.' + SETN_VAL_SPD_LimitDefault;
 
   SETN_VAL_REG_INP_IncreaseByStep = SETN_GRP_Inputs + '.' + SETN_VAL_INP_IncreaseByStep;
   SETN_VAL_REG_INP_DecreaseByStep = SETN_GRP_Inputs + '.' + SETN_VAL_INP_DecreaseByStep;
@@ -101,6 +110,8 @@ const
   SETN_VAL_REG_INP_UserEngage     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserEngage;
   SETN_VAL_REG_INP_UserVehicle    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserVehicle;
   SETN_VAL_REG_INP_UserCruise     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_UserCruise;
+  SETN_VAL_REG_INP_SetToLimit     = SETN_GRP_Inputs + '.' + SETN_VAL_INP_SetToLimit;
+  SETN_VAL_REG_INP_KeepOnLimit    = SETN_GRP_Inputs + '.' + SETN_VAL_INP_KeepOnLimit;
 
   SETN_SUF_PrimaryKey = '.PrimaryKey';
   SETN_SUF_ShiftKey   = '.ShiftKey';
@@ -115,11 +126,12 @@ type
   end;
 
   TSpeeds = record
-    Step:       Single;
-    City:       Single;
-    Roads:      Single;
-    User:       Array[0..9] of Single;
-    Arbitrary:  Single;
+    Step:         Single;
+    City:         Single;
+    Roads:        Single;
+    User:         Array[0..9] of Single;
+    Arbitrary:    Single;
+    LimitDefault: Single;
   end;
 
   TInput = record
@@ -143,6 +155,8 @@ type
     UserEngage:     Array[0..9] of TInput;
     UserVehicle:    Array[0..9] of TInput;
     UserCruise:     Array[0..9] of TInput;
+    SetToLimit:     TInput;
+    KeepOnLimit:    TInput;
   end;
 
   TSettings = record
@@ -154,7 +168,8 @@ type
     DiscernKeyboardSides:       Boolean;
     SoftKeyComboRecognition:    Boolean;
     GameActiveForTrigger:       Boolean;
-    UsedSpeedUnit:              Integer;    
+    UsedSpeedUnit:              Integer;
+    ZeroLimitAction:            Integer;
     ProcessBinderScanInterval:  Integer;
     ModulesLoadTimeout:         Integer;
     SpeedUnits:                 Array of TSpeedUnit;
@@ -209,15 +224,17 @@ const
     SoftKeyComboRecognition:    True;
     GameActiveForTrigger:       True;
     UsedSpeedUnit:              0;
+    ZeroLimitAction:            0;
     ProcessBinderScanInterval:  1000;
     ModulesLoadTimeout:         5000;
     SpeedUnits:                 nil;
     Speeds:(
-      Step:       5.0;
-      City:       50.0;
-      Roads:      80.0;
-      User:       (0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
-      Arbitrary:  0.0);
+      Step:         5.0;
+      City:         50.0;
+      Roads:        80.0;
+      User:         (0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+      Arbitrary:    0.0;
+      LimitDefault: 90.0);
     Inputs:(
       IncreaseByStep: (PrimaryKey: VK_PRIOR; ShiftKey: -1);
       DecreaseByStep: (PrimaryKey: VK_NEXT;  ShiftKey: -1);
@@ -260,7 +277,10 @@ const
                        (PrimaryKey: VK_NUMPAD6; ShiftKey: VK_CONTROL),
                        (PrimaryKey: VK_NUMPAD7; ShiftKey: VK_CONTROL),
                        (PrimaryKey: VK_NUMPAD8; ShiftKey: VK_CONTROL),
-                       (PrimaryKey: VK_NUMPAD9; ShiftKey: VK_CONTROL))));
+                       (PrimaryKey: VK_NUMPAD9; ShiftKey: VK_CONTROL));
+      SetToLimit:     (PrimaryKey: VK_MULTIPLY; ShiftKey: -1);
+      KeepOnLimit:    (PrimaryKey: VK_MULTIPLY; ShiftKey: VK_SHIFT);
+                       ));
 
   def_SpeedUnits: Array[0..2] of TSpeedUnit = (
     (Name: 'km/h'; Coefficient: 1.0),
@@ -295,6 +315,8 @@ case Index of
   12..21: Result := fSettings^.Inputs.UserEngage[Index - 12];
   22..31: Result := fSettings^.Inputs.UserVehicle[Index - 22];
   32..41: Result := fSettings^.Inputs.UserCruise[Index - 32];
+  42: Result := fSettings^.Inputs.SetToLimit;
+  43: Result := fSettings^.Inputs.KeepOnLimit;
 else
   Result.PrimaryKey := -1;
   Result.ShiftKey := -1;
@@ -321,6 +343,8 @@ case Index of
   12..21: fSettings^.Inputs.UserEngage[Index - 12] := Value;
   22..31: fSettings^.Inputs.UserVehicle[Index - 22] := Value;
   32..41: fSettings^.Inputs.UserCruise[Index - 32] := Value;
+  42: fSettings^.Inputs.SetToLimit := Value;
+  43: fSettings^.Inputs.KeepOnLimit := Value;
 end;
 end;
 
@@ -345,6 +369,8 @@ If not fSettings^.MinimizeToTray then fSettings^.StartMinimized := False;
 If (fSettings^.UsedSpeedUnit < Low(fSettings^.SpeedUnits)) or
    (fSettings^.UsedSpeedUnit > High(fSettings^.SpeedUnits)) then
    fSettings^.UsedSpeedUnit := Low(fSettings^.SpeedUnits);
+If (fSettings^.ZeroLimitAction < 0) or (fSettings^.ZeroLimitAction > 1) then
+   fSettings^.ZeroLimitAction := 0;    
 end;
 
 //------------------------------------------------------------------------------
@@ -415,6 +441,7 @@ try
         fSettings^.SoftKeyComboRecognition := Registry.ReadBoolDef(SETN_VAL_REG_SoftKeyComboRecognition,def_Settings.SoftKeyComboRecognition);
         fSettings^.GameActiveForTrigger := Registry.ReadBoolDef(SETN_VAL_REG_GameActiveForTrigger,def_Settings.GameActiveForTrigger);
         fSettings^.UsedSpeedUnit := Registry.ReadIntegerDef(SETN_VAL_REG_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
+        fSettings^.ZeroLimitAction := Registry.ReadIntegerDef(SETN_VAL_REG_ZeroLimitAction,def_Settings.ZeroLimitAction);
 
         fSettings^.ProcessBinderScanInterval := Registry.ReadIntegerDef(SETN_VAL_TMR_REG_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
         fSettings^.ModulesLoadTimeout := Registry.ReadIntegerDef(SETN_VAL_TMR_REG_ModulesLoadTimeout,def_Settings.ModulesLoadTimeout);
@@ -432,6 +459,7 @@ try
         fSettings^.Speeds.Arbitrary := Registry.ReadFloatDef(SETN_VAL_REG_SPD_Arbitrary,def_Settings.Speeds.Arbitrary);
         For i := Low(fSettings^.Speeds.User) to High(fSettings^.Speeds.User) do
           fSettings^.Speeds.User[i] := Registry.ReadFloatDef(Format(SETN_VAL_REG_SPD_User,[i]),def_Settings.Speeds.User[i]);
+        fSettings^.Speeds.LimitDefault := Registry.ReadFloatDef(SETN_VAL_REG_SPD_LimitDefault,def_Settings.Speeds.LimitDefault);
 
         fSettings^.Inputs.IncreaseByStep := ReadInput(Registry,SETN_VAL_REG_INP_IncreaseByStep,def_Settings.Inputs.IncreaseByStep);
         fSettings^.Inputs.DecreaseByStep := ReadInput(Registry,SETN_VAL_REG_INP_DecreaseByStep,def_Settings.Inputs.DecreaseByStep);
@@ -451,6 +479,8 @@ try
           fSettings^.Inputs.UserVehicle[i] := ReadInput(Registry,Format(SETN_VAL_REG_INP_UserVehicle,[i]),def_Settings.Inputs.UserVehicle[i]);
         For i := Low(fSettings^.Inputs.UserCruise) to High(fSettings^.Inputs.UserCruise) do
           fSettings^.Inputs.UserCruise[i] := ReadInput(Registry,Format(SETN_VAL_REG_INP_UserCruise,[i]),def_Settings.Inputs.UserCruise[i]);
+        fSettings^.Inputs.SetToLimit := ReadInput(Registry,SETN_VAL_REG_INP_SetToLimit,def_Settings.Inputs.SetToLimit);
+        fSettings^.Inputs.KeepOnLimit := ReadInput(Registry,SETN_VAL_REG_INP_KeepOnLimit,def_Settings.Inputs.KeepOnLimit);
 
         Registry.CloseKey;
         ValidateSettings;
@@ -496,6 +526,7 @@ try
         Registry.WriteBool(SETN_VAL_REG_SoftKeyComboRecognition,fSettings^.SoftKeyComboRecognition);
         Registry.WriteBool(SETN_VAL_REG_GameActiveForTrigger,fSettings^.GameActiveForTrigger);
         Registry.WriteInteger(SETN_VAL_REG_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
+        Registry.WriteInteger(SETN_VAL_REG_ZeroLimitAction,fSettings^.ZeroLimitAction);
 
         Registry.WriteInteger(SETN_VAL_TMR_REG_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);
         Registry.WriteInteger(SETN_VAL_TMR_REG_ModulesLoadTimeout,fSettings^.ModulesLoadTimeout);
@@ -513,6 +544,7 @@ try
         Registry.WriteFloat(SETN_VAL_REG_SPD_Arbitrary,fSettings^.Speeds.Arbitrary);
         For i := Low(fSettings^.Speeds.User) to High(fSettings^.Speeds.User) do
           Registry.WriteFloat(Format(SETN_VAL_REG_SPD_User,[i]),fSettings^.Speeds.User[i]);
+        Registry.WriteFloat(SETN_VAL_REG_SPD_LimitDefault,fSettings^.Speeds.LimitDefault);
 
         WriteInput(Registry,SETN_VAL_REG_INP_IncreaseByStep,fSettings^.Inputs.IncreaseByStep);
         WriteInput(Registry,SETN_VAL_REG_INP_DecreaseByStep,fSettings^.Inputs.DecreaseByStep);
@@ -532,6 +564,8 @@ try
           WriteInput(Registry,Format(SETN_VAL_REG_INP_UserVehicle,[i]),fSettings^.Inputs.UserVehicle[i]);
         For i := Low(fSettings^.Inputs.UserCruise) to High(fSettings^.Inputs.UserCruise) do
           WriteInput(Registry,Format(SETN_VAL_REG_INP_UserCruise,[i]),fSettings^.Inputs.UserCruise[i]);
+        WriteInput(Registry,SETN_VAL_REG_INP_SetToLimit,fSettings^.Inputs.SetToLimit);
+        WriteInput(Registry,SETN_VAL_REG_INP_KeepOnLimit,fSettings^.Inputs.KeepOnLimit);
 
         Registry.CloseKey;
         Result := True;
@@ -571,6 +605,7 @@ try
     fSettings^.SoftKeyComboRecognition := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_SoftKeyComboRecognition,def_Settings.SoftKeyComboRecognition);
     fSettings^.GameActiveForTrigger := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_GameActiveForTrigger,def_Settings.GameActiveForTrigger);
     fSettings^.UsedSpeedUnit := IniFile.ReadInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
+    fSettings^.ZeroLimitAction := IniFile.ReadInteger(SETN_GRP_General,SETN_VAL_ZeroLimitAction,def_Settings.ZeroLimitAction);
 
     fSettings^.ProcessBinderScanInterval := IniFile.ReadInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
     fSettings^.ModulesLoadTimeout := IniFile.ReadInteger(SETN_GRP_Timers,SETN_VAL_TMR_ModulesLoadTimeout,def_Settings.ModulesLoadTimeout);
@@ -588,6 +623,7 @@ try
     fSettings^.Speeds.Arbitrary := HexToSingle(IniFile.ReadString(SETN_GRP_Speeds,SETN_VAL_SPD_Arbitrary,SingleToHex(def_Settings.Speeds.Arbitrary)));
     For i := Low(fSettings^.Speeds.User) to High(fSettings^.Speeds.User) do
       fSettings^.Speeds.User[i] := HexToSingle(IniFile.ReadString(SETN_GRP_Speeds,Format(SETN_VAL_SPD_User,[i]),SingleToHex(def_Settings.Speeds.User[i])));
+    fSettings^.Speeds.LimitDefault := HexToSingle(IniFile.ReadString(SETN_GRP_Speeds,SETN_VAL_SPD_LimitDefault,SingleToHex(def_Settings.Speeds.LimitDefault)));
 
     fSettings^.Inputs.IncreaseByStep := ReadInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_IncreaseByStep,def_Settings.Inputs.IncreaseByStep);
     fSettings^.Inputs.IncreaseByUnit := ReadInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_IncreaseByUnit,def_Settings.Inputs.IncreaseByUnit);
@@ -607,6 +643,8 @@ try
       fSettings^.Inputs.UserVehicle[i] := ReadInput(IniFile,SETN_GRP_Inputs,Format(SETN_VAL_INP_UserVehicle,[i]),def_Settings.Inputs.UserVehicle[i]);
     For i := Low(fSettings^.Inputs.UserCruise) to High(fSettings^.Inputs.UserCruise) do
       fSettings^.Inputs.UserCruise[i] := ReadInput(IniFile,SETN_GRP_Inputs,Format(SETN_VAL_INP_UserCruise,[i]),def_Settings.Inputs.UserCruise[i]);
+    fSettings^.Inputs.SetToLimit := ReadInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_SetToLimit,def_Settings.Inputs.SetToLimit);
+    fSettings^.Inputs.KeepOnLimit := ReadInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_KeepOnLimit,def_Settings.Inputs.KeepOnLimit);
 
     ValidateSettings;
     Result := True;
@@ -646,6 +684,7 @@ try
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_SoftKeyComboRecognition,fSettings^.SoftKeyComboRecognition);
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_GameActiveForTrigger,fSettings^.GameActiveForTrigger);
     IniFile.WriteInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
+    IniFile.WriteInteger(SETN_GRP_General,SETN_VAL_ZeroLimitAction,fSettings^.ZeroLimitAction);
 
     IniFile.WriteInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);
     IniFile.WriteInteger(SETN_GRP_Timers,SETN_VAL_TMR_ModulesLoadTimeout,fSettings^.ModulesLoadTimeout);
@@ -663,6 +702,7 @@ try
     IniFile.WriteString(SETN_GRP_Speeds,SETN_VAL_SPD_Arbitrary,SingleToHex(fSettings^.Speeds.Arbitrary));
     For i := Low(fSettings^.Speeds.User) to High(fSettings^.Speeds.User) do
       IniFile.WriteString(SETN_GRP_Speeds,Format(SETN_VAL_SPD_User,[i]),SingleToHex(fSettings^.Speeds.User[i]));
+    IniFile.WriteString(SETN_GRP_Speeds,SETN_VAL_SPD_LimitDefault,SingleToHex(fSettings^.Speeds.LimitDefault));
 
     WriteInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_IncreaseByStep,fSettings^.Inputs.IncreaseByStep);
     WriteInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_IncreaseByUnit,fSettings^.Inputs.IncreaseByUnit);
@@ -682,6 +722,8 @@ try
       WriteInput(IniFile,SETN_GRP_Inputs,Format(SETN_VAL_INP_UserVehicle,[i]),fSettings^.Inputs.UserVehicle[i]);
     For i := Low(fSettings^.Inputs.UserCruise) to High(fSettings^.Inputs.UserCruise) do
       WriteInput(IniFile,SETN_GRP_Inputs,Format(SETN_VAL_INP_UserCruise,[i]),fSettings^.Inputs.UserCruise[i]);
+    WriteInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_SetToLimit,fSettings^.Inputs.SetToLimit);
+    WriteInput(IniFile,SETN_GRP_Inputs,SETN_VAL_INP_KeepOnLimit,fSettings^.Inputs.KeepOnLimit);
 
     Result := True;
   finally
@@ -700,7 +742,7 @@ var
   TempInput:  TInput;
 begin
 ConflictingInputIndex := -1;
-For i := 0 to 41 do
+For i := 0 to Pred(InputCount) do
   begin
     TempInput := GetInput(i);
     If (i <> InputIndex) and (TempInput.PrimaryKey = Input.PrimaryKey) and (TempInput.ShiftKey = Input.ShiftKey) then

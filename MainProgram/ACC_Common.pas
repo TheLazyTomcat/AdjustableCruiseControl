@@ -15,8 +15,8 @@ uses
   Forms;
 
 const
-  ACC_VersionShort = $00020002;
-  ACC_VersionLong  = $0002000200020000;
+  ACC_VersionShort = $00020003;
+  ACC_VersionLong  = $0002000300000000;
 
   ACC_VersionShortStr = '2.3';
   ACC_VersionLongStr  = '2.3.0';

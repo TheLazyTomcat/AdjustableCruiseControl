@@ -195,7 +195,7 @@ object fSettingsForm: TfSettingsForm
       DefaultRowHeight = 16
       FixedColor = clGray
       FixedCols = 0
-      RowCount = 43
+      RowCount = 2
       Options = [goVertLine, goHorzLine, goRowSelect, goThumbTracking]
       ScrollBars = ssVertical
       TabOrder = 0

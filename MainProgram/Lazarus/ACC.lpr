@@ -20,6 +20,8 @@ uses
   WndAlloc,
   UtilityWindow,
   SimpleTimer,
+  WinMsgComm,
+  WinMsgCommClient,
 
   ACC_Common,
   ACC_Strings,
@@ -32,6 +34,7 @@ uses
   ACC_MemoryOps,
   ACC_Input,
   ACC_Manager,
+  ACC_PluginComm,
 
   MainForm,
   AboutForm,

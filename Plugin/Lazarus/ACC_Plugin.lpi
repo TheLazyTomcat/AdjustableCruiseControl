@@ -21,7 +21,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="34"/>
+      <BuildNr Value="40"/>
       <Language Value="0405"/>
       <StringTable Comments="Starter plugin for ACC 2.2.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Starter Plugin" InternalName="ACC 2.2.x Starter Plugin" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control Starter Plugin" OriginalFilename="ACC_Plugin.dll" ProductName="Adjustable Cruise Control Starter Plugin" ProductVersion="1.0.0.0"/>
     </VersionInfo>
@@ -36,7 +36,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -77,7 +77,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -126,7 +126,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -167,7 +167,7 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="6">
+    <Units Count="13">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -198,6 +198,41 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_PluginManager"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="..\..\MainProgram\Libs\CRC32.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CRC32"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\..\MainProgram\Libs\WndAlloc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WndAlloc"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\MainProgram\Libs\MulticastEvent.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MulticastEvent"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\MainProgram\Libs\UtilityWindow.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UtilityWindow"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinMsgCommServer"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgComm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinMsgComm"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_PluginComm"/>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -208,7 +243,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+      <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
       <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>

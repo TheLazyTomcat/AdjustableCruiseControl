@@ -130,6 +130,8 @@ type
 
   TFileStructure = LongWord;
 
+  TSupportedSpeedReading = (ssrDirect,ssrPlugin,ssrNone);
+
 const
   CF_NONE      = $00000000;
   CF_FILESIZE  = $00000001;
@@ -227,7 +229,7 @@ type
     class Function SupportsIniFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsProtocolVersion(ProtocolVersion: TProtocolVersion): Boolean; virtual;
     class Function IsValid(GameData: TGameData): Boolean; virtual;
-    class Function TruckSpeedSupported(const GameData: TGameData): Boolean; virtual;
+    class Function TruckSpeedSupported(const GameData: TGameData): TSupportedSpeedReading; virtual;
     constructor Create;
     destructor Destroy; override;
     Function IndexOf(Identifier: TGUID): Integer; virtual;
@@ -1358,11 +1360,12 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TGamesDataManager.TruckSpeedSupported(const GameData: TGameData): Boolean;
+class Function TGamesDataManager.TruckSpeedSupported(const GameData: TGameData): TSupportedSpeedReading;
 begin
-Result := ((GameData.TruckSpeed.Flags and PTRFLAG_TELEMETRY_TRUCK_SPEED) <> 0) or
-          ((GameData.TruckSpeed.ModuleIndex >= Low(GameData.Modules)) and
-          (GameData.TruckSpeed.ModuleIndex <= High(GameData.Modules)));
+If (GameData.TruckSpeed.ModuleIndex >= Low(GameData.Modules)) and
+   (GameData.TruckSpeed.ModuleIndex <= High(GameData.Modules)) then Result := ssrDirect
+  else If (GameData.TruckSpeed.Flags and PTRFLAG_TELEMETRY_TRUCK_SPEED) <> 0 then Result := ssrPlugin
+    else Result := ssrNone;
 end;
 
 //------------------------------------------------------------------------------

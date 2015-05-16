@@ -4,6 +4,7 @@ program ACC;
 
 uses
   Forms,
+
   CRC32                in '..\Libs\CRC32.pas',
   MD5                  in '..\Libs\MD5.pas',
   WinRawInput          in '..\Libs\WinRawInput.pas',
@@ -15,6 +16,8 @@ uses
   WndAlloc             in '..\Libs\WndAlloc.pas',
   UtilityWindow        in '..\Libs\UtilityWindow.pas',
   SimpleTimer          in '..\Libs\SimpleTimer.pas',
+  WinMsgComm           in '..\Libs\WMC\WinMsgComm.pas',
+  WinMsgCommClient     in '..\Libs\WMC\WinMsgCommClient.pas',
 
   ACC_Common          in '..\ACC_Common.pas',
   ACC_Strings         in '..\ACC_Strings.pas',
@@ -27,6 +30,7 @@ uses
   ACC_MemoryOps       in '..\ACC_MemoryOps.pas',
   ACC_Input           in '..\ACC_Input.pas',
   ACC_Manager         in '..\ACC_Manager.pas',
+  ACC_PluginComm      in '..\ACC_PluginComm.pas',
 
   MainForm           in '..\MainForm.pas' {fMainForm},
   MsgForm            in '..\Libs\Msg\MsgForm.pas' {fMsgForm},
@@ -35,7 +39,6 @@ uses
   KeyBindForm        in '..\KeyBindForm.pas' {fKeyBindForm},
   SupportedGamesForm in '..\SupportedGamesForm.pas' {fSupportedGamesForm},
   UpdateForm         in '..\UpdateForm.pas' {fUpdateForm};
-
 
 {$R *.res}
 
@@ -47,13 +50,13 @@ try
       Application.Initialize;
       Application.Title := 'Adjustable Cruise Control';
       Application.CreateForm(TfMainForm, fMainForm);
-  Application.CreateForm(TfMsgForm, fMsgForm);
-  Application.CreateForm(TfAboutForm, fAboutForm);
-  Application.CreateForm(TfSettingsForm, fSettingsForm);
-  Application.CreateForm(TfKeyBindForm, fKeyBindForm);
-  Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
-  Application.CreateForm(TfUpdateForm, fUpdateForm);
-  ACCManager.Initialize(Application);
+      Application.CreateForm(TfMsgForm, fMsgForm);
+      Application.CreateForm(TfAboutForm, fAboutForm);
+      Application.CreateForm(TfSettingsForm, fSettingsForm);
+      Application.CreateForm(TfKeyBindForm, fKeyBindForm);
+      Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
+      Application.CreateForm(TfUpdateForm, fUpdateForm);
+      ACCManager.Initialize(Application);
       Application.Run;
       ACCManager.Save;
     end;

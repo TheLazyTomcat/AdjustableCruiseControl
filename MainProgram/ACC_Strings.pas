@@ -34,6 +34,8 @@ const
   ACCSTR_UI_STB_GameProcess   = 'Game process: ';
   ACCSTR_UI_STB_ProcessInfo   = '%s (PID %d)';
   ACCSTR_UI_STB_NoGameProcess = ACCSTR_UI_STB_GameProcess + 'not found';
+  ACCSTR_UI_STB_PluginOnline  = 'Plugin online';
+  ACCSTR_UI_STB_PluginOffline = 'Plugin offline';
 
   // User interface - game info
   ACCSTR_UI_GAM_NoGameTitle = '>>> None of the supported games is running <<<';
@@ -52,6 +54,14 @@ const
   ACCSTR_UI_BTN_SetToRoads = 'Roads';
 
   ACCSTR_UI_BTN_SetToUser = 'User %d';
+
+  ACCSTR_UI_BTN_SetToLimit  = 'Set to speed limit';
+  ACCSTR_UI_BTN_KeepOnLimit = 'Keep on speed limit';
+
+  ACCSTR_UI_LIM_BoxCaptionNormal      = 'Speed limit';
+  ACCSTR_UI_LIM_BoxCaptionInactive    = 'Speed limit (inactive)';
+  ACCSTR_UI_LIM_BoxCaptionUnsupported = 'Speed limit (unsupported)';
+  ACCSTR_UI_LIM_ActionsOnZeroLimit: Array[0..1] of String = ('Turn CC off','Set CC to speed...');
 
   // User interface - About
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';
@@ -84,6 +94,9 @@ const
   ACCSTR_UI_SET_BIND_UserEngage  = 'Set CC to User %d speed';
   ACCSTR_UI_SET_BIND_UserVehicle = 'Vehicle -> User %d speed';
   ACCSTR_UI_SET_BIND_UserCruise  = 'CC -> User %d speed';
+
+  ACCSTR_UI_SET_BIND_SetToLimit  = 'Set to limit';
+  ACCSTR_UI_SET_BIND_KeepOnLimit  = 'Keep on limit';
 
   ACCSTR_UI_SET_BIND_ClearBinding = 'Are you sure you want to clear binding for action "%s"?';
 
@@ -133,6 +146,8 @@ case Index of
   12..21: Result := Format(ACCSTR_UI_SET_BIND_UserEngage,[Index - 12]);
   22..31: Result := Format(ACCSTR_UI_SET_BIND_UserVehicle,[Index - 22]);
   32..41: Result := Format(ACCSTR_UI_SET_BIND_UserCruise,[Index - 32]);
+  42: Result := ACCSTR_UI_SET_BIND_SetToLimit;
+  43: Result := ACCSTR_UI_SET_BIND_KeepOnLimit;
 else
   Result := '';
 end;

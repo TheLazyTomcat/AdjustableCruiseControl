@@ -222,7 +222,7 @@ end;
 
 constructor TMemoryOperator.Create;
 begin
-inherited;
+inherited Create;
 fActive := False;
 fCanReadVehicleSpeed := False;
 end;
@@ -232,7 +232,7 @@ end;
 procedure TMemoryOperator.Activate(GameData: TGameData);
 begin
 fGameData := GameData;
-fCanReadVehicleSpeed := TGamesDataManager.TruckSpeedSupported(fGameData);
+fCanReadVehicleSpeed := TGamesDataManager.TruckSpeedSupported(fGameData) = ssrDirect;
 fActive := TGamesDataManager.IsValid(fGameData);
 end;
 
@@ -249,14 +249,9 @@ end;
 Function TMemoryOperator.ReadVehicleSpeed(out Value: Single): Boolean;
 begin
 If fActive and fCanReadVehicleSpeed then
-  begin
-    If (fGameData.TruckSpeed.Flags and PTRFLAG_TELEMETRY_TRUCK_SPEED) <> 0 then
-      begin
-        {$IFDEF DevMsgs}{$MESSAGE 'implement reading by plugin'}{$ENDIF}
-      end
-    else Result := ReadFloat(PTR_IDX_TruckSpeed,Value);
-  end
-else Result := False;
+  Result := ReadFloat(PTR_IDX_TruckSpeed,Value)
+else
+  Result := False;
 end;
 
 //------------------------------------------------------------------------------

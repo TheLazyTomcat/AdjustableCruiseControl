@@ -1,13 +1,13 @@
 object fMainForm: TfMainForm
-  Left = 627
-  Height = 311
-  Top = 154
-  Width = 632
+  Left = 635
+  Height = 373
+  Top = 128
+  Width = 624
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Adjustable Cruise Control'
-  ClientHeight = 311
-  ClientWidth = 632
+  ClientHeight = 373
+  ClientWidth = 624
   Color = clBtnFace
   Font.Color = clWindowText
   Font.Height = -11
@@ -59,14 +59,14 @@ object fMainForm: TfMainForm
     Left = 0
     Height = 49
     Top = 0
-    Width = 632
+    Width = 624
     Anchors = [akTop, akLeft, akRight]
     Pen.Style = psClear
   end
   object lblUnits: TLabel
-    Left = 261
+    Left = 133
     Height = 13
-    Top = 262
+    Top = 294
     Width = 28
     Alignment = taRightJustify
     Caption = 'Units:'
@@ -76,7 +76,7 @@ object fMainForm: TfMainForm
     Left = 0
     Height = 9
     Top = 48
-    Width = 633
+    Width = 625
     Anchors = [akTop, akLeft, akRight]
     Shape = bsTopLine
     Style = bsRaised
@@ -91,7 +91,7 @@ object fMainForm: TfMainForm
     Left = 8
     Height = 13
     Top = 8
-    Width = 616
+    Width = 608
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     AutoSize = False
@@ -108,7 +108,7 @@ object fMainForm: TfMainForm
     Left = 8
     Height = 13
     Top = 24
-    Width = 616
+    Width = 608
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
     AutoSize = False
@@ -120,13 +120,13 @@ object fMainForm: TfMainForm
     Left = 8
     Height = 225
     Top = 56
-    Width = 241
+    Width = 233
     Caption = 'Preset speeds'
     ClientHeight = 207
-    ClientWidth = 237
+    ClientWidth = 229
     TabOrder = 0
     object lblStep: TLabel
-      Left = 153
+      Left = 145
       Height = 13
       Top = 66
       Width = 26
@@ -139,7 +139,7 @@ object fMainForm: TfMainForm
       Left = 6
       Height = 21
       Top = 34
-      Width = 225
+      Width = 218
       Caption = 'btnIncreaseByStep'
       OnClick = btnSpeedsClick
       TabOrder = 1
@@ -149,7 +149,7 @@ object fMainForm: TfMainForm
       Left = 6
       Height = 21
       Top = 90
-      Width = 225
+      Width = 218
       Caption = 'btnDecreaseByStep'
       OnClick = btnSpeedsClick
       TabOrder = 5
@@ -159,7 +159,7 @@ object fMainForm: TfMainForm
       Left = 6
       Height = 21
       Top = 144
-      Width = 161
+      Width = 153
       Caption = 'btnSetCity'
       OnClick = btnSpeedsClick
       TabOrder = 7
@@ -169,7 +169,7 @@ object fMainForm: TfMainForm
       Left = 6
       Height = 21
       Top = 174
-      Width = 161
+      Width = 153
       Caption = 'btnSetRoads'
       OnClick = btnSpeedsClick
       TabOrder = 9
@@ -179,7 +179,7 @@ object fMainForm: TfMainForm
       Left = 6
       Height = 21
       Top = 10
-      Width = 225
+      Width = 218
       Caption = 'btnIncreaseByUnit'
       OnClick = btnSpeedsClick
       TabOrder = 0
@@ -189,7 +189,7 @@ object fMainForm: TfMainForm
       Left = 6
       Height = 21
       Top = 114
-      Width = 225
+      Width = 218
       Caption = 'btnDecreaseByUnit'
       OnClick = btnSpeedsClick
       TabOrder = 6
@@ -219,7 +219,7 @@ object fMainForm: TfMainForm
     end
     object seSpeedStep: TFloatSpinEdit
       Tag = -2
-      Left = 182
+      Left = 174
       Height = 21
       Top = 62
       Width = 49
@@ -233,7 +233,7 @@ object fMainForm: TfMainForm
     end
     object seSpeedCity: TFloatSpinEdit
       Tag = -3
-      Left = 174
+      Left = 166
       Height = 21
       Top = 146
       Width = 57
@@ -247,7 +247,7 @@ object fMainForm: TfMainForm
     end
     object seSpeedRoads: TFloatSpinEdit
       Tag = -4
-      Left = 174
+      Left = 166
       Height = 21
       Top = 174
       Width = 57
@@ -261,7 +261,7 @@ object fMainForm: TfMainForm
     end
   end
   object grbUser: TGroupBox
-    Left = 256
+    Left = 248
     Height = 193
     Top = 56
     Width = 369
@@ -519,41 +519,109 @@ object fMainForm: TfMainForm
   object sbStatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 288
-    Width = 632
+    Top = 350
+    Width = 624
     Panels = <    
       item
         Text = 'game_process'
-        Width = 330
+        Width = 470
+      end    
+      item
+        Text = 'plugin_status'
+        Width = 50
       end>
     SimplePanel = False
   end
   object cbUnits: TComboBox
-    Left = 296
+    Left = 168
     Height = 21
-    Top = 258
+    Top = 290
     Width = 73
     ItemHeight = 13
     OnChange = cbUnitsChange
     Style = csDropDownList
-    TabOrder = 2
+    TabOrder = 3
   end
   object btnAbout: TButton
-    Left = 520
+    Left = 128
     Height = 21
-    Top = 258
-    Width = 105
+    Top = 319
+    Width = 113
     Caption = 'About...'
     OnClick = btnAboutClick
-    TabOrder = 4
+    TabOrder = 5
   end
   object btnSettings: TButton
-    Left = 408
+    Left = 8
     Height = 21
-    Top = 258
-    Width = 105
+    Top = 319
+    Width = 113
     Caption = 'Settings...'
     OnClick = btnSettingsClick
-    TabOrder = 3
+    TabOrder = 4
+  end
+  object grbSpeedLimit: TGroupBox
+    Left = 248
+    Height = 88
+    Top = 252
+    Width = 369
+    Caption = 'Speed limit'
+    ClientHeight = 70
+    ClientWidth = 365
+    TabOrder = 2
+    object btnSetToLimit: TButton
+      Tag = 400
+      Left = 8
+      Height = 21
+      Top = 7
+      Width = 167
+      Caption = 'btnSetToLimit'
+      OnClick = btnSpeedsClick
+      TabOrder = 0
+    end
+    object btnKeepOnLimit: TButton
+      Tag = 401
+      Left = 184
+      Height = 21
+      Top = 7
+      Width = 175
+      Caption = 'btnKeepOnLimit'
+      OnClick = btnSpeedsClick
+      TabOrder = 1
+    end
+    object seSpeedLimitDefault: TFloatSpinEdit
+      Tag = -5
+      Left = 304
+      Height = 21
+      Top = 40
+      Width = 57
+      DecimalPlaces = 1
+      Increment = 1
+      MaxValue = 999
+      MinValue = 0
+      OnChange = seSpeedsChange
+      TabOrder = 3
+      Value = 0
+    end
+    object lblActionOnZero: TLabel
+      Left = 13
+      Height = 13
+      Top = 43
+      Width = 124
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      Caption = 'Action on speed limit of 0:'
+      ParentColor = False
+    end
+    object cbActionOnZero: TComboBox
+      Left = 144
+      Height = 21
+      Top = 40
+      Width = 151
+      ItemHeight = 13
+      OnChange = cbActionOnZeroChange
+      Style = csDropDownList
+      TabOrder = 2
+    end
   end
 end

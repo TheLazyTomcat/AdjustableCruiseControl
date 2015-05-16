@@ -90,20 +90,15 @@ procedure TfSettingsForm.PrepareBindTable;
 var
   i:  Integer;
 begin
+sgBindings.RowCount := InputCount + 1;
 sgBindings.ColWidths[0] := 135;
 sgBindings.ColWidths[1] := 115;
 sgBindings.ColWidths[2] := 80;
 sgBindings.Cells[0,0] := ACCSTR_UI_SET_BIND_HEAD_Action;
 sgBindings.Cells[1,0] := ACCSTR_UI_SET_BIND_HEAD_Keys;
 sgBindings.Cells[2,0] := ACCSTR_UI_SET_BIND_HEAD_VKCodes;
-For i := 0 to 12 do
+For i := 0 to Pred(InputCount) do
   sgBindings.Cells[0,i + 1] := ACCSTR_UI_SET_BIND_InputText(i);
-For i := 0 to 9 do
-  begin
-    sgBindings.Cells[0,13 + i] := Format(ACCSTR_UI_SET_BIND_UserEngage,[i]);
-    sgBindings.Cells[0,23 + i] := Format(ACCSTR_UI_SET_BIND_UserVehicle,[i]);
-    sgBindings.Cells[0,33 + i] := Format(ACCSTR_UI_SET_BIND_UserCruise,[i]);
-  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -112,7 +107,7 @@ procedure TfSettingsForm.KeysToForm;
 var
   i:  Integer;
 begin
-For i := 0 to 41 do
+For i := 0 to Pred(InputCount) do
   begin
     sgBindings.Cells[1,i + 1] := TInputManager.GetInputKeyNames(LocalSettingsManager.Inputs[i]);
     sgBindings.Cells[2,i + 1] := TInputManager.GetInputKeyNames(LocalSettingsManager.Inputs[i],True);

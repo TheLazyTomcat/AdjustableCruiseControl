@@ -4,10 +4,20 @@ library ACC_Plugin;
 
 uses
   SysUtils,
+
+  CRC32,
   FloatHex,
   DefRegistry,
+  MulticastEvent,
+  WndAlloc,
+  UtilityWindow,
+  WinMsgComm,
+  WinMsgCommServer,
+
   SCS_Telemetry_Condensed,
+
   ACC_Settings,
+  ACC_PluginComm,
   ACC_PluginManager;
 
 {$R *.res}

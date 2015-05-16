@@ -115,7 +115,7 @@ try
     end;
   ListPointerData(GDIN_GD_CCSpeed,TempGameData.CCSpeed);
   ListPointerData(GDIN_GD_CCStatus,TempGameData.CCStatus);
-  If TGamesDataManager.TruckSpeedSupported(TempGameData) then
+  If TGamesDataManager.TruckSpeedSupported(TempGameData) <> ssrNone then
     ListPointerData(GDIN_GD_TruckSpeed,TempGameData.TruckSpeed);
   AddRow(GDIN_GD_Values,IntToStr(Length(TempGameData.Values)));
   For i := Low(TempGameData.Values) to High(TempGameData.Values) do

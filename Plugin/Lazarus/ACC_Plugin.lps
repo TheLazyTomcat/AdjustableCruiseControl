@@ -4,16 +4,16 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Debug_win_x86"/>
-    <Units Count="6">
+    <Units Count="13">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Plugin"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="15"/>
-        <CursorPos X="22" Y="18"/>
-        <UsageCount Value="23"/>
+        <TopLine Value="1"/>
+        <CursorPos X="3" Y="20"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -23,7 +23,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="26"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\MainProgram\Libs\FloatHex.pas"/>
@@ -32,7 +32,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="26"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\..\MainProgram\ACC_Settings.pas"/>
@@ -41,17 +41,17 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="11" Y="12"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="26"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="SCS_Telemetry_Condensed"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2179"/>
-        <CursorPos X="1" Y="2190"/>
-        <UsageCount Value="23"/>
+        <TopLine Value="1585"/>
+        <CursorPos X="45" Y="1600"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -59,13 +59,78 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_PluginManager"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="76"/>
-        <CursorPos X="54" Y="77"/>
-        <UsageCount Value="23"/>
+        <TopLine Value="253"/>
+        <CursorPos X="97" Y="218"/>
+        <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="..\..\MainProgram\Libs\CRC32.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CRC32"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="23"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="..\..\MainProgram\Libs\WndAlloc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WndAlloc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="23"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\MainProgram\Libs\MulticastEvent.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="MulticastEvent"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="23"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\MainProgram\Libs\UtilityWindow.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="UtilityWindow"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="23"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinMsgCommServer"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="22"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgComm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="WinMsgComm"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="22"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_PluginComm"/>
+        <EditorIndex Value="2"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="10"/>
+        <CursorPos X="21" Y="25"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+      </Unit12>
     </Units>
     <CustomDefines Count="5">
       <Define0 Value="FPC"/>
@@ -77,127 +142,43 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="9" HistoryIndex="8">
       <Position1>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="75" Column="5" TopLine="42"/>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="6" Column="1" TopLine="2"/>
       </Position1>
       <Position2>
         <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="27" Column="22" TopLine="15"/>
+        <Caret Line="77" Column="54" TopLine="1"/>
       </Position2>
       <Position3>
-        <Filename Value="ACC_Plugin.lpr"/>
-        <Caret Line="6" Column="1" TopLine="2"/>
+        <Filename Value="..\ACC_PluginManager.pas"/>
+        <Caret Line="8" Column="3" TopLine="1"/>
       </Position3>
       <Position4>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="2180" Column="60" TopLine="2174"/>
+        <Filename Value="..\ACC_PluginManager.pas"/>
+        <Caret Line="43" Column="52" TopLine="31"/>
       </Position4>
       <Position5>
         <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="239" Column="20" TopLine="226"/>
+        <Caret Line="2190" Column="1" TopLine="2179"/>
       </Position5>
       <Position6>
         <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="821" Column="17" TopLine="800"/>
+        <Caret Line="1567" Column="13" TopLine="1554"/>
       </Position6>
       <Position7>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="874" Column="9" TopLine="853"/>
+        <Filename Value="..\ACC_PluginManager.pas"/>
+        <Caret Line="275" Column="54" TopLine="257"/>
       </Position7>
       <Position8>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="892" Column="9" TopLine="871"/>
+        <Filename Value="..\ACC_PluginManager.pas"/>
+        <Caret Line="270" Column="106" TopLine="257"/>
       </Position8>
       <Position9>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="901" Column="9" TopLine="880"/>
+        <Filename Value="..\ACC_PluginManager.pas"/>
+        <Caret Line="218" Column="77" TopLine="201"/>
       </Position9>
-      <Position10>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="988" Column="72" TopLine="967"/>
-      </Position10>
-      <Position11>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="1161" Column="9" TopLine="1140"/>
-      </Position11>
-      <Position12>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="1186" Column="9" TopLine="1165"/>
-      </Position12>
-      <Position13>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="1204" Column="9" TopLine="1183"/>
-      </Position13>
-      <Position14>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="1222" Column="9" TopLine="1201"/>
-      </Position14>
-      <Position15>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="1240" Column="9" TopLine="1219"/>
-      </Position15>
-      <Position16>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="90" Column="66" TopLine="85"/>
-      </Position16>
-      <Position17>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="469" Column="33" TopLine="376"/>
-      </Position17>
-      <Position18>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="479" Column="53" TopLine="458"/>
-      </Position18>
-      <Position19>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="481" Column="9" TopLine="460"/>
-      </Position19>
-      <Position20>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="580" Column="32" TopLine="559"/>
-      </Position20>
-      <Position21>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="584" Column="37" TopLine="576"/>
-      </Position21>
-      <Position22>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="55" Column="3" TopLine="39"/>
-      </Position22>
-      <Position23>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="53" Column="33" TopLine="40"/>
-      </Position23>
-      <Position24>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="55" Column="54" TopLine="42"/>
-      </Position24>
-      <Position25>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="135" Column="90" TopLine="113"/>
-      </Position25>
-      <Position26>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="718" Column="5" TopLine="705"/>
-      </Position26>
-      <Position27>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="154" Column="37" TopLine="140"/>
-      </Position27>
-      <Position28>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="151" Column="56" TopLine="137"/>
-      </Position28>
-      <Position29>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="59" Column="32" TopLine="134"/>
-      </Position29>
-      <Position30>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <Caret Line="717" Column="5" TopLine="704"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>
