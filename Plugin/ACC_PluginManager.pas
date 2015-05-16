@@ -215,7 +215,7 @@ case Value.UserCode of
   WMC_CODE_LimitStart:  If fLimitRegistered then
                           begin
                             fLimitSending := True;
-                            fWMCServer.SendSingle(fSpeedLimit * 3.6,SenderID,WMC_CODE_SpeedLimit);
+                            fWMCServer.SendSingle(fSpeedLimit * 3.6,SenderID,WMC_CODE_LimitStart);
                           end;
   WMC_CODE_LimitStop:   begin
                           fLimitSending := False;

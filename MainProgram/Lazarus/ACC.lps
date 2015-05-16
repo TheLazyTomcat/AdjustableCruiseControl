@@ -9,7 +9,6 @@
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
@@ -168,14 +167,17 @@
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_Manager"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="377"/>
-        <CursorPos X="63" Y="225"/>
+        <TopLine Value="211"/>
+        <CursorPos X="56" Y="216"/>
         <UsageCount Value="90"/>
         <Bookmarks Count="2">
           <Item0 X="8" Y="184" ID="1"/>
-          <Item1 X="7" Y="558" ID="2"/>
+          <Item1 X="7" Y="569" ID="2"/>
         </Bookmarks>
+        <Loaded Value="True"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
@@ -220,7 +222,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="344"/>

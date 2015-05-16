@@ -211,6 +211,17 @@ case Value.UserCode of
                             else If Value.SingleValue > 0 then SetCCSpeed(Value.SingleValue)
                               else SetCCSpeed(0);
                           end;
+  WMC_CODE_LimitStart:  If Value.ValueType = mvtSingle then
+                          begin
+                            fKeepCCSpeedOnLimit := True;
+                            If Value.SingleValue = 0 then
+                              case Settings.ZeroLimitAction of
+                                0:  SetCCSpeed(0);
+                                1:  SetCCSpeed(Settings.Speeds.LimitDefault,False);
+                              end
+                            else If Value.SingleValue > 0 then SetCCSpeed(Value.SingleValue,False)
+                              else SetCCSpeed(0);
+                          end;
   WMC_CODE_LimitStop:   fKeepCCSpeedOnLimit := False;
   WMC_CODE_SpeedLimit:  If (Value.ValueType = mvtSingle) and fKeepCCSpeedOnLimit then
                           begin
@@ -565,11 +576,7 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
             fWMCClient.SendInteger(0,0,WMC_CODE_LimitStop);
             SetCCSpeed(0);
           end
-        else
-          begin
-            fKeepCCSpeedOnLimit := True;
-            fWMCClient.SendInteger(0,0,WMC_CODE_LimitStart);
-          end;
+        else fWMCClient.SendInteger(0,0,WMC_CODE_LimitStart);
       end;
   end;
 end;
