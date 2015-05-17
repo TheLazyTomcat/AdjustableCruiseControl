@@ -79,13 +79,13 @@ Result := False;
 try
   Address := BaseAddress;
   If Length(PointerData.Offsets) > 0 then
-    Address := {%H-}Pointer(PtrUInt(Address) + PointerData.Offsets[0]);
+    Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[0]);
   For i := Succ(Low(PointerData.Offsets)) to High(PointerData.Offsets) do
     begin
       If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),{%H-}Temp) then
         begin
           If Assigned(Address) and (Temp = SizeOf(Pointer)) then
-            Address := {%H-}Pointer(PtrUInt(Address) + PointerData.Offsets[i])
+            Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[i])
           else Exit;
         end
       else Exit;

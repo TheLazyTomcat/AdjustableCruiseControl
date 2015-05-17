@@ -9,7 +9,6 @@ uses
   StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF};
 
 type
-
   { TfMainForm }
 {$IFDEF FPC}
   TfMainForm = class(TForm)

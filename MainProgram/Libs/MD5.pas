@@ -294,12 +294,12 @@ LastChunkSize := Size - (Int64(FullChunks) * ChunkSize);
 HelpChunks := Ceil((LastChunkSize + SizeOf(QuadWord) + 1) / ChunkSize);
 HelpChunksBuff := AllocMem(HelpChunks * ChunkSize);
 try
-  Move({%H-}Pointer(PtrUInt(@Buffer) + (FullChunks * ChunkSize))^,HelpChunksBuff^,LastChunkSize);
-  {%H-}PByte(PtrUInt(HelpChunksBuff) + LastChunkSize)^ := $80;
+  Move({%H-}Pointer({%H-}PtrUInt(@Buffer) + (FullChunks * ChunkSize))^,HelpChunksBuff^,LastChunkSize);
+  {%H-}PByte({%H-}PtrUInt(HelpChunksBuff) + LastChunkSize)^ := $80;
   {$IFDEF x64}
-  {%H-}PQuadWord(PtrUInt(HelpChunksBuff) + (HelpChunks * ChunkSize) - SizeOf(QuadWord))^ := MessageLength;
+  {%H-}PQuadWord({%H-}PtrUInt(HelpChunksBuff) + (HelpChunks * ChunkSize) - SizeOf(QuadWord))^ := MessageLength;
   {$ELSE}
-  {%H-}PQuadWord(PtrUInt(HelpChunksBuff) + (Int64(HelpChunks) * ChunkSize) - SizeOf(QuadWord))^ := MessageLength;
+  {%H-}PQuadWord({%H-}PtrUInt(HelpChunksBuff) + (Int64(HelpChunks) * ChunkSize) - SizeOf(QuadWord))^ := MessageLength;
   {$ENDIF}
   BufferMD5(Result,HelpChunksBuff^,HelpChunks * ChunkSize);
 finally
@@ -462,7 +462,11 @@ with PMD5Context_Internal(Context)^ do
             BufferMD5(MessageHash,TransferBuffer,ChunkSize);
             RemainingSize := Size - (ChunkSize - TransferSize);
             TransferSize := 0;
-            MD5_Update(Context,{%H-}Pointer(PtrUInt(@Buffer) + Size - RemainingSize)^,RemainingSize);
+            {$IFDEF x64}
+            MD5_Update(Context,{%H-}Pointer({%H-}PtrUInt(@Buffer) + Size - RemainingSize)^,RemainingSize);
+            {$ELSE}
+            MD5_Update(Context,{%H-}Pointer(Int64({%H-}PtrUInt(@Buffer)) + Size - RemainingSize)^,RemainingSize);
+            {$ENDIF}
           end
         else
           begin

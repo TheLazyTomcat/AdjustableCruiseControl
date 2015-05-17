@@ -322,6 +322,13 @@ Function NEXTRAWINPUTBLOCK(ptr: PRAWINPUT): PRAWINPUT;
 
 implementation
 
+type
+{$IFDEF x64}
+  PtrUInt = UInt64;
+{$ELSE}
+  PtrUint = LongWord;
+{$ENDIF}
+
 Function GET_RAWINPUT_CODE_WPARAM(wParam: WPARAM): WPARAM;
 begin
 Result := wParam and $FF;
@@ -330,15 +337,19 @@ end;
 Function RAWINPUT_ALIGN(x: Pointer): Pointer;
 begin
 {$IFDEF x64}
-{%H-}Result := Pointer((NativeInt(x) + SizeOf(QWORD) - 1) and not (SizeOf(QWORD) - 1));
+Result := {%H-}Pointer(({%H-}PtrUInt(x) + SizeOf(QWORD) - 1) and not (SizeOf(QWORD) - 1));
 {$ELSE}
-{%H-}Result := Pointer((NativeInt(x) + SizeOf(DWORD) - 1) and not (SizeOf(DWORD) - 1));
+Result := {%H-}Pointer((Int64({%H-}PtrUInt(x)) + SizeOf(DWORD) - 1) and not (SizeOf(DWORD) - 1));
 {$ENDIF}
 end;
 
 Function NEXTRAWINPUTBLOCK(ptr: PRAWINPUT): PRAWINPUT;
 begin
-{%H-}Result := PRAWINPUT(RAWINPUT_ALIGN(Pointer(NativeInt(ptr) + ptr^.header.dwSize)));
+{$IFDEF x64}
+Result := PRAWINPUT(RAWINPUT_ALIGN({%H-}Pointer({%H-}PtrUInt(ptr) + ptr^.header.dwSize)));
+{$ELSE}
+Result := PRAWINPUT(RAWINPUT_ALIGN({%H-}Pointer(Int64({%H-}PtrUInt(ptr)) + ptr^.header.dwSize)));
+{$ENDIF}
 end;
 
 end.

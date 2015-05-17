@@ -6,7 +6,7 @@ interface
 
 uses
   Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, ComCtrls, StdCtrls, Grids,
+  ExtCtrls, ComCtrls, StdCtrls,
   ACC_GamesData;
 
 type
@@ -187,7 +187,7 @@ const
   LeftBarWidth    = 6;
 var
   TempGameData: TGameData;
-  WorkBitmap:   TBitmap; // maybe use blobal object?
+  WorkBitmap:   TBitmap;
   WorkRect:     TRect;
 begin
 TempGameData := ACCManager.GamesDataManager.GameData[Index];

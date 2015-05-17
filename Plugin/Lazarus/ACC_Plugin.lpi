@@ -21,7 +21,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="41"/>
+      <BuildNr Value="43"/>
       <Language Value="0405"/>
       <StringTable Comments="Starter plugin for ACC 2.2.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Starter Plugin" InternalName="ACC 2.2.x Starter Plugin" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control Starter Plugin" OriginalFilename="ACC_Plugin.dll" ProductName="Adjustable Cruise Control Starter Plugin" ProductVersion="1.0.0.0"/>
     </VersionInfo>
@@ -58,13 +58,9 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerMessages>
-              <MsgFileName Value=""/>
-            </CompilerMessages>
             <CustomOptions Value="-dFPC
 -dRelease
 -dx86"/>
-            <CompilerPath Value="$(CompPath)"/>
           </Other>
         </CompilerOptions>
       </Item2>
@@ -107,13 +103,9 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerMessages>
-              <MsgFileName Value=""/>
-            </CompilerMessages>
             <CustomOptions Value="-dFPC
 -dDebug
 -dx64"/>
-            <CompilerPath Value="$(CompPath)"/>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -148,13 +140,9 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerMessages>
-              <MsgFileName Value=""/>
-            </CompilerMessages>
             <CustomOptions Value="-dFPC
 -dRelease
 -dx64"/>
-            <CompilerPath Value="$(CompPath)"/>
           </Other>
         </CompilerOptions>
       </Item4>
@@ -171,27 +159,22 @@
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Plugin"/>
       </Unit0>
       <Unit1>
         <Filename Value="..\..\MainProgram\Libs\DefRegistry.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="DefRegistry"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\MainProgram\Libs\FloatHex.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FloatHex"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\..\MainProgram\ACC_Settings.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Settings"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="SCS_Telemetry_Condensed"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\ACC_PluginManager.pas"/>
@@ -201,37 +184,30 @@
       <Unit6>
         <Filename Value="..\..\MainProgram\Libs\CRC32.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="CRC32"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\MainProgram\Libs\WndAlloc.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WndAlloc"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\..\MainProgram\Libs\MulticastEvent.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="MulticastEvent"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\..\MainProgram\Libs\UtilityWindow.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UtilityWindow"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinMsgCommServer"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgComm.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinMsgComm"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_PluginComm"/>
       </Unit12>
     </Units>
   </ProjectOptions>
@@ -273,13 +249,9 @@
       </Options>
     </Linking>
     <Other>
-      <CompilerMessages>
-        <MsgFileName Value=""/>
-      </CompilerMessages>
       <CustomOptions Value="-dFPC
 -dDebug
 -dx86"/>
-      <CompilerPath Value="$(CompPath)"/>
     </Other>
   </CompilerOptions>
   <Debugging>

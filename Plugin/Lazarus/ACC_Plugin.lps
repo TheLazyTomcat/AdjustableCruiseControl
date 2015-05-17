@@ -8,10 +8,6 @@
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Plugin"/>
-        <EditorIndex Value="0"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
         <CursorPos X="3" Y="20"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
@@ -19,35 +15,22 @@
       <Unit1>
         <Filename Value="..\..\MainProgram\Libs\DefRegistry.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="DefRegistry"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="26"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\..\MainProgram\Libs\FloatHex.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FloatHex"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="26"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\..\MainProgram\ACC_Settings.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Settings"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
         <CursorPos X="11" Y="12"/>
         <UsageCount Value="26"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="SCS_Telemetry_Condensed"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="1585"/>
         <CursorPos X="45" Y="1600"/>
         <UsageCount Value="26"/>
@@ -58,71 +41,44 @@
         <UnitName Value="ACC_PluginManager"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="200"/>
-        <CursorPos X="1" Y="219"/>
+        <CursorPos Y="219"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\..\MainProgram\Libs\CRC32.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="CRC32"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="23"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\..\MainProgram\Libs\WndAlloc.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WndAlloc"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="23"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\..\MainProgram\Libs\MulticastEvent.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="MulticastEvent"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="23"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\..\MainProgram\Libs\UtilityWindow.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UtilityWindow"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="23"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinMsgCommServer"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="22"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgComm.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinMsgComm"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="1" Y="1"/>
         <UsageCount Value="22"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_PluginComm"/>
-        <WindowIndex Value="0"/>
         <TopLine Value="10"/>
         <CursorPos X="21" Y="25"/>
         <UsageCount Value="22"/>
@@ -135,15 +91,11 @@
       <Define3 Value="x86"/>
       <Define4 Value="x64"/>
     </CustomDefines>
-    <General>
-      <ActiveWindowIndexAtStart Value="0"/>
-    </General>
-    <JumpHistory Count="1" HistoryIndex="0">
+    <JumpHistory Count="1">
       <Position1>
         <Filename Value="ACC_Plugin.lpr"/>
-        <Caret Line="6" Column="1" TopLine="2"/>
+        <Caret Line="6" TopLine="2"/>
       </Position1>
     </JumpHistory>
   </ProjectSession>
-  <EditorMacros Count="0"/>
 </CONFIG>
