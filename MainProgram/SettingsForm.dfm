@@ -309,9 +309,9 @@ object fSettingsForm: TfSettingsForm
     object cbGameActiveForTrigger: TCheckBox
       Left = 16
       Top = 48
-      Width = 273
+      Width = 329
       Height = 17
-      Caption = 'Game window must be active for a trigger to activate'
+      Caption = 'Game window must be in the foreground for a trigger to activate'
       TabOrder = 2
     end
   end

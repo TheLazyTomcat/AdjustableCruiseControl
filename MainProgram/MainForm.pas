@@ -58,16 +58,18 @@ type
     lblActionOnZero: TLabel;
     cbActionOnZero: TComboBox;
     seSpeedLimitDefault: TFloatSpinEdit;
+    cbShowKeyBindings: TCheckBox;
     lblUnits: TLabel;
     cbUnits: TComboBox;
     btnSettings: TButton;
     btnAbout: TButton;
     sbStatusBar: TStatusBar;
-    procedure cbActionOnZeroChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
     procedure seSpeedsChange(Sender: TObject);
+    procedure cbActionOnZeroChange(Sender: TObject);
+    procedure cbShowKeyBindingsClick(Sender: TObject);
     procedure cbUnitsChange(Sender: TObject);
     procedure btnSettingsClick(Sender: TObject);    
     procedure btnAboutClick(Sender: TObject);
@@ -131,6 +133,7 @@ type
     lblActionOnZero: TLabel;    
     cbActionOnZero: TComboBox;
     seSpeedLimitDefault: TSpinEdit;
+    cbShowKeyBindings: TCheckBox;    
     lblUnits: TLabel;
     cbUnits: TComboBox;
     btnSettings: TButton;
@@ -141,7 +144,8 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
     procedure seSpeedsChange(Sender: TObject);
-    procedure cbActionOnZeroChange(Sender: TObject);    
+    procedure cbActionOnZeroChange(Sender: TObject);
+    procedure cbShowKeyBindingsClick(Sender: TObject);
     procedure cbUnitsChange(Sender: TObject);
     procedure btnSettingsClick(Sender: TObject);
     procedure btnAboutClick(Sender: TObject);
@@ -264,15 +268,14 @@ var
 
   procedure SetButtonCaption(Button: TButton; const Text: String; const KeysStr: String; NoText: Boolean = False);
   begin
-    If KeysStr <> '' then
+    If (KeysStr <> '') and Settings.ShowKeyBindings then
       begin
         If NoText then
           Button.Caption := Format(ACCSTR_UI_BTN_Keys,[KeysStr])
         else
           Button.Caption := Text + Format(ACCSTR_UI_BTN_Keys,[KeysStr]);
       end
-    else
-      Button.Caption := Text;
+    else Button.Caption := Text;
   end;
 
 begin
@@ -309,7 +312,8 @@ finally
   cbUnits.Items.EndUpdate;
 end;
 cbUnits.ItemIndex := Settings.UsedSpeedUnit;
-cbActionOnZero.ItemIndex := Settings.ZeroLimitAction; 
+cbActionOnZero.ItemIndex := Settings.ZeroLimitAction;
+cbShowKeyBindings.Checked := Settings.ShowKeyBindings;
 end;
 
 //==============================================================================
@@ -385,6 +389,14 @@ end;
 procedure TfMainForm.cbActionOnZeroChange(Sender: TObject);
 begin
 Settings.ZeroLimitAction := cbActionOnZero.ItemIndex;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.cbShowKeyBindingsClick(Sender: TObject);
+begin
+Settings.ShowKeyBindings := cbShowKeyBindings.Checked;
+KeysToForm;
 end;
 
 //------------------------------------------------------------------------------

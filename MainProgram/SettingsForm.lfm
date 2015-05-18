@@ -15,7 +15,7 @@ object fSettingsForm: TfSettingsForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.4.0.4'
   object bvlVertSplit: TBevel
     Left = 384
     Height = 521
@@ -320,8 +320,8 @@ object fSettingsForm: TfSettingsForm
       Left = 14
       Height = 17
       Top = 34
-      Width = 273
-      Caption = 'Game window must be active for a trigger to activate'
+      Width = 328
+      Caption = 'Game window must be in the foreground for a trigger to activate'
       TabOrder = 2
     end
   end

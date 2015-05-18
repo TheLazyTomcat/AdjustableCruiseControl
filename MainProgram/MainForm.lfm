@@ -1,7 +1,7 @@
 object fMainForm: TfMainForm
-  Left = 635
+  Left = 647
   Height = 373
-  Top = 128
+  Top = 114
   Width = 624
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -540,7 +540,7 @@ object fMainForm: TfMainForm
     ItemHeight = 13
     OnChange = cbUnitsChange
     Style = csDropDownList
-    TabOrder = 3
+    TabOrder = 4
   end
   object btnAbout: TButton
     Left = 128
@@ -549,7 +549,7 @@ object fMainForm: TfMainForm
     Width = 113
     Caption = 'About...'
     OnClick = btnAboutClick
-    TabOrder = 5
+    TabOrder = 6
   end
   object btnSettings: TButton
     Left = 8
@@ -558,7 +558,7 @@ object fMainForm: TfMainForm
     Width = 113
     Caption = 'Settings...'
     OnClick = btnSettingsClick
-    TabOrder = 4
+    TabOrder = 5
   end
   object grbSpeedLimit: TGroupBox
     Left = 248
@@ -623,5 +623,14 @@ object fMainForm: TfMainForm
       Style = csDropDownList
       TabOrder = 2
     end
+  end
+  object cbShowKeyBindings: TCheckBox
+    Left = 8
+    Height = 17
+    Top = 292
+    Width = 106
+    Caption = 'Show key bindings'
+    OnClick = cbShowKeyBindingsClick
+    TabOrder = 3
   end
 end

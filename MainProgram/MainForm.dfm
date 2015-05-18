@@ -1,5 +1,5 @@
 object fMainForm: TfMainForm
-  Left = 672
+  Left = 679
   Top = 115
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -591,6 +591,15 @@ object fMainForm: TfMainForm
       Value = 0
       OnChange = seSpeedsChange
     end
+  end
+  object cbShowKeyBindings: TCheckBox
+    Left = 8
+    Top = 299
+    Width = 113
+    Height = 17
+    Caption = 'Show key bindings'
+    TabOrder = 7
+    OnClick = cbShowKeyBindingsClick
   end
   object oXPManifest: TXPManifest
   end

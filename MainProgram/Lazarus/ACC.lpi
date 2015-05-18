@@ -19,7 +19,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="3"/>
-      <BuildNr Value="97"/>
+      <BuildNr Value="114"/>
       <Language Value="0405"/>
       <StringTable Comments="Main program for ACC 2.3.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.3.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.3.0"/>
     </VersionInfo>
@@ -177,7 +177,6 @@
       <Unit3>
         <Filename Value="..\Libs\WinRawInput.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinRawInput"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\Libs\FloatHex.pas"/>
@@ -214,6 +213,7 @@
       <Unit12>
         <Filename Value="..\ACC_Strings.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Strings"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\ACC_TrayIcon.pas"/>
@@ -234,11 +234,11 @@
       <Unit17>
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Manager"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_MemoryOps"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
@@ -247,6 +247,7 @@
       <Unit20>
         <Filename Value="..\ACC_Settings.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Settings"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\ACC_SplashScreen.pas"/>
@@ -273,6 +274,7 @@
         <ComponentName Value="fSettingsForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SettingsForm"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\KeyBindForm.pas"/>
