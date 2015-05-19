@@ -123,6 +123,13 @@ const
   ACCSTR_UI_SUPG_SupportedList = 'Supported games (%d)';
   ACCSTR_UI_SUPG_VAL_Index     = 'Index';
 
+  ACCSTR_UI_SUPG_ASSOC_Associate = 'Image from which this instance of ACC is started will be associated with file extension UGDB.' + sLineBreak +
+                                   'From now on, the program image must stay in the same folder for this association to work properly.' + sLineBreak +
+                                   'Are you sure you want to associate UGDB file extension to this program?';
+
+  ACCSTR_UI_SUPG_ASSOC_Deassociate = 'File extension UGDB seems to be already associated.'  + sLineBreak +
+                                     'What you want to do with this association?';
+
 implementation
 
 uses

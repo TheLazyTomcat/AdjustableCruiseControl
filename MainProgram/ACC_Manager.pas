@@ -18,6 +18,8 @@ uses
   ACC_SplashScreen, ACC_ProcessBinder, ACC_MemoryOps, ACC_Input;
 
 type
+  TLoadUpdateEvent = procedure(Sender: TObject; const UpdateFile: String) of object;
+
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                                 TACCManager                                  }
@@ -41,17 +43,19 @@ type
     fWMCClient:           TWinMsgCommClient;
     fOnSpeedChange:       TNotifyEvent;
     fOnPluginStateChange: TNotifyEvent;
+    fOnLoadUpdate:        TLoadUpdateEvent;
     Function GetPluginState: Boolean;
   protected
     procedure Application_OnMinimize(Sender: TObject); virtual;
+    procedure InstaceControl_OnRestoreMessage(Sender: TObject; Parameter: Integer); virtual;
     procedure ProcessBinder_OnStateChange(Sender: TObject); virtual;
     procedure ProcessBinder_OnGameUnbind(Sender: TObject); virtual;
     procedure WMCClient_OnValueRecived(Sender: TObject; {%H-}SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
     procedure DoPluginStateChange(Sender: TObject); virtual;
   public
-    constructor Create;
+    constructor Create(LoadingUpdate: Boolean; const UpdateFile: String = '');
     destructor Destroy; override;
-    procedure Initialize(Application: TApplication); virtual;
+    procedure Initialize(Application: TApplication; LoadingUpdate: Boolean); virtual;
     procedure BuildInputTriggers; virtual;
     procedure ExtractGamesData; virtual;
     procedure UpdateFromInternalGamesData; virtual;
@@ -74,6 +78,7 @@ type
     property PluginOnline: Boolean read GetPluginState;
     property OnSpeedChange: TNotifyEvent read fOnSpeedChange write fOnSpeedChange;
     property OnPluginStateChange: TNotifyEvent read fOnPluginStateChange write fOnPluginStateChange;
+    property OnLoadUpdate: TLoadUpdateEvent read fOnLoadUpdate write fOnLoadUpdate;
   end;
 
 var
@@ -149,6 +154,30 @@ If Settings.MinimizeToTray then
     ShowWindow(fApplication.Handle,SW_HIDE);
     {$ENDIF}
   end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TACCManager.InstaceControl_OnRestoreMessage(Sender: TObject; Parameter: Integer);
+var
+  TempStr:  String;
+
+  procedure DoRestore;
+  begin
+    fApplication.Restore;
+    fApplication.MainForm.Show;
+    SetForegroundWindow(fApplication.MainForm.Handle);
+    fTrayIcon.HideTrayIcon;
+  end;
+  
+begin
+If Parameter = 1 then
+  begin
+    DoRestore;
+    TempStr := fInstanceControl.ReadSharedString;
+    If Assigned(fOnLoadUpdate) and FileExists(TempStr) then fOnLoadUpdate(Self,TempStr);
+  end
+else DoRestore;
 end;
 
 //------------------------------------------------------------------------------
@@ -254,14 +283,14 @@ end;
 {   TACCManager // Public methods                                              }
 {------------------------------------------------------------------------------}
 
-constructor TACCManager.Create;
+constructor TACCManager.Create(LoadingUpdate: Boolean; const UpdateFile: String = '');
 begin
 inherited Create;
 fPluginFeatures := 0;
 fKeepCCSpeedOnLimit := False;
 fOnBindStateChange := TMulticastNotifyEvent.Create(Self);
 fUtilityWindow := TUtilityWindow.Create;
-fInstanceControl := TInstanceControl.Create(fUtilityWindow,ACCSTR_IC_InstanceName);
+fInstanceControl := TInstanceControl.Create(fUtilityWindow,ACCSTR_IC_InstanceName,LoadingUpdate,UpdateFile);
 fSettingsManager := TSettingsManager.Create(Addr(ACC_Settings.Settings));
 fSplashScreen := nil;
 fGamesDataManager := TGamesDataManager.Create;
@@ -281,6 +310,7 @@ begin
 fSplashScreen.Free;
 fInputManager.Free;
 fWMCClient.Free;
+fInstanceControl.OnRestoreMessage := nil;
 fTrayIcon.Free;
 fMemoryOperator.Free;
 fProcessBinder.Free;
@@ -294,13 +324,14 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TACCManager.Initialize(Application: TApplication);
+procedure TACCManager.Initialize(Application: TApplication; LoadingUpdate: Boolean);
 begin
 fApplication := Application;
 fApplication.OnMinimize := Application_OnMinimize;
 SettingsManager.PreloadSettings;
 fTrayIcon := TTrayIcon.Create(fUtilityWindow,fApplication);
-If Settings.StartMinimized then
+fInstanceControl.OnRestoreMessage := InstaceControl_OnRestoreMessage;
+If Settings.StartMinimized and not LoadingUpdate then
   begin
     fApplication.ShowMainForm := False;
     Load;

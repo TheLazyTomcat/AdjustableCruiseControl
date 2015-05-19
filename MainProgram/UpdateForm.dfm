@@ -71,7 +71,7 @@ object fUpdateForm: TfUpdateForm
   end
   object gbColorLegend: TGroupBox
     Left = 496
-    Top = 240
+    Top = 208
     Width = 145
     Height = 121
     Caption = 'Colors'
@@ -158,6 +158,15 @@ object fUpdateForm: TfUpdateForm
       Pen.Style = psClear
       ShowHint = True
     end
+  end
+  object btnAssociateFile: TButton
+    Left = 496
+    Top = 336
+    Width = 145
+    Height = 25
+    Caption = 'Associate UGDB files...'
+    TabOrder = 5
+    OnClick = btnAssociateFileClick
   end
   object diaLoadUpdate: TOpenDialog
     Filter = 

@@ -18,16 +18,16 @@ which each part starts.
   Installation ............................................ 176
   How to use the program .................................. 240
   How to install an update ................................ 260
-  Program features ........................................ 291
-  Common problems ......................................... 322
-  How the program works ................................... 387
-  Changelog ............................................... 419
-  Known issues ............................................ 461
-  Source code ............................................. 474
-  Licensing ............................................... 483
-  Authors, contacts ....................................... 491
-  Links ................................................... 498
-  Copyright ............................................... 504
+  Program features ........................................ 292
+  Common problems ......................................... 323
+  How the program works ................................... 388
+  Changelog ............................................... 420
+  Known issues ............................................ 463
+  Source code ............................................. 476
+  Licensing ............................................... 485
+  Authors, contacts ....................................... 493
+  Links ................................................... 500
+  Copyright ............................................... 506
 
 
 
@@ -262,7 +262,8 @@ How to install an update
 Data updates for ACC are distributed as UGBD files. It is possible to distribute
 an update in GDB or INI file, but it is not recommended and you should be
 carefull with such files.
-To install a game update, follow these steps:
+To install a game update, follow these steps (steps 2 and 3 can be skipped if
+the update is in UGDB file and you have valid file association active):
 
   - download update file (*.INI,*.GDB or preferably *.UGBD) - latest updates 
     should be available on a forum linked further in this document (section 
@@ -429,6 +430,7 @@ List of changes between individual versions of ACC.
   - advanced settings are now available in settings window, and are no longer
     hidden from user
   - added an option to hide key bindings on buttons in main window
+  - adden an option to associate UGDB file extension to ACC 
   - older game data entries updated to support reading of vehicle speed by a 
     plugin
   - added support for new games

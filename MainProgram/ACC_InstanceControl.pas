@@ -12,10 +12,12 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Messages, Classes,
+  Windows, Messages, Classes,
   UtilityWindow;
 
 type
+  TRestoreMessageEvent = procedure(Sender: TObject; Parameter: Integer) of object;
+
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                               TInstanceControl                               }
@@ -30,23 +32,31 @@ type
     fMapMemory:           Pointer;
     fMutexHandle:         THandle;
     fFirstInstance:       Boolean;
-    fOnRestoreRequired:   TNotifyEvent;
+    fOnRestoreMessage:    TRestoreMessageEvent;
   protected
     procedure MessageHandler(var Msg: TMessage; var Handled: Boolean); virtual;
+    procedure WriteSharedHandle(Handle: HWND); virtual;
+    Function ReadSharedHandle: HWND; virtual;
   public
-    constructor Create(UtilityWindow: TUtilityWindow; InstanceName: String);
+    constructor Create(UtilityWindow: TUtilityWindow; InstanceName: String; LoadingUpdate: Boolean; const UpdateFile: String);
     destructor Destroy; override;
+    procedure WriteSharedString(const Str: String); virtual;
+    Function ReadSharedString: String; virtual;
   published
     property InstanceName: String read fInstanceName;
     property RestoreMessageCode: LongWord read fRestoreMessageCode;
     property FirstInstance: Boolean read fFirstInstance;
-    property OnRestoreRequired: TNotifyEvent read fOnRestoreRequired write fOnRestoreRequired;
+    property OnRestoreMessage: TRestoreMessageEvent read fOnRestoreMessage write fOnRestoreMessage;
   end;
 
 implementation
 
 uses
-  Windows, ACC_Strings;
+  ACC_Common, ACC_Strings;
+
+const
+  SharedMemorySize   = 1024;
+  SharedStringOffset = 8;  
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -62,43 +72,63 @@ procedure TInstanceControl.MessageHandler(var Msg: TMessage; var Handled: Boolea
 begin
 If Msg.Msg = fRestoreMessageCode then
   begin
-    If Assigned(fOnRestoreRequired) then fOnRestoreRequired(Self);
+    If Assigned(fOnRestoreMessage) then fOnRestoreMessage(Self,Integer(Msg.WParam));
     Handled := True;
   end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TInstanceControl.WriteSharedHandle(Handle: HWND);
+begin
+If WaitForSingleObject(fMutexHandle,10000) in [WAIT_OBJECT_0,WAIT_ABANDONED] then
+  try
+    HWND(fMapMemory^) := Handle;
+  finally
+    ReleaseMutex(fMutexHandle);
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TInstanceControl.ReadSharedHandle: HWND;
+begin
+If WaitForSingleObject(fMutexHandle,10000) in [WAIT_OBJECT_0,WAIT_ABANDONED] then
+  try
+    Result := HWND(fMapMemory^);
+  finally
+    ReleaseMutex(fMutexHandle);
+  end
+else Result := INVALID_HANDLE_VALUE;  
 end;
 
 {------------------------------------------------------------------------------}
 {   TInstanceControl // Public methods                                         }
 {------------------------------------------------------------------------------}
 
-constructor TInstanceControl.Create(UtilityWindow: TUtilityWindow; InstanceName: String);
+constructor TInstanceControl.Create(UtilityWindow: TUtilityWindow; InstanceName: String; LoadingUpdate: Boolean; const UpdateFile: String);
 begin
 inherited Create;
 fUtilityWindow := UtilityWindow;
 fUtilityWindow.OnMessage.Add(MessageHandler);
 fInstanceName := InstanceName;
 fRestoreMessageCode := RegisterWindowMessage(PChar(ACCSTR_IC_MessagePrefix + fInstanceName));
-fMapHandle := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,SizeOf(HWND),PChar(ACCSTR_IC_MapPrefix + fInstanceName));
+fMapHandle := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,SharedMemorySize,PChar(ACCSTR_IC_MapPrefix + fInstanceName));
 fMapMemory := MapViewOfFile(fMapHandle,FILE_MAP_ALL_ACCESS,0,0,SizeOf(HWND));
 fMutexHandle := CreateMutex(nil,False,PChar(ACCSTR_IC_MutexPrefix + fInstanceName));
 If GetLastError = ERROR_ALREADY_EXISTS then
   begin
     fFirstInstance := False;
-    If WaitForSingleObject(fMutexHandle,1000) in [WAIT_OBJECT_0,WAIT_ABANDONED] then
-      try
-        SendMessage(HWND(fMapMemory^),fRestoreMessageCode,0,0);
-      finally
-        ReleaseMutex(fMutexHandle);
-      end;
+    If LoadingUpdate then
+      begin
+        WriteSharedString(UpdateFile);
+        SendMessage(ReadSharedHandle,fRestoreMessageCode,1,0)
+      end
+    else SendMessage(ReadSharedHandle,fRestoreMessageCode,0,0);
   end
 else
   begin
-    If WaitForSingleObject(fMutexHandle,5000) in [WAIT_OBJECT_0,WAIT_ABANDONED] then
-      try
-        HWND(fMapMemory^) := fUtilityWindow.WindowHandle;
-      finally
-        ReleaseMutex(fMutexHandle);
-      end;
+    WriteSharedHandle(fUtilityWindow.WindowHandle);
     fFirstInstance := True;
   end;
 end;
@@ -112,6 +142,38 @@ CloseHandle(fMutexHandle);
 UnmapViewOfFile(fMapMemory);
 CloseHandle(fMapHandle);
 inherited;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TInstanceControl.WriteSharedString(const Str: String);
+var
+  TempStr:  UTF8String;
+begin
+If WaitForSingleObject(fMutexHandle,10000) in [WAIT_OBJECT_0,WAIT_ABANDONED] then
+  try
+    TempStr := StringToUTF8(Str);
+    {%H-}PInteger({%H-}PtrUInt(fMapMemory) + SharedStringOffset)^ := Length(TempStr);
+    Move(PAnsiChar(TempStr)^,{%H-}Pointer({%H-}PtrUInt(fMapMemory) + SharedStringOffset + SizeOf(Integer))^,Length(TempStr))
+  finally
+    ReleaseMutex(fMutexHandle);
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TInstanceControl.ReadSharedString: String;
+var
+  TempStr:  UTF8String;
+begin
+If WaitForSingleObject(fMutexHandle,10000) in [WAIT_OBJECT_0,WAIT_ABANDONED] then
+  try
+    SetLength(TempStr,{%H-}PInteger({%H-}PtrUInt(fMapMemory) + SharedStringOffset)^);
+    Move({%H-}Pointer({%H-}PtrUInt(fMapMemory) + SharedStringOffset + SizeOf(Integer))^,PAnsiChar(TempStr)^,Length(TempStr));
+    Result := UTF8ToString(TempStr);
+  finally
+    ReleaseMutex(fMutexHandle);
+  end;
 end;
 
 end.

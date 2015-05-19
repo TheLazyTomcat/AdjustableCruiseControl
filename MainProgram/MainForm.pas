@@ -5,8 +5,11 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
+  Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF};
+
+const
+  WM_AFTERSHOW = WM_USER + 100;
 
 type
   { TfMainForm }
@@ -75,14 +78,18 @@ type
     procedure btnAboutClick(Sender: TObject);
   private
     { Private declarations }
-  protected
+  protected  
+    fLoadingUpdate:   Boolean;
+    fUpdateFile:      String;
     fSpeedsChanging:  Boolean;
-    procedure OnPluginStateChange(Sender: TObject);
+    procedure AfterShow(var {%H-}Msg: TMessage); message WM_AFTERSHOW;
     procedure OnBindStateChange(Sender: TObject);
+    procedure OnPluginStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
     procedure KeysToForm;
   public
     procedure SettingsToForm;
+    procedure LoadUpdate(const UpdateFile: String);
   end;
 
 {$ELSE}
@@ -152,13 +159,17 @@ type
   private
     { Private declarations }
   protected
+    fLoadingUpdate:   Boolean;
+    fUpdateFile:      String;
     fSpeedsChanging:  Boolean;
+    procedure AfterShow(var Msg: TMessage); message WM_AFTERSHOW;
     procedure OnBindStateChange(Sender: TObject);
     procedure OnPluginStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
     procedure KeysToForm;
   public
     procedure SettingsToForm;
+    procedure LoadUpdate(const UpdateFile: String);
   end;
 {$ENDIF}
 
@@ -174,8 +185,17 @@ implementation
 {$ENDIF}
 
 uses
+  Windows,
   ACC_Manager, ACC_Settings, ACC_Strings, ACC_Input, ACC_PluginComm,
-  AboutForm, SettingsForm;
+  AboutForm, SettingsForm, UpdateForm;
+
+procedure TfMainForm.AfterShow(var Msg: TMessage);
+begin
+If fLoadingUpdate then
+  fUpdateForm.LoadUpdateFromFile(Self,fUpdateFile);
+end;
+
+//------------------------------------------------------------------------------
 
 procedure TfMainForm.OnBindStateChange(Sender: TObject);
 begin
@@ -316,6 +336,14 @@ cbActionOnZero.ItemIndex := Settings.ZeroLimitAction;
 cbShowKeyBindings.Checked := Settings.ShowKeyBindings;
 end;
 
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.LoadUpdate(const UpdateFile: String);
+begin
+fLoadingUpdate := True;
+fUpdateFile := UpdateFile;
+end;
+
 //==============================================================================
 
 procedure TfMainForm.FormCreate(Sender: TObject);
@@ -329,6 +357,7 @@ For i := Low(ACCSTR_UI_LIM_ActionsOnZeroLimit) to High(ACCSTR_UI_LIM_ActionsOnZe
 ACCManager.OnBindStateChange.Add(OnBindStateChange);
 ACCManager.OnSpeedChange := SpeedsToForm;
 ACCManager.OnPluginStateChange := OnPluginStateChange;
+fLoadingUpdate := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -338,6 +367,7 @@ begin
 SettingsToForm;
 OnPluginStateChange(nil);
 btnAbout.SetFocus;
+PostMessage(Self.WindowHandle,WM_AFTERSHOW,0,0);
 end;
 
 //------------------------------------------------------------------------------

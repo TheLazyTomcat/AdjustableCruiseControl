@@ -15,7 +15,7 @@ object fUpdateForm: TfUpdateForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poOwnerFormCenter
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.4.0.4'
   object lblIcons: TLabel
     Left = 8
     Height = 13
@@ -72,7 +72,7 @@ object fUpdateForm: TfUpdateForm
   object gbColorLegend: TGroupBox
     Left = 496
     Height = 121
-    Top = 240
+    Top = 208
     Width = 145
     Caption = 'Colors'
     ClientHeight = 103
@@ -162,6 +162,15 @@ object fUpdateForm: TfUpdateForm
       Pen.Style = psClear
       ShowHint = True
     end
+  end
+  object btnAssociateFile: TButton
+    Left = 496
+    Height = 25
+    Top = 336
+    Width = 145
+    Caption = 'Associate UGDB files...'
+    OnClick = btnAssociateFileClick
+    TabOrder = 5
   end
   object diaLoadUpdate: TOpenDialog
     Title = 'Load update file'
