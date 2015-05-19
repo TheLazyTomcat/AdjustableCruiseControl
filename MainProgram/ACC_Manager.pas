@@ -164,10 +164,22 @@ var
 
   procedure DoRestore;
   begin
-    fApplication.Restore;
-    fApplication.MainForm.Show;
-    SetForegroundWindow(fApplication.MainForm.Handle);
-    fTrayIcon.HideTrayIcon;
+    If fTrayIcon.Visible then
+      begin
+        fApplication.Restore;
+        fApplication.MainForm.Show;
+        SetForegroundWindow(fApplication.MainForm.Handle);
+        fTrayIcon.HideTrayIcon;
+      end
+    else
+      begin
+        fApplication.Restore;
+        {$IFDEF FPC}
+        SetForegroundWindow(WidgetSet.AppHandle);
+        {$ELSE}
+        SetForegroundWindow(fApplication.Handle);
+        {$ENDIF}
+      end;
   end;
   
 begin

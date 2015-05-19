@@ -122,9 +122,9 @@ If GetLastError = ERROR_ALREADY_EXISTS then
     If LoadingUpdate then
       begin
         WriteSharedString(UpdateFile);
-        SendMessage(ReadSharedHandle,fRestoreMessageCode,1,0)
+        PostMessage(ReadSharedHandle,fRestoreMessageCode,1,0)
       end
-    else SendMessage(ReadSharedHandle,fRestoreMessageCode,0,0);
+    else PostMessage(ReadSharedHandle,fRestoreMessageCode,0,0);
   end
 else
   begin

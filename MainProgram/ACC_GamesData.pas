@@ -1486,6 +1486,7 @@ try
 except
   Result := False;
 end;
+If not Result then Clear;
 end;
 
 //------------------------------------------------------------------------------
@@ -1552,6 +1553,7 @@ try
 except
   Result := False;
 end;
+If not Result then Clear;
 end;
 
 //------------------------------------------------------------------------------

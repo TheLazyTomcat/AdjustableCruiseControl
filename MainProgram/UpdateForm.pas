@@ -107,19 +107,26 @@ If fUpdateDataManager.LoadFrom(UpdateFile) then
 {$ENDIF}
   begin
     fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
-    fDontClearOnShow := True;
-    try
-      ShowModal;
-    finally
-      fDontClearOnShow := False;
-    end;
+    FillList;
+    If not Visible then
+      begin
+        fDontClearOnShow := True;
+        try
+          ShowModal;
+        finally
+          fDontClearOnShow := False;
+        end;
+      end;
   end
 else
-{$IFDEF FPC}
-  Application.MessageBox('Failed to load selected file.','Games Data Update',MB_ICONERROR);
-{$ELSE}
-  ShowErrorMsg(Application.MainForm,0,'Failed to load selected file.','Games Data Update','','');
-{$ENDIF}
+  begin
+    FillList;  
+  {$IFDEF FPC}
+    Application.MessageBox('Failed to load selected file.','Games Data Update',MB_ICONERROR);
+  {$ELSE}
+    ShowErrorMsg(Application.MainForm,0,'Failed to load selected file.','Games Data Update','','');
+  {$ENDIF}
+  end;
 end;
 
 //==============================================================================
@@ -138,8 +145,10 @@ end;
 procedure TfUpdateForm.FormShow(Sender: TObject);
 begin
 If not fDontClearOnShow then
-  fUpdateDataManager.Clear;
-FillList;
+  begin
+    fUpdateDataManager.Clear;
+    FillList;
+  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -285,23 +294,26 @@ end;
 procedure TfUpdateForm.btnLoadUpdateFileClick(Sender: TObject);
 begin
 If diaLoadUpdate.Execute then
-    begin
-      {$IFDEF FPC}
-      If fUpdateDataManager.LoadFrom(UTF8ToString(diaLoadUpdate.FileName)) then
-      {$ELSE}
-      If fUpdateDataManager.LoadFrom(diaLoadUpdate.FileName) then
-      {$ENDIF}
-        begin
-          fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
-          FillList;
-        end
-      else
+  begin
+    {$IFDEF FPC}
+    If fUpdateDataManager.LoadFrom(UTF8ToString(diaLoadUpdate.FileName)) then
+    {$ELSE}
+    If fUpdateDataManager.LoadFrom(diaLoadUpdate.FileName) then
+    {$ENDIF}
+      begin
+        fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
+        FillList;
+      end
+    else
+      begin
+        FillList;
       {$IFDEF FPC}
         Application.MessageBox('Failed to load selected file.','Adjustable Cruise Control',MB_ICONERROR);
       {$ELSE}
         ShowErrorMsg('Failed to load selected file.');
       {$ENDIF}
-    end;
+      end;
+  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -340,13 +352,13 @@ procedure TfUpdateForm.btnAssociateFileClick(Sender: TObject);
   var
     Reg: TRegistry;
   begin
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    Result := Reg.KeyExists('Software\Classes\.ugdb');
-  finally
-    Reg.Free;
-  end;
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      Result := Reg.KeyExists('Software\Classes\.ugdb');
+    finally
+      Reg.Free;
+    end;
   end;
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -355,25 +367,25 @@ procedure TfUpdateForm.btnAssociateFileClick(Sender: TObject);
   var
     Reg: TRegistry;
   begin
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    Reg.OpenKey('Software\Classes\.ugdb', True);
-    Reg.WriteString('','ACCUpdateFile');
-    Reg.CloseKey;
-    Reg.OpenKey('Software\Classes\ACCUpdateFile', True);
-    Reg.WriteString('','Binary update file for Adjustable Cruise Control 2');
-    Reg.CloseKey;
-    Reg.OpenKey('Software\Classes\ACCUpdateFile\DefaultIcon', True);
-    Reg.WriteString('',ParamStr(0) + ',0');
-    Reg.CloseKey;
-    Reg.OpenKey('Software\Classes\ACCUpdateFile\shell\open\command', True);
-    Reg.WriteString('',ParamStr(0) + ' "%1"') ;
-    Reg.CloseKey;
-  finally
-    Reg.Free;
-  end;
-  SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,nil,nil);
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      Reg.OpenKey('Software\Classes\.ugdb', True);
+      Reg.WriteString('','ACCUpdateFile');
+      Reg.CloseKey;
+      Reg.OpenKey('Software\Classes\ACCUpdateFile', True);
+      Reg.WriteString('','Binary update file for Adjustable Cruise Control 2');
+      Reg.CloseKey;
+      Reg.OpenKey('Software\Classes\ACCUpdateFile\DefaultIcon', True);
+      Reg.WriteString('',ParamStr(0) + ',0');
+      Reg.CloseKey;
+      Reg.OpenKey('Software\Classes\ACCUpdateFile\shell\open\command', True);
+      Reg.WriteString('',ParamStr(0) + ' "%1"') ;
+      Reg.CloseKey;
+    finally
+      Reg.Free;
+    end;
+    SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,nil,nil);
   end;
 
   //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -382,15 +394,15 @@ procedure TfUpdateForm.btnAssociateFileClick(Sender: TObject);
   var
     Reg: TRegistry;
   begin
-  Reg := TRegistry.Create;
-  try
-    Reg.RootKey := HKEY_CURRENT_USER;
-    Reg.DeleteKey('Software\Classes\.ugdb');
-    Reg.DeleteKey('Software\Classes\ACCUpdateFile');
-  finally
-    Reg.Free;
-  end;
-  SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,nil,nil);
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := HKEY_CURRENT_USER;
+      Reg.DeleteKey('Software\Classes\.ugdb');
+      Reg.DeleteKey('Software\Classes\ACCUpdateFile');
+    finally
+      Reg.Free;
+    end;
+    SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,nil,nil);
   end;
 
 begin
