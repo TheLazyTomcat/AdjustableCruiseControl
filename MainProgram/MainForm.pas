@@ -12,7 +12,6 @@ const
   WM_AFTERSHOW = WM_USER + 100;
 
 type
-  { TfMainForm }
 {$IFDEF FPC}
   TfMainForm = class(TForm)
     shpTitleBackground: TShape;
@@ -91,7 +90,6 @@ type
     procedure SettingsToForm;
     procedure LoadUpdate(const UpdateFile: String);
   end;
-
 {$ELSE}
   TfMainForm = class(TForm)
     shpTitleBackground: TShape;

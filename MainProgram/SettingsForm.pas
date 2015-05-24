@@ -10,9 +10,6 @@ uses
   ACC_Settings;
 
 type
-
-  { TfSettingsForm }
-
   TfSettingsForm = class(TForm)
     gbGeneral: TGroupBox;
     cbShowSplash: TCheckBox;

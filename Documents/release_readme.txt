@@ -23,11 +23,11 @@ which each part starts.
   How the program works ................................... 388
   Changelog ............................................... 420
   Known issues ............................................ 463
-  Source code ............................................. 476
-  Licensing ............................................... 485
-  Authors, contacts ....................................... 493
-  Links ................................................... 500
-  Copyright ............................................... 506
+  Source code ............................................. 475
+  Licensing ............................................... 484
+  Authors, contacts ....................................... 492
+  Links ................................................... 499
+  Copyright ............................................... 505
 
 
 
@@ -468,8 +468,7 @@ way to the final release.
 * The list of supported games might flicker when scrolled wery fast (using 
   scroll bar). This affects only Lazarus builds, and only when they were 
   compiled in Lazarus 1.4.0.
-  This problem seems to originate from Lazaruse's LCL library, and there is 
-  currently no solution to it. 
+  Temporary fix applied.
 
 
 

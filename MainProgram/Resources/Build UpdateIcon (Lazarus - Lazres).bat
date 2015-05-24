@@ -1,0 +1,1 @@
+lazres  UpdateIcon.res  ..\..\Documents\UpdateIcon.ico

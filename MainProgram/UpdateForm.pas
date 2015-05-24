@@ -7,12 +7,9 @@ interface
 uses
   Windows, SysUtils, Variants, Classes, Graphics, Controls,
   Forms, Dialogs, StdCtrls, CheckLst, ExtCtrls,
-  ACC_GamesData, types;
+  ACC_GamesData;
 
 type
-
-  { TfUpdateForm }
-
   TfUpdateForm = class(TForm)
     clbUpdateData: TCheckListBox;
     lblIcons: TLabel;
@@ -58,6 +55,7 @@ implementation
 
 {$IFDEF FPC}
   {$R *.lfm}
+  {$R Resources\UpdateIcon.res}
 {$ELSE}
   {$R *.dfm}
 {$ENDIF}
@@ -100,11 +98,7 @@ end;
 
 procedure TfUpdateForm.LoadUpdateFromFile(Sender: TObject; const UpdateFile: String);
 begin
-{$IFDEF FPC}
 If fUpdateDataManager.LoadFrom(UpdateFile) then
-{$ELSE}
-If fUpdateDataManager.LoadFrom(UpdateFile) then
-{$ENDIF}
   begin
     fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
     FillList;
@@ -377,7 +371,7 @@ procedure TfUpdateForm.btnAssociateFileClick(Sender: TObject);
       Reg.WriteString('','Binary update file for Adjustable Cruise Control 2');
       Reg.CloseKey;
       Reg.OpenKey('Software\Classes\ACCUpdateFile\DefaultIcon', True);
-      Reg.WriteString('',ParamStr(0) + ',0');
+      Reg.WriteString('',ParamStr(0) + {$IFDEF FPC}',1'{$ELSE}',0'{$ENDIF});
       Reg.CloseKey;
       Reg.OpenKey('Software\Classes\ACCUpdateFile\shell\open\command', True);
       Reg.WriteString('',ParamStr(0) + ' "%1"') ;

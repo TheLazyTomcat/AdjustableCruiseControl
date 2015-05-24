@@ -13,7 +13,7 @@ object fKeyBindForm: TfKeyBindForm
   Font.Name = 'Tahoma'
   FormStyle = fsStayOnTop
   OnShow = FormShow
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.4.0.4'
   object bvlBorder: TBevel
     Left = 0
     Height = 118
