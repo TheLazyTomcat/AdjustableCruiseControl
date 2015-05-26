@@ -206,6 +206,9 @@ end;
 
 //------------------------------------------------------------------------------
 
+var
+  WorkBitmap: TBitmap;
+
 procedure TfSupportedGamesForm.lbGamesListDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 const
@@ -216,58 +219,60 @@ const
   LeftBarWidth    = 6;
 var
   TempGameData: TGameData;
-  WorkBitmap:   TBitmap;
   WorkRect:     TRect;
 begin
 TempGameData := ACCManager.GamesDataManager.GameData[Index];
-WorkBitmap := TBitmap.Create;
-try
-  WorkBitmap.Width := Rect.Right - Rect.Left;
-  WorkBitmap.Height := Rect.Bottom - Rect.Top;
-  WorkRect := Classes.Rect(0,0,WorkBitmap.Width,WorkBitmap.Height);
-  with WorkBitmap.Canvas do
-    begin
-      If (odSelected in State) then
-        begin
-          Brush.Color := clSideBar;
-          Pen.Color := clSideBar;
-        end
-      else
-        begin
-          Brush.Color := lbGamesList.Color;
-          Pen.Color := lbGamesList.Color;
-        end;
-      Rectangle(WorkRect);
-      If fGameIsBinded and IsEqualGUID(fBindedGame,TempGameData.Identifier) then
-        begin
-          Brush.Color := clSideBarBinded;
-          Pen.Color := clSideBarBinded;
-        end
-      else
-        begin
-          Brush.Color := clSideBar;
-          Pen.Color := clSideBar;
-        end;
-      Rectangle(WorkRect.Left,WorkRect.Top,WorkRect.Left + LeftBarWidth,WorkRect.Bottom);
-      Brush.Style := bsClear;
-      Font := lbGamesList.Font;
-      Font.Style := [fsBold];
-      TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
-              WorkRect.Top + 4,TempGameData.Title);
-      Font.Style := [];
-      TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
-              WorkRect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
-      Pen.Color := clHorSplit;
-      MoveTo(WorkRect.Left,WorkRect.Bottom - 1);
-      LineTo(WorkRect.Right,WorkRect.Bottom - 1);
-      Draw(WorkRect.Left + LeftBarWidth + 2,WorkRect.Top + (WorkRect.Bottom - WorkRect.Top - DefIconSize) div 2,
-           ACCManager.GamesDataManager.GameIcons.GetIcon(TempGameData.Icon));
-    end;
-  lbGamesList.Canvas.Draw(Rect.Left,Rect.Top,WorkBitmap);
-  If (odFocused in State) then lbGamesList.Canvas.DrawFocusRect(Rect);
-finally
+WorkRect := Classes.Rect(0,0,Rect.Right - Rect.Left,Rect.Bottom - Rect.Top);
+If WorkBitmap.Width <> WorkRect.Right then
+  WorkBitmap.Width := WorkRect.Right;
+If WorkBitmap.Height <> WorkRect.Bottom then
+  WorkBitmap.Height := WorkRect.Bottom;
+with WorkBitmap.Canvas do
+  begin
+    If (odSelected in State) then
+      begin
+        Brush.Color := clSideBar;
+        Pen.Color := clSideBar;
+      end
+    else
+      begin
+        Brush.Color := lbGamesList.Color;
+        Pen.Color := lbGamesList.Color;
+      end;
+    Rectangle(WorkRect);
+    If fGameIsBinded and IsEqualGUID(fBindedGame,TempGameData.Identifier) then
+      begin
+        Brush.Color := clSideBarBinded;
+        Pen.Color := clSideBarBinded;
+      end
+    else
+      begin
+        Brush.Color := clSideBar;
+        Pen.Color := clSideBar;
+      end;
+    Rectangle(WorkRect.Left,WorkRect.Top,WorkRect.Left + LeftBarWidth,WorkRect.Bottom);
+    Brush.Style := bsClear;
+    Font := lbGamesList.Font;
+    Font.Style := [fsBold];
+    TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
+            WorkRect.Top + 4,TempGameData.Title);
+    Font.Style := [];
+    TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
+            WorkRect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
+    Pen.Color := clHorSplit;
+    MoveTo(WorkRect.Left,WorkRect.Bottom - 1);
+    LineTo(WorkRect.Right,WorkRect.Bottom - 1);
+    Draw(WorkRect.Left + LeftBarWidth + 2,WorkRect.Top + (WorkRect.Bottom - WorkRect.Top - DefIconSize) div 2,
+         ACCManager.GamesDataManager.GameIcons.GetIcon(TempGameData.Icon));
+  end;
+lbGamesList.Canvas.Draw(Rect.Left,Rect.Top,WorkBitmap);
+If (odFocused in State) then lbGamesList.Canvas.DrawFocusRect(Rect);
+end;
+
+initialization
+  WorkBitmap := TBitmap.Create;
+
+finalization
   WorkBitmap.Free;
-end;
-end;
 
 end.

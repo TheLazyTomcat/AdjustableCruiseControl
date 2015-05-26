@@ -171,6 +171,9 @@ end;
 
 //------------------------------------------------------------------------------
 
+var
+  WorkBitmap: TBitmap;
+
 procedure TfUpdateForm.clbUpdateDataDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 const
@@ -187,7 +190,6 @@ const
 var
   TempGameData: TGameData;
   TempStr:      String;
-  WorkBitmap:   TBitmap;
   WorkRect:     TRect;
 {$IFDEF FPC}
   CheckRect:    TRect;
@@ -195,92 +197,89 @@ var
 {$ENDIF}
 begin
 TempGameData := fUpdateDataManager.GameData[Index];
-WorkBitmap := TBitmap.Create;
-try
-  WorkBitmap.Width := Rect.Right - Rect.Left;
-  WorkBitmap.Height := Rect.Bottom - Rect.Top;
-  WorkRect := Classes.Rect(0,0,WorkBitmap.Width,WorkBitmap.Height);
-  with WorkBitmap.Canvas do
-    begin
-    {$IFDEF FPC}
-      CheckRect := Classes.Rect(WorkRect.Left,WorkRect.Top,WorkRect.Left + clbCheckAreaWidth,WorkRect.Bottom);
-      WorkRect.Left := WorkRect.Left + clbCheckAreaWidth;
-      Brush.Color := clbUpdateData.Color;
-      Pen.Color := clbUpdateData.Color;
-      Rectangle(CheckRect);
-      BoxRect.Left := CheckRect.Left + (CheckRect.Right - CheckRect.Left - BoxSize) div 2;
-      BoxRect.Top := CheckRect.Top + (CheckRect.Bottom - CheckRect.Top - BoxSize) div 2;
-      BoxRect.Right := BoxRect.Left + BoxSize;
-      BoxRect.Bottom := BoxRect.Top + BoxSize;
-      Brush.Color := $00F3F3F3;
-      Pen.Color := clGray;
-      Rectangle(BoxRect);
-      If clbUpdateData.Checked[Index] then
-        begin
-          Brush.Color := clLime;
-          Pen.Color := clLime;
-          Rectangle(BoxRect.Left + 3,BoxRect.Top + 3,BoxRect.Right - 3,BoxRect.Bottom - 3);
-        end;
-    {$ENDIF}
-      If odSelected in State then
-        begin
-          Brush.Color := clSelected;
-          Pen.Color := clSelected;
-        end
-      else
-        begin
-          Brush.Color := clbUpdateData.Color;
-          Pen.Color := clbUpdateData.Color;
-        end;
-      Rectangle(WorkRect);
-      If TempGameData.UpdateInfo.NewEntry then
-        begin
-          Brush.Color := clNewEntry;
-          Pen.Color := clNewEntry;
-        end
-      else If TempGameData.UpdateInfo.NewVersion then
-        begin
-          Brush.Color := clNewVersion;
-          Pen.Color := clNewVersion;
-        end
-      else If TempGameData.UpdateInfo.OldVersion then
-        begin
-          Brush.Color := clOldVersion;
-          Pen.Color := clOldVersion;
-        end
-      else
-        begin
-          Brush.Color := clCurrentVersion;
-          Pen.Color := clCurrentVersion;
-        end;
-      Rectangle(WorkRect.Right - StateBarWidth,WorkRect.Top,WorkRect.Right,WorkRect.Bottom);
-      Brush.Style := bsClear;
-      Font := clbUpdateData.Font;
-      Font.Style := [fsBold];
-      TextOut(WorkRect.Left + 4,WorkRect.Top + 2,TempGameData.Title);
-      Font.Style := [];
-      TextOut(WorkRect.Left + 4,WorkRect.Top + ((WorkRect.Bottom - WorkRect.Top) - TextHeight(TempGameData.Info)) div 2,TempGameData.Info);
-      Font.Color := clGray;
-      Font.Name := 'Courier New';
-      TempStr := GUIDToString(TempGameData.Identifier) + ' - version ' + IntToStr(TempGameData.Version);
-      TextOut(WorkRect.Left + 4,WorkRect.Bottom - 2 - TextHeight(TempStr),TempStr);
-    {$IFDEF FPC}
-      Pen.Color := clHorSplit;
-      MoveTo(0,WorkRect.Bottom - 1);
-      LineTo(WorkRect.Right - StateBarWidth,WorkRect.Bottom - 1);
-      WorkRect.Left := WorkRect.Left - clbCheckAreaWidth;
-    {$ENDIF}
-    end;
-  clbUpdateData.Canvas.Draw(Rect.Left,Rect.Top,WorkBitmap);
+WorkRect := Classes.Rect(0,0,Rect.Right - Rect.Left,Rect.Bottom - Rect.Top);
+If WorkBitmap.Width <> WorkRect.Right then
+  WorkBitmap.Width := WorkRect.Right;
+If WorkBitmap.Height <> WorkRect.Bottom then
+  WorkBitmap.Height := WorkRect.Bottom;
+with WorkBitmap.Canvas do
+  begin
+  {$IFDEF FPC}
+    CheckRect := Classes.Rect(WorkRect.Left,WorkRect.Top,WorkRect.Left + clbCheckAreaWidth,WorkRect.Bottom);
+    WorkRect.Left := WorkRect.Left + clbCheckAreaWidth;
+    Brush.Color := clbUpdateData.Color;
+    Pen.Color := clbUpdateData.Color;
+    Rectangle(CheckRect);
+    BoxRect.Left := CheckRect.Left + (CheckRect.Right - CheckRect.Left - BoxSize) div 2;
+    BoxRect.Top := CheckRect.Top + (CheckRect.Bottom - CheckRect.Top - BoxSize) div 2;
+    BoxRect.Right := BoxRect.Left + BoxSize;
+    BoxRect.Bottom := BoxRect.Top + BoxSize;
+    Brush.Color := $00F3F3F3;
+    Pen.Color := clGray;
+    Rectangle(BoxRect);
+    If clbUpdateData.Checked[Index] then
+      begin
+        Brush.Color := clLime;
+        Pen.Color := clLime;
+        Rectangle(BoxRect.Left + 3,BoxRect.Top + 3,BoxRect.Right - 3,BoxRect.Bottom - 3);
+      end;
+  {$ENDIF}
+    If odSelected in State then
+      begin
+        Brush.Color := clSelected;
+        Pen.Color := clSelected;
+      end
+    else
+      begin
+        Brush.Color := clbUpdateData.Color;
+        Pen.Color := clbUpdateData.Color;
+      end;
+    Rectangle(WorkRect);
+    If TempGameData.UpdateInfo.NewEntry then
+      begin
+        Brush.Color := clNewEntry;
+        Pen.Color := clNewEntry;
+      end
+    else If TempGameData.UpdateInfo.NewVersion then
+      begin
+        Brush.Color := clNewVersion;
+        Pen.Color := clNewVersion;
+      end
+    else If TempGameData.UpdateInfo.OldVersion then
+      begin
+        Brush.Color := clOldVersion;
+        Pen.Color := clOldVersion;
+      end
+    else
+      begin
+        Brush.Color := clCurrentVersion;
+        Pen.Color := clCurrentVersion;
+      end;
+    Rectangle(WorkRect.Right - StateBarWidth,WorkRect.Top,WorkRect.Right,WorkRect.Bottom);
+    Brush.Style := bsClear;
+    Font := clbUpdateData.Font;
+    Font.Style := [fsBold];
+    TextOut(WorkRect.Left + 4,WorkRect.Top + 2,TempGameData.Title);
+    Font.Style := [];
+    TextOut(WorkRect.Left + 4,WorkRect.Top + ((WorkRect.Bottom - WorkRect.Top) - TextHeight(TempGameData.Info)) div 2,TempGameData.Info);
+    Font.Color := clGray;
+    Font.Name := 'Courier New';
+    TempStr := GUIDToString(TempGameData.Identifier) + ' - version ' + IntToStr(TempGameData.Version);
+    TextOut(WorkRect.Left + 4,WorkRect.Bottom - 2 - TextHeight(TempStr),TempStr);
+  {$IFDEF FPC}
+    Pen.Color := clHorSplit;
+    MoveTo(0,WorkRect.Bottom - 1);
+    LineTo(WorkRect.Right - StateBarWidth,WorkRect.Bottom - 1);
+    WorkRect.Left := WorkRect.Left - clbCheckAreaWidth;
+  {$ENDIF}
+  end;
+clbUpdateData.Canvas.Draw(Rect.Left,Rect.Top,WorkBitmap);
 {$IFNDEF FPC}
-  clbUpdateData.Canvas.Pen.Color := clHorSplit;
-  clbUpdateData.Canvas.MoveTo(0,Rect.Bottom - 1);
-  clbUpdateData.Canvas.LineTo(Rect.Right - StateBarWidth,Rect.Bottom - 1);
+clbUpdateData.Canvas.Pen.Color := clHorSplit;
+clbUpdateData.Canvas.MoveTo(0,Rect.Bottom - 1);
+clbUpdateData.Canvas.LineTo(Rect.Right - StateBarWidth,Rect.Bottom - 1);
 {$ENDIF}  
-  If odFocused in State then clbUpdateData.Canvas.DrawFocusRect(Rect);
-finally
-  WorkBitmap.Free;
-end;
+If odFocused in State then clbUpdateData.Canvas.DrawFocusRect(Rect);
 end;
 
 //------------------------------------------------------------------------------
@@ -421,5 +420,13 @@ else
       AssociateFile;
   end;
 end;
+
+//------------------------------------------------------------------------------
+
+initialization
+  WorkBitmap := TBitmap.Create;
+
+finalization
+  WorkBitmap.Free;
 
 end.

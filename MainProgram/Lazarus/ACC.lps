@@ -155,7 +155,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="8"/>
         <UsageCount Value="128"/>
@@ -197,10 +196,13 @@
         <ComponentName Value="fSupportedGamesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="4"/>
-        <CursorPos X="64" Y="20"/>
+        <UnitName Value="SupportedGamesForm"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="211"/>
+        <CursorPos X="75" Y="225"/>
         <UsageCount Value="128"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -208,10 +210,13 @@
         <ComponentName Value="fUpdateForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="362"/>
-        <CursorPos X="55" Y="374"/>
+        <UnitName Value="UpdateForm"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="183"/>
+        <CursorPos X="75" Y="200"/>
         <UsageCount Value="128"/>
+        <Loaded Value="True"/>
       </Unit27>
       <Unit28>
         <Filename Value="..\Libs\WndAlloc.pas"/>
