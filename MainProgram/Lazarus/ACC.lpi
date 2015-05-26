@@ -19,7 +19,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="3"/>
-      <BuildNr Value="149"/>
+      <BuildNr Value="150"/>
       <Language Value="0405"/>
       <StringTable Comments="Main program for ACC 2.3.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.3.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.3.0"/>
     </VersionInfo>
@@ -285,7 +285,6 @@
         <ComponentName Value="fSupportedGamesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="SupportedGamesForm"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -293,7 +292,6 @@
         <ComponentName Value="fUpdateForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="UpdateForm"/>
       </Unit27>
       <Unit28>
         <Filename Value="..\Libs\WndAlloc.pas"/>

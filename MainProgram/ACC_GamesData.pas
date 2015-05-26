@@ -713,7 +713,7 @@ var
     If (Module.CheckFlags and CF_FILESIZE) <> 0 then
       Ini.WriteInteger(Section,Prefix + GDIN_GD_MOD_Size,Integer(Module.Size));
     If (Module.CheckFlags and CF_FILECRC32) <> 0 then
-      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_CRC32,CRC32.CRC32ToStr(Module.CRC32));
+      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_CRC32,'$' + CRC32ToStr(Module.CRC32));
     If (Module.CheckFlags and CF_FILEMD5) <> 0 then
       Ini.WriteString(Section,Prefix + GDIN_GD_MOD_MD5,MD5ToStr(Module.MD5));
   end;
@@ -722,7 +722,12 @@ var
   var
     ii: Integer;
   begin
-    If Pointer.ModuleIndex >= 0 then
+    If Pointer.ModuleIndex < 0 then
+      begin
+        If Pointer.Flags <> 0 then
+          Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Flags,'$' + IntToHex(Pointer.Flags,8));
+      end
+    else
       begin
         Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Flags,'$' + IntToHex(Pointer.Flags,8));
         Ini.WriteInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,Pointer.ModuleIndex);

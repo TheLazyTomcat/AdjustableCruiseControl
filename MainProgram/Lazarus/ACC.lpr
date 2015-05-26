@@ -4,9 +4,7 @@ program ACC;
 
 uses
   Interfaces, // this includes the LCL widgetset
-{$IFDEF Debug}
   SysUtils,
-{$ENDIF}
   Forms,
 
   CRC32,

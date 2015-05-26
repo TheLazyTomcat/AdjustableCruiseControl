@@ -285,6 +285,8 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TfUpdateForm.btnLoadUpdateFileClick(Sender: TObject);
+var
+  i:  Integer;
 begin
 If diaLoadUpdate.Execute then
   begin
@@ -296,6 +298,12 @@ If diaLoadUpdate.Execute then
       begin
         fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
         FillList;
+        For i := 0 to Pred(fUpdateDataManager.GamesDataCount) do
+          If fUpdateDataManager[i].UpdateInfo.Add then
+            begin
+              clbUpdateData.TopIndex := i;
+              Break;
+            end;
       end
     else
       begin
