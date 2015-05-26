@@ -1,11 +1,11 @@
 object fSettingsForm: TfSettingsForm
-  Left = 738
-  Height = 496
-  Top = 235
+  Left = 743
+  Height = 520
+  Top = 122
   Width = 520
   BorderStyle = bsDialog
   Caption = 'Settings'
-  ClientHeight = 496
+  ClientHeight = 520
   ClientWidth = 520
   Color = clBtnFace
   Font.Color = clWindowText
@@ -15,10 +15,10 @@ object fSettingsForm: TfSettingsForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.4.0.4'
   object bvlVertSplit: TBevel
     Left = 384
-    Height = 497
+    Height = 521
     Top = 0
     Width = 9
     Shape = bsLeftLine
@@ -69,12 +69,12 @@ object fSettingsForm: TfSettingsForm
   object gbTimers: TGroupBox
     Left = 8
     Height = 89
-    Top = 96
+    Top = 184
     Width = 169
-    Caption = 'Timers (advanced)'
+    Caption = 'Timers'
     ClientHeight = 71
     ClientWidth = 165
-    TabOrder = 1
+    TabOrder = 2
     object lblProcessScanTimer: TLabel
       Left = 11
       Height = 13
@@ -94,7 +94,7 @@ object fSettingsForm: TfSettingsForm
       ParentColor = False
     end
     object imgHint_PSI: TImage
-      Cursor = crHandPoint
+      Cursor = crHelp
       Left = 142
       Height = 16
       Hint = 'Processes scan interval'
@@ -123,7 +123,7 @@ object fSettingsForm: TfSettingsForm
       ShowHint = True
     end
     object imgHint_MLT: TImage
-      Cursor = crHandPoint
+      Cursor = crHelp
       Left = 142
       Height = 16
       Hint = 'Modules load timeout'
@@ -174,24 +174,24 @@ object fSettingsForm: TfSettingsForm
   end
   object gbBindings: TGroupBox
     Left = 8
-    Height = 297
-    Top = 192
+    Height = 233
+    Top = 280
     Width = 369
     Caption = 'Key bindings'
-    ClientHeight = 279
+    ClientHeight = 215
     ClientWidth = 365
-    TabOrder = 3
+    TabOrder = 4
     object lblBindingHint: TLabel
       Left = 6
       Height = 13
-      Top = 263
+      Top = 200
       Width = 351
       Caption = 'Double-click on item in the table to select a new key binding for that item.'
       ParentColor = False
     end
     object sgBindings: TStringGrid
       Left = 6
-      Height = 260
+      Height = 196
       Top = 2
       Width = 353
       ColCount = 3
@@ -199,7 +199,7 @@ object fSettingsForm: TfSettingsForm
       FixedColor = clGray
       FixedCols = 0
       Options = [goVertLine, goHorzLine, goRowSelect, goThumbTracking]
-      RowCount = 43
+      RowCount = 12
       ScrollBars = ssVertical
       TabOrder = 0
       TitleFont.Color = clWindowText
@@ -212,12 +212,12 @@ object fSettingsForm: TfSettingsForm
   object gbGamesData: TGroupBox
     Left = 184
     Height = 89
-    Top = 96
+    Top = 184
     Width = 193
     Caption = 'Games data (supported games)'
     ClientHeight = 71
     ClientWidth = 189
-    TabOrder = 2
+    TabOrder = 3
     object btnSupportedGames: TButton
       Left = 6
       Height = 25
@@ -244,7 +244,7 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Caption = 'Accept'
     OnClick = btnAcceptClick
-    TabOrder = 4
+    TabOrder = 5
   end
   object btnApply: TButton
     Left = 392
@@ -253,7 +253,7 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Caption = 'Apply'
     OnClick = btnApplyClick
-    TabOrder = 5
+    TabOrder = 6
   end
   object btnCancel: TButton
     Left = 392
@@ -262,46 +262,80 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Caption = 'Cancel'
     OnClick = btnCancelClick
-    TabOrder = 6
+    TabOrder = 7
   end
   object btnExportSettings: TButton
     Left = 392
     Height = 25
-    Top = 432
+    Top = 456
     Width = 121
     Caption = 'Export settings...'
     OnClick = btnExportSettingsClick
-    TabOrder = 8
+    TabOrder = 9
   end
   object btnImportSettings: TButton
     Left = 392
     Height = 25
-    Top = 464
+    Top = 488
     Width = 121
     Caption = 'Import settings...'
     OnClick = btnImportSettingsClick
-    TabOrder = 9
+    TabOrder = 10
   end
   object btnDefault: TButton
     Left = 392
     Height = 25
-    Top = 400
+    Top = 424
     Width = 121
     Caption = 'Load default settings'
     OnClick = btnDefaultClick
-    TabOrder = 7
+    TabOrder = 8
+  end
+  object grbAdvanced: TGroupBox
+    Left = 8
+    Height = 81
+    Top = 96
+    Width = 369
+    Caption = 'Advanced settings'
+    ClientHeight = 63
+    ClientWidth = 365
+    TabOrder = 1
+    object cbDiscernKeyboardSides: TCheckBox
+      Left = 206
+      Height = 17
+      Top = 10
+      Width = 128
+      Caption = 'Discern keyboard sides'
+      TabOrder = 1
+    end
+    object cbSoftKeyComboRecognition: TCheckBox
+      Left = 14
+      Height = 17
+      Top = 10
+      Width = 174
+      Caption = 'Soft key combination recognition'
+      TabOrder = 0
+    end
+    object cbGameActiveForTrigger: TCheckBox
+      Left = 14
+      Height = 17
+      Top = 34
+      Width = 328
+      Caption = 'Game window must be in the foreground for a trigger to activate'
+      TabOrder = 2
+    end
   end
   object diaImportSettings: TOpenDialog
     Title = 'Importing program settings'
     Filter = 'INI files (*.ini)|*.ini'
-    left = 440
-    top = 152
+    left = 424
+    top = 104
   end
   object diaExportSettings: TSaveDialog
     Title = 'Exporting program settings'
     DefaultExt = '.ini'
     Filter = 'INI files (*.ini)|*.ini'
-    left = 440
+    left = 392
     top = 104
   end
 end

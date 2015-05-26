@@ -119,7 +119,7 @@ try
   MemoryStream := TMemoryStream.Create;
   try
     MemoryStream.CopyFrom(ResourceStream,0);
-    MemoryStream.Position:= 0;
+    MemoryStream.Position := 0;
     fSplashBitmap.LoadFromStream(MemoryStream);
   finally
     MemoryStream.Free;

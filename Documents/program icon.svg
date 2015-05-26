@@ -20,6 +20,52 @@
   <defs
      id="defs3">
     <linearGradient
+       id="linearGradient4247">
+      <stop
+         id="stop4249"
+         offset="0"
+         style="stop-color:#00ca00;stop-opacity:1;" />
+      <stop
+         style="stop-color:#00ca00;stop-opacity:1;"
+         offset="0.31027052"
+         id="stop4251" />
+      <stop
+         style="stop-color:#4dfd4d;stop-opacity:1;"
+         offset="0.47621372"
+         id="stop4253" />
+      <stop
+         id="stop4255"
+         offset="0.64466453"
+         style="stop-color:#00c300;stop-opacity:1;" />
+      <stop
+         id="stop4257"
+         offset="1"
+         style="stop-color:#00a800;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4225">
+      <stop
+         style="stop-color:#00ca00;stop-opacity:1;"
+         offset="0"
+         id="stop4227" />
+      <stop
+         id="stop4235"
+         offset="0.1492506"
+         style="stop-color:#00ca00;stop-opacity:1;" />
+      <stop
+         id="stop4233"
+         offset="0.42141923"
+         style="stop-color:#4dfd4d;stop-opacity:1;" />
+      <stop
+         style="stop-color:#00c300;stop-opacity:1;"
+         offset="0.7097941"
+         id="stop4237" />
+      <stop
+         style="stop-color:#00a800;stop-opacity:1;"
+         offset="1"
+         id="stop4229" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient3997">
       <stop
          style="stop-color:#c7c7c7;stop-opacity:1;"
@@ -125,14 +171,6 @@
        y2="730.16071"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(61.023424,15.820888)" />
-    <filter
-       inkscape:collect="always"
-       id="filter3846">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="1.6639842"
-         id="feGaussianBlur3848" />
-    </filter>
     <clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath3854">
@@ -211,18 +249,6 @@
        y2="337.59351"
        gradientUnits="userSpaceOnUse"
        gradientTransform="translate(-0.95922951,-0.31119475)" />
-    <filter
-       inkscape:collect="always"
-       id="filter4015"
-       x="-0.15319948"
-       width="1.306399"
-       y="-0.098626823"
-       height="1.1972536">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="2.8264948"
-         id="feGaussianBlur4017" />
-    </filter>
     <clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath4023">
@@ -1405,22 +1431,6 @@
        gradientTransform="translate(-375.36538,305.74116)" />
     <filter
        inkscape:collect="always"
-       id="filter5635">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="1.3129217"
-         id="feGaussianBlur5637" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter5639">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="3.9387651"
-         id="feGaussianBlur5641" />
-    </filter>
-    <filter
-       inkscape:collect="always"
        id="filter5663">
       <feGaussianBlur
          inkscape:collect="always"
@@ -1650,6 +1660,208 @@
        y1="562.30688"
        x2="945.51965"
        y2="562.30688" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3740"
+       id="linearGradient3417"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-414.92603,269.98944)"
+       x1="811.51404"
+       y1="746.0705"
+       x2="1057.4547"
+       y2="500.08572" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3740"
+       id="linearGradient3419"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-414.92603,269.98944)"
+       x1="1057.4547"
+       y1="500.08572"
+       x2="811.51404"
+       y2="746.07056" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3421"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-683.84592,304.15025)"
+       x1="894.17786"
+       y1="300.53912"
+       x2="984.83221"
+       y2="300.53912" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3740"
+       id="linearGradient3423"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,-516.59018,537.54524)"
+       x1="861.06598"
+       y1="377.83606"
+       x2="1010.1672"
+       y2="377.83606" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3997"
+       id="linearGradient3425"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-687.37228,-262.94295)"
+       x1="915.05676"
+       y1="377.83606"
+       x2="948.06219"
+       y2="374.40311" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3740"
+       id="linearGradient3427"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.66181534,0,0,0.66181534,-106.59274,309.68485)"
+       x1="312.44742"
+       y1="655.58997"
+       x2="548.3335"
+       y2="419.66159" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3963"
+       id="radialGradient3429"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.8524591,4.2252825e-7,-3.7017959e-7,1.6229508,-385.74741,-379.90729)"
+       cx="452.5116"
+       cy="609.85089"
+       fx="452.5116"
+       fy="609.85089"
+       r="30.500782" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3832"
+       id="linearGradient3431"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.61313005,0.1642877,-0.1642877,0.61313005,-292.52004,124.61247)"
+       x1="813.94556"
+       y1="754.11072"
+       x2="1059.8862"
+       y2="508.12595" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3433"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-414.92603,269.98944)"
+       x1="923.4375"
+       y1="469.78125"
+       x2="945.53125"
+       y2="469.78125" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3435"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.44884234,0.44884234,-0.44884234,0.44884234,38.473959,-33.606161)"
+       x1="945.53125"
+       y1="490.40619"
+       x2="923.4375"
+       y2="490.40616" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3437"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,0.63475893,-0.63475893,0,573.75068,72.321543)"
+       x1="945.53125"
+       y1="490.40619"
+       x2="923.4375"
+       y2="490.40619" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3439"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(-0.44884234,0.44884234,-0.44884234,-0.44884234,877.34628,525.72155)"
+       x1="945.53125"
+       y1="490.40619"
+       x2="923.43756"
+       y2="490.40622" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3441"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(-0.44884234,-0.44884234,0.44884234,-0.44884234,318.01856,1364.5939)"
+       x1="945.53119"
+       y1="490.40619"
+       x2="923.4375"
+       y2="490.40619" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3443"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,-0.63475893,0.63475893,0,-217.25814,1258.6661)"
+       x1="923.4375"
+       y1="469.78125"
+       x2="945.53125"
+       y2="469.78125" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3445"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.44884234,-0.44884234,0.44884234,0.44884234,-520.8537,805.2661)"
+       x1="923.4375"
+       y1="469.78125"
+       x2="945.53125"
+       y2="469.78125" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3690"
+       id="linearGradient3447"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58701545,-0.24151971,0.20843448,0.50660156,-504.45601,565.14855)"
+       x1="923.44897"
+       y1="562.30688"
+       x2="945.51965"
+       y2="562.30688" />
+    <filter
+       inkscape:collect="always"
+       id="filter4275"
+       x="-0.01214742"
+       width="1.0242948"
+       y="-0.98879976"
+       height="2.9775995">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.47104629"
+         id="feGaussianBlur4277" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4247"
+       id="linearGradient4284"
+       gradientUnits="userSpaceOnUse"
+       x1="-632.80481"
+       y1="503.58655"
+       x2="-506.21997"
+       y2="509.92648" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4225"
+       id="linearGradient4286"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.72831118,0,0,0.72831118,-138.77443,175.34305)"
+       x1="-640.3764"
+       y1="603.77368"
+       x2="-545.45767"
+       y2="603.77368" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4225"
+       id="linearGradient4290"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.95906063,0,0,0.95906063,455.94743,87.716805)"
+       x1="-640.3764"
+       y1="603.77368"
+       x2="-545.45767"
+       y2="603.77368" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1658,9 +1870,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70076713"
-     inkscape:cx="505.00122"
-     inkscape:cy="342.65154"
+     inkscape:zoom="0.47973751"
+     inkscape:cx="178.17107"
+     inkscape:cy="519.70046"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -4851,5 +5063,277 @@
          sodipodi:nodetypes="csc"
          inkscape:transform-center-x="21.938057" />
     </g>
+    <rect
+       inkscape:export-ydpi="149.72742"
+       inkscape:export-xdpi="149.72742"
+       inkscape:export-filename="E:\Programy\Programs\SCS Games Cruise Control\ACC 2.2.x\Dev\Documents\icon_upd.png"
+       y="398.91788"
+       x="-338.2428"
+       height="307.75925"
+       width="307.75925"
+       id="rect3363"
+       style="fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none;opacity:1" />
+    <g
+       transform="matrix(1.0485379,0,0,1.0485379,-371.24753,-84.243369)"
+       id="g3365">
+      <path
+         id="path3367"
+         d="m 178.23333,548.41723 c -64.65639,0 -117.062503,52.40611 -117.062503,117.0625 0,34.85383 15.24166,66.14681 39.406253,87.59375 l 9.625,-9.59375 0.0937,-0.0937 C 88.589547,724.43241 74.858277,696.55825 74.858277,665.47978 c 0,-57.09062 46.284383,-103.375 103.375003,-103.375 57.09063,0 103.375,46.28438 103.375,103.375 0,31.07011 -13.70481,58.95293 -35.40625,77.90625 l 0.0937,0.0937 9.59375,9.59375 c 24.17494,-21.44715 39.40625,-52.73574 39.40625,-87.59375 0,-64.65639 -52.40612,-117.0625 -117.0625,-117.0625 z"
+         style="fill:url(#linearGradient3417);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <path
+         id="path3369"
+         d="m 178.23333,555.10473 c -60.97054,0 -110.375003,49.40446 -110.375003,110.375 0,33.00987 14.47572,62.64156 37.437503,82.875 l 4.90625,-4.875 0.0937,-0.0937 C 88.589547,724.43241 74.858277,696.55825 74.858277,665.47978 c 0,-57.09062 46.284383,-103.375 103.375003,-103.375 57.09063,0 103.375,46.28438 103.375,103.375 0,31.07011 -13.70481,58.95293 -35.40625,77.90625 l 0.0937,0.0937 4.875,4.875 c 22.97063,-20.23357 37.46875,-49.86222 37.46875,-82.875 0,-60.97054 -49.43572,-110.375 -110.40625,-110.375 z"
+         style="fill:url(#linearGradient3419);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         transform="matrix(0.92478485,-0.38049044,0.38049044,0.92478485,0,0)"
+         style="fill:url(#linearGradient3421);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect3371"
+         width="57.543652"
+         height="38.939667"
+         x="-116.25854"
+         y="475.45032"
+         inkscape:transform-center-x="70.840252"
+         inkscape:transform-center-y="-174.51133" />
+      <rect
+         style="opacity:0.5;fill:#000000;fill-opacity:1;stroke:none;filter:url(#filter4168)"
+         id="rect3373"
+         width="90.265678"
+         height="1.0045464"
+         x="204.51028"
+         y="73.50074"
+         inkscape:transform-center-x="63.414815"
+         inkscape:transform-center-y="-156.4638"
+         transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,-49.58612,525.88288)" />
+      <path
+         inkscape:transform-center-x="64.253284"
+         style="fill:url(#linearGradient3423);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="M 70.230617,527.3312 157.75533,491.32032 133.77917,557.41624 70.230617,527.3312 z"
+         id="path3375"
+         sodipodi:nodetypes="cccc"
+         inkscape:transform-center-y="-141.12556" />
+      <path
+         sodipodi:nodetypes="cccc"
+         id="path3377"
+         d="m 225.49989,73.931231 34.87795,0 -12.13352,81.923729 -22.74443,-81.923729 z"
+         style="opacity:0.6;fill:url(#linearGradient3425);fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4108)"
+         inkscape:transform-center-x="61.035848"
+         inkscape:transform-center-y="-133.58809"
+         transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,-49.58612,525.88288)" />
+      <path
+         sodipodi:nodetypes="cscsc"
+         id="path3379"
+         d="m 251.17083,748.35473 c 22.96755,-20.23048 37.46875,-49.86222 37.46875,-82.875 0,-60.97053 -49.43572,-110.375 -110.40625,-110.375 -60.97053,0 -110.375003,49.40447 -110.375003,110.375 0,33.01278 14.5012,62.64452 37.468753,82.875"
+         style="fill:none;stroke:url(#linearGradient3427);stroke-width:1.58689737;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter4471)" />
+      <path
+         sodipodi:type="arc"
+         style="fill:url(#radialGradient3429);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path3381"
+         sodipodi:cx="464.5119"
+         sodipodi:cy="603.85071"
+         sodipodi:rx="30.500782"
+         sodipodi:ry="30.500782"
+         d="m 495.01268,603.85071 c 0,16.84511 -13.65566,30.50078 -30.50078,30.50078 -16.84511,0 -30.50078,-13.65567 -30.50078,-30.50078 0,-16.84512 13.65567,-30.50078 30.50078,-30.50078 16.84512,0 30.50078,13.65566 30.50078,30.50078 z"
+         transform="matrix(0.63475893,0,0,0.63475893,-116.60682,282.19422)"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         id="path3383"
+         d="m 176.48333,552.41723 c -49.25907,0.73351 -94.054613,33.86689 -107.437503,83.8125 -11.48097,42.84756 3.25339,86.52143 34.375003,114.03125 l 2.84375,-2.84375 C 76.116487,720.89189 61.792077,678.6774 72.889577,637.26098 c 15.58958,-58.1811 75.381423,-92.71457 133.562503,-77.125 58.18106,15.58957 92.71458,75.3814 77.125,133.5625 -5.79281,21.61908 -17.69376,39.98967 -33.34375,53.71875 l 2.84375,2.84375 c 16.14028,-14.21673 28.39148,-33.16921 34.375,-55.5 16.16047,-60.31168 -19.65706,-122.30828 -79.96875,-138.46875 -10.36607,-2.77758 -20.77642,-4.02724 -31,-3.875 z"
+         style="fill:url(#linearGradient3431);fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4459)" />
+      <path
+         style="fill:url(#linearGradient3433);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 178.23636,555.09538 c 0,0 -5.23748,7.14168 -7.00219,7.14168 l 0,19.04213 14.02421,0 0,-19.04213 c -1.46246,0 -7.02202,-7.14168 -7.02202,-7.14168 z"
+         id="path3385"
+         inkscape:transform-center-y="-97.306562"
+         sodipodi:nodetypes="cccccc"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         sodipodi:nodetypes="cccccc"
+         id="path3387"
+         d="m 256.30279,587.4233 c 0,0 -8.75346,1.34652 -10.00127,0.0987 l -13.46476,13.46478 9.91659,9.91661 13.46476,-13.46478 c -1.03409,-1.03411 0.0847,-10.01529 0.0847,-10.01529 z"
+         style="fill:url(#linearGradient3435);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         inkscape:transform-center-x="-66.323514"
+         inkscape:transform-center-y="-66.330495"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-x="-97.306594"
+         style="fill:url(#linearGradient3437);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 288.64477,665.48393 c 0,0 -7.14174,-5.2375 -7.14174,-7.00219 l -19.04207,1e-5 0,14.02419 19.04207,-10e-6 c 0,-1.46244 7.14174,-7.022 7.14174,-7.022 z"
+         id="path3389"
+         sodipodi:nodetypes="cccccc"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         sodipodi:nodetypes="cccccc"
+         id="path3391"
+         d="m 256.31681,743.55036 c 0,0 -1.34651,-8.75344 -0.0987,-10.00127 l -13.46476,-13.46476 -9.91659,9.91659 13.46476,13.46477 c 1.03409,-1.0341 10.01529,0.0847 10.01529,0.0847 z"
+         style="fill:url(#linearGradient3439);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         inkscape:transform-center-x="-66.330514"
+         inkscape:transform-center-y="66.323523"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-y="66.330525"
+         inkscape:transform-center-x="66.323503"
+         style="fill:url(#linearGradient3441);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 100.18976,743.56438 c 0,0 8.75343,-1.34651 10.00125,-0.0987 l 13.46477,-13.46475 -9.9166,-9.91659 -13.46476,13.46476 c 1.03409,1.03409 -0.0847,10.01529 -0.0847,10.01529 z"
+         id="path3393"
+         sodipodi:nodetypes="cccccc"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         sodipodi:nodetypes="cccccc"
+         id="path3395"
+         d="m 67.847767,665.50376 c 0,0 7.14174,5.23748 7.14175,7.00215 l 19.04205,2e-5 -10e-6,-14.02418 -19.04204,0 c 0,1.46242 -7.14175,7.02201 -7.14175,7.02201 z"
+         style="fill:url(#linearGradient3443);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         inkscape:transform-center-x="97.306601"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-x="66.330524"
+         style="fill:url(#linearGradient3445);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 100.17572,587.43733 c 0,0 1.34652,8.75342 0.0987,10.00124 l 13.46475,13.46478 9.91658,-9.9166 -13.46475,-13.46476 c -1.03408,1.03409 -10.01529,-0.0847 -10.01529,-0.0847 z"
+         id="path3397"
+         sodipodi:nodetypes="cccccc"
+         inkscape:transform-center-y="-66.32352"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:transform-center-y="-106.82762"
+         id="path3399"
+         d="m 259.29122,177.29782 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4136)"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706"
+         transform="matrix(0.63475893,0,0,0.63475893,20.670959,449.6957)" />
+      <path
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4136)"
+         d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
+         id="path3401"
+         inkscape:transform-center-y="-73.062897"
+         sodipodi:nodetypes="ccc"
+         transform="matrix(0.44884234,0.44884234,-0.44884234,0.44884234,38.473959,-33.606161)"
+         inkscape:transform-center-x="-73.055877"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-x="-106.82763"
+         transform="matrix(0,0.63475893,-0.63475893,0,573.75068,72.321543)"
+         sodipodi:nodetypes="ccc"
+         id="path3403"
+         d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4136)"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4136)"
+         d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
+         id="path3405"
+         sodipodi:nodetypes="ccc"
+         transform="matrix(-0.44884234,0.44884234,-0.44884234,-0.44884234,877.34628,525.72154)"
+         inkscape:transform-center-x="-73.062904"
+         inkscape:transform-center-y="73.055877"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-y="73.062875"
+         inkscape:transform-center-x="73.055904"
+         transform="matrix(-0.44884234,-0.44884234,0.44884234,-0.44884234,318.01856,1364.5939)"
+         sodipodi:nodetypes="ccc"
+         id="path3407"
+         d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4136)"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4136)"
+         d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
+         id="path3409"
+         sodipodi:nodetypes="ccc"
+         transform="matrix(0,-0.63475893,0.63475893,0,-217.25814,1258.6661)"
+         inkscape:transform-center-x="106.82763"
+         inkscape:transform-center-y="-6.0480843e-05"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-y="-73.055924"
+         inkscape:transform-center-x="73.062858"
+         transform="matrix(0.44884234,-0.44884234,0.44884234,0.44884234,-520.85369,805.26611)"
+         sodipodi:nodetypes="ccc"
+         id="path3411"
+         d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4136)"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-x="21.938063"
+         style="fill:url(#linearGradient3447);fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 140.55649,592.31765 24.34065,59.16014 c 2.29211,-0.29622 11.05951,14.95808 13.34912,14.01605 2.28959,-0.94203 -2.09597,-18.04167 -0.37974,-19.35213 l -24.34066,-59.16014 -12.96937,5.33608 z"
+         id="path3413"
+         inkscape:transform-center-y="-47.577213"
+         sodipodi:nodetypes="ccsccc"
+         inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706" />
+      <path
+         inkscape:transform-center-x="21.938057"
+         sodipodi:nodetypes="csc"
+         inkscape:transform-center-y="-47.577215"
+         id="path3415"
+         d="m 237.19747,311.54681 c 3.51696,0.94237 7.14645,28.42187 11.04685,28.42187 3.9004,0 7.76101,-27.54142 11.0469,-28.42187"
+         style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4126)"
+         inkscape:export-xdpi="44.89706"
+         inkscape:export-ydpi="44.89706"
+         transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,-49.58612,525.88288)" />
+    </g>
+    <path
+       sodipodi:type="star"
+       style="fill:url(#linearGradient4284);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3449"
+       sodipodi:sides="3"
+       sodipodi:cx="-569.51239"
+       sodipodi:cy="521.85748"
+       sodipodi:r1="73.083786"
+       sodipodi:r2="36.541893"
+       sodipodi:arg1="0.52359878"
+       sodipodi:arg2="1.5707963"
+       inkscape:flatsided="true"
+       inkscape:rounded="1.0408341e-17"
+       inkscape:randomized="0"
+       d="m -506.21998,558.39938 -126.58483,0 63.29242,-109.62568 63.29241,109.62568 z"
+       transform="matrix(1.2841535,0,0,0.88512118,619.5806,132.61644)" />
+    <rect
+       style="fill:url(#linearGradient4290);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3451"
+       width="91.032814"
+       height="79.809593"
+       x="-158.21237"
+       y="626.86755" />
+    <rect
+       style="fill:#666666;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4275);opacity:0.5"
+       id="rect4265"
+       width="93.065941"
+       height="1.1433165"
+       x="-640.42517"
+       y="561.87952"
+       transform="matrix(0.95906063,0,0,0.83307665,456.76631,159.29297)" />
   </g>
 </svg>

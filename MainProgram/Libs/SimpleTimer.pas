@@ -1,8 +1,15 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 {==============================================================================}
 {                                                                              }
 {   Simple timer                                                               }
 {                                                                              }
-{   Non visual variant of TTimer component.                                    }
+{   Non visual variant of TTimer component                                     }
 {                                                                              }
 {   ©František Milt 2015-01-11                                                 }
 {                                                                              }
@@ -87,7 +94,7 @@ begin
 KillTimer(WindowHandle,fTimerID);
 If (fInterval > 0) and fEnabled then
   If SetTimer(WindowHandle,fTimerID,fInterval,nil) = 0 then
-    raise EOutOfResources.Create('Not enough timers available');
+    raise EOutOfResources.Create('Not enough timers available.');
 end;
 
 procedure TSimpleTimer.MessagesHandler(var Msg: TMessage; var Handled: Boolean);

@@ -1,11 +1,11 @@
 object fMainForm: TfMainForm
-  Left = 687
-  Top = 114
+  Left = 679
+  Top = 115
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Adjustable Cruise Control'
-  ClientHeight = 307
-  ClientWidth = 584
+  ClientHeight = 371
+  ClientWidth = 592
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -54,21 +54,21 @@ object fMainForm: TfMainForm
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    584
-    307)
+    592
+    371)
   PixelsPerInch = 96
   TextHeight = 13
   object shpTitleBackground: TShape
     Left = 0
     Top = 0
-    Width = 584
+    Width = 592
     Height = 49
     Anchors = [akLeft, akTop, akRight]
     Pen.Style = psClear
   end
   object lblUnits: TLabel
-    Left = 245
-    Top = 262
+    Left = 133
+    Top = 300
     Width = 28
     Height = 13
     Alignment = taRightJustify
@@ -91,7 +91,7 @@ object fMainForm: TfMainForm
   object lblGameTitle: TLabel
     Left = 8
     Top = 8
-    Width = 568
+    Width = 576
     Height = 13
     Alignment = taCenter
     Anchors = [akLeft, akTop, akRight]
@@ -109,7 +109,7 @@ object fMainForm: TfMainForm
   object lblGameInfo: TLabel
     Left = 8
     Top = 24
-    Width = 568
+    Width = 576
     Height = 13
     Alignment = taCenter
     Anchors = [akLeft, akTop, akRight]
@@ -121,13 +121,13 @@ object fMainForm: TfMainForm
   object grbPreset: TGroupBox
     Left = 8
     Top = 56
-    Width = 225
-    Height = 225
+    Width = 233
+    Height = 235
     Caption = 'Preset speeds'
     TabOrder = 0
     object lblStep: TLabel
-      Left = 147
-      Top = 80
+      Left = 155
+      Top = 86
       Width = 26
       Height = 13
       Alignment = taRightJustify
@@ -136,8 +136,8 @@ object fMainForm: TfMainForm
     object btnIncreaseByStep: TButton
       Tag = 1
       Left = 8
-      Top = 48
-      Width = 209
+      Top = 49
+      Width = 217
       Height = 21
       Caption = 'btnIncreaseByStep'
       TabOrder = 1
@@ -146,8 +146,8 @@ object fMainForm: TfMainForm
     object btnDecreaseByStep: TButton
       Tag = 2
       Left = 8
-      Top = 104
-      Width = 209
+      Top = 115
+      Width = 217
       Height = 21
       Caption = 'btnDecreaseByStep'
       TabOrder = 5
@@ -156,7 +156,7 @@ object fMainForm: TfMainForm
     object seSpeedArbitrary: TSpinEdit
       Tag = -1
       Left = 72
-      Top = 76
+      Top = 82
       Width = 49
       Height = 22
       MaxValue = 999
@@ -167,8 +167,8 @@ object fMainForm: TfMainForm
     end
     object seSpeedStep: TSpinEdit
       Tag = -2
-      Left = 176
-      Top = 76
+      Left = 184
+      Top = 82
       Width = 41
       Height = 22
       MaxValue = 99
@@ -179,8 +179,8 @@ object fMainForm: TfMainForm
     end
     object seSpeedCity: TSpinEdit
       Tag = -3
-      Left = 176
-      Top = 160
+      Left = 184
+      Top = 178
       Width = 41
       Height = 22
       MaxValue = 999
@@ -191,8 +191,8 @@ object fMainForm: TfMainForm
     end
     object seSpeedRoads: TSpinEdit
       Tag = -4
-      Left = 176
-      Top = 188
+      Left = 184
+      Top = 203
       Width = 41
       Height = 22
       MaxValue = 99
@@ -204,8 +204,8 @@ object fMainForm: TfMainForm
     object btnSetCity: TButton
       Tag = 10
       Left = 8
-      Top = 160
-      Width = 161
+      Top = 178
+      Width = 169
       Height = 21
       Caption = 'btnSetCity'
       TabOrder = 7
@@ -214,8 +214,8 @@ object fMainForm: TfMainForm
     object btnSetRoads: TButton
       Tag = 15
       Left = 8
-      Top = 188
-      Width = 161
+      Top = 203
+      Width = 169
       Height = 21
       Caption = 'btnSetRoads'
       TabOrder = 9
@@ -225,7 +225,7 @@ object fMainForm: TfMainForm
       Tag = 3
       Left = 8
       Top = 24
-      Width = 209
+      Width = 217
       Height = 21
       Caption = 'btnIncreaseByUnit'
       TabOrder = 0
@@ -234,8 +234,8 @@ object fMainForm: TfMainForm
     object btnDecreaseByUnit: TButton
       Tag = 4
       Left = 8
-      Top = 128
-      Width = 209
+      Top = 140
+      Width = 217
       Height = 21
       Caption = 'btnDecreaseByUnit'
       TabOrder = 6
@@ -243,7 +243,7 @@ object fMainForm: TfMainForm
     end
     object btnSetTo: TButton
       Left = 8
-      Top = 76
+      Top = 82
       Width = 57
       Height = 21
       Caption = 'btnSetTo'
@@ -252,7 +252,7 @@ object fMainForm: TfMainForm
     end
   end
   object grbUser: TGroupBox
-    Left = 240
+    Left = 248
     Top = 56
     Width = 337
     Height = 193
@@ -487,8 +487,8 @@ object fMainForm: TfMainForm
   end
   object sbStatusBar: TStatusBar
     Left = 0
-    Top = 288
-    Width = 584
+    Top = 352
+    Width = 592
     Height = 19
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBtnText
@@ -498,37 +498,108 @@ object fMainForm: TfMainForm
     Panels = <
       item
         Text = 'game_process'
-        Width = 330
+        Width = 450
+      end
+      item
+        Text = 'plugin_status'
+        Width = 50
       end>
     UseSystemFont = False
   end
   object cbUnits: TComboBox
-    Left = 280
-    Top = 258
+    Left = 168
+    Top = 296
     Width = 73
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 2
+    TabOrder = 3
     OnChange = cbUnitsChange
   end
   object btnAbout: TButton
-    Left = 472
-    Top = 258
-    Width = 105
+    Left = 128
+    Top = 322
+    Width = 113
     Height = 21
     Caption = 'About...'
-    TabOrder = 4
+    TabOrder = 5
     OnClick = btnAboutClick
   end
   object btnSettings: TButton
-    Left = 360
-    Top = 258
-    Width = 105
+    Left = 8
+    Top = 322
+    Width = 113
     Height = 21
     Caption = 'Settings...'
-    TabOrder = 3
+    TabOrder = 4
     OnClick = btnSettingsClick
+  end
+  object grbSpeedLimit: TGroupBox
+    Left = 248
+    Top = 256
+    Width = 337
+    Height = 89
+    Caption = 'Speed limit'
+    TabOrder = 2
+    object lblActionOnZero: TLabel
+      Left = 13
+      Top = 59
+      Width = 124
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Action on speed limit of 0:'
+    end
+    object btnSetToLimit: TButton
+      Tag = 400
+      Left = 8
+      Top = 24
+      Width = 161
+      Height = 21
+      Caption = 'btnSetToLimit'
+      TabOrder = 0
+      OnClick = btnSpeedsClick
+    end
+    object btnKeepOnLimit: TButton
+      Tag = 401
+      Left = 176
+      Top = 24
+      Width = 153
+      Height = 21
+      Caption = 'btnKeepOnLimit'
+      TabOrder = 1
+      OnClick = btnSpeedsClick
+    end
+    object cbActionOnZero: TComboBox
+      Left = 144
+      Top = 56
+      Width = 137
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      TabOrder = 2
+      OnChange = cbActionOnZeroChange
+    end
+    object seSpeedLimitDefault: TSpinEdit
+      Tag = -5
+      Left = 288
+      Top = 56
+      Width = 41
+      Height = 22
+      MaxValue = 999
+      MinValue = 0
+      TabOrder = 3
+      Value = 0
+      OnChange = seSpeedsChange
+    end
+  end
+  object cbShowKeyBindings: TCheckBox
+    Left = 8
+    Top = 299
+    Width = 113
+    Height = 17
+    Caption = 'Show key bindings'
+    TabOrder = 7
+    OnClick = cbShowKeyBindingsClick
   end
   object oXPManifest: TXPManifest
   end

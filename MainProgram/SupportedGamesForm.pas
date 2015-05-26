@@ -6,10 +6,30 @@ interface
 
 uses
   Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, ComCtrls, StdCtrls, Grids,
+  ExtCtrls, ComCtrls, StdCtrls, {$IFDEF FPC}LCLVersion, LMessages,{$ENDIF}
   ACC_GamesData;
 
 type
+{
+Interposer class for TListBox intended as at least partial workaround for
+LCL 1.4 bug #0028146 (http://bugs.freepascal.org/view.php?id=28146).
+Will be removed when official patch (new Lazarus/LCL) will be released.
+}
+{$IFNDEF FPC}{$WARNINGS OFF}{$ENDIF}  // because Delphi 7 are parsing {$IF ...} when they shouldn't
+{$IFDEF FPC}
+  {$IF declared(lcl_fullversion) and (lcl_fullversion = 1040004)}
+    {$DEFINE LCL0028146fix}
+  {$IFEND}
+{$ENDIF}
+{$IFNDEF FPC}{$WARNINGS ON}{$ENDIF}
+
+{$IFDEF LCL0028146fix}
+  TListBox = class(StdCtrls.TListBox)
+  protected
+    procedure WM_EraseBackground(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
+  end;
+{$ENDIF}
+
   TfSupportedGamesForm = class(TForm)
     lbGamesList: TListBox;
     lvGameDetails: TListView;
@@ -46,6 +66,15 @@ uses
   {$IFDEF FPC}LCLType,{$ENDIF}
   CRC32, MD5,
   ACC_Strings, ACC_Manager;
+
+{$IFDEF LCL0028146fix}
+procedure TListBox.WM_EraseBackground(var Msg: TLMEraseBkgnd);
+begin
+Msg.Result := 1;
+end;
+{$ENDIF}
+
+//==============================================================================
 
 procedure TfSupportedGamesForm.ClearGameDetails;
 begin
@@ -115,7 +144,7 @@ try
     end;
   ListPointerData(GDIN_GD_CCSpeed,TempGameData.CCSpeed);
   ListPointerData(GDIN_GD_CCStatus,TempGameData.CCStatus);
-  If TGamesDataManager.TruckSpeedSupported(TempGameData) then
+  If TGamesDataManager.TruckSpeedSupported(TempGameData) <> ssrNone then
     ListPointerData(GDIN_GD_TruckSpeed,TempGameData.TruckSpeed);
   AddRow(GDIN_GD_Values,IntToStr(Length(TempGameData.Values)));
   For i := Low(TempGameData.Values) to High(TempGameData.Values) do
@@ -177,6 +206,9 @@ end;
 
 //------------------------------------------------------------------------------
 
+var
+  WorkBitmap: TBitmap;
+
 procedure TfSupportedGamesForm.lbGamesListDrawItem(Control: TWinControl;
   Index: Integer; Rect: TRect; State: TOwnerDrawState);
 const
@@ -187,58 +219,60 @@ const
   LeftBarWidth    = 6;
 var
   TempGameData: TGameData;
-  WorkBitmap:   TBitmap; // maybe use blobal object?
   WorkRect:     TRect;
 begin
 TempGameData := ACCManager.GamesDataManager.GameData[Index];
-WorkBitmap := TBitmap.Create;
-try
-  WorkBitmap.Width := Rect.Right - Rect.Left;
-  WorkBitmap.Height := Rect.Bottom - Rect.Top;
-  WorkRect := Classes.Rect(0,0,WorkBitmap.Width,WorkBitmap.Height);
-  with WorkBitmap.Canvas do
-    begin
-      If (odSelected in State) then
-        begin
-          Brush.Color := clSideBar;
-          Pen.Color := clSideBar;
-        end
-      else
-        begin
-          Brush.Color := lbGamesList.Color;
-          Pen.Color := lbGamesList.Color;
-        end;
-      Rectangle(WorkRect);
-      If fGameIsBinded and IsEqualGUID(fBindedGame,TempGameData.Identifier) then
-        begin
-          Brush.Color := clSideBarBinded;
-          Pen.Color := clSideBarBinded;
-        end
-      else
-        begin
-          Brush.Color := clSideBar;
-          Pen.Color := clSideBar;
-        end;
-      Rectangle(WorkRect.Left,WorkRect.Top,WorkRect.Left + LeftBarWidth,WorkRect.Bottom);
-      Brush.Style := bsClear;
-      Font := lbGamesList.Font;
-      Font.Style := [fsBold];
-      TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
-              WorkRect.Top + 4,TempGameData.Title);
-      Font.Style := [];
-      TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
-              WorkRect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
-      Pen.Color := clHorSplit;
-      MoveTo(WorkRect.Left,WorkRect.Bottom - 1);
-      LineTo(WorkRect.Right,WorkRect.Bottom - 1);
-      Draw(WorkRect.Left + LeftBarWidth + 2,WorkRect.Top + (WorkRect.Bottom - WorkRect.Top - DefIconSize) div 2,
-           ACCManager.GamesDataManager.GameIcons.GetIcon(TempGameData.Icon));
-    end;
-  lbGamesList.Canvas.Draw(Rect.Left,Rect.Top,WorkBitmap);
-  If (odFocused in State) then lbGamesList.Canvas.DrawFocusRect(Rect);
-finally
+WorkRect := Classes.Rect(0,0,Rect.Right - Rect.Left,Rect.Bottom - Rect.Top);
+If WorkBitmap.Width <> WorkRect.Right then
+  WorkBitmap.Width := WorkRect.Right;
+If WorkBitmap.Height <> WorkRect.Bottom then
+  WorkBitmap.Height := WorkRect.Bottom;
+with WorkBitmap.Canvas do
+  begin
+    If (odSelected in State) then
+      begin
+        Brush.Color := clSideBar;
+        Pen.Color := clSideBar;
+      end
+    else
+      begin
+        Brush.Color := lbGamesList.Color;
+        Pen.Color := lbGamesList.Color;
+      end;
+    Rectangle(WorkRect);
+    If fGameIsBinded and IsEqualGUID(fBindedGame,TempGameData.Identifier) then
+      begin
+        Brush.Color := clSideBarBinded;
+        Pen.Color := clSideBarBinded;
+      end
+    else
+      begin
+        Brush.Color := clSideBar;
+        Pen.Color := clSideBar;
+      end;
+    Rectangle(WorkRect.Left,WorkRect.Top,WorkRect.Left + LeftBarWidth,WorkRect.Bottom);
+    Brush.Style := bsClear;
+    Font := lbGamesList.Font;
+    Font.Style := [fsBold];
+    TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
+            WorkRect.Top + 4,TempGameData.Title);
+    Font.Style := [];
+    TextOut(WorkRect.Left + LeftBarWidth + DefIconSize + 6,
+            WorkRect.Bottom - 4 - TextHeight(TempGameData.Info),TempGameData.Info);
+    Pen.Color := clHorSplit;
+    MoveTo(WorkRect.Left,WorkRect.Bottom - 1);
+    LineTo(WorkRect.Right,WorkRect.Bottom - 1);
+    Draw(WorkRect.Left + LeftBarWidth + 2,WorkRect.Top + (WorkRect.Bottom - WorkRect.Top - DefIconSize) div 2,
+         ACCManager.GamesDataManager.GameIcons.GetIcon(TempGameData.Icon));
+  end;
+lbGamesList.Canvas.Draw(Rect.Left,Rect.Top,WorkBitmap);
+If (odFocused in State) then lbGamesList.Canvas.DrawFocusRect(Rect);
+end;
+
+initialization
+  WorkBitmap := TBitmap.Create;
+
+finalization
   WorkBitmap.Free;
-end;
-end;
 
 end.

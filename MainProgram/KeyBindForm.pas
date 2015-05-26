@@ -10,9 +10,6 @@ uses
   ACC_Settings;
 
 type
-
-  { TfKeyBindForm }
-
   TfKeyBindForm = class(TForm)
     bvlBorder: TBevel;
     lblTitle: TLabel;

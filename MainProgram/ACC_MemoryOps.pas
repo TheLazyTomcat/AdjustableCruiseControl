@@ -79,13 +79,13 @@ Result := False;
 try
   Address := BaseAddress;
   If Length(PointerData.Offsets) > 0 then
-    Address := {%H-}Pointer(PtrInt(Address) + PointerData.Offsets[0]);
+    Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[0]);
   For i := Succ(Low(PointerData.Offsets)) to High(PointerData.Offsets) do
     begin
       If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),{%H-}Temp) then
         begin
           If Assigned(Address) and (Temp = SizeOf(Pointer)) then
-            Address := {%H-}Pointer(PtrInt(Address) + PointerData.Offsets[i])
+            Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[i])
           else Exit;
         end
       else Exit;
@@ -138,7 +138,7 @@ else
   If (Index >= Low(fGameData.Values)) and (Index <= High(fGameData.Values)) then
     Result := fGameData.Values[Index]
   else
-    raise Exception.Create('TMemoryOperator.PointerDataByIndex: Index (' + IntToStr(Index) + ') out of bounds.');
+    raise Exception.CreateFmt('TMemoryOperator.PointerDataByIndex: Index (%d) out of bounds.',[Index]);
 end;
 end;
 
@@ -222,7 +222,7 @@ end;
 
 constructor TMemoryOperator.Create;
 begin
-inherited;
+inherited Create;
 fActive := False;
 fCanReadVehicleSpeed := False;
 end;
@@ -232,7 +232,7 @@ end;
 procedure TMemoryOperator.Activate(GameData: TGameData);
 begin
 fGameData := GameData;
-fCanReadVehicleSpeed := TGamesDataManager.TruckSpeedSupported(fGameData);
+fCanReadVehicleSpeed := TGamesDataManager.TruckSpeedSupported(fGameData) = ssrDirect;
 fActive := TGamesDataManager.IsValid(fGameData);
 end;
 
@@ -249,10 +249,9 @@ end;
 Function TMemoryOperator.ReadVehicleSpeed(out Value: Single): Boolean;
 begin
 If fActive and fCanReadVehicleSpeed then
-  begin
-    Result := ReadFloat(PTR_IDX_TruckSpeed,Value);
-  end
-else Result := False;
+  Result := ReadFloat(PTR_IDX_TruckSpeed,Value)
+else
+  Result := False;
 end;
 
 //------------------------------------------------------------------------------

@@ -1,9 +1,9 @@
 object fSettingsForm: TfSettingsForm
-  Left = 717
-  Top = 230
+  Left = 743
+  Top = 122
   BorderStyle = bsDialog
   Caption = 'Settings'
-  ClientHeight = 496
+  ClientHeight = 536
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object fSettingsForm: TfSettingsForm
     Left = 384
     Top = 0
     Width = 9
-    Height = 497
+    Height = 537
     Shape = bsLeftLine
   end
   object gbGeneral: TGroupBox
@@ -68,11 +68,11 @@ object fSettingsForm: TfSettingsForm
   end
   object gbTimers: TGroupBox
     Left = 8
-    Top = 96
+    Top = 184
     Width = 169
     Height = 89
-    Caption = 'Timers (advanced)'
-    TabOrder = 1
+    Caption = 'Timers'
+    TabOrder = 2
     object lblProcessScanTimer: TLabel
       Left = 13
       Top = 27
@@ -94,7 +94,7 @@ object fSettingsForm: TfSettingsForm
       Top = 26
       Width = 16
       Height = 16
-      Cursor = crHandPoint
+      Cursor = crHelp
       Hint = 'Processes scan interval'
       AutoSize = True
       ParentShowHint = False
@@ -124,7 +124,7 @@ object fSettingsForm: TfSettingsForm
       Top = 58
       Width = 16
       Height = 16
-      Cursor = crHandPoint
+      Cursor = crHelp
       Hint = 'Modules load timeout'
       AutoSize = True
       ParentShowHint = False
@@ -172,14 +172,14 @@ object fSettingsForm: TfSettingsForm
   end
   object gbBindings: TGroupBox
     Left = 8
-    Top = 192
+    Top = 280
     Width = 369
-    Height = 297
+    Height = 249
     Caption = 'Key bindings'
-    TabOrder = 3
+    TabOrder = 4
     object lblBindingHint: TLabel
       Left = 8
-      Top = 277
+      Top = 229
       Width = 351
       Height = 13
       Caption = 
@@ -190,12 +190,12 @@ object fSettingsForm: TfSettingsForm
       Left = 8
       Top = 16
       Width = 353
-      Height = 258
+      Height = 207
       ColCount = 3
       DefaultRowHeight = 16
       FixedColor = clGray
       FixedCols = 0
-      RowCount = 43
+      RowCount = 2
       Options = [goVertLine, goHorzLine, goRowSelect, goThumbTracking]
       ScrollBars = ssVertical
       TabOrder = 0
@@ -205,11 +205,11 @@ object fSettingsForm: TfSettingsForm
   end
   object gbGamesData: TGroupBox
     Left = 184
-    Top = 96
+    Top = 184
     Width = 193
     Height = 89
     Caption = 'Games data (supported games)'
-    TabOrder = 2
+    TabOrder = 3
     object btnSupportedGames: TButton
       Left = 8
       Top = 24
@@ -235,7 +235,7 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Height = 25
     Caption = 'Accept'
-    TabOrder = 4
+    TabOrder = 5
     OnClick = btnAcceptClick
   end
   object btnApply: TButton
@@ -244,7 +244,7 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Height = 25
     Caption = 'Apply'
-    TabOrder = 5
+    TabOrder = 6
     OnClick = btnApplyClick
   end
   object btnCancel: TButton
@@ -253,35 +253,67 @@ object fSettingsForm: TfSettingsForm
     Width = 121
     Height = 25
     Caption = 'Cancel'
-    TabOrder = 6
+    TabOrder = 7
     OnClick = btnCancelClick
   end
   object btnExportSettings: TButton
     Left = 392
-    Top = 432
+    Top = 472
     Width = 121
     Height = 25
     Caption = 'Export settings...'
-    TabOrder = 8
+    TabOrder = 9
     OnClick = btnExportSettingsClick
   end
   object btnImportSettings: TButton
     Left = 392
-    Top = 464
+    Top = 504
     Width = 121
     Height = 25
     Caption = 'Import settings...'
-    TabOrder = 9
+    TabOrder = 10
     OnClick = btnImportSettingsClick
   end
   object btnDefault: TButton
     Left = 392
-    Top = 400
+    Top = 440
     Width = 121
     Height = 25
     Caption = 'Load default settings'
-    TabOrder = 7
+    TabOrder = 8
     OnClick = btnDefaultClick
+  end
+  object grbAdvanced: TGroupBox
+    Left = 8
+    Top = 96
+    Width = 369
+    Height = 81
+    Caption = 'Advanced settings'
+    TabOrder = 1
+    object cbDiscernKeyboardSides: TCheckBox
+      Left = 208
+      Top = 24
+      Width = 129
+      Height = 17
+      Caption = 'Discern keyboard sides'
+      TabOrder = 1
+    end
+    object cbSoftKeyComboRecognition: TCheckBox
+      Left = 16
+      Top = 24
+      Width = 177
+      Height = 17
+      Caption = 'Soft key combination recognition'
+      TabOrder = 0
+    end
+    object cbGameActiveForTrigger: TCheckBox
+      Left = 16
+      Top = 48
+      Width = 329
+      Height = 17
+      Caption = 'Game window must be in the foreground for a trigger to activate'
+      TabOrder = 2
+    end
   end
   object diaImportSettings: TOpenDialog
     Filter = 'INI files (*.ini)|*.ini'

@@ -213,7 +213,7 @@ end;
 
 procedure TTrayIcon.SetTipText(IconTipText: String);
 begin
-StrPLCopy(fIconData.szTip,IconTipText,SizeOf(fIconData.szTip) - 1);
+StrPLCopy(PChar(@fIconData.szTip),IconTipText,SizeOf(fIconData.szTip) - 1);
 UpdateTrayIcon;
 end;
 

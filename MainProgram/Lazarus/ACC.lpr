@@ -4,9 +4,7 @@ program ACC;
 
 uses
   Interfaces, // this includes the LCL widgetset
-{$IFDEF Debug}
   SysUtils,
-{$ENDIF}
   Forms,
 
   CRC32,
@@ -17,8 +15,11 @@ uses
   SimpleCompress,
   StringEncryptionUnit,
   MulticastEvent,
+  WndAlloc,
   UtilityWindow,
   SimpleTimer,
+  WinMsgComm,
+  WinMsgCommClient,
 
   ACC_Common,
   ACC_Strings,
@@ -31,6 +32,7 @@ uses
   ACC_MemoryOps,
   ACC_Input,
   ACC_Manager,
+  ACC_PluginComm,
 
   MainForm,
   AboutForm,
@@ -41,12 +43,27 @@ uses
 
 {$R *.res}
 
+var
+  LoadingUpdate: Boolean = False;
+  UpdateFile:    String = '';
+
+  procedure CheckStartedForUpdate;
+  begin
+    If (ParamCount > 0) and FileExists(ParamStr(1)) then
+      begin
+        UpdateFile := ParamStr(1);
+        LoadingUpdate := True;
+      end;
+  end;
+
 begin
 {$IFDEF Debug}
-If FileExists('heap.trc') then DeleteFile('heap.trc');
-SetHeapTraceOutput('heap.trc');
+If FileExists(ExtractFilePath(ParamStr(0)) + 'heap.trc') then
+  DeleteFile(ExtractFilePath(ParamStr(0)) + 'heap.trc');
+SetHeapTraceOutput(ExtractFilePath(ParamStr(0)) + 'heap.trc');
 {$ENDIF}
-ACCManager := TACCManager.Create;
+CheckStartedForUpdate;
+ACCManager := TACCManager.Create(LoadingUpdate,UpdateFile);
 try
   If ACCManager.InstanceControl.FirstInstance then
     begin
@@ -54,17 +71,20 @@ try
       Application.Initialize;
       Application.Title:='Adjustable Cruise Control';
       Application.CreateForm(TfMainForm, fMainForm);
+      If LoadingUpdate then fMainForm.LoadUpdate(UpdateFile);
       Application.CreateForm(TfAboutForm, fAboutForm);
       Application.CreateForm(TfSettingsForm, fSettingsForm);
       Application.CreateForm(TfKeyBindForm, fKeyBindForm);
       Application.CreateForm(TfSupportedGamesForm, fSupportedGamesForm);
       Application.CreateForm(TfUpdateForm, fUpdateForm);
-      ACCManager.Initialize(Application);
+      ACCManager.OnLoadUpdate := fUpdateForm.LoadUpdateFromFile;
+      ACCManager.Initialize(Application,LoadingUpdate);
       Application.Run;
       ACCManager.Save;
     end;
 finally
   ACCManager.Free;
+  UpdateFile := '';
 end;
 end.
 

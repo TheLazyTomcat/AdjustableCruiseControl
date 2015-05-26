@@ -120,7 +120,7 @@ begin
 If (Index >= 0) and (Index < Count) then
   Result := PTriggerListItem(Items[Index])^.Trigger
 else
-  raise Exception.Create('TTriggersList.GetTrigger: Index (' + IntToStr(Index) + ') out of bounds.');
+  raise Exception.CreateFmt('TTriggersList.GetTrigger: Index (%d) out of bounds.',[Index]);
 end;
 
 {------------------------------------------------------------------------------}

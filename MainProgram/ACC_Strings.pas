@@ -34,6 +34,8 @@ const
   ACCSTR_UI_STB_GameProcess   = 'Game process: ';
   ACCSTR_UI_STB_ProcessInfo   = '%s (PID %d)';
   ACCSTR_UI_STB_NoGameProcess = ACCSTR_UI_STB_GameProcess + 'not found';
+  ACCSTR_UI_STB_PluginOnline  = 'Plugin online';
+  ACCSTR_UI_STB_PluginOffline = 'Plugin offline';
 
   // User interface - game info
   ACCSTR_UI_GAM_NoGameTitle = '>>> None of the supported games is running <<<';
@@ -53,10 +55,18 @@ const
 
   ACCSTR_UI_BTN_SetToUser = 'User %d';
 
+  ACCSTR_UI_BTN_SetToLimit  = 'Set to speed limit';
+  ACCSTR_UI_BTN_KeepOnLimit = 'Keep on speed limit';
+
+  ACCSTR_UI_LIM_BoxCaptionNormal      = 'Speed limit';
+  ACCSTR_UI_LIM_BoxCaptionInactive    = 'Speed limit (inactive)';
+  ACCSTR_UI_LIM_BoxCaptionUnsupported = 'Speed limit (unsupported)';
+  ACCSTR_UI_LIM_ActionsOnZeroLimit: Array[0..1] of String = ('Turn CC off','Set CC to speed...');
+
   // User interface - About
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';
 {$IFDEF FPC}
-  ACCSTR_UI_CPY_Author         = #194 + #169 + '2013-2015 Franti' + #197 + #161 + 'ek Milt';
+  ACCSTR_UI_CPY_Author         = #194 + #169 + ' 2013-2015 Franti' + #197 + #161 + 'ek Milt';
 {$ELSE}
   ACCSTR_UI_CPY_Author         = '© 2013-2015 František Milt';
 {$ENDIF}
@@ -85,6 +95,9 @@ const
   ACCSTR_UI_SET_BIND_UserVehicle = 'Vehicle -> User %d speed';
   ACCSTR_UI_SET_BIND_UserCruise  = 'CC -> User %d speed';
 
+  ACCSTR_UI_SET_BIND_SetToLimit  = 'Set to limit';
+  ACCSTR_UI_SET_BIND_KeepOnLimit  = 'Keep on limit';
+
   ACCSTR_UI_SET_BIND_ClearBinding = 'Are you sure you want to clear binding for action "%s"?';
 
   Function ACCSTR_UI_SET_BIND_InputText(Index: Integer): String;
@@ -110,6 +123,13 @@ const
   ACCSTR_UI_SUPG_SupportedList = 'Supported games (%d)';
   ACCSTR_UI_SUPG_VAL_Index     = 'Index';
 
+  ACCSTR_UI_SUPG_ASSOC_Associate = 'Image from which this instance of ACC is started will be associated with file extension UGDB.' + sLineBreak +
+                                   'From now on, the program image must stay in the same folder for this association to work properly.' + sLineBreak +
+                                   'Are you sure you want to associate UGDB file extension to this program?';
+
+  ACCSTR_UI_SUPG_ASSOC_Deassociate = 'File extension UGDB seems to be already associated.'  + sLineBreak +
+                                     'What you want to do with this association?';
+
 implementation
 
 uses
@@ -133,6 +153,8 @@ case Index of
   12..21: Result := Format(ACCSTR_UI_SET_BIND_UserEngage,[Index - 12]);
   22..31: Result := Format(ACCSTR_UI_SET_BIND_UserVehicle,[Index - 22]);
   32..41: Result := Format(ACCSTR_UI_SET_BIND_UserCruise,[Index - 32]);
+  42: Result := ACCSTR_UI_SET_BIND_SetToLimit;
+  43: Result := ACCSTR_UI_SET_BIND_KeepOnLimit;
 else
   Result := '';
 end;

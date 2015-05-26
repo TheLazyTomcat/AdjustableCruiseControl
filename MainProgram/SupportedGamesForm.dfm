@@ -1,10 +1,10 @@
 object fSupportedGamesForm: TfSupportedGamesForm
-  Left = 305
-  Top = 211
+  Left = 246
+  Top = 284
   BorderStyle = bsDialog
   Caption = 'Supported games'
   ClientHeight = 440
-  ClientWidth = 960
+  ClientWidth = 1024
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object fSupportedGamesForm: TfSupportedGamesForm
   object lbGamesList: TListBox
     Left = 8
     Top = 8
-    Width = 385
+    Width = 449
     Height = 422
     Style = lbOwnerDrawFixed
     ItemHeight = 38
@@ -29,7 +29,7 @@ object fSupportedGamesForm: TfSupportedGamesForm
     OnDrawItem = lbGamesListDrawItem
   end
   object gbGameDetails: TGroupBox
-    Left = 400
+    Left = 464
     Top = 8
     Width = 553
     Height = 425

@@ -10,9 +10,6 @@ uses
   ACC_Settings;
 
 type
-
-  { TfSettingsForm }
-
   TfSettingsForm = class(TForm)
     gbGeneral: TGroupBox;
     cbShowSplash: TCheckBox;
@@ -41,6 +38,10 @@ type
     btnDefault: TButton;
     btnExportSettings: TButton;
     btnImportSettings: TButton;
+    grbAdvanced: TGroupBox;
+    cbDiscernKeyboardSides: TCheckBox;
+    cbSoftKeyComboRecognition: TCheckBox;
+    cbGameActiveForTrigger: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -90,20 +91,15 @@ procedure TfSettingsForm.PrepareBindTable;
 var
   i:  Integer;
 begin
+sgBindings.RowCount := InputCount + 1;
 sgBindings.ColWidths[0] := 135;
 sgBindings.ColWidths[1] := 115;
 sgBindings.ColWidths[2] := 80;
 sgBindings.Cells[0,0] := ACCSTR_UI_SET_BIND_HEAD_Action;
 sgBindings.Cells[1,0] := ACCSTR_UI_SET_BIND_HEAD_Keys;
 sgBindings.Cells[2,0] := ACCSTR_UI_SET_BIND_HEAD_VKCodes;
-For i := 0 to 12 do
+For i := 0 to Pred(InputCount) do
   sgBindings.Cells[0,i + 1] := ACCSTR_UI_SET_BIND_InputText(i);
-For i := 0 to 9 do
-  begin
-    sgBindings.Cells[0,13 + i] := Format(ACCSTR_UI_SET_BIND_UserEngage,[i]);
-    sgBindings.Cells[0,23 + i] := Format(ACCSTR_UI_SET_BIND_UserVehicle,[i]);
-    sgBindings.Cells[0,33 + i] := Format(ACCSTR_UI_SET_BIND_UserCruise,[i]);
-  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -112,7 +108,7 @@ procedure TfSettingsForm.KeysToForm;
 var
   i:  Integer;
 begin
-For i := 0 to 41 do
+For i := 0 to Pred(InputCount) do
   begin
     sgBindings.Cells[1,i + 1] := TInputManager.GetInputKeyNames(LocalSettingsManager.Inputs[i]);
     sgBindings.Cells[2,i + 1] := TInputManager.GetInputKeyNames(LocalSettingsManager.Inputs[i],True);
@@ -128,6 +124,9 @@ cbCloseOnGameEnd.Checked := fLocalSettings.CloseOnGameEnd;
 cbMinimizeToTray.Checked := fLocalSettings.MinimizeToTray;
 cbMinimizeToTray.OnClick(nil);
 cbStartMinimized.Checked := fLocalSettings.StartMinimized;
+cbSoftKeyComboRecognition.Checked := fLocalSettings.SoftKeyComboRecognition;
+cbDiscernKeyboardSides.Checked := fLocalSettings.DiscernKeyboardSides;
+cbGameActiveForTrigger.Checked := fLocalSettings.GameActiveForTrigger;
 seProcessScanTImer.Value := fLocalSettings.ProcessBinderScanInterval;
 seModuleLoadTimer.Value := fLocalSettings.ModulesLoadTimeout;
 KeysToForm;
@@ -141,6 +140,9 @@ fLocalSettings.ShowSplashScreen := cbShowSplash.Checked;
 fLocalSettings.CloseOnGameEnd := cbCloseOnGameEnd.Checked;
 fLocalSettings.MinimizeToTray := cbMinimizeToTray.Checked;
 fLocalSettings.StartMinimized := cbStartMinimized.Checked and cbStartMinimized.Enabled;
+fLocalSettings.SoftKeyComboRecognition := cbSoftKeyComboRecognition.Checked;
+fLocalSettings.DiscernKeyboardSides :=cbDiscernKeyboardSides.Checked;
+fLocalSettings.GameActiveForTrigger := cbGameActiveForTrigger.Checked;
 fLocalSettings.ProcessBinderScanInterval := seProcessScanTImer.Value;
 fLocalSettings.ModulesLoadTimeout := seModuleLoadTimer.Value;
 end;
@@ -304,6 +306,8 @@ ACC_Settings.Settings := fLocalSettings;
 fMainForm.SettingsToForm;
 ACCManager.ProcessBinder.UpdateTimerInterval;
 ACCManager.BuildInputTriggers;
+ACCManager.InputManager.SoftKeyComboRecognition := ACC_Settings.Settings.SoftKeyComboRecognition;
+ACCManager.InputManager.DiscernKeyboardSides := ACC_Settings.Settings.DiscernKeyboardSides;
 end;
 
 //------------------------------------------------------------------------------
@@ -333,7 +337,11 @@ end;
 procedure TfSettingsForm.btnExportSettingsClick(Sender: TObject);
 begin
 If diaExportSettings.Execute then
+{$IFDEF FPC}
+  LocalSettingsManager.SaveToIni(UTF8ToString(diaExportSettings.FileName));
+{$ELSE}
   LocalSettingsManager.SaveToIni(diaExportSettings.FileName);
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -342,12 +350,15 @@ procedure TfSettingsForm.btnImportSettingsClick(Sender: TObject);
 begin
 If diaImportSettings.Execute then
   begin
+    {$IFDEF FPC}
+    If LocalSettingsManager.LoadFromIni(UTF8ToString(diaImportSettings.FileName)) then
+      SettingsToForm
+    else
+      Application.MessageBox('Settings import has failed.','Adjustable Cruise Control',MB_ICONERROR);
+    {$ELSE}
     If LocalSettingsManager.LoadFromIni(diaImportSettings.FileName) then
       SettingsToForm
     else
-    {$IFDEF FPC}
-      Application.MessageBox('Settings import has failed.','Adjustable Cruise Control',MB_ICONERROR);
-    {$ELSE}
       ShowErrorMsg('Settings import has failed.');
     {$ENDIF}
   end;

@@ -1,12 +1,12 @@
 object fSupportedGamesForm: TfSupportedGamesForm
-  Left = 305
-  Height = 440
-  Top = 211
-  Width = 960
+  Left = 237
+  Height = 438
+  Top = 171
+  Width = 1024
   BorderStyle = bsDialog
   Caption = 'Supported games'
-  ClientHeight = 440
-  ClientWidth = 960
+  ClientHeight = 438
+  ClientWidth = 1024
   Color = clBtnFace
   Font.Color = clWindowText
   Font.Height = -11
@@ -14,12 +14,12 @@ object fSupportedGamesForm: TfSupportedGamesForm
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poOwnerFormCenter
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.4.0.4'
   object lbGamesList: TListBox
     Left = 8
     Height = 422
     Top = 8
-    Width = 385
+    Width = 449
     Color = clWindow
     ItemHeight = 38
     OnClick = lbGamesListClick
@@ -28,7 +28,7 @@ object fSupportedGamesForm: TfSupportedGamesForm
     TabOrder = 0
   end
   object gbGameDetails: TGroupBox
-    Left = 400
+    Left = 464
     Height = 425
     Top = 8
     Width = 553

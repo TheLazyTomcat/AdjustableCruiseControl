@@ -18,11 +18,10 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="2"/>
-      <MinorVersionNr Value="2"/>
-      <RevisionNr Value="1"/>
-      <BuildNr Value="45"/>
+      <MinorVersionNr Value="3"/>
+      <BuildNr Value="150"/>
       <Language Value="0405"/>
-      <StringTable Comments="Main program for ACC 2.2.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.2.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.2.1"/>
+      <StringTable Comments="Main program for ACC 2.3.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.3.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.3.0"/>
     </VersionInfo>
     <BuildModes Count="4">
       <Item1 Name="Debug_win_x86" Default="True"/>
@@ -35,7 +34,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\Libs;.."/>
+            <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -58,13 +57,9 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerMessages>
-              <MsgFileName Value=""/>
-            </CompilerMessages>
             <CustomOptions Value="-dFPC
 -dx86
 -dRelease"/>
-            <CompilerPath Value="$(CompPath)"/>
           </Other>
         </CompilerOptions>
       </Item2>
@@ -77,7 +72,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\Libs;.."/>
+            <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -108,13 +103,9 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerMessages>
-              <MsgFileName Value=""/>
-            </CompilerMessages>
             <CustomOptions Value="-dFPC
 -dx64
 -dDebug"/>
-            <CompilerPath Value="$(CompPath)"/>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -127,7 +118,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\Libs;.."/>
+            <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -150,13 +141,9 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerMessages>
-              <MsgFileName Value=""/>
-            </CompilerMessages>
             <CustomOptions Value="-dFPC
 -dx64
 -dRelease"/>
-            <CompilerPath Value="$(CompPath)"/>
           </Other>
         </CompilerOptions>
       </Item4>
@@ -174,116 +161,94 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="28">
+    <Units Count="32">
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC"/>
       </Unit0>
       <Unit1>
         <Filename Value="..\Libs\CRC32.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="CRC32"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\Libs\MD5.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="MD5"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\Libs\WinRawInput.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="WinRawInput"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\Libs\FloatHex.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FloatHex"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\Libs\DefRegistry.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="DefRegistry"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\Libs\MulticastEvent.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="MulticastEvent"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\Libs\SimpleCompress.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="SimpleCompress"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\Libs\SimpleTimer.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="SimpleTimer"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\Libs\StringEncryptionUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="StringEncryptionUnit"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\Libs\UtilityWindow.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UtilityWindow"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\ACC_Common.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Common"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\ACC_Strings.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Strings"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\ACC_TrayIcon.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_TrayIcon"/>
       </Unit13>
       <Unit14>
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_GamesData"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\ACC_Input.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Input"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\ACC_InstanceControl.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_InstanceControl"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Manager"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_MemoryOps"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_ProcessBinder"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\ACC_Settings.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Settings"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\ACC_SplashScreen.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_SplashScreen"/>
       </Unit21>
       <Unit22>
         <Filename Value="..\MainForm.pas"/>
@@ -299,7 +264,6 @@
         <ComponentName Value="fAboutForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="AboutForm"/>
       </Unit23>
       <Unit24>
         <Filename Value="..\SettingsForm.pas"/>
@@ -307,7 +271,6 @@
         <ComponentName Value="fSettingsForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="SettingsForm"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\KeyBindForm.pas"/>
@@ -315,7 +278,6 @@
         <ComponentName Value="fKeyBindForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="KeyBindForm"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\SupportedGamesForm.pas"/>
@@ -323,7 +285,6 @@
         <ComponentName Value="fSupportedGamesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="SupportedGamesForm"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -331,8 +292,23 @@
         <ComponentName Value="fUpdateForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="UpdateForm"/>
       </Unit27>
+      <Unit28>
+        <Filename Value="..\Libs\WndAlloc.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="..\Libs\WMC\WinMsgCommClient.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="..\Libs\WMC\WinMsgComm.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="..\ACC_PluginComm.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit31>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -343,7 +319,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\Libs;.."/>
+      <OtherUnitFiles Value="..\Libs;..;..\Libs\WMC"/>
       <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
@@ -374,13 +350,9 @@
       </Options>
     </Linking>
     <Other>
-      <CompilerMessages>
-        <MsgFileName Value=""/>
-      </CompilerMessages>
       <CustomOptions Value="-dFPC
 -dx86
 -dDebug"/>
-      <CompilerPath Value="$(CompPath)"/>
     </Other>
   </CompilerOptions>
   <Debugging>

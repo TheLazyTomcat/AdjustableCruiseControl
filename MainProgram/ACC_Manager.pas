@@ -13,11 +13,13 @@ interface
 
 uses
   Classes, Forms,
-  MulticastEvent, UtilityWindow,
+  MulticastEvent, UtilityWindow, WinMsgComm, WinMsgCommClient,
   ACC_InstanceControl, ACC_Settings, ACC_GamesData, ACC_TrayIcon,
   ACC_SplashScreen, ACC_ProcessBinder, ACC_MemoryOps, ACC_Input;
 
 type
+  TLoadUpdateEvent = procedure(Sender: TObject; const UpdateFile: String) of object;
+
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                                 TACCManager                                  }
@@ -25,36 +27,46 @@ type
 {==============================================================================}
   TACCManager = class(TObject)
   private
-    fOnBindStateChange: TMulticastNotifyEvent;  
-    fApplication:       TApplication;
-    fUtilityWindow:     TUtilityWindow;
-    fInstanceControl:   TInstanceControl;
-    fSettingsManager:   TSettingsManager;
-    fSplashScreen:      TSplashScreen;
-    fGamesDataManager:  TGamesDataManager;
-    fProcessBinder:     TProcessBinder;
-    fMemoryOperator:    TMemoryOperator;
-    fInputManager:      TInputManager;
-    fTrayIcon:          TTrayIcon;
-    fOnSpeedChange:     TNotifyEvent;
+    fPluginFeatures:      LongWord;
+    fKeepCCSpeedOnLimit:  Boolean;
+    fOnBindStateChange:   TMulticastNotifyEvent;
+    fApplication:         TApplication;
+    fUtilityWindow:       TUtilityWindow;
+    fInstanceControl:     TInstanceControl;
+    fSettingsManager:     TSettingsManager;
+    fSplashScreen:        TSplashScreen;
+    fGamesDataManager:    TGamesDataManager;
+    fProcessBinder:       TProcessBinder;
+    fMemoryOperator:      TMemoryOperator;
+    fInputManager:        TInputManager;
+    fTrayIcon:            TTrayIcon;
+    fWMCClient:           TWinMsgCommClient;
+    fOnSpeedChange:       TNotifyEvent;
+    fOnPluginStateChange: TNotifyEvent;
+    fOnLoadUpdate:        TLoadUpdateEvent;
+    Function GetPluginState: Boolean;
   protected
     procedure Application_OnMinimize(Sender: TObject); virtual;
+    procedure InstaceControl_OnRestoreMessage(Sender: TObject; Parameter: Integer); virtual;
     procedure ProcessBinder_OnStateChange(Sender: TObject); virtual;
     procedure ProcessBinder_OnGameUnbind(Sender: TObject); virtual;
+    procedure WMCClient_OnValueRecived(Sender: TObject; {%H-}SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
+    procedure DoPluginStateChange(Sender: TObject); virtual;
   public
-    constructor Create;
+    constructor Create(LoadingUpdate: Boolean; const UpdateFile: String = '');
     destructor Destroy; override;
-    procedure Initialize(Application: TApplication); virtual;
+    procedure Initialize(Application: TApplication; LoadingUpdate: Boolean); virtual;
     procedure BuildInputTriggers; virtual;
     procedure ExtractGamesData; virtual;
     procedure UpdateFromInternalGamesData; virtual;
     procedure Load; virtual;
     procedure Save; virtual;
-    procedure SetCCSpeed(NewSpeed: Single); virtual;
+    procedure SetCCSpeed(NewSpeed: Single; DeactivateLimitSending: Boolean = True); virtual;
     procedure IncreaseCCSpeed(Increment: Single); virtual;
     Function GameActive: Boolean; virtual;
     procedure ExecuteTrigger(Sender: TObject; Trigger: Integer; Caller: TTriggerCaller); virtual;
   published
+    property PluginFeatures: LongWord read fPluginFeatures;
     property OnBindStateChange: TMulticastNotifyEvent read fOnBindStateChange;  
     property InstanceControl: TInstanceControl read fInstanceControl;
     property SettingsManager: TSettingsManager read fSettingsManager;
@@ -63,7 +75,10 @@ type
     property ProcessBinder: TProcessBinder read fProcessBinder;
     property MemoryOperator: TMemoryOperator read fMemoryOperator;
     property InputManager: TInputManager read fInputManager;
+    property PluginOnline: Boolean read GetPluginState;
     property OnSpeedChange: TNotifyEvent read fOnSpeedChange write fOnSpeedChange;
+    property OnPluginStateChange: TNotifyEvent read fOnPluginStateChange write fOnPluginStateChange;
+    property OnLoadUpdate: TLoadUpdateEvent read fOnLoadUpdate write fOnLoadUpdate;
   end;
 
 var
@@ -73,7 +88,7 @@ implementation
 
 uses
   Windows, SysUtils,{$IFDEF FPC}InterfaceBase,{$ENDIF}
-  ACC_Strings;
+  ACC_Strings, ACC_PluginComm;
 
 {$R 'Resources\GamesData.res'}
 
@@ -106,11 +121,23 @@ const
   ACC_TRIGGER_UserCruise_0 = 300;
   ACC_TRIGGER_UserCruise_9 = ACC_TRIGGER_UserCruise_0 + 9;
 
+  ACC_TRIGGER_SetToLimit  = 400;
+  ACC_TRIGGER_KeepOnLimit = 401;
+
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                                 TACCManager                                  }
 {------------------------------------------------------------------------------}
 {==============================================================================}
+
+{------------------------------------------------------------------------------}
+{   TACCManager // Private methods                                             }
+{------------------------------------------------------------------------------}
+
+Function TACCManager.GetPluginState: Boolean;
+begin
+Result := fWMCClient.ServerOnline;
+end;
 
 {------------------------------------------------------------------------------}
 {   TACCManager // Protected methods                                           }
@@ -127,6 +154,42 @@ If Settings.MinimizeToTray then
     ShowWindow(fApplication.Handle,SW_HIDE);
     {$ENDIF}
   end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TACCManager.InstaceControl_OnRestoreMessage(Sender: TObject; Parameter: Integer);
+var
+  TempStr:  String;
+
+  procedure DoRestore;
+  begin
+    If fTrayIcon.Visible then
+      begin
+        fApplication.Restore;
+        fApplication.MainForm.Show;
+        SetForegroundWindow(fApplication.MainForm.Handle);
+        fTrayIcon.HideTrayIcon;
+      end
+    else
+      begin
+        fApplication.Restore;
+        {$IFDEF FPC}
+        SetForegroundWindow(WidgetSet.AppHandle);
+        {$ELSE}
+        SetForegroundWindow(fApplication.Handle);
+        {$ENDIF}
+      end;
+  end;
+  
+begin
+If Parameter = 1 then
+  begin
+    DoRestore;
+    TempStr := fInstanceControl.ReadSharedString;
+    If Assigned(fOnLoadUpdate) and FileExists(TempStr) then fOnLoadUpdate(Self,TempStr);
+  end
+else DoRestore;
 end;
 
 //------------------------------------------------------------------------------
@@ -156,21 +219,99 @@ If Settings.CloseOnGameEnd then
   fApplication.MainForm.Close;
 end;
 
+//------------------------------------------------------------------------------
+
+procedure TACCManager.WMCClient_OnValueRecived(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue);
+begin
+case Value.UserCode of
+  WMC_CODE_SetCCSpeed:  If Value.ValueType = mvtSingle then
+                          SetCCSpeed(Value.SingleValue);
+  WMC_CODE_SpeedHome:   If Value.ValueType = mvtSingle then
+                          begin
+                            Settings.Speeds.City := Value.SingleValue;
+                            If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+                          end;
+  WMC_CODE_SpeedRoads:  If Value.ValueType = mvtSingle then
+                          begin
+                            Settings.Speeds.Roads := Value.SingleValue;
+                            If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+                          end;
+  WMC_CODE_SpeedUser0..
+  WMC_CODE_SpeedUser9:  If Value.ValueType = mvtSingle then
+                          begin
+                            Settings.Speeds.User[Value.UserCode - WMC_CODE_SpeedUser0] := Value.SingleValue;
+                            If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+                          end;
+  WMC_CODE_SetToLimit:  If Value.ValueType = mvtSingle then
+                          begin
+                            If Value.SingleValue = 0 then
+                              case Settings.ZeroLimitAction of
+                                0:  SetCCSpeed(0);
+                                1:  SetCCSpeed(Settings.Speeds.LimitDefault);
+                              end
+                            else If Value.SingleValue > 0 then SetCCSpeed(Value.SingleValue)
+                              else SetCCSpeed(0);
+                          end;
+  WMC_CODE_LimitStart:  If Value.ValueType = mvtSingle then
+                          begin
+                            fKeepCCSpeedOnLimit := True;
+                            If Value.SingleValue = 0 then
+                              case Settings.ZeroLimitAction of
+                                0:  SetCCSpeed(0);
+                                1:  SetCCSpeed(Settings.Speeds.LimitDefault,False);
+                              end
+                            else If Value.SingleValue > 0 then SetCCSpeed(Value.SingleValue,False)
+                              else SetCCSpeed(0);
+                          end;
+  WMC_CODE_LimitStop:   fKeepCCSpeedOnLimit := False;
+  WMC_CODE_SpeedLimit:  If (Value.ValueType = mvtSingle) and fKeepCCSpeedOnLimit then
+                          begin
+                            If Value.SingleValue = 0 then
+                              case Settings.ZeroLimitAction of
+                                0:  SetCCSpeed(0);
+                                1:  SetCCSpeed(Settings.Speeds.LimitDefault,False);
+                              end
+                            else If Value.SingleValue > 0 then SetCCSpeed(Value.SingleValue,False)
+                              else SetCCSpeed(0);
+                          end
+                        else fWMCClient.SendInteger(0,SenderID,WMC_CODE_LimitStop);
+  WMC_CODE_Features:    If Value.ValueType = mvtLongWord then
+                          begin
+                            fPluginFeatures := Value.LongWordValue;
+                            If Assigned(fOnPluginStateChange) then fOnPluginStateChange(Self);
+                          end;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TACCManager.DoPluginStateChange(Sender: TObject);
+begin
+If Assigned(fOnPluginStateChange) then fOnPluginStateChange(Self);
+If fWMCClient.ServerOnline then fWMCClient.SendInteger(0,0,WMC_CODE_Features);
+end;
+
 {------------------------------------------------------------------------------}
 {   TACCManager // Public methods                                              }
 {------------------------------------------------------------------------------}
 
-constructor TACCManager.Create;
+constructor TACCManager.Create(LoadingUpdate: Boolean; const UpdateFile: String = '');
 begin
 inherited Create;
+fPluginFeatures := 0;
+fKeepCCSpeedOnLimit := False;
 fOnBindStateChange := TMulticastNotifyEvent.Create(Self);
 fUtilityWindow := TUtilityWindow.Create;
-fInstanceControl := TInstanceControl.Create(fUtilityWindow,ACCSTR_IC_InstanceName);
+fInstanceControl := TInstanceControl.Create(fUtilityWindow,ACCSTR_IC_InstanceName,LoadingUpdate,UpdateFile);
 fSettingsManager := TSettingsManager.Create(Addr(ACC_Settings.Settings));
 fSplashScreen := nil;
 fGamesDataManager := TGamesDataManager.Create;
 fProcessBinder := TProcessBinder.Create(fUtilityWindow);
 fMemoryOperator := TMemoryOperator.Create;
+fWMCClient := TWinMsgCommClient.Create(fUtilityWindow,False,WMC_MessageName);
+fWMCClient.OnServerStatusChange := DoPluginStateChange;
+fWMCClient.OnValueReceived := WMCClient_OnValueRecived;
+fWMCClient.SendInteger(0,0,WMC_CODE_Features);
 fInputManager := TInputManager.Create(fUtilityWindow);
 end;
 
@@ -180,6 +321,8 @@ destructor TACCManager.Destroy;
 begin
 fSplashScreen.Free;
 fInputManager.Free;
+fWMCClient.Free;
+fInstanceControl.OnRestoreMessage := nil;
 fTrayIcon.Free;
 fMemoryOperator.Free;
 fProcessBinder.Free;
@@ -193,13 +336,14 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TACCManager.Initialize(Application: TApplication);
+procedure TACCManager.Initialize(Application: TApplication; LoadingUpdate: Boolean);
 begin
 fApplication := Application;
 fApplication.OnMinimize := Application_OnMinimize;
 SettingsManager.PreloadSettings;
 fTrayIcon := TTrayIcon.Create(fUtilityWindow,fApplication);
-If Settings.StartMinimized then
+fInstanceControl.OnRestoreMessage := InstaceControl_OnRestoreMessage;
+If Settings.StartMinimized and not LoadingUpdate then
   begin
     fApplication.ShowMainForm := False;
     Load;
@@ -238,6 +382,8 @@ For i := Low(Settings.Inputs.UserVehicle) to High(Settings.Inputs.UserVehicle) d
   fInputManager.AddTrigger(ACC_TRIGGER_UserVehicle_0 + i,Settings.Inputs.UserVehicle[i]);
 For i := Low(Settings.Inputs.UserCruise) to High(Settings.Inputs.UserCruise) do
   fInputManager.AddTrigger(ACC_TRIGGER_UserCruise_0 + i,Settings.Inputs.UserCruise[i]);
+fInputManager.AddTrigger(ACC_TRIGGER_SetToLimit,Settings.Inputs.SetToLimit);
+fInputManager.AddTrigger(ACC_TRIGGER_KeepOnLimit,Settings.Inputs.KeepOnLimit);
 end;
 
 //------------------------------------------------------------------------------
@@ -317,12 +463,21 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TACCManager.SetCCSpeed(NewSpeed: Single);
+procedure TACCManager.SetCCSpeed(NewSpeed: Single; DeactivateLimitSending: Boolean = True);
 begin
-If fMemoryOperator.Active and (NewSpeed > 0) then
+If DeactivateLimitSending or (NewSpeed <= 0) then
   begin
-    If fMemoryOperator.WriteCCSpeed(NewSpeed) then
-      fMemoryOperator.WriteCCStatus(True);
+    fWMCClient.SendInteger(0,0,WMC_CODE_LimitStop);
+    fKeepCCSpeedOnLimit := False;
+  end;
+If fMemoryOperator.Active then
+  begin
+    If NewSpeed > 0 then
+      begin
+        If fMemoryOperator.WriteCCSpeed(NewSpeed) then
+          fMemoryOperator.WriteCCStatus(True);
+      end
+    else fMemoryOperator.WriteCCStatus(False);
   end;
 end;
 
@@ -333,6 +488,8 @@ var
   CurrentSpeed: Single;
   CCStatus:     Boolean;
 begin
+fWMCClient.SendInteger(0,0,WMC_CODE_LimitStop);
+fKeepCCSpeedOnLimit := False;
 If fMemoryOperator.Active and (Increment <> 0) then
   If fMemoryOperator.ReadCCStatus(CCStatus) then
     begin
@@ -344,9 +501,12 @@ If fMemoryOperator.Active and (Increment <> 0) then
         end
       else
         begin
-          If MemoryOperator.ReadVehicleSpeed(CurrentSpeed) then
-            If fMemoryOperator.WriteCCSpeed(CurrentSpeed + Increment) then
-              fMemoryOperator.WriteCCStatus(True);
+          case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+            ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(CurrentSpeed) then
+                          If fMemoryOperator.WriteCCSpeed(CurrentSpeed + Increment) then
+                            fMemoryOperator.WriteCCStatus(True);
+            ssrPlugin:  fWMCClient.SendSingle(Increment,0,WMC_CODE_SpeedInc);
+          end;
         end;
     end;
 end;
@@ -397,11 +557,14 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
     ACC_TRIGGER_CityEngage:       //--------------------------------------------
       SetCCSpeed(Settings.Speeds.City);
     ACC_TRIGGER_CityVehicle:      //--------------------------------------------
-      If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
-        begin
-          Settings.Speeds.City := TempSpeed;
-          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-        end;
+      case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+        ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
+                      begin
+                        Settings.Speeds.City := TempSpeed;
+                        If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+                      end;
+        ssrPlugin:  fWMCClient.SendInteger(0,0,WMC_CODE_SpeedHome);
+      end;
     ACC_TRIGGER_CityCruise:       //--------------------------------------------
       If fMemoryOperator.ReadCCSpeed(TempSpeed) then
         begin
@@ -411,11 +574,14 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
     ACC_TRIGGER_RoadsEngage:      //--------------------------------------------
       SetCCSpeed(Settings.Speeds.Roads);
     ACC_TRIGGER_RoadsVehicle:     //--------------------------------------------
-      If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
-        begin
-          Settings.Speeds.Roads := TempSpeed;
-          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-        end;
+      case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+        ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
+                      begin
+                        Settings.Speeds.Roads := TempSpeed;
+                        If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+                      end;
+        ssrPlugin:  fWMCClient.SendInteger(0,0,WMC_CODE_SpeedRoads);
+      end;
     ACC_TRIGGER_RoadsCruise:      //--------------------------------------------
       If fMemoryOperator.ReadCCSpeed(TempSpeed) then
         begin
@@ -427,11 +593,14 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
       SetCCSpeed(Settings.Speeds.User[Trigger - ACC_TRIGGER_UserEngage_0]);
     ACC_TRIGGER_UserVehicle_0..   //--------------------------------------------
     ACC_TRIGGER_UserVehicle_9:
-      If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
-        begin
-          Settings.Speeds.User[Trigger - ACC_TRIGGER_UserVehicle_0] := TempSpeed;
-          If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
-        end;
+      case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+        ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
+                      begin
+                        Settings.Speeds.User[Trigger - ACC_TRIGGER_UserVehicle_0] := TempSpeed;
+                        If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
+                      end;
+        ssrPlugin:  fWMCClient.SendInteger(0,0,WMC_CODE_SpeedUser0 + (Trigger - ACC_TRIGGER_UserVehicle_0));
+      end;
     ACC_TRIGGER_UserCruise_0..    //--------------------------------------------
     ACC_TRIGGER_UserCruise_9:
       If fMemoryOperator.ReadCCStatus(TempState) then
@@ -440,6 +609,18 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
             Settings.Speeds.User[Trigger - ACC_TRIGGER_UserCruise_0] := TempSpeed;
             If Assigned(fOnSpeedChange) then fOnSpeedChange(Self);
           end;
+    ACC_TRIGGER_SetToLimit:       //--------------------------------------------
+       fWMCClient.SendInteger(0,0,WMC_CODE_SetToLimit);
+    ACC_TRIGGER_KeepOnLimit:      //--------------------------------------------
+      begin
+        If fKeepCCSpeedOnLimit then
+          begin
+            fKeepCCSpeedOnLimit := False;
+            fWMCClient.SendInteger(0,0,WMC_CODE_LimitStop);
+            SetCCSpeed(0);
+          end
+        else fWMCClient.SendInteger(0,0,WMC_CODE_LimitStart);
+      end;
   end;
 end;
 

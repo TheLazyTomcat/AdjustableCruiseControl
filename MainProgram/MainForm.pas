@@ -5,12 +5,13 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
+  Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF};
 
-type
+const
+  WM_AFTERSHOW = WM_USER + 100;
 
-  { TfMainForm }
+type
 {$IFDEF FPC}
   TfMainForm = class(TForm)
     shpTitleBackground: TShape;
@@ -53,6 +54,13 @@ type
     btnSetUser9: TButton;
     seSpeedUser9: TFloatSpinEdit;
     bvlUserSplit: TBevel;
+    grbSpeedLimit: TGroupBox;
+    btnSetToLimit: TButton;
+    btnKeepOnLimit: TButton;
+    lblActionOnZero: TLabel;
+    cbActionOnZero: TComboBox;
+    seSpeedLimitDefault: TFloatSpinEdit;
+    cbShowKeyBindings: TCheckBox;
     lblUnits: TLabel;
     cbUnits: TComboBox;
     btnSettings: TButton;
@@ -62,20 +70,26 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
     procedure seSpeedsChange(Sender: TObject);
+    procedure cbActionOnZeroChange(Sender: TObject);
+    procedure cbShowKeyBindingsClick(Sender: TObject);
     procedure cbUnitsChange(Sender: TObject);
     procedure btnSettingsClick(Sender: TObject);    
     procedure btnAboutClick(Sender: TObject);
   private
     { Private declarations }
-  protected
+  protected  
+    fLoadingUpdate:   Boolean;
+    fUpdateFile:      String;
     fSpeedsChanging:  Boolean;
+    procedure AfterShow(var {%H-}Msg: TMessage); message WM_AFTERSHOW;
     procedure OnBindStateChange(Sender: TObject);
+    procedure OnPluginStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
     procedure KeysToForm;
   public
     procedure SettingsToForm;
+    procedure LoadUpdate(const UpdateFile: String);
   end;
-
 {$ELSE}
   TfMainForm = class(TForm)
     shpTitleBackground: TShape;
@@ -118,28 +132,42 @@ type
     btnSetUser9: TButton;
     seSpeedUser9: TSpinEdit;
     bvlUserSplit: TBevel;
+    grbSpeedLimit: TGroupBox;
+    btnSetToLimit: TButton;
+    btnKeepOnLimit: TButton;
+    lblActionOnZero: TLabel;    
+    cbActionOnZero: TComboBox;
+    seSpeedLimitDefault: TSpinEdit;
+    cbShowKeyBindings: TCheckBox;    
     lblUnits: TLabel;
     cbUnits: TComboBox;
     btnSettings: TButton;
     btnAbout: TButton;
+    oXPManifest: TXPManifest;
     sbStatusBar: TStatusBar;
-    oXPManifest: TXPManifest;  
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSpeedsClick(Sender: TObject);
     procedure seSpeedsChange(Sender: TObject);
+    procedure cbActionOnZeroChange(Sender: TObject);
+    procedure cbShowKeyBindingsClick(Sender: TObject);
     procedure cbUnitsChange(Sender: TObject);
-    procedure btnSettingsClick(Sender: TObject);    
+    procedure btnSettingsClick(Sender: TObject);
     procedure btnAboutClick(Sender: TObject);
   private
     { Private declarations }
   protected
+    fLoadingUpdate:   Boolean;
+    fUpdateFile:      String;
     fSpeedsChanging:  Boolean;
+    procedure AfterShow(var Msg: TMessage); message WM_AFTERSHOW;
     procedure OnBindStateChange(Sender: TObject);
+    procedure OnPluginStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
     procedure KeysToForm;
   public
     procedure SettingsToForm;
+    procedure LoadUpdate(const UpdateFile: String);
   end;
 {$ENDIF}
 
@@ -155,8 +183,17 @@ implementation
 {$ENDIF}
 
 uses
-  ACC_Manager, ACC_Settings, ACC_Strings, ACC_Input,
-  AboutForm, SettingsForm;
+  Windows,
+  ACC_Manager, ACC_Settings, ACC_Strings, ACC_Input, ACC_PluginComm,
+  AboutForm, SettingsForm, UpdateForm;
+
+procedure TfMainForm.AfterShow(var Msg: TMessage);
+begin
+If fLoadingUpdate then
+  fUpdateForm.LoadUpdateFromFile(Self,fUpdateFile);
+end;
+
+//------------------------------------------------------------------------------
 
 procedure TfMainForm.OnBindStateChange(Sender: TObject);
 begin
@@ -174,6 +211,25 @@ else
     lblGameTitle.Caption := ACCSTR_UI_GAM_NoGameTitle;
     lblGameInfo.Caption := ACCSTR_UI_GAM_NoGameInfo;
     sbStatusBar.Panels[0].Text := ACCSTR_UI_STB_NoGameProcess;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.OnPluginStateChange(Sender: TObject);
+begin
+If ACCManager.PluginOnline then
+  begin
+    sbStatusBar.Panels[1].Text := ACCSTR_UI_STB_PluginOnline;
+    If (ACCManager.PluginFeatures and WMC_PF_Limit) <> 0 then
+      grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionNormal
+    else
+      grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionUnsupported;
+  end
+else
+  begin
+    sbStatusBar.Panels[1].Text := ACCSTR_UI_STB_PluginOffline;
+    grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionInactive;
   end;
 end;
 
@@ -203,6 +259,7 @@ try
       SpinEdit := FindComponent('seSpeedUser' + IntToStr(i)) as TFloatSpinEdit;
       If Assigned(SpinEdit) then SpinEdit.Value := Settings.Speeds.User[i] / Coef;
     end;
+  seSpeedLimitDefault.Value := Settings.Speeds.LimitDefault / Coef;  
 {$ELSE}
   seSpeedArbitrary.Value := Round(Settings.Speeds.Arbitrary / Coef);
   seSpeedStep.Value := Round(Settings.Speeds.Step / Coef);
@@ -213,6 +270,7 @@ try
       SpinEdit := FindComponent('seSpeedUser' + IntToStr(i)) as TSpinEdit;
       If Assigned(SpinEdit) then SpinEdit.Value := Round(Settings.Speeds.User[i] / Coef);
     end;
+  seSpeedLimitDefault.Value := Round(Settings.Speeds.LimitDefault / Coef);
 {$ENDIF}
 finally
   fSpeedsChanging := False;
@@ -228,15 +286,14 @@ var
 
   procedure SetButtonCaption(Button: TButton; const Text: String; const KeysStr: String; NoText: Boolean = False);
   begin
-    If KeysStr <> '' then
+    If (KeysStr <> '') and Settings.ShowKeyBindings then
       begin
         If NoText then
           Button.Caption := Format(ACCSTR_UI_BTN_Keys,[KeysStr])
         else
           Button.Caption := Text + Format(ACCSTR_UI_BTN_Keys,[KeysStr]);
       end
-    else
-      Button.Caption := Text;
+    else Button.Caption := Text;
   end;
 
 begin
@@ -252,6 +309,8 @@ For i := 0 to 9 do
     UserButton := FindComponent('btnSetUser' + IntToStr(i)) as TButton;
     SetButtonCaption(UserButton,Format(ACCSTR_UI_BTN_SetToUser,[i]),TInputManager.GetInputKeyNames(Settings.Inputs.UserEngage[i]),True);
   end;
+SetButtonCaption(btnSetToLimit,ACCSTR_UI_SET_BIND_SetToLimit,TInputManager.GetInputKeyNames(Settings.Inputs.SetToLimit));
+SetButtonCaption(btnKeepOnLimit,ACCSTR_UI_SET_BIND_KeepOnLimit,TInputManager.GetInputKeyNames(Settings.Inputs.KeepOnLimit));
 end;
 
 //------------------------------------------------------------------------------
@@ -271,16 +330,32 @@ finally
   cbUnits.Items.EndUpdate;
 end;
 cbUnits.ItemIndex := Settings.UsedSpeedUnit;
+cbActionOnZero.ItemIndex := Settings.ZeroLimitAction;
+cbShowKeyBindings.Checked := Settings.ShowKeyBindings;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.LoadUpdate(const UpdateFile: String);
+begin
+fLoadingUpdate := True;
+fUpdateFile := UpdateFile;
 end;
 
 //==============================================================================
 
 procedure TfMainForm.FormCreate(Sender: TObject);
+var
+  i:  Integer;
 begin
 sbStatusBar.DoubleBuffered := True;
 fSpeedsChanging := False;
+For i := Low(ACCSTR_UI_LIM_ActionsOnZeroLimit) to High(ACCSTR_UI_LIM_ActionsOnZeroLimit) do
+  cbActionOnZero.Items.Add(ACCSTR_UI_LIM_ActionsOnZeroLimit[i]);
 ACCManager.OnBindStateChange.Add(OnBindStateChange);
 ACCManager.OnSpeedChange := SpeedsToForm;
+ACCManager.OnPluginStateChange := OnPluginStateChange;
+fLoadingUpdate := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -288,7 +363,9 @@ end;
 procedure TfMainForm.FormShow(Sender: TObject);
 begin
 SettingsToForm;
+OnPluginStateChange(nil);
 btnAbout.SetFocus;
+PostMessage(Self.WindowHandle,WM_AFTERSHOW,0,0);
 end;
 
 //------------------------------------------------------------------------------
@@ -328,10 +405,26 @@ If not fSpeedsChanging then
             -2: Settings.Speeds.Step := SpinEdit.Value * Coef;
             -3: Settings.Speeds.City := SpinEdit.Value * Coef;
             -4: Settings.Speeds.Roads := SpinEdit.Value * Coef;
+            -5: Settings.Speeds.LimitDefault := SpinEdit.Value * Coef;
           0..9: Settings.Speeds.User[SpinEdit.Tag] := SpinEdit.Value * Coef;
         end;
       end;
   end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.cbActionOnZeroChange(Sender: TObject);
+begin
+Settings.ZeroLimitAction := cbActionOnZero.ItemIndex;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.cbShowKeyBindingsClick(Sender: TObject);
+begin
+Settings.ShowKeyBindings := cbShowKeyBindings.Checked;
+KeysToForm;
 end;
 
 //------------------------------------------------------------------------------
