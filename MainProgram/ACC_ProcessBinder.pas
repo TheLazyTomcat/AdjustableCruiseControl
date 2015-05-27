@@ -472,20 +472,24 @@ end;
 
 procedure TBinderThread.DoRebind;
 begin
-If fState = bsBinded then
-  begin
-    fState := bsSearching;
-    fRebinding := True;
-    try
-      Synchronize(sync_StateChange);
-    finally
-      fRebinding := False;
+case fState of
+  bsBinded:
+    begin
+      fState := bsSearching;
+      fRebinding := True;
+      try
+        Synchronize(sync_StateChange);
+      finally
+        fRebinding := False;
+      end;
+      CloseHandle(fWaitObjects.GameProcess);
+      fWaitObjects.GameProcess := INVALID_HANDLE_VALUE;
     end;
-    CloseHandle(fWaitObjects.GameProcess);
-    fWaitObjects.GameProcess := INVALID_HANDLE_VALUE;
-    fCurrentProcessList.Invalidate;
-    SetEvent(fWaitObjects.ControlEvent);
-  end;
+  bsModulesWaiting:
+    fState := bsSearching;
+end;
+fCurrentProcessList.Invalidate;
+SetEvent(fWaitObjects.ControlEvent);
 end;
 
 //------------------------------------------------------------------------------

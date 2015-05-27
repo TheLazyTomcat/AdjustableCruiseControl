@@ -8,7 +8,6 @@
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <CursorPos Y="8"/>
         <UsageCount Value="128"/>
         <Loaded Value="True"/>
@@ -116,9 +115,13 @@
       <Unit17>
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="161"/>
+        <UnitName Value="ACC_Manager"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="569"/>
         <CursorPos X="58" Y="175"/>
         <UsageCount Value="128"/>
+        <Loaded Value="True"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
@@ -131,8 +134,9 @@
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="672"/>
-        <CursorPos X="61" Y="184"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="470"/>
+        <CursorPos X="5" Y="489"/>
         <UsageCount Value="128"/>
       </Unit19>
       <Unit20>
@@ -156,7 +160,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <CursorPos X="8"/>
         <UsageCount Value="128"/>
         <Loaded Value="True"/>
@@ -209,8 +213,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="183"/>
-        <CursorPos X="75" Y="200"/>
+        <TopLine Value="322"/>
+        <CursorPos Y="326"/>
         <UsageCount Value="128"/>
       </Unit27>
       <Unit28>
