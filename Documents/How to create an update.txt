@@ -1,0 +1,168 @@
+Intent of this document is to provide simple walkthrough on how to create an
+update file for Adjustable Cruise Control application. It will not provide any
+information on how to obtain data necessary to build such file (memory 
+addresses, pointer offsets, checksums, ...).
+It is highly recommended you read following documents (files) before you start 
+creating your first update (they should be distributed along this document):
+
+   #1 - (old)GamesData entries formatting [Rev_0].pdf
+   #2 - GamesData INI 2.0 [Rev_0].txt
+   #3 - (U)GDB file format.txt
+
+This document also assumes you are experienced user, you know at least basics
+about working with console applications in Windows, and also you are able to
+write or edit batch scripts.
+Only two tools are required - a good plain-text editor (notepad will suffice;
+but no MS Word, OO Writer and similar!) and a Games Data Converter (it is part
+of the ACC repository, compiled binary can be found in "bin" branch).
+
+Generally, creating an update consist of only two steps - create INI file of
+structure 2.0 with your data stored in it, and convert this INI to UGDB file.
+So, let's look at those two steps closely.
+
+NOTE - you can also distribute the update in the INI file, without converting it
+to UGDB file. But it is not recommended (UGDB is smaller, less prone to reading
+errors, normal user can't fiddle with its content and it is opaque to him, you
+can include game icon in it, and it is possible to associate this file type to
+ACC application).
+
+
+
+Creating an INI file
+---------------------------------------
+INI file is normal text file, so use text editor to write create one. Internal
+structure of it is described in document #2 (see above).
+Writing it is straight forward and informations provided in document #2 should
+be enough. But for the sake of completeness, here are steps you should take:
+
+  - create new text file and change its extension to "ini"
+
+  - open it in text editor
+
+  - create header section:
+
+      * on the first line, write "[GamesData]" (without the quotes)
+      * on next line, write "Version = $00020000"
+      * leave third line empty
+
+  - create first entry section:
+
+      * write "[Game.0]" as section name
+      * write global data about the entry ("Protocol" - set it to 0,
+        "Identifier", "Descriptor", "Version", "Icon", "Date" - mind the
+        formatting, "Author", "Title", "Info" and "ExtendedTitle")
+      * write how many modules is required ("Modules")
+      * write fields containing data about individual modules with proper prefix
+        for each one ("Module[0].FileMame", "Module[0].CRC32",
+        "Module[1].FileMame", ...), be cautious about indexing, also remember
+        that some fields might not be needed depending on check flags
+      * write data for CCSpeed pointer, watch proper indexing in offsets array,
+        do not use coefficient of 0, if you do not know what to write there,
+        use value $3f800000
+      * write data for CCStatus pointer
+      * write data for TruckSpeed pointer, include this pointer only when you
+        have data for it, if vehicle speed can be obtained via telemetry, write
+        only field "TruckSpeed.Flags" with tenth bit set in the flags themselves
+      * write any special pointers you may need
+
+  - add more entries, as many as needed ("[Game.1]", "[Game.2]", ...,
+    "[Game.n]")
+
+
+Done, just remember following:
+
+  - you can put more than one update in one file
+  - fill all fields that are necessary
+  - be conservative and think before you fill fields "Author" and "Info"
+  - if you are adding support for new game/version, generate new GUID for
+    "Identifier" (do not reuse old ones) and set "Version" to 0
+  - to generate a valid GUID, you can use any tool available (for example
+    https://www.guidgenerator.com), do not write some random thing off top of 
+    your head
+  - if you want to provide update for already existing entry, be sure to set
+    "Identifier" to the same GUID this entry have, and increase the "Version"
+    number; do not write information that this is new version of the entry to
+    fields the user sees ("Info", "Title", "ExtendedTitle"), but you can,
+    although this is not mandatory, change "Descriptor" accordingly
+  - when updating existing entry, you can change absolutely anything with
+    exception of "Protocol" and "Identifier", you can even change what game this
+    entry is used for
+  - when adding support for 64bit game, be sure to write pointer offsets in full
+    64bit representation (16 hex numbers), do not truncate anything
+
+
+If you want an example how the update INI can look, you can find few of them in
+directory "MainProgram\Data\Updates" in the ACC repository.
+
+
+
+Converting INI to UGDB
+---------------------------------------
+As was already said, this step is optional because you can distribute updates
+as INI files.
+Conversion is done using Games Data Converter (further referred to only as GDC),
+a small utility (console program) that can convert between any data formats used
+in ACC. GDC can be run with following parameters:
+
+  -i InputFile
+
+      Input file is name of the file that will be used as a source of data for
+      conversion. Path can be relative to current directory or absolute.
+      It can be any supported file format (INI 1.0, INI 2.0, GDB, UGDB). Note
+      that actual file extension is irrelevant, as the loader selects loading
+      procedure according to internal file structure.
+
+  -o OutputFile (optional)
+
+      File that will be used as destination for converted data. Again, path can
+      be relative to current directory or absolute.
+      File extension is irrelevant again, actual output format is selected by
+      -of parameter.
+      If you do not set output file name by this parameter, the data will be
+      stored back in the input file.
+
+  -of OutputFormat
+
+      Sets format to which the data will be converted.
+      Following values can be used:
+
+        INI1 - stores data in INI file with formatting 1.0 (old format used in
+               ACC 2.1.3 and older)
+        INI2 - stores data in INI file with formatting 2.0 (new format used in
+               ACC 2.2.0 and newer)
+        INI  - alias for INI2
+        BIN1 - stores data in binary file with a structure 1.0 (see document #3
+               for details about this file format)
+        BIN  - alias for BIN1
+
+  -ic IconFile1 IconFile2 ... IconFileN (optional)
+
+      Stores icon from passed files (IconFileX) into output file. Works only
+      with binary output.
+      It must be placed at the end, because everything behind "-ic" is
+      considered to be an icon file.
+      Path of the icon files can be relative to current directory or absolute.
+      Icon files must be PNG files, no other format is currently supported.
+      Name of the icon is the same as name of the source icon file, minus path
+      and extension.
+
+
+Following example will show you how to do the actual conversion:     
+ 
+  Let's assume you have complete INI file, ready for conversion, named
+  "Update.ini", and you want to convert it to binary file of name "Update.ugdb".
+  And you also want to include a new icon that is stored in file "GameIcon.png".
+  All source files are in the same folder as GDC and output file should be 
+  stored there too.
+  You can call the GDC in many different ways, but probably the simplest is to 
+  create a batch script. So create a BAT file in the same folder where the GDC 
+  is located and write into it the following text:
+  
+    start GamesDataConverter.exe -i Update.ini -o Update.ugdb -of bin -ic GameIcon.png  
+    
+  Save the file an run it. You are done. 
+  
+  
+If you think anything is missing from this document or something is not clear
+enough, please send your suggestions to a contact you can find in the repository
+readme file.

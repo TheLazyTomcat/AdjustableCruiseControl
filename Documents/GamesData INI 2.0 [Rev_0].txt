@@ -363,6 +363,6 @@ like so:
 
 
 --- Protocol 3 (updhide) -------------------------------------------------------
-This protocol is designed for update entries that are about to hide entries 
+This protocol is designed for update entries that are about to hide entries
 already in the list of supported games.
 It changes protocol of enries to be hidden to protocol 1 (hidden).
