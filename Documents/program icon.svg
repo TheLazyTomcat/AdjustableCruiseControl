@@ -20,6 +20,32 @@
   <defs
      id="defs3">
     <linearGradient
+       id="linearGradient4244">
+      <stop
+         id="stop4246"
+         offset="0"
+         style="stop-color:#00c500;stop-opacity:1;" />
+      <stop
+         style="stop-color:#72ff70;stop-opacity:1;"
+         offset="0.5"
+         id="stop4250" />
+      <stop
+         id="stop4254"
+         offset="1"
+         style="stop-color:#00a800;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4202">
+      <stop
+         style="stop-color:#20d520;stop-opacity:1;"
+         offset="0"
+         id="stop4204" />
+      <stop
+         style="stop-color:#00ae00;stop-opacity:1;"
+         offset="1"
+         id="stop4212" />
+    </linearGradient>
+    <linearGradient
        id="linearGradient4247">
       <stop
          id="stop4249"
@@ -640,7 +666,7 @@
        xlink:href="#linearGradient3740"
        id="linearGradient4384"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.63475893,0,0,0.63475893,-81.94061,-166.92779)"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-50.673511,-173.18121)"
        x1="811.51404"
        y1="746.0705"
        x2="1057.4547"
@@ -650,7 +676,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4388"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.63475893,0,0,0.63475893,-209.66322,26.79358)"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-178.36851,32.907344)"
        x1="894.17786"
        y1="300.53912"
        x2="984.83221"
@@ -660,7 +686,7 @@
        xlink:href="#linearGradient3740"
        id="linearGradient4390"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,-183.60476,100.62801)"
+       gradientTransform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,-152.33766,94.37459)"
        x1="861.06598"
        y1="377.83606"
        x2="1010.1672"
@@ -684,7 +710,7 @@
        y1="655.58997"
        x2="548.3335"
        y2="419.66159"
-       gradientTransform="matrix(0.66181534,0,0,0.66181534,226.39268,-127.23238)" />
+       gradientTransform="matrix(0.66181534,0,0,0.66181534,257.65978,-133.4858)" />
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3963"
@@ -701,7 +727,7 @@
        xlink:href="#linearGradient3832"
        id="linearGradient4398"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.61313005,0.1642877,-0.1642877,0.61313005,40.465382,-312.30476)"
+       gradientTransform="matrix(0.61313005,0.1642877,-0.1642877,0.61313005,71.732481,-318.55818)"
        x1="813.94556"
        y1="754.11072"
        x2="1059.8862"
@@ -711,7 +737,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4400"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.63475893,0,0,0.63475893,-81.94061,-166.92779)"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-50.673511,-173.18121)"
        x1="923.4375"
        y1="469.78125"
        x2="945.53125"
@@ -721,7 +747,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4402"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.44884234,0.44884234,-0.44884234,0.44884234,371.45938,-470.52339)"
+       gradientTransform="matrix(0.44884234,0.44884234,-0.44884234,0.44884234,402.72648,-476.77681)"
        x1="945.53125"
        y1="490.40619"
        x2="923.4375"
@@ -731,7 +757,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4404"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0,0.63475893,-0.63475893,0,906.7361,-364.59569)"
+       gradientTransform="matrix(0,0.63475893,-0.63475893,0,938.0032,-370.84911)"
        x1="945.53125"
        y1="490.40619"
        x2="923.4375"
@@ -741,7 +767,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4406"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(-0.44884234,0.44884234,-0.44884234,-0.44884234,1210.3317,88.804314)"
+       gradientTransform="matrix(-0.44884234,0.44884234,-0.44884234,-0.44884234,1241.5988,82.550894)"
        x1="945.53125"
        y1="490.40619"
        x2="923.43756"
@@ -751,7 +777,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4408"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(-0.44884234,-0.44884234,0.44884234,-0.44884234,651.00398,927.67662)"
+       gradientTransform="matrix(-0.44884234,-0.44884234,0.44884234,-0.44884234,682.27108,921.4232)"
        x1="945.53119"
        y1="490.40619"
        x2="923.4375"
@@ -761,7 +787,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4410"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0,-0.63475893,0.63475893,0,115.72728,821.74888)"
+       gradientTransform="matrix(0,-0.63475893,0.63475893,0,146.99438,815.49546)"
        x1="923.4375"
        y1="469.78125"
        x2="945.53125"
@@ -771,7 +797,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4412"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.44884234,-0.44884234,0.44884234,0.44884234,-187.86828,368.34887)"
+       gradientTransform="matrix(0.44884234,-0.44884234,0.44884234,0.44884234,-156.60118,362.09545)"
        x1="923.4375"
        y1="469.78125"
        x2="945.53125"
@@ -781,7 +807,7 @@
        xlink:href="#linearGradient3690"
        id="linearGradient4414"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.58701545,-0.24151971,0.20843448,0.50660156,-171.47059,128.23132)"
+       gradientTransform="matrix(0.58701545,-0.24151971,0.20843448,0.50660156,-140.20349,121.9779)"
        x1="923.44897"
        y1="562.30688"
        x2="945.51965"
@@ -791,7 +817,7 @@
        xlink:href="#linearGradient3740"
        id="linearGradient4430"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.63475893,0,0,0.63475893,-81.94061,-166.92779)"
+       gradientTransform="matrix(0.63475893,0,0,0.63475893,-50.673511,-173.18121)"
        x1="1057.4547"
        y1="500.08572"
        x2="811.51404"
@@ -1835,15 +1861,6 @@
     </filter>
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient4247"
-       id="linearGradient4284"
-       gradientUnits="userSpaceOnUse"
-       x1="-632.80481"
-       y1="503.58655"
-       x2="-506.21997"
-       y2="509.92648" />
-    <linearGradient
-       inkscape:collect="always"
        xlink:href="#linearGradient4225"
        id="linearGradient4286"
        gradientUnits="userSpaceOnUse"
@@ -1862,6 +1879,36 @@
        y1="603.77368"
        x2="-545.45767"
        y2="603.77368" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4202"
+       id="linearGradient4200"
+       x1="-632.80481"
+       y1="503.58655"
+       x2="-506.21997"
+       y2="503.58655"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       inkscape:collect="always"
+       id="filter4232"
+       x="-0.21821392"
+       width="1.4364278"
+       y="-0.055334386"
+       height="1.1106688">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.8202365"
+         id="feGaussianBlur4234" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4244"
+       id="linearGradient4242"
+       x1="-38.361073"
+       y1="484.51385"
+       x2="11.349895"
+       y2="570.61578"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1870,9 +1917,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.47973751"
-     inkscape:cx="178.17107"
-     inkscape:cy="519.70046"
+     inkscape:zoom="0.48459315"
+     inkscape:cx="184.81181"
+     inkscape:cy="524.91164"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -2167,24 +2214,24 @@
        transform="matrix(0.63475893,0,0,0.63475893,6.9581697,4.5967951)" />
     <path
        style="fill:url(#linearGradient4384);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       d="M 511.21875 111.5 C 446.56236 111.5 394.15625 163.90611 394.15625 228.5625 C 394.15625 263.41633 409.39791 294.70931 433.5625 316.15625 L 443.1875 306.5625 L 443.28125 306.46875 C 421.57502 287.51513 407.84375 259.64097 407.84375 228.5625 C 407.84375 171.47188 454.12813 125.1875 511.21875 125.1875 C 568.30938 125.1875 614.59375 171.47188 614.59375 228.5625 C 614.59375 259.63261 600.88894 287.51543 579.1875 306.46875 L 579.28125 306.5625 L 588.875 316.15625 C 613.04994 294.7091 628.28125 263.42051 628.28125 228.5625 C 628.28125 163.90611 575.87513 111.5 511.21875 111.5 z "
+       d="m 542.48585,105.24658 c -64.65639,0 -117.0625,52.40611 -117.0625,117.0625 0,34.85383 15.24166,66.14681 39.40625,87.59375 l 9.625,-9.59375 0.0937,-0.0937 c -21.70623,-18.95362 -35.4375,-46.82778 -35.4375,-77.90625 0,-57.09062 46.28438,-103.375 103.375,-103.375 57.09063,0 103.375,46.28438 103.375,103.375 0,31.07011 -13.70481,58.95293 -35.40625,77.90625 l 0.0937,0.0937 9.59375,9.59375 c 24.17494,-21.44715 39.40625,-52.73574 39.40625,-87.59375 0,-64.65639 -52.40612,-117.0625 -117.0625,-117.0625 z"
        id="path4334" />
     <path
        style="fill:url(#linearGradient4430);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       d="M 511.21875 118.1875 C 450.24821 118.1875 400.84375 167.59196 400.84375 228.5625 C 400.84375 261.57237 415.31947 291.20406 438.28125 311.4375 L 443.1875 306.5625 L 443.28125 306.46875 C 421.57502 287.51513 407.84375 259.64097 407.84375 228.5625 C 407.84375 171.47188 454.12813 125.1875 511.21875 125.1875 C 568.30938 125.1875 614.59375 171.47188 614.59375 228.5625 C 614.59375 259.63261 600.88894 287.51543 579.1875 306.46875 L 579.28125 306.5625 L 584.15625 311.4375 C 607.12688 291.20393 621.625 261.57528 621.625 228.5625 C 621.625 167.59196 572.18928 118.1875 511.21875 118.1875 z "
+       d="m 542.48585,111.93408 c -60.97054,0 -110.375,49.40446 -110.375,110.375 0,33.00987 14.47572,62.64156 37.4375,82.875 l 4.90625,-4.875 0.0937,-0.0937 c -21.70623,-18.95362 -35.4375,-46.82778 -35.4375,-77.90625 0,-57.09062 46.28438,-103.375 103.375,-103.375 57.09063,0 103.375,46.28438 103.375,103.375 0,31.07011 -13.70481,58.95293 -35.40625,77.90625 l 0.0937,0.0937 4.875,4.875 c 22.97063,-20.23357 37.46875,-49.86222 37.46875,-82.875 0,-60.97054 -49.43572,-110.375 -110.40625,-110.375 z"
        id="path4336" />
     <rect
        inkscape:transform-center-y="-174.51133"
        inkscape:transform-center-x="70.840252"
-       y="198.09366"
-       x="357.92416"
+       y="204.20743"
+       x="389.21887"
        height="38.939667"
        width="57.543652"
        id="rect4338"
        style="fill:url(#linearGradient4388);fill-opacity:1;fill-rule:nonzero;stroke:none"
        transform="matrix(0.92478485,-0.38049044,0.38049044,0.92478485,0,0)" />
     <rect
-       transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,283.3993,88.965646)"
+       transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,314.6664,82.712226)"
        inkscape:transform-center-y="-156.4638"
        inkscape:transform-center-x="63.414815"
        y="73.50074"
@@ -2197,11 +2244,11 @@
        inkscape:transform-center-y="-141.12556"
        sodipodi:nodetypes="cccc"
        id="path4342"
-       d="M 403.21604,90.413964 490.74075,54.403086 466.76459,120.49901 403.21604,90.413964 z"
+       d="M 434.48314,84.160544 522.00785,48.149666 498.03169,114.24559 434.48314,84.160544 z"
        style="fill:url(#linearGradient4390);fill-opacity:1;fill-rule:nonzero;stroke:none"
        inkscape:transform-center-x="64.253284" />
     <path
-       transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,283.3993,88.965646)"
+       transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,314.6664,82.712226)"
        inkscape:transform-center-y="-133.58809"
        inkscape:transform-center-x="61.035848"
        style="opacity:0.6;fill:url(#linearGradient4392);fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4108)"
@@ -2209,15 +2256,15 @@
        id="path4344"
        sodipodi:nodetypes="cccc" />
     <path
-       style="fill:none;stroke:url(#linearGradient4394);stroke-width:1.58689737000000000;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;opacity:1;filter:url(#filter4471)"
-       d="m 584.15625,311.4375 c 22.96755,-20.23048 37.46875,-49.86222 37.46875,-82.875 0,-60.97053 -49.43572,-110.375 -110.40625,-110.375 -60.97053,0 -110.375,49.40447 -110.375,110.375 0,33.01278 14.5012,62.64452 37.46875,82.875"
+       style="fill:none;stroke:url(#linearGradient4394);stroke-width:1.58689737;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;filter:url(#filter4471)"
+       d="m 615.42335,305.18408 c 22.96755,-20.23048 37.46875,-49.86222 37.46875,-82.875 0,-60.97053 -49.43572,-110.375 -110.40625,-110.375 -60.97053,0 -110.375,49.40447 -110.375,110.375 0,33.01278 14.5012,62.64452 37.46875,82.875"
        id="path4346"
        sodipodi:nodetypes="cscsc" />
     <path
        inkscape:export-ydpi="44.89706"
        inkscape:export-xdpi="44.89706"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
-       transform="matrix(0.63475893,0,0,0.63475893,216.3786,-154.72301)"
+       transform="matrix(0.63475893,0,0,0.63475893,247.6457,-160.97643)"
        d="m 495.01268,603.85071 a 30.500782,30.500782 0 1 1 -61.00156,0 30.500782,30.500782 0 1 1 61.00156,0 z"
        sodipodi:ry="30.500782"
        sodipodi:rx="30.500782"
@@ -2228,7 +2275,7 @@
        sodipodi:type="arc" />
     <path
        style="fill:url(#linearGradient4398);fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4459)"
-       d="M 509.46875 115.5 C 460.20968 116.23351 415.41414 149.36689 402.03125 199.3125 C 390.55028 242.16006 405.28464 285.83393 436.40625 313.34375 L 439.25 310.5 C 409.10191 283.97466 394.7775 241.76017 405.875 200.34375 C 421.46458 142.16265 481.25642 107.62918 539.4375 123.21875 C 597.61856 138.80832 632.15208 198.60015 616.5625 256.78125 C 610.76969 278.40033 598.86874 296.77092 583.21875 310.5 L 586.0625 313.34375 C 602.20278 299.12702 614.45398 280.17454 620.4375 257.84375 C 636.59797 197.53207 600.78044 135.53547 540.46875 119.375 C 530.10268 116.59742 519.69233 115.34776 509.46875 115.5 z "
+       d="m 540.73585,109.24658 c -49.25907,0.73351 -94.05461,33.86689 -107.4375,83.8125 -11.48097,42.84756 3.25339,86.52143 34.375,114.03125 l 2.84375,-2.84375 c -30.14809,-26.52534 -44.4725,-68.73983 -33.375,-110.15625 15.58958,-58.1811 75.38142,-92.71457 133.5625,-77.125 58.18106,15.58957 92.71458,75.3814 77.125,133.5625 -5.79281,21.61908 -17.69376,39.98967 -33.34375,53.71875 l 2.84375,2.84375 c 16.14028,-14.21673 28.39148,-33.16921 34.375,-55.5 16.16047,-60.31168 -19.65706,-122.30828 -79.96875,-138.46875 -10.36607,-2.77758 -20.77642,-4.02724 -31,-3.875 z"
        id="path4350" />
     <path
        inkscape:export-ydpi="44.89706"
@@ -2237,7 +2284,7 @@
        sodipodi:nodetypes="cccccc"
        inkscape:transform-center-y="-97.306562"
        id="path4352"
-       d="m 511.22178,118.17815 c 0,0 -5.23748,7.14168 -7.00219,7.14168 l 0,19.04213 14.02421,0 0,-19.04213 c -1.46246,0 -7.02202,-7.14168 -7.02202,-7.14168 z"
+       d="m 542.48888,111.92473 c 0,0 -5.23748,7.14168 -7.00219,7.14168 l 0,19.04213 14.02421,0 0,-19.04213 c -1.46246,0 -7.02202,-7.14168 -7.02202,-7.14168 z"
        style="fill:url(#linearGradient4400);fill-opacity:1;fill-rule:nonzero;stroke:none" />
     <path
        inkscape:export-ydpi="44.89706"
@@ -2246,7 +2293,7 @@
        inkscape:transform-center-y="-66.330495"
        inkscape:transform-center-x="-66.323514"
        style="fill:url(#linearGradient4402);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       d="m 589.28821,150.50607 c 0,0 -8.75346,1.34652 -10.00127,0.0987 l -13.46476,13.46478 9.91659,9.91661 13.46476,-13.46478 c -1.03409,-1.03411 0.0847,-10.01529 0.0847,-10.01529 z"
+       d="m 620.55531,144.25265 c 0,0 -8.75346,1.34652 -10.00127,0.0987 l -13.46476,13.46478 9.91659,9.91661 13.46476,-13.46478 c -1.03409,-1.03411 0.0847,-10.01529 0.0847,-10.01529 z"
        id="path4354"
        sodipodi:nodetypes="cccccc" />
     <path
@@ -2255,7 +2302,7 @@
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
        sodipodi:nodetypes="cccccc"
        id="path4356"
-       d="m 621.63019,228.5667 c 0,0 -7.14174,-5.2375 -7.14174,-7.00219 l -19.04207,10e-6 0,14.02419 19.04207,-1e-5 c 0,-1.46244 7.14174,-7.022 7.14174,-7.022 z"
+       d="m 652.89729,222.31328 c 0,0 -7.14174,-5.2375 -7.14174,-7.00219 l -19.04207,1e-5 0,14.02419 19.04207,-10e-6 c 0,-1.46244 7.14174,-7.022 7.14174,-7.022 z"
        style="fill:url(#linearGradient4404);fill-opacity:1;fill-rule:nonzero;stroke:none"
        inkscape:transform-center-x="-97.306594" />
     <path
@@ -2265,7 +2312,7 @@
        inkscape:transform-center-y="66.323523"
        inkscape:transform-center-x="-66.330514"
        style="fill:url(#linearGradient4406);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       d="m 589.30223,306.63313 c 0,0 -1.34651,-8.75344 -0.0987,-10.00127 l -13.46476,-13.46476 -9.91659,9.91659 13.46476,13.46477 c 1.03409,-1.0341 10.01529,0.0847 10.01529,0.0847 z"
+       d="m 620.56933,300.37971 c 0,0 -1.34651,-8.75344 -0.0987,-10.00127 l -13.46476,-13.46476 -9.91659,9.91659 13.46476,13.46477 c 1.03409,-1.0341 10.01529,0.0847 10.01529,0.0847 z"
        id="path4358"
        sodipodi:nodetypes="cccccc" />
     <path
@@ -2274,7 +2321,7 @@
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
        sodipodi:nodetypes="cccccc"
        id="path4360"
-       d="m 433.17518,306.64715 c 0,0 8.75343,-1.34651 10.00125,-0.0987 l 13.46477,-13.46475 -9.9166,-9.91659 -13.46476,13.46476 c 1.03409,1.03409 -0.0847,10.01529 -0.0847,10.01529 z"
+       d="m 464.44228,300.39373 c 0,0 8.75343,-1.34651 10.00125,-0.0987 l 13.46477,-13.46475 -9.9166,-9.91659 -13.46476,13.46476 c 1.03409,1.03409 -0.0847,10.01529 -0.0847,10.01529 z"
        style="fill:url(#linearGradient4408);fill-opacity:1;fill-rule:nonzero;stroke:none"
        inkscape:transform-center-x="66.323503"
        inkscape:transform-center-y="66.330525" />
@@ -2284,7 +2331,7 @@
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
        inkscape:transform-center-x="97.306601"
        style="fill:url(#linearGradient4410);fill-opacity:1;fill-rule:nonzero;stroke:none"
-       d="m 400.83319,228.58653 c 0,0 7.14174,5.23748 7.14175,7.00215 l 19.04205,2e-5 -1e-5,-14.02418 -19.04204,0 c 0,1.46242 -7.14175,7.02201 -7.14175,7.02201 z"
+       d="m 432.10029,222.33311 c 0,0 7.14174,5.23748 7.14175,7.00215 l 19.04205,2e-5 -10e-6,-14.02418 -19.04204,0 c 0,1.46242 -7.14175,7.02201 -7.14175,7.02201 z"
        id="path4362"
        sodipodi:nodetypes="cccccc" />
     <path
@@ -2294,11 +2341,11 @@
        inkscape:transform-center-y="-66.32352"
        sodipodi:nodetypes="cccccc"
        id="path4364"
-       d="m 433.16114,150.5201 c 0,0 1.34652,8.75342 0.0987,10.00124 l 13.46475,13.46478 9.91658,-9.9166 -13.46475,-13.46476 c -1.03408,1.03409 -10.01529,-0.0847 -10.01529,-0.0847 z"
+       d="m 464.42824,144.26668 c 0,0 1.34652,8.75342 0.0987,10.00124 l 13.46475,13.46478 9.91658,-9.9166 -13.46475,-13.46476 c -1.03408,1.03409 -10.01529,-0.0847 -10.01529,-0.0847 z"
        style="fill:url(#linearGradient4412);fill-opacity:1;fill-rule:nonzero;stroke:none"
        inkscape:transform-center-x="66.330524" />
     <path
-       transform="matrix(0.63475893,0,0,0.63475893,353.65638,12.778464)"
+       transform="matrix(0.63475893,0,0,0.63475893,384.92348,6.5250443)"
        inkscape:export-ydpi="44.89706"
        inkscape:export-xdpi="44.89706"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
@@ -2312,7 +2359,7 @@
        inkscape:export-xdpi="44.89706"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
        inkscape:transform-center-x="-73.055877"
-       transform="matrix(0.44884234,0.44884234,-0.44884234,0.44884234,371.45938,-470.52339)"
+       transform="matrix(0.44884234,0.44884234,-0.44884234,0.44884234,402.72648,-476.77681)"
        sodipodi:nodetypes="ccc"
        inkscape:transform-center-y="-73.062897"
        id="path4368"
@@ -2326,7 +2373,7 @@
        d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
        id="path4370"
        sodipodi:nodetypes="ccc"
-       transform="matrix(0,0.63475893,-0.63475893,0,906.7361,-364.59569)"
+       transform="matrix(0,0.63475893,-0.63475893,0,938.0032,-370.84911)"
        inkscape:transform-center-x="-106.82763" />
     <path
        inkscape:export-ydpi="44.89706"
@@ -2334,7 +2381,7 @@
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
        inkscape:transform-center-y="73.055877"
        inkscape:transform-center-x="-73.062904"
-       transform="matrix(-0.44884234,0.44884234,-0.44884234,-0.44884234,1210.3317,88.804308)"
+       transform="matrix(-0.44884234,0.44884234,-0.44884234,-0.44884234,1241.5988,82.550888)"
        sodipodi:nodetypes="ccc"
        id="path4372"
        d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
@@ -2347,7 +2394,7 @@
        d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
        id="path4374"
        sodipodi:nodetypes="ccc"
-       transform="matrix(-0.44884234,-0.44884234,0.44884234,-0.44884234,651.00398,927.67662)"
+       transform="matrix(-0.44884234,-0.44884234,0.44884234,-0.44884234,682.27108,921.4232)"
        inkscape:transform-center-x="73.055904"
        inkscape:transform-center-y="73.062875" />
     <path
@@ -2356,7 +2403,7 @@
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\path4112.png"
        inkscape:transform-center-y="-6.0480843e-05"
        inkscape:transform-center-x="106.82763"
-       transform="matrix(0,-0.63475893,0.63475893,0,115.72728,821.74888)"
+       transform="matrix(0,-0.63475893,0.63475893,0,146.99438,815.49546)"
        sodipodi:nodetypes="ccc"
        id="path4376"
        d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
@@ -2369,7 +2416,7 @@
        d="m 945.53125,460.40726 c -2.30395,0 -11.0625,-11.25101 -11.0625,-11.25101 0,0 -8.25113,11.25101 -11.03125,11.25101"
        id="path4378"
        sodipodi:nodetypes="ccc"
-       transform="matrix(0.44884234,-0.44884234,0.44884234,0.44884234,-187.86827,368.34888)"
+       transform="matrix(0.44884234,-0.44884234,0.44884234,0.44884234,-156.60117,362.09546)"
        inkscape:transform-center-x="73.062858"
        inkscape:transform-center-y="-73.055924" />
     <path
@@ -2379,11 +2426,11 @@
        sodipodi:nodetypes="ccsccc"
        inkscape:transform-center-y="-47.577213"
        id="path4380"
-       d="m 473.54191,155.40042 24.34065,59.16014 c 2.29211,-0.29622 11.05951,14.95808 13.34912,14.01605 2.28959,-0.94203 -2.09597,-18.04167 -0.37974,-19.35213 l -24.34066,-59.16014 -12.96937,5.33608 z"
+       d="m 504.80901,149.147 24.34065,59.16014 c 2.29211,-0.29622 11.05951,14.95808 13.34912,14.01605 2.28959,-0.94203 -2.09597,-18.04167 -0.37974,-19.35213 l -24.34066,-59.16014 -12.96937,5.33608 z"
        style="fill:url(#linearGradient4414);fill-opacity:1;fill-rule:nonzero;stroke:none"
        inkscape:transform-center-x="21.938063" />
     <path
-       transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,283.3993,88.965646)"
+       transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,314.6664,82.712226)"
        inkscape:export-ydpi="44.89706"
        inkscape:export-xdpi="44.89706"
        style="opacity:0.15;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4126)"
@@ -2624,7 +2671,7 @@
          inkscape:transform-center-x="21.938057" />
     </g>
     <g
-       transform="translate(2.0180932,-25.226173)"
+       transform="translate(22.862826,-23.141699)"
        id="g5155"
        style="opacity:0.5;filter:url(#filter5219)"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\splash.png"
@@ -2887,7 +2934,7 @@
     </g>
     <g
        id="g5091"
-       transform="translate(2.0180932,-25.226173)"
+       transform="translate(22.862826,-23.141699)"
        style="opacity:0.75;filter:url(#filter5151)"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\splash.png"
        inkscape:export-xdpi="50.303932"
@@ -3150,7 +3197,7 @@
     <g
        id="g5040"
        style="filter:url(#filter5087)"
-       transform="translate(2.0180932,-25.226173)"
+       transform="translate(22.862826,-23.141699)"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\splash.png"
        inkscape:export-xdpi="50.303932"
        inkscape:export-ydpi="50.303932">
@@ -3411,7 +3458,7 @@
     </g>
     <g
        id="g4972"
-       transform="translate(2.0180932,-25.226173)"
+       transform="translate(22.862826,-23.141699)"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\splash.png"
        inkscape:export-xdpi="50.303932"
        inkscape:export-ydpi="50.303932">
@@ -4145,7 +4192,7 @@
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\logo.png"
        style="opacity:0.5;fill:#000000;filter:url(#filter6070)"
        id="g5669"
-       transform="translate(380.38313,280.75824)">
+       transform="translate(382.4676,270.33588)">
       <path
          id="path5671"
          d="m 178.23333,548.41723 c -64.65639,0 -117.062503,52.40611 -117.062503,117.0625 0,34.85383 15.24166,66.14681 39.406253,87.59375 l 9.625,-9.59375 0.0937,-0.0937 C 88.589547,724.43241 74.858277,696.55825 74.858277,665.47978 c 0,-57.09062 46.284383,-103.375 103.375003,-103.375 57.09063,0 103.375,46.28438 103.375,103.375 0,31.07011 -13.70481,58.95293 -35.40625,77.90625 l 0.0937,0.0937 9.59375,9.59375 c 24.17494,-21.44715 39.40625,-52.73574 39.40625,-87.59375 0,-64.65639 -52.40612,-117.0625 -117.0625,-117.0625 z"
@@ -4370,7 +4417,7 @@
          transform="matrix(0.58701545,-0.24151971,0.24151971,0.58701545,-49.58612,525.88288)" />
     </g>
     <g
-       transform="translate(380.38313,280.75824)"
+       transform="translate(382.4676,270.33588)"
        id="g5729"
        style="opacity:0.75;fill:#000000;filter:url(#filter6074)"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\logo.png"
@@ -4605,7 +4652,7 @@
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\logo.png"
        style="fill:#000000;filter:url(#filter6086)"
        id="g5789"
-       transform="translate(380.38313,280.75824)">
+       transform="translate(382.4676,270.33588)">
       <path
          id="path5791"
          d="m 178.23333,548.41723 c -64.65639,0 -117.062503,52.40611 -117.062503,117.0625 0,34.85383 15.24166,66.14681 39.406253,87.59375 l 9.625,-9.59375 0.0937,-0.0937 C 88.589547,724.43241 74.858277,696.55825 74.858277,665.47978 c 0,-57.09062 46.284383,-103.375 103.375003,-103.375 57.09063,0 103.375,46.28438 103.375,103.375 0,31.07011 -13.70481,58.95293 -35.40625,77.90625 l 0.0937,0.0937 9.59375,9.59375 c 24.17494,-21.44715 39.40625,-52.73574 39.40625,-87.59375 0,-64.65639 -52.40612,-117.0625 -117.0625,-117.0625 z"
@@ -4833,7 +4880,7 @@
        inkscape:export-ydpi="28.793427"
        inkscape:export-xdpi="28.793427"
        inkscape:export-filename="E:\Programy\SCS Games Cruise Control\MainProgram 2.0\Images\logo.png"
-       transform="translate(380.38313,280.75824)"
+       transform="translate(382.4676,270.33588)"
        id="g5849">
       <path
          style="fill:url(#linearGradient6090);fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -5064,8 +5111,8 @@
          inkscape:transform-center-x="21.938057" />
     </g>
     <rect
-       inkscape:export-ydpi="149.72742"
-       inkscape:export-xdpi="149.72742"
+       inkscape:export-ydpi="149.72743"
+       inkscape:export-xdpi="149.72743"
        inkscape:export-filename="E:\Programy\Programs\SCS Games Cruise Control\ACC 2.2.x\Dev\Documents\icon_upd.png"
        y="398.91788"
        x="-338.2428"
@@ -5306,7 +5353,7 @@
     </g>
     <path
        sodipodi:type="star"
-       style="fill:url(#linearGradient4284);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="fill:url(#linearGradient4200);fill-opacity:1.0;fill-rule:nonzero;stroke:none"
        id="path3449"
        sodipodi:sides="3"
        sodipodi:cx="-569.51239"
@@ -5335,5 +5382,21 @@
        x="-640.42517"
        y="561.87952"
        transform="matrix(0.95906063,0,0,0.83307665,456.76631,159.29297)" />
+    <path
+       sodipodi:type="star"
+       style="opacity:0.59999999999999998;fill:url(#linearGradient4242);fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4232)"
+       id="path4214"
+       sodipodi:sides="3"
+       sodipodi:cx="-20.051044"
+       sodipodi:cy="531.70337"
+       sodipodi:r1="31.66824"
+       sodipodi:r2="15.83412"
+       sodipodi:arg1="1.5707963"
+       sodipodi:arg2="2.6179939"
+       inkscape:flatsided="true"
+       inkscape:rounded="1.0408341e-17"
+       inkscape:randomized="0"
+       d="m -20.051044,563.37161 -27.425501,-47.50236 54.8510001,0 -27.4254991,47.50236 z"
+       transform="matrix(0.48758757,-1.755542,0.53550668,1.0135627,-392.1226,19.164496)" />
   </g>
 </svg>

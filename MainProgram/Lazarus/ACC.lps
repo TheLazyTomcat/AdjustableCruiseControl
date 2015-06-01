@@ -8,10 +8,9 @@
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="65"/>
         <CursorPos Y="89"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,13 +18,13 @@
         <IsPartOfProject Value="True"/>
         <TopLine Value="127"/>
         <CursorPos X="23" Y="158"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\Libs\MD5.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="243"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\Libs\WinRawInput.pas"/>
@@ -33,74 +32,74 @@
         <WindowIndex Value="1"/>
         <TopLine Value="329"/>
         <CursorPos X="47" Y="342"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\Libs\FloatHex.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="241"/>
         <CursorPos X="10" Y="37"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\Libs\DefRegistry.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\Libs\MulticastEvent.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit6>
       <Unit7>
         <Filename Value="..\Libs\SimpleCompress.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit7>
       <Unit8>
         <Filename Value="..\Libs\SimpleTimer.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit8>
       <Unit9>
         <Filename Value="..\Libs\StringEncryptionUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit9>
       <Unit10>
         <Filename Value="..\Libs\UtilityWindow.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit10>
       <Unit11>
         <Filename Value="..\ACC_Common.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="41"/>
         <CursorPos X="22" Y="47"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit11>
       <Unit12>
         <Filename Value="..\ACC_Strings.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="28"/>
         <CursorPos Y="57"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit12>
       <Unit13>
         <Filename Value="..\ACC_TrayIcon.pas"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="170"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="192"/>
         <CursorPos Y="217"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit13>
       <Unit14>
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_GamesData"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1747"/>
         <CursorPos X="76" Y="1767"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
         <Bookmarks Count="2">
           <Item0 X="5" Y="1206" ID="1"/>
           <Item1 X="30" Y="1349" ID="2"/>
@@ -111,23 +110,22 @@
         <IsPartOfProject Value="True"/>
         <TopLine Value="297"/>
         <CursorPos X="89" Y="123"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit15>
       <Unit16>
         <Filename Value="..\ACC_InstanceControl.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="111"/>
         <CursorPos X="14" Y="127"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit16>
       <Unit17>
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Manager"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="428"/>
+        <TopLine Value="359"/>
         <CursorPos Y="359"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
@@ -135,7 +133,7 @@
         <WindowIndex Value="1"/>
         <TopLine Value="76"/>
         <CursorPos X="42" Y="88"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
@@ -143,21 +141,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="470"/>
         <CursorPos X="5" Y="489"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\ACC_Settings.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="214"/>
         <CursorPos X="13" Y="337"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit20>
       <Unit21>
         <Filename Value="..\ACC_SplashScreen.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="225"/>
         <CursorPos X="37" Y="229"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit21>
       <Unit22>
         <Filename Value="..\MainForm.pas"/>
@@ -166,9 +164,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="8"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit22>
@@ -179,7 +178,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <CursorPos Y="46"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit23>
       <Unit24>
         <Filename Value="..\SettingsForm.pas"/>
@@ -189,7 +188,7 @@
         <ResourceBaseClass Value="Form"/>
         <TopLine Value="3"/>
         <CursorPos Y="13"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit24>
       <Unit25>
         <Filename Value="..\KeyBindForm.pas"/>
@@ -199,7 +198,7 @@
         <ResourceBaseClass Value="Form"/>
         <TopLine Value="2"/>
         <CursorPos Y="13"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit25>
       <Unit26>
         <Filename Value="..\SupportedGamesForm.pas"/>
@@ -210,7 +209,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="211"/>
         <CursorPos X="75" Y="225"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -221,29 +220,29 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="322"/>
         <CursorPos Y="326"/>
-        <UsageCount Value="132"/>
+        <UsageCount Value="133"/>
       </Unit27>
       <Unit28>
         <Filename Value="..\Libs\WndAlloc.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="95"/>
+        <UsageCount Value="96"/>
       </Unit28>
       <Unit29>
         <Filename Value="..\Libs\WMC\WinMsgCommClient.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="86"/>
+        <UsageCount Value="87"/>
       </Unit29>
       <Unit30>
         <Filename Value="..\Libs\WMC\WinMsgComm.pas"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="86"/>
+        <UsageCount Value="87"/>
       </Unit30>
       <Unit31>
         <Filename Value="..\ACC_PluginComm.pas"/>
         <IsPartOfProject Value="True"/>
         <TopLine Value="10"/>
         <CursorPos X="21" Y="25"/>
-        <UsageCount Value="64"/>
+        <UsageCount Value="65"/>
       </Unit31>
       <Unit32>
         <Filename Value="D:\Lazarus\lcl\include\control.inc"/>
