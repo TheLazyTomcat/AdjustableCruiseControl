@@ -1,0 +1,368 @@
+This document describes meaning of individual values/keys (in this document
+referred to as "field" or "fields") in INI files that are storing games data for
+use in Adjustable Cruise Control application.
+It is focused only on version 2.0 of those files, for details about version 1.0,
+read "(old)GamesData entries formatting [Rev_0].pdf" file.
+
+
+
+General file structure
+================================================================================
+As in the case of version 1.0, this version contains two types of sections.
+
+First type of section is named "GamesData" and has only one field named
+"Version". It is always set to $00020000 (or alternatively 131072 in decimal)
+for version 2.0.
+
+Second type is named "Game.x", where x is a decimal number. First section of
+this type must be named "Game.0" and all subsequent sections must have number
+greater by 1. This type of section is referred to as "entry".
+If there are two sections with the same number, then reading behavior is not
+defined. Ordering of sections (numbers) inside the INI file should have no
+effect on reading. Number of section have no inherent meaning and is not tied to
+any particular game or its trait, it is there only to simplify reading. These
+sections contains actual game data in individual fields described further.
+
+
+
+Individual entry fields
+================================================================================
+Meaning of each field (with field "Protocol" being an exception) in the entry is
+given by a protocol number and reading of entire entry is also affected by a
+used protocol. Currently, following five protocols are implemented (number in
+brackets is the actual number of the protocol stored in field "Protocol"):
+
+  Invalid   (-1)  invalid entry, default value for "Protocol" field
+  Normal    (0)   normal game data entry
+  Hidden    (1)   hidden entry, not used in list of supported games
+  Hide      (2)   used to mark existing entry as hidden
+  UpdHide   (3)   used to mark existing entry as hidden when updating
+
+Each field has default value that is read when such field does not exist or some
+error is raised when reading it. This default value is often selected in a way
+that effectively make entire entry invalid, resulting in a drop of such entry
+- ie. such entry is ignored and data stored in it are not used in the list of
+supported games. These cases are marked with word "drop" enclosed in brackets.
+
+
+
+--- Protocol -1 (invalid) ------------------------------------------------------
+Entry with this protocol is ignored beyond the protocol field.
+Such entry (even when fully read) is also considered invalid and is completely
+discarded and not used in the program at all.
+
+Protocol
+  Set to -1.
+
+  Default:  -1 (drop)
+
+
+All other fields are ignored.
+
+
+
+--- Protocol 0 (normal) --------------------------------------------------------
+Normal entry containing data for support of one game.
+
+Protocol
+
+  Set to 0.
+
+  Default: -1 (drop)
+
+
+Identifier
+
+  Unique identifier (GUID) of an entry. Must be unique in the entire file.
+  Program uses this field to distinguish entries, for example when an update has
+  to be installed.
+  Must be in format {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}, where x are
+  hexadecimal numbers.
+
+  Default: {00000000-0000-0000-0000-000000000000} (drop)
+
+
+Descriptor
+
+  Simple text descriptor. Should in some human readable way identify what game
+  is this entry used for. Do not use white spaces and special characters;
+  you should use only latin alphabet, numbers, underscore, dot and dash.
+
+  Default: empty string
+
+
+Version
+
+  Version of the entry. Decimal number. Needed when updating the file. Should be
+  set to 0 for first version and every consecutive version should add 1 (not
+  mandatory).
+
+  Default: 0
+
+
+Icon
+
+  Textual identifier of icon that should be used when displaying informations
+  about the game.
+  Following icons are distributed with ACC of version 2.3.0 - ALH, AuTS, ET,
+  ET2, ETS, ETS2, GTS, STDS, TaT, UKTS, HAUL and CONV.
+  If it is set to a name that is not present in the game data, then a default
+  icon is selected.
+  Can be left empty (default icon is selected).
+
+  Default: implementation specific
+
+
+Date
+
+  Date when this entry was created or published. Must be in format YYYY-MM-DD.
+
+  Default: current system date
+
+
+Author
+
+  Author of this entry. Use only ASCII characters (e.g. no diacritics).
+
+  Default: empty string
+
+
+Title
+
+  Title of the game this entry is intended for. Should not contain any further
+  information (like version), use field "Info" for that purpose.
+
+  Default: empty string
+
+
+Info
+
+  Further information on game this entry is intended for (version, language,
+  distribution channel, bits, ...).
+
+  Default: empty string
+
+
+Extended title
+
+  Longer version of game title that should also contain some of the other info
+  about it.
+  It is used as tip text for notification area icon (trayicon). Should not
+  exceed 100 characters in length (it will be truncated) and should also contain
+  ASCII characters only.
+
+  Default: empty string
+
+
+Modules
+
+  Number of modules stored. If is followed by fields prefixed by "Module[x]",
+  where x is a module index - a decimal number from 0 to this value minus 1
+  (e.g. when this field contains 3, there will be three modules numbered
+  from 0 to 2).
+
+  Default: 0 (drop)
+
+
+Module[x] (prefix)
+
+  Prefix for fields that are storing actual informations about the module of
+  index x. Each module is a binary module that must be loaded into memory before
+  ACC can start to work with a running game. They are also used when obtaining
+  memory addresses for required pointers (each pointers might require different
+  module).
+
+  Fields with this prefix:
+
+    .CheckFlags
+
+      Check flags are denoting method of identification of the module (see
+      source code for details).
+      Written in hexadecimal notation (prefixed by $ sign).
+      Meaning of individual bits:
+
+        bit 0 (CF_FILESIZE)  - size of the module is checked
+        bit 1 (CF_FILECRC32) - CRC32 checksum of the module is checked
+        bit 2 (CF_FILEMD5)   - MD5 hash of the module is checked
+
+      If any individual bit is set, then it is required the corresponding field
+      is present. If the bit is not set, then corresponding field is ignored.
+
+      Default: 0 (drop)
+
+
+    .FileName
+
+      File name of this module (without any path).
+      It is used to actually find the running game process in the system.
+      Must not be empty.
+
+      Default: empty string (drop)
+
+
+    .Size (optional field)
+
+      Size of the file in bytes. Decimal notation.
+      Present only when CF_FILESIZE (bit 0) is set in check flags.
+
+      Default: 0 (drop)
+
+
+    .CRC32 (optional field)
+
+      CRC32 checksum of the file. Hexadecimal notation prefixed by $.
+      Present only when CF_FILECRC32 (bit 1) is set in check flags.
+
+      Default: 0 (drop)
+
+
+    .MD5 (optional field)
+
+      MD5 hash of the file. Hexadecimal notation.
+      Present only when CF_FILEMD5 (bit 2) is set in check flags.
+
+      Default: 00000000000000000000000000000000 (drop)
+
+
+CCSpeed
+
+  Prefix for fields that are storing informations necessary for obtaining memory
+  address (further referred to as pointer) of speed the cruise control system
+  is set to in game.
+
+  Fields with this prefix:
+
+    .Flags
+
+      Flags used when reading/writing value pointed to by this pointer.
+      Currently, only one flag is implemented - bit 10. See prefix "TruckSpeed"
+      for details.
+      Lower 9 bits contain number (unsigned integer) corresponding to pointer
+      type from INI version 1.0 (refer to abovementioned document for details)
+      - that is, for numbers ranging from 256 to 356, value in field
+      ".Coefficient" of this pointer is ignored and instead, a new value for
+      this field is taken directly from game memory at address pointed to by a
+      pointer "Value[x]", where x is pointer type number minus 256.
+      For example, when lower 9 bits contain number 257, then coefficient for
+      this pointer is taken from memory address pointed to by a pointer stored
+      in fields prefixed by "Value[1]".
+      If required "Value[x]" prefix is not present, then entire entry is
+      invalid.
+      Hexadecimal notation prefixed by $.
+
+      Default: 0
+
+
+    .ModuleIndex
+
+      Index of the module in modules array whose base address will be used when
+      resolving this pointer. Must be valid (0 <= ModuleIndex < Modules ),
+      otherwise the entry is dropped.
+      Decimal notation.
+
+      Default: -1 (drop)
+
+
+    .Offsets
+
+      Number of pointer offsets stored in the following array.
+      Decimal notation.
+
+      Default: 0
+
+
+    .Offset[x]
+
+      Array of pointer offsets where x is index in this array.
+      Array must start with index 0 and end with index Offsets - 1.
+      Hexadecimal notation prefixed by $, or decimal notation for negative
+      offsets.
+
+      Default: 0
+
+
+    .Coefficient
+
+      Coefficient used when a number is read or written.
+      It is meant for conversion between different units of measurement. For
+      example, when value obtained from memory is in m/s and program requires it
+      to be in km/h, this coefficient is used for conversion.
+      When the value is read, it is divided by this coefficient. When it is
+      written, it is multiplied by it.
+      Hexadecimal notation of 32bit floating point number prefixed by $.
+      Must not be set to 0!
+
+      Default: $3F800000 (1.0)
+
+
+CCStatus
+
+  Prefix for fields that are storing informations necessary for obtaining memory
+  address of game cruise control status.
+  Individual fields with this prefix have exactly the same meaning as in case of
+  "CCSpeed" prefix with one exception:
+
+    .Coefficient
+
+      It is read but in further processing ignored for this prefix.
+
+
+TruckSpeed (optional)
+
+  Prefix for fields that are storing informations necessary for obtaining memory
+  address of actual speed of the vehicle. Fields with this prefix are optional
+  and are present only when current entry supports reading of this variable.
+  All fields with this prefix have exactly the same meaning as in case of
+  "CCSpeed", with only one nuance:
+
+    .Flags
+
+      When bit 10 is set (flag ACC_PTR_FLAGS_TelemetryTruckSpeed), the actual
+      speed is obtained by a plugin via telemetry API (if supported by the
+      game). In such case, all other fields in this prefix are ignored.
+
+
+Values
+
+  Number of (other/special) value pointers stored.
+
+
+Value[x]
+
+  Prefix for fields that are storing informations necessary for obtaining memory
+  address of a special value.
+  Fields with this prefix have exactly the same meaning as in case of "CCSpeed".
+  This entire prefix is optional and fields with it might not be present at all,
+  only if required by other pointers.
+
+
+
+--- Protocol 1 (hidden) --------------------------------------------------------
+Entry with this protocol is not included in the list of supported games, even
+when read successfully. As such, all fields except for "Identifier" have no
+meaning, but can otherwise be completely valid.
+It is intended as a tool to remove entries that are known to be corrupted or
+simply not to be included for whatever reason in the list anymore.
+
+
+
+--- Protocol 2 (hide) ----------------------------------------------------------
+Entry with this protocol will hide other entries (as if they have been read with
+protocol 1 - hidden).
+Identifiers of entries to be hidden are stored in "Module[x].FileName" fields.
+For example, if you want to hide entries {12af1080-1583-aca3-5d66-2801be1e3213}
+and {ac125688-cccc-1544-3200-19723bf133f1}, then protocol 2 entry would look
+like so:
+
+  [Game.122]
+  ...
+  Modules = 2
+  Module[0].FileName = {12af1080-1583-aca3-5d66-2801be1e3213}
+  Module[1].FileName = {ac125688-cccc-1544-3200-19723bf133f1}
+
+
+
+--- Protocol 3 (updhide) -------------------------------------------------------
+This protocol is designed for update entries that are about to hide entries 
+already in the list of supported games.
+It changes protocol of enries to be hidden to protocol 1 (hidden).
