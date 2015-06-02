@@ -61,7 +61,7 @@ const
   ACCSTR_UI_LIM_BoxCaptionNormal      = 'Speed limit';
   ACCSTR_UI_LIM_BoxCaptionInactive    = 'Speed limit (inactive)';
   ACCSTR_UI_LIM_BoxCaptionUnsupported = 'Speed limit (unsupported)';
-  ACCSTR_UI_LIM_ActionsOnZeroLimit: Array[0..1] of String = ('Turn CC off','Set CC to speed...');
+  ACCSTR_UI_LIM_ActionsOnZeroLimit: Array[0..1] of String = ('Turn CC off','Set CC speed to...');
 
   // User interface - About
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';

@@ -124,7 +124,7 @@ type
 
   TGamesData = record
     Entries:  Array of TGameData;
-    Hidden:   Array of TGUID;
+    Hidden:   Array of TGameData;
   end;
   PGamesData = ^TGamesData;
 
@@ -218,6 +218,7 @@ type
     Function LoadEntryFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean; virtual;
+    procedure SortHiddenForSaving; virtual;    
     Function SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToBin_Struct00010000(Stream: TStream): Boolean; virtual;
@@ -253,6 +254,7 @@ type
     procedure DeleteGameData(Index: Integer); virtual;
     Function IsHidden(Identifier: TGUID): Boolean; virtual;
     Function HideGameData(Identifier: TGUID): Integer; virtual;
+    Function AddHiddenGameData(GameData: TGameData): Integer; virtual;
     property GamesData: TGamesData read fGamesData;
     property GameDataPtr[Index: Integer]: PGameData read GetGameDataPtr;
     property GameData[Index: Integer]: TGameData read GetGameData; default;
@@ -1113,6 +1115,23 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TGamesDataManager.SortHiddenForSaving;
+var
+  i,j:  Integer;
+  Temp: TGameData;
+begin
+For i := Pred(High(fGamesData.Hidden)) downto Low(fGamesData.Hidden) do
+  For j := Low(fGamesData.Hidden) to i do
+    If Integer(fGamesData.Hidden[j].Protocol) > Integer(fGamesData.Hidden[j + 1].Protocol) then
+      begin
+        Temp := fGamesData.Hidden[j];
+        fGamesData.Hidden[j] := fGamesData.Hidden[j + 1];
+        fGamesData.Hidden[j + 1] := Temp;
+      end;
+end;
+
+//------------------------------------------------------------------------------
+
 Function TGamesDataManager.SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean;
 var
   i:  Integer;
@@ -1120,6 +1139,8 @@ begin
 try
   For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
     SaveEntryToIni_Struct00010000(Ini,Format(GDIN_Game,[i]),fGamesData.Entries[i]);
+  If Ini.SectionExists(Format(GDIN_Game,[Length(fGamesData.Entries)])) then
+    Ini.EraseSection(Format(GDIN_Game,[Length(fGamesData.Entries)]));
   Result := True;
 except
   Result := False;
@@ -1130,20 +1151,24 @@ end;
 
 Function TGamesDataManager.SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean;
 var
-  i:          Integer;
-  TempEntry:  TGameData;
+  i:  Integer;
 begin
 try
   For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
-    SaveEntryToIni_Struct00020000(Ini,Format(GDIN_Game,[i]),fGamesData.Entries[i]);
-  FillChar({%H-}TempEntry,SizeOf(TempEntry),0);
-  TempEntry.Protocol := PROTOCOL_HIDDEN;
-  TempEntry.TruckSpeed.ModuleIndex := -1;
+    begin
+      If Ini.SectionExists(Format(GDIN_Game,[i])) then
+        Ini.EraseSection(Format(GDIN_Game,[i]));
+      SaveEntryToIni_Struct00020000(Ini,Format(GDIN_Game,[i]),fGamesData.Entries[i]);
+    end;
+  SortHiddenForSaving;
   For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
     begin
-      TempEntry.Identifier := fGamesData.Hidden[i];
-      SaveEntryToIni_Struct00020000(Ini,Format(GDIN_Game,[i + Length(fGamesData.Entries)]),TempEntry);
+      If Ini.SectionExists(Format(GDIN_Game,[i + Length(fGamesData.Entries)])) then
+        Ini.EraseSection(Format(GDIN_Game,[i + Length(fGamesData.Entries)]));
+      SaveEntryToIni_Struct00020000(Ini,Format(GDIN_Game,[i + Length(fGamesData.Entries)]),fGamesData.Hidden[i]);
     end;
+  If Ini.SectionExists(Format(GDIN_Game,[Length(fGamesData.Entries) + Length(fGamesData.Hidden)])) then
+    Ini.EraseSection(Format(GDIN_Game,[Length(fGamesData.Entries) + Length(fGamesData.Hidden)]));
   Result := True;
 except
   Result := False;
@@ -1155,21 +1180,15 @@ end;
 Function TGamesDataManager.SaveToBin_Struct00010000(Stream: TStream): Boolean;
 var
   i:          Integer;
-  TempEntry:  TGameData;
 begin
 try
   SaveIcons(Stream);
   WriteIntegerToStream(Stream,Length(fGamesData.Entries) + Length(fGamesData.Hidden));
   For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
     SaveEntryToBin_Struct00010000(Stream,Stream.Position,fGamesData.Entries[i]);
-  FillChar({%H-}TempEntry,SizeOf(TempEntry),0);
-  TempEntry.Protocol := PROTOCOL_HIDDEN;
-  TempEntry.TruckSpeed.ModuleIndex := -1;
+  SortHiddenForSaving;  
   For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
-    begin
-      TempEntry.Identifier := fGamesData.Hidden[i];
-      SaveEntryToBin_Struct00010000(Stream,Stream.Position,TempEntry);
-    end;
+    SaveEntryToBin_Struct00010000(Stream,Stream.Position,fGamesData.Hidden[i]);
   Result := True;
 except
   Result := False;
@@ -1180,7 +1199,7 @@ end;
 
 Function TGamesDataManager.LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean;
 var
-  Index:        Integer;
+  i, Index:     Integer;
   TempGameData: TGameData;
 begin
 try
@@ -1192,10 +1211,15 @@ try
           case TempGameData.Protocol of
             PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
                                 AddGameData(TempGameData);
-            PROTOCOL_HIDDEN:  HideGameData(TempGameData.Identifier);
-            PROTOCOL_HIDE:    HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+            PROTOCOL_HIDDEN:  AddHiddenGameData(TempGameData);
+            PROTOCOL_HIDE:    begin
+                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
+                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
+                                AddHiddenGameData(TempGameData);  
+                              end;
             PROTOCOL_UPDHIDE: begin
-                                HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
+                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
                                 AddGameData(TempGameData);
                               end;
           end;
@@ -1211,7 +1235,7 @@ end;
 
 Function TGamesDataManager.LoadFromIni_Struct00020000(Ini: TCustomIniFile): Boolean;
 var
-  Index:        Integer;
+  i, Index:     Integer;
   TempGameData: TGameData;
 begin
 try
@@ -1223,10 +1247,15 @@ try
           case TempGameData.Protocol of
             PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
                                 AddGameData(TempGameData);
-            PROTOCOL_HIDDEN:  HideGameData(TempGameData.Identifier);
-            PROTOCOL_HIDE:    HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+            PROTOCOL_HIDDEN:  AddHiddenGameData(TempGameData);
+            PROTOCOL_HIDE:    begin
+                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
+                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
+                                AddHiddenGameData(TempGameData);  
+                              end;
             PROTOCOL_UPDHIDE: begin
-                                HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
+                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
                                 AddGameData(TempGameData);
                               end;
           end;
@@ -1242,7 +1271,7 @@ end;
 
 Function TGamesDataManager.LoadFromBin_Struct00010000(Stream: TStream): Boolean;
 var
-  i:            Integer;
+  i,j:          Integer;
   TempGameData: TGameData;
 begin
 try
@@ -1253,10 +1282,15 @@ try
         case TempGameData.Protocol of
           PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
                               AddGameData(TempGameData);
-          PROTOCOL_HIDDEN:  HideGameData(TempGameData.Identifier);
-          PROTOCOL_HIDE:    HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+          PROTOCOL_HIDDEN:  AddHiddenGameData(TempGameData);
+          PROTOCOL_HIDE:    begin
+                              For j := Low(TempGameData.Modules) to High(TempGameData.Modules) do
+                                HideGameData(StringToGUID(TempGameData.Modules[j].FileName));
+                              AddHiddenGameData(TempGameData);
+                            end;
           PROTOCOL_UPDHIDE: begin
-                              HideGameData(StringToGUID(TempGameData.Modules[0].FileName));
+                              For j := Low(TempGameData.Modules) to High(TempGameData.Modules) do
+                                HideGameData(StringToGUID(TempGameData.Modules[j].FileName));
                               AddGameData(TempGameData);
                             end;
         end;
@@ -1357,6 +1391,12 @@ case GameData.Protocol of
       begin
         Result := Result and not IsEqualGUID(GameData.Identifier,StringToGUID('{00000000-0000-0000-0000-000000000000}'));
         Result := Result and (Length(GameData.Modules) > 0);
+        try
+          For i := Low(GameData.Modules) to High(GameData.Modules) do
+            StringtoGUID(GameData.Modules[i].FileName);
+        except
+          Result := False;
+        end;
       end;
 else
   Result := False;
@@ -1615,9 +1655,12 @@ end;
 
 procedure TGamesDataManager.CheckUpdate(OldData: TGamesDataManager);
 var
-  i, Index:     Integer;
+  i,Index:      Integer;
   GameDataTemp: PGameData;
 begin
+For i := Pred(GamesDataCount) downto 0 do
+  If OldData.IsHidden(GameData[i].Identifier) then
+    HideGameData(GameData[i].Identifier);
 For i := 0 to Pred(GamesDataCount) do
   begin
     GameDataTemp := GameDataPtr[i];
@@ -1643,15 +1686,13 @@ For i := 0 to Pred(GamesDataCount) do
         GameDataTemp^.UpdateInfo.Valid := False;
       PROTOCOL_UPDHIDE:
         begin
-          try
-            Index := OldData.IndexOf(StringToGUID(GameDataTemp^.Modules[0].FileName));
-          except
-            Index := -1;
-          end;
-          If Index >= 0 then
-            GameDataTemp^.UpdateInfo.NewEntry := True
-          else
-            GameDataTemp^.UpdateInfo.NewEntry := False;
+          GameDataTemp^.UpdateInfo.NewEntry := False;
+          For Index := Low(GameDataTemp^.Modules) to High(GameDataTemp^.Modules) do
+            If OldData.IndexOf(StringToGUID(GameDataTemp^.Modules[Index].FileName)) >= 0 then
+              begin
+                GameDataTemp^.UpdateInfo.NewEntry := True;
+                Break;
+              end;
         end;
     end;
     GameDataTemp^.UpdateInfo.Add := GameDataTemp^.UpdateInfo.Valid and
@@ -1664,7 +1705,7 @@ end;
 
 Function TGamesDataManager.UpdateFrom(UpdateData: TGamesDataManager): Integer;
 var
-  i,Index:  Integer;
+  i, Index: Integer;
 begin
 Result := 0;
 fGameIcons.UpdateFrom(UpdateData.GameIcons);
@@ -1684,8 +1725,9 @@ If UpdateData.GamesDataCount > 0 then
           PROTOCOL_HIDDEN,
           PROTOCOL_HIDE:;   // do nothing
           PROTOCOL_UPDHIDE:
-            If HideGameData(StringToGUID(UpdateData[i].Modules[0].FileName)) > 0 then
-              Inc(Result);
+            For Index := Low(UpdateData[i].Modules) to High(UpdateData[i].Modules) do
+              If HideGameData(StringToGUID(UpdateData[i].Modules[Index].FileName)) > 0 then
+                Inc(Result);
         end;
       end;
 end;
@@ -1720,7 +1762,7 @@ begin
 If (Index >= Low(fGamesData.Entries)) and (Index <= High(fGamesData.Entries)) then
   begin
     For i := Index to Pred(High(fGamesData.Entries)) do
-      fGamesData.Entries[Index] := fGamesData.Entries[Index + 1];
+      fGamesData.Entries[i] := fGamesData.Entries[i + 1];
     SetLength(fGamesData.Entries,Length(fGamesData.Entries) - 1);
   end
 else raise Exception.CreateFmt('TGamesDataManager.DeleteGameData: Index (%d) out of bounds.',[Index]);
@@ -1734,7 +1776,7 @@ var
 begin
 Result := False;
 For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
-  If IsEqualGUID(fGamesData.Hidden[i],Identifier) then
+  If IsEqualGUID(fGamesData.Hidden[i].Identifier,Identifier) then
     begin
       Result := True;
       Break;
@@ -1746,12 +1788,39 @@ end;
 Function TGamesDataManager.HideGameData(Identifier: TGUID): Integer;
 begin
 Result := IndexOf(Identifier);
-If Result >= 0 then DeleteGameData(Result);
-If not IsHidden(Identifier) then
+If (Result >= 0) and not IsHidden(Identifier) then
   begin
     SetLength(fGamesData.Hidden,Length(fGamesData.Hidden) + 1);
-    fGamesData.Hidden[High(fGamesData.Hidden)] := Identifier;
+    fGamesData.Hidden[High(fGamesData.Hidden)] := fGamesData.Entries[Result];
+    case fGamesData.Hidden[High(fGamesData.Hidden)].Protocol of
+      PROTOCOL_HIDDEN,
+      PROTOCOL_HIDE,
+      PROTOCOL_UPDHIDE:;  // do nothing
+    else
+      fGamesData.Hidden[High(fGamesData.Hidden)].Protocol := PROTOCOL_HIDDEN;
+    end;
+    DeleteGameData(Result);
   end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.AddHiddenGameData(GameData: TGameData): Integer;
+begin
+If IsValid(GameData) and not IsHidden(GameData.Identifier) then
+  begin
+    SetLength(fGamesData.Hidden,Length(fGamesData.Hidden) + 1);
+    fGamesData.Hidden[High(fGamesData.Hidden)] := GameData;
+    case fGamesData.Hidden[High(fGamesData.Hidden)].Protocol of
+      PROTOCOL_HIDDEN,
+      PROTOCOL_HIDE,
+      PROTOCOL_UPDHIDE:;  // do nothing
+    else
+      fGamesData.Hidden[High(fGamesData.Hidden)].Protocol := PROTOCOL_HIDDEN;
+    end;
+    Result := High(fGamesData.Hidden);
+  end
+else Result := -1;
 end;
 
 end.

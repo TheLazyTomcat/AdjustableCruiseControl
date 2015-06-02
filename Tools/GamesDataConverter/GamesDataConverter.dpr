@@ -66,7 +66,7 @@ var
     If GetParamIndex('-o',Index) then
       ProgramParams.OutputFile := ExpandFileName(ParamStr(Succ(Index)))
     else
-      ProgramParams.OutputFile := ProgramParams.OutputFile;
+      ProgramParams.OutputFile := ProgramParams.InputFile;
     If GetParamIndex('-of',Index) then
       ProgramParams.OutputFormat := ResolveFormat(ParamStr(Succ(Index)))
     else Exit;
