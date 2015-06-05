@@ -204,6 +204,7 @@ If ProcessBinder.Binded then
   end
 else
   begin
+    fKeepCCSpeedOnLimit := False;  
     TrayIcon.SetTipText(ACCSTR_TI_DefaultTipText);
     fMemoryOperator.Deactivate;
     fInputManager.Mode := fInputManager.Mode - [omTrigger];
@@ -287,6 +288,7 @@ end;
 
 procedure TACCManager.DoPluginStateChange(Sender: TObject);
 begin
+If not fWMCClient.ServerOnline then fKeepCCSpeedOnLimit := False;
 If Assigned(fOnPluginStateChange) then fOnPluginStateChange(Self);
 If fWMCClient.ServerOnline then fWMCClient.SendInteger(0,0,WMC_CODE_Features);
 end;
