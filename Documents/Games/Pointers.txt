@@ -666,3 +666,51 @@ Euro Truck Simulator 2 1.18.1 Multi Steam [CRC32: 186af0f7]
 CCStatus:	eurotrucks2.exe +0x00CE708C --> +0x000005d0 --> +0x00000058 --> Boolean
 CCSpeed:	eurotrucks2.exe +0x00CE708C --> +0x000005d0 --> +0x0000005c --> Single (kph)
 TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.18.1 Multi 64b [CRC32: 32C54797]
+CCStatus:	eurotrucks2.exe +0x01173560 --> +0x000009C8 --> +0x00000068 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x01173560 --> +0x000009C8 --> +0x0000006c --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.18.1 Multi Steam 64b [CRC32: 9A129282]
+CCStatus:	eurotrucks2.exe +0x01151778 --> +0x000009C8 --> +0x00000068 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x01151778 --> +0x000009C8 --> +0x0000006c --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.18.1.3 Multi [CRC32: 49718c26]
+CCStatus:	eurotrucks2.exe +0x00CFD6BC --> +0x000005d0 --> +0x00000058 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00CFD6BC --> +0x000005d0 --> +0x0000005c --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.18.1.3 Multi Steam [CRC32: 6998519e]
+CCStatus:	eurotrucks2.exe +0x00CE708c --> +0x000005d0 --> +0x00000058 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00CE708C --> +0x000005d0 --> +0x0000005c --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.18.1.3 Multi 64b [CRC32: e8dec450]
+CCStatus:	eurotrucks2.exe +0x01173560 --> +0x000009C8 --> +0x00000068 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x01173560 --> +0x000009C8 --> +0x0000006c --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.18.1.3 Multi Steam 64b [CRC32: 7f38d35e]
+CCStatus:	eurotrucks2.exe +0x01151778 --> +0x000009C8 --> +0x00000068 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x01151778 --> +0x000009C8 --> +0x0000006c --> Single (kph)
+TruckSpeed:	n/k
