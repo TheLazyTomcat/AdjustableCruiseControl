@@ -14,20 +14,20 @@ which each part starts.
   Index ...................................................   9
   Description .............................................  34
   Supported games .........................................  43
-  Parts of the program .................................... 156
-  Installation ............................................ 178
-  How to use the program .................................. 242
-  How to install an update ................................ 262
-  Program features ........................................ 294
-  Common problems ......................................... 352
-  How the program works ................................... 417
-  Changelog ............................................... 449
-  Known issues ............................................ 492
-  Source code ............................................. 504
-  Licensing ............................................... 513
-  Authors, contacts ....................................... 521
-  Links ................................................... 528
-  Copyright ............................................... 534
+  Parts of the program .................................... 162
+  Installation ............................................ 184
+  How to use the program .................................. 248
+  How to install an update ................................ 268
+  Program features ........................................ 300
+  Common problems ......................................... 358
+  How the program works ................................... 423
+  Changelog ............................................... 455
+  Known issues ............................................ 498
+  Source code ............................................. 510
+  Licensing ............................................... 519
+  Authors, contacts ....................................... 527
+  Links ................................................... 534
+  Copyright ............................................... 540
 
 
 
@@ -129,6 +129,12 @@ Fully supported with plugin:
   Euro Truck Simulator 2 1.17.1 Multi 64bit, Steam version
   Euro Truck Simulator 2 1.18.1 Multi, DD & CD version
   Euro Truck Simulator 2 1.18.1 Multi, Steam version
+  Euro Truck Simulator 2 1.18.1 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.18.1 Multi 64bit, Steam version
+  Euro Truck Simulator 2 1.18.1.3 Multi, DD & CD version
+  Euro Truck Simulator 2 1.18.1.3 Multi, Steam version
+  Euro Truck Simulator 2 1.18.1.3 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.18.1.3 Multi 64bit, Steam version
 
 Partially supported:
 

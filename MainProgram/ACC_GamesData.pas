@@ -139,8 +139,10 @@ const
   CF_FILEMD5   = $00000004;
 
   BFS_1_0 = $00010000;
+  BFS_1_5 = $00010005;
   IFS_1_0 = $00010000;
   IFS_2_0 = $00020000;
+  IFS_2_5 = $00020005;
 
   InvalidProtocolVersion = TProtocolVersion(-1);
 
@@ -275,8 +277,8 @@ const
   InvalidFileStructure = TFileStructure(-1);
 
   // Supported gamesdata file structures
-  SupportedBinFileStructure: Array[0..0] of TFileStructure = (BFS_1_0);
-  SupportedIniFileStructure: Array[0..1] of TFileStructure = (IFS_1_0,IFS_2_0);
+  SupportedBinFileStructure: Array[0..1] of TFileStructure = (BFS_1_0,BFS_1_5);
+  SupportedIniFileStructure: Array[0..2] of TFileStructure = (IFS_1_0,IFS_2_0,IFS_2_5);
 
   // Supported protocols
   // Note that protocol affects the entire program, not just games data
