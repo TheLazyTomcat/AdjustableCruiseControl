@@ -18,6 +18,7 @@ uses
   WndAlloc,
   UtilityWindow,
   SimpleTimer,
+  BinTextEnc,
   WinMsgComm,
   WinMsgCommClient,
 

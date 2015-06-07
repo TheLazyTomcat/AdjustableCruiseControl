@@ -152,9 +152,13 @@ begin
 Result := False;
 try
   PointerData := PointerDataByIndex(PointerIndex);
-  case PointerData.Flags and ACC_PTR_FLAGS_PointerTypeBitmask of
-       0..$FF:  Coefficient := PointerData.Coefficient;
-    $100..$164: If not ReadFloat((PointerData.Flags and ACC_PTR_FLAGS_PointerTypeBitmask) - $100,Coefficient) then Exit;
+  case TPtrInfoRec(PointerData.PtrInfo).PtrType of
+    PTR_TYPE_Float:
+      Coefficient := 1.0;
+    PTR_TYPE_FloatCorrected:
+      Coefficient := PointerData.Coefficient;
+    PTR_TYPE_FloatCorrectedRemote:
+      If not ReadFloat(TPtrInfoRec(PointerData.PtrInfo).PtrData,Coefficient) then Exit;
   else
     Exit;
   end;
@@ -177,16 +181,20 @@ begin
 Result := False;
 try
   PointerData := PointerDataByIndex(PointerIndex);
-  case PointerData.Flags and ACC_PTR_FLAGS_PointerTypeBitmask of
-       0..$FF:  Coefficient := PointerData.Coefficient;
-    $100..$164: If not ReadFloat((PointerData.Flags and ACC_PTR_FLAGS_PointerTypeBitmask) - $100,Coefficient) then Exit;
+  case TPtrInfoRec(PointerData.PtrInfo).PtrType of
+    PTR_TYPE_Float:
+      Coefficient := 1.0;
+    PTR_TYPE_FloatCorrected:
+      Coefficient := PointerData.Coefficient;
+    PTR_TYPE_FloatCorrectedRemote:
+      If not ReadFloat(TPtrInfoRec(PointerData.PtrInfo).PtrData,Coefficient) then Exit;
   else
     Exit;
   end;
   Result := ReadValue(fGameData.ProcessInfo.ProcessHandle,
                       fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
                       PointerData,SizeOf(Single),@Value);
-  Value := Value / Coefficient;                    
+  Value := Value / Coefficient;
 except
   Result := False;
 end;

@@ -24,8 +24,13 @@ const
   // Identifiers used for saving/loading ini file
   GDIN_MainSection = 'GamesData';
   GDIN_Game        = 'Game.%d';
+  GDIN_Icon        = 'Icon.%d';
 
   GDIN_MS_FileStructure = 'Version';
+
+  GDIN_IC_Name      = 'Name';
+  GDIN_IC_DataCount = 'DataCount';
+  GDIN_IC_Data      = 'Data[%d]';
 
   GDIN_GD_Protocol      = 'Protocol';
   GDIN_GD_Identifier    = 'Identifier';
@@ -52,6 +57,7 @@ const
   GDIN_GD_MOD_MD5        = '.MD5';
 
   GDIN_GD_VAL_Flags       = '.Flags';
+  GDIN_GD_VAL_PtrInfo     = '.PtrInfo';
   GDIN_GD_VAL_ModuleIndex = '.ModuleIndex';
   GDIN_GD_VAL_Offsets     = '.Offsets';
   GDIN_GD_VAL_Offset      = '.Offset[%d]';
@@ -83,6 +89,7 @@ type
 
   TPointerData = record
     Flags:        LongWord;
+    PtrInfo:      LongWord;
     ModuleIndex:  Integer;
     Offsets:      Array of Int64;
     Coefficient:  Single;
@@ -139,18 +146,28 @@ const
   CF_FILEMD5   = $00000004;
 
   BFS_1_0 = $00010000;
-  BFS_1_5 = $00010005;
+  BFS_1_1 = $00010001;
   IFS_1_0 = $00010000;
   IFS_2_0 = $00020000;
-  IFS_2_5 = $00020005;
+  IFS_2_1 = $00020001;
 
   InvalidProtocolVersion = TProtocolVersion(-1);
 
-  ACC_PTR_FLAGS_PointerTypeBitmask = $1FF;
+  PTR_TYPE_Bool                 = 0;
+  PTR_TYPE_Float                = 100;
+  PTR_TYPE_FloatCorrected       = 101;
+  PTR_TYPE_FloatCorrectedRemote = 102;
 
-  ACC_PTR_FLAGS_TelemetryTruckSpeed = $200;
+  PTR_TYPE_Invalid = $FFFF;
+
+  PTR_FLAGS_TelemetryTruckSpeed = $00000001;
 
 type
+  TPtrInfoRec = packed record
+    PtrType: Word;  
+    PtrData: Word;
+  end;
+
 {$IFDEF FPC}
   TPNGObject = TPortableNetworkGraphic;
 {$ENDIF}
@@ -212,21 +229,33 @@ type
     class procedure WriteFloatToStream(Stream: TStream; Value: Single); virtual;
     class procedure ReadFloatFromStream(Stream: TStream; out Value: Single); overload; virtual;
     class Function ReadFloatFromStream(Stream: TStream): Single; overload; virtual;
-    procedure SaveIcons(Stream: TStream); virtual;
-    procedure LoadIcons(Stream: TStream); virtual;
+    procedure SaveIcons(Stream: TStream); overload; virtual;
+    procedure LoadIcons(Stream: TStream); overload; virtual;
+    procedure SaveIcons(Ini: TCustomIniFile); overload; virtual;
+    procedure LoadIcons(Ini: TCustomIniFile); overload; virtual;
     procedure SaveEntryToIni_Struct00010000(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
     procedure SaveEntryToIni_Struct00020000(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
+    procedure SaveEntryToIni_Struct00020001(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
     procedure SaveEntryToBin_Struct00010000(Stream: TStream; Position: Int64; const GameData: TGameData); virtual;
+    procedure SaveEntryToBin_Struct00010001(Stream: TStream; Position: Int64; const GameData: TGameData); virtual;
+    procedure PointerTypeCorrection(var Pointer: TPointerData; Bool: Boolean = False); virtual;
     Function LoadEntryFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
+    Function LoadEntryFromIni_Struct00020001(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean; virtual;
-    procedure SortHiddenForSaving; virtual;    
+    Function LoadEntryFromBin_Struct00010001(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean; virtual;
+    procedure SortHiddenForSaving; virtual;
     Function SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
+    Function SaveToIni_Struct00020001(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToBin_Struct00010000(Stream: TStream): Boolean; virtual;
+    Function SaveToBin_Struct00010001(Stream: TStream): Boolean; virtual;
+    procedure ProcessEntryByProtocol(const GameData: TGameData); virtual;
     Function LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
     Function LoadFromIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
+    Function LoadFromIni_Struct00020001(Ini: TCustomIniFile): Boolean; virtual;
     Function LoadFromBin_Struct00010000(Stream: TStream): Boolean; virtual;
+    Function LoadFromBin_Struct00010001(Stream: TStream): Boolean; virtual; 
   public
     class Function SupportsBinFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsIniFileStructure(FileStructure: TFileStructure): Boolean; virtual;
@@ -271,14 +300,14 @@ implementation
 {$R 'Resources\DefGameIcon.res'}
 
 uses
-  Windows, SysUtils, DateUtils, StrUtils;
+  Windows, SysUtils, DateUtils, StrUtils, Math, BinTextEnc;
 
 const
   InvalidFileStructure = TFileStructure(-1);
 
   // Supported gamesdata file structures
-  SupportedBinFileStructure: Array[0..1] of TFileStructure = (BFS_1_0,BFS_1_5);
-  SupportedIniFileStructure: Array[0..2] of TFileStructure = (IFS_1_0,IFS_2_0,IFS_2_5);
+  SupportedBinFileStructure: Array[0..1] of TFileStructure = (BFS_1_0,BFS_1_1);
+  SupportedIniFileStructure: Array[0..2] of TFileStructure = (IFS_1_0,IFS_2_0,IFS_2_1);
 
   // Supported protocols
   // Note that protocol affects the entire program, not just games data
@@ -295,6 +324,8 @@ const
 
   DefaultGameIconName    = 'default';
   DefaultGameIconResName = 'GI_' + DefaultGameIconName;
+
+  INI_ICON_DATA_SplitLength = 128;
 
 {$IFDEF FPC}
 Function StrToDateDef(const Str: String; const Default: TDateTime; const FormatSettings: TFormatSettings): TDateTime;
@@ -655,6 +686,85 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TGamesDataManager.SaveIcons(Ini: TCustomIniFile);
+var
+  Index,i,j:    Integer;
+  WorkStream:   TMemoryStream;
+  SectionName:  String;
+  EncodedStr:   AnsiString;
+  DataCount:    Integer;
+begin
+Index := 0;
+WorkStream := TMemoryStream.Create;
+try
+  For i := 0 to Pred(fGameIcons.Count) do
+    If not AnsiSameStr(fGameIcons[i].Identifier,DefaultGameIconName) then
+      begin
+        WorkStream.Clear;
+        SectionName := Format(GDIN_Icon,[Index]);
+        If Ini.SectionExists(SectionName) then
+          Ini.EraseSection(SectionName);
+        fGameIcons[i].Icon.SaveToStream(WorkStream);
+        EncodedStr := AnsiEncode_Base85(WorkStream.Memory,WorkStream.Size,False,True,True);
+        DataCount := Ceil(Length(EncodedStr) / INI_ICON_DATA_SplitLength);
+        Ini.WriteString(SectionName,GDIN_IC_Name,fGameIcons[i].Identifier);
+        Ini.WriteInteger(SectionName,GDIN_IC_DataCount,DataCount);
+        For j := 0 to Pred(DataCount) do
+          Ini.WriteString(SectionName,Format(GDIN_IC_Data,[j]),Copy(EncodedStr,(j * INI_ICON_DATA_SplitLength) + 1,INI_ICON_DATA_SplitLength));
+        Inc(Index);
+      end;
+finally
+  WorkStream.Free;
+end;
+If Ini.SectionExists(Format(GDIN_Icon,[fGameIcons.Count])) then
+  Ini.EraseSection(Format(GDIN_Icon,[fGameIcons.Count]));
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.LoadIcons(Ini: TCustomIniFile);
+var
+  Index,i:      Integer;
+  WorkStream:   TMemoryStream;
+  SectionName:  String;
+  EncodedStr:   AnsiString;
+  IconName:     String;
+  DataCount:    Integer;
+begin
+Index := 0;
+WorkStream := TMemoryStream.Create;
+try
+  while Ini.SectionExists(Format(GDIN_Icon,[Index])) do
+    begin
+      SectionName := Format(GDIN_Icon,[Index]);
+      IconName := Ini.ReadString(SectionName,GDIN_IC_Name,'');
+      DataCount := Ini.ReadInteger(SectionName,GDIN_IC_DataCount,-1);
+      If (IconName <> '') and (DataCount > 0) then
+        begin
+          EncodedStr := '';
+          For i := 0 to Pred(DataCount) do
+            EncodedStr := EncodedStr + Ini.ReadString(SectionName,Format(GDIN_IC_Data,[i]),'');
+          try
+            WorkStream.Clear;
+            WorkStream.Size := AnsiDecodedLength_Base85(EncodedStr);
+            WorkStream.Size := AnsiDecode_Base85(EncodedStr,WorkStream.Memory,WorkStream.Size,False);
+            WorkStream.Position := 0;
+            If WorkStream.Size > 0 then
+              fGameIcons.AddItem(IconName,WorkStream);
+          except
+            Inc(Index);
+            Continue;
+          end;
+        end;
+      Inc(Index);
+    end;
+finally
+  WorkStream.Free;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TGamesDataManager.SaveEntryToIni_Struct00010000(Ini: TCustomIniFile; Section: String; const GameData: TGameData);
 var
   TempStr:  String;
@@ -674,8 +784,11 @@ var
   begin
     If Pointer.ModuleIndex >= 0 then
       begin
-        iTempStr := '$' + IntToHex(Pointer.Flags and ACC_PTR_FLAGS_PointerTypeBitmask,3) + '@' +
-                    '$' + IntToHex(Pointer.ModuleIndex,1) + '+';
+        If TPtrInfoRec(Pointer.PtrInfo).PtrType = PTR_TYPE_FloatCorrectedRemote then
+          ii := (TPtrInfoRec(Pointer.PtrInfo).PtrData + $100) and $1FF
+        else
+          ii := 0;
+        iTempStr := '$' + IntToHex(ii,3) + '@' + '$' + IntToHex(Pointer.ModuleIndex,1) + '+';
         For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
           iTempStr := iTempStr + '$' + IntToHex(Pointer.Offsets[ii],16) + '>';
         iTempStr := iTempStr + SingleToHex(Pointer.Coefficient);
@@ -724,6 +837,76 @@ var
 
   procedure WritePointer(const Prefix: String; Pointer: TPointerData);
   var
+    TempFlags:  LongWord;
+    ii:         Integer;
+  begin
+    TempFlags := Pointer.Flags shl 9;
+    If TPtrInfoRec(Pointer.PtrInfo).PtrType = PTR_TYPE_FloatCorrectedRemote then
+      TempFlags := TempFlags or LongWord((TPtrInfoRec(Pointer.PtrInfo).PtrData + $100) and $1FF);
+    If Pointer.ModuleIndex < 0 then
+      begin
+        If Pointer.Flags <> 0 then
+          Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Flags,'$' + IntToHex(TempFlags,8));
+      end
+    else
+      begin
+        Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Flags,'$' + IntToHex(TempFlags,8));
+        Ini.WriteInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,Pointer.ModuleIndex);
+        Ini.WriteInteger(Section,Prefix + GDIN_GD_VAL_Offsets,Length(Pointer.Offsets));
+        For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
+          Ini.WriteString(Section,Prefix + Format(GDIN_GD_VAL_Offset,[ii]),'$' + IntToHex(Pointer.Offsets[ii],16));
+        Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Coefficient,'$' + SingleToHex(Pointer.Coefficient));
+      end;
+  end;
+
+begin
+Ini.WriteInteger(Section,GDIN_GD_Protocol,Integer(GameData.Protocol));
+Ini.WriteString(Section,GDIN_GD_Identifier,GUIDToString(GameData.Identifier));
+Ini.WriteString(Section,GDIN_GD_Descriptor,GameData.Descriptor);
+Ini.WriteInteger(Section,GDIN_GD_Version,Integer(GameData.Version));
+Ini.WriteString(Section,GDIN_GD_Icon,GameData.Icon);
+{%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
+FormatSettings.DateSeparator := '-';
+FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+Ini.WriteString(Section,GDIN_GD_Date,DateToStr(GameData.Date,FormatSettings));
+Ini.WriteString(Section,GDIN_GD_Author,GameData.Author);
+Ini.WriteString(Section,GDIN_GD_Title,GameData.Title);
+Ini.WriteString(Section,GDIN_GD_Info,GameData.Info);
+Ini.WriteString(Section,GDIN_GD_ExtendedTitle,GameData.ExtendedTitle);
+
+Ini.WriteInteger(Section,GDIN_GD_Modules,Length(GameData.Modules));
+For i := Low(GameData.Modules) to High(GameData.Modules) do
+  WriteModule(Format(GDIN_GD_Module,[i]),GameData.Modules[i]);
+
+WritePointer(GDIN_GD_CCSpeed,GameData.CCSpeed);
+WritePointer(GDIN_GD_CCStatus,GameData.CCStatus);
+WritePointer(GDIN_GD_TruckSpeed,GameData.TruckSpeed);
+Ini.WriteInteger(Section,GDIN_GD_Values,Length(GameData.Values));
+For i := Low(GameData.Values) to High(GameData.Values) do
+  WritePointer(Format(GDIN_GD_Value,[i]),GameData.Values[i]);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.SaveEntryToIni_Struct00020001(Ini: TCustomIniFile; Section: String; const GameData: TGameData);
+var
+  FormatSettings: TFormatSettings;
+  i:              Integer;
+  
+  procedure WriteModule(const Prefix: String; Module: TModuleData);
+  begin
+    Ini.WriteString(Section,Prefix + GDIN_GD_MOD_CheckFlags,'$' + IntToHex(Module.CheckFlags,8));
+      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_FileName,Module.FileName);
+    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
+      Ini.WriteInteger(Section,Prefix + GDIN_GD_MOD_Size,Integer(Module.Size));
+    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
+      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_CRC32,'$' + CRC32ToStr(Module.CRC32));
+    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
+      Ini.WriteString(Section,Prefix + GDIN_GD_MOD_MD5,MD5ToStr(Module.MD5));
+  end;
+
+  procedure WritePointer(const Prefix: String; Pointer: TPointerData);
+  var
     ii: Integer;
   begin
     If Pointer.ModuleIndex < 0 then
@@ -734,6 +917,7 @@ var
     else
       begin
         Ini.WriteString(Section,Prefix + GDIN_GD_VAL_Flags,'$' + IntToHex(Pointer.Flags,8));
+        Ini.WriteString(Section,Prefix + GDIN_GD_VAL_PtrInfo,'$' + IntToHex(Pointer.PtrInfo,8));
         Ini.WriteInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,Pointer.ModuleIndex);
         Ini.WriteInteger(Section,Prefix + GDIN_GD_VAL_Offsets,Length(Pointer.Offsets));
         For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
@@ -790,9 +974,13 @@ var
 
   procedure WritePointer(EnStream: TStream; Pointer: TPointerData);
   var
-    ii: Integer;
+    TempFlags:  LongWord;
+    ii:         Integer;
   begin
-    WriteIntegerToStream(EnStream,Integer(Pointer.Flags));
+    TempFlags := Pointer.Flags shl 9;
+    If TPtrInfoRec(Pointer.PtrInfo).PtrType = PTR_TYPE_FloatCorrectedRemote then
+      TempFlags := TempFlags or LongWord((TPtrInfoRec(Pointer.PtrInfo).PtrData + $100) and $1FF);
+    WriteIntegerToStream(EnStream,Integer(TempFlags));
     WriteIntegerToStream(EnStream,Pointer.ModuleIndex);
     WriteIntegerToStream(EnStream,Length(Pointer.Offsets));
     For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
@@ -832,6 +1020,96 @@ try
 finally
   EntryStream.Free;
 end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.SaveEntryToBin_Struct00010001(Stream: TStream; Position: Int64; const GameData: TGameData);
+var
+  EntryStream:  TMemoryStream;
+  i:            Integer;
+
+  procedure WriteModule(EnStream: TStream; Module: TModuleData);
+  begin
+    WriteIntegerToStream(EnStream,Integer(Module.CheckFlags));
+    WriteStringToStream(EnStream,Module.FileName);
+    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
+      WriteInt64ToStream(EnStream,Module.Size);
+    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
+      EnStream.WriteBuffer(Module.CRC32,SizeOf(TCRC32));
+    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
+      EnStream.WriteBuffer(Module.MD5,SizeOf(TMD5Hash));
+  end;
+
+  procedure WritePointer(EnStream: TStream; Pointer: TPointerData);
+  var
+    ii: Integer;
+  begin
+    WriteIntegerToStream(EnStream,Integer(Pointer.Flags));
+    WriteIntegerToStream(EnStream,Integer(Pointer.PtrInfo));
+    WriteIntegerToStream(EnStream,Pointer.ModuleIndex);
+    WriteIntegerToStream(EnStream,Length(Pointer.Offsets));
+    For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
+      WriteInt64ToStream(EnStream,Pointer.Offsets[ii]);
+    WriteFloatToStream(EnStream,Pointer.Coefficient);
+  end;
+
+begin
+Stream.Seek(Position,soBeginning);
+EntryStream := TMemoryStream.Create;
+try
+  WriteIntegerToStream(EntryStream,Integer(GameData.Protocol));
+  EntryStream.WriteBuffer(GameData.Identifier,SizeOf(TGUID));
+  WriteStringToStream(EntryStream,GameData.Descriptor);
+  WriteIntegerToStream(EntryStream,Integer(GameData.Version));
+  WriteStringToStream(EntryStream,GameData.Icon);
+  WriteInt64ToStream(EntryStream,DateTimeToUnix(GameData.Date));
+  WriteStringToStream(EntryStream,GameData.Author);
+  WriteStringToStream(EntryStream,GameData.Title);
+  WriteStringToStream(EntryStream,GameData.Info);
+  WriteStringToStream(EntryStream,GameData.ExtendedTitle);
+
+  WriteIntegerToStream(EntryStream,Length(GameData.Modules));
+  For i := Low(GameData.Modules) to High(GameData.Modules) do
+    WriteModule(EntryStream,GameData.Modules[i]);
+
+  WritePointer(EntryStream,GameData.CCSpeed);
+  WritePointer(EntryStream,GameData.CCStatus);
+  WritePointer(EntryStream,GameData.TruckSpeed);
+  WriteIntegerToStream(EntryStream,Length(GameData.Values));
+  For i := Low(GameData.Values) to High(GameData.Values) do
+    WritePointer(EntryStream,GameData.Values[i]);
+
+  ZCompressStream(EntryStream);
+  WriteIntegerToStream(Stream,Integer(EntryStream.Size));
+  Stream.CopyFrom(EntryStream,0);
+finally
+  EntryStream.Free;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.PointerTypeCorrection(var Pointer: TPointerData; Bool: Boolean = False);
+begin
+If Bool then
+  begin
+    TPtrInfoRec(Pointer.PtrInfo).PtrType := PTR_TYPE_Bool;
+    TPtrInfoRec(Pointer.PtrInfo).PtrData := 0;
+  end
+else
+  begin
+    If TPtrInfoRec(Pointer.PtrInfo).PtrData <> 0 then
+      begin
+        TPtrInfoRec(Pointer.PtrInfo).PtrType := PTR_TYPE_FloatCorrectedRemote;
+        TPtrInfoRec(Pointer.PtrInfo).PtrData := TPtrInfoRec(Pointer.PtrInfo).PtrData - $100;
+      end
+    else
+      begin
+        TPtrInfoRec(Pointer.PtrInfo).PtrType := PTR_TYPE_FloatCorrected;
+        TPtrInfoRec(Pointer.PtrInfo).PtrData := 0;
+      end;
+  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -917,7 +1195,8 @@ var
     If Length(Text) > 0 then
       try
         Result := False;
-        Pointer.Flags := LongWord(StrToInt(AnsiLeftStr(Text,AnsiPos('@',Text) - 1)) and ACC_PTR_FLAGS_PointerTypeBitmask);
+        Pointer.Flags := 0;
+        TPtrInfoRec(Pointer.PtrInfo).PtrData := LongWord(StrToInt(AnsiLeftStr(Text,AnsiPos('@',Text) - 1)) and $1FF);
         Delete(Text,1,AnsiPos('@',Text));
         Pointer.ModuleIndex := StrToInt(AnsiLeftStr(Text,AnsiPos('+',Text) - 1));
         Delete(Text,1,AnsiPos('+',Text));
@@ -954,11 +1233,14 @@ try
   GameData.ExtendedTitle := GameData.Title;
   If not ParseProcess(Decrypt(Ini.ReadString(Section,GDIN_GD_LEG_Process,''))) then Exit;
   If not ParsePointer(Decrypt(Ini.ReadString(Section,GDIN_GD_CCStatus,'')),GameData.CCStatus) then Exit;
+  PointerTypeCorrection(GameData.CCStatus,True);
   If not ParsePointer(Decrypt(Ini.ReadString(Section,GDIN_GD_CCSpeed,'')),GameData.CCSpeed) then Exit;
+  PointerTypeCorrection(GameData.CCSpeed);
   TempStr := Decrypt(Ini.ReadString(Section,GDIN_GD_TruckSpeed,''));
   If TempStr <> '0' then
     begin
       If not ParsePointer(TempStr,GameData.TruckSpeed) then Exit;
+      PointerTypeCorrection(GameData.TruckSpeed);
     end
   else
     begin
@@ -972,6 +1254,7 @@ try
     begin
       SetLength(GameData.Values,Length(GameData.Values) + 1);
       If not ParsePointer(Decrypt(Ini.ReadString(Section,Format(GDIN_GD_LEG_Special,[i]),'')),GameData.Values[i]) then Exit;
+      PointerTypeCorrection(GameData.Values[i]);
       Inc(i);
     end;
   Result := True;
@@ -1001,9 +1284,83 @@ var
 
   procedure ReadPointer(const Prefix: String; var Pointer: TPointerData);
   var
+    TempFlags:  LongWord;
+    ii:         Integer;
+  begin
+    TempFlags := LongWord(Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Flags,CF_NONE));
+    Pointer.Flags := TempFlags shr 9;
+    TPtrInfoRec(Pointer.PtrInfo).PtrData := TempFlags and $1FF;
+    Pointer.ModuleIndex := Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,-1);
+    SetLength(Pointer.Offsets,Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Offsets,0));
+    For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
+      Pointer.Offsets[ii] := StrToInt64(Ini.ReadString(Section,Prefix + Format(GDIN_GD_VAL_Offset,[ii]),'0'));
+    Pointer.Coefficient := HexToSingle(Ini.ReadString(Section,Prefix + GDIN_GD_VAL_Coefficient,'0'));
+  end;
+
+begin
+try
+  GameData.Protocol := TProtocolVersion(Ini.ReadInteger(Section,GDIN_GD_Protocol,Integer(InvalidProtocolVersion)));
+  GameData.Identifier := StringToGUID(Ini.ReadString(Section,GDIN_GD_Identifier,'{00000000-0000-0000-0000-000000000000}'));
+  GameData.Descriptor := Ini.ReadString(Section,GDIN_GD_Descriptor,'');
+  GameData.Version := LongWord(Ini.ReadInteger(Section,GDIN_GD_Version,0));
+  GameData.Icon := Ini.ReadString(Section,GDIN_GD_Icon,DefaultGameIconName);
+  {%H-}GetLocaleFormatSettings(LOCALE_USER_DEFAULT,{%H-}FormatSettings);
+  FormatSettings.DateSeparator := '-';
+  FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
+  GameData.Date := StrToDateDef(Ini.ReadString(Section,GDIN_GD_Date,''),Now,FormatSettings);
+  GameData.Author := Ini.ReadString(Section,GDIN_GD_Author,'');
+  GameData.Title := Ini.ReadString(Section,GDIN_GD_Title,'');
+  GameData.Info := Ini.ReadString(Section,GDIN_GD_Info,'');
+  GameData.ExtendedTitle := Ini.ReadString(Section,GDIN_GD_ExtendedTitle,'');
+
+  SetLength(GameData.Modules,Ini.ReadInteger(Section,GDIN_GD_Modules,0));
+  For i := Low(GameData.Modules) to High(GameData.Modules) do
+    ReadModule(Format(GDIN_GD_Module,[i]),GameData.Modules[i]);
+
+  ReadPointer(GDIN_GD_CCSpeed,GameData.CCSpeed);
+  PointerTypeCorrection(GameData.CCSpeed);
+  ReadPointer(GDIN_GD_CCStatus,GameData.CCStatus);
+  PointerTypeCorrection(GameData.CCStatus,True);
+  ReadPointer(GDIN_GD_TruckSpeed,GameData.TruckSpeed);
+  PointerTypeCorrection(GameData.TruckSpeed);
+  SetLength(GameData.Values,Ini.ReadInteger(Section,GDIN_GD_Values,0));
+  For i := Low(GameData.Values) to High(GameData.Values) do
+    begin
+      ReadPointer(Format(GDIN_GD_Value,[i]),GameData.Values[i]);
+      PointerTypeCorrection(GameData.Values[i]);
+    end;
+
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadEntryFromIni_Struct00020001(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
+var
+  FormatSettings: TFormatSettings;
+  i:              Integer;
+
+  procedure ReadModule(const Prefix: String; var Module: TModuleData);
+  begin
+    Module.CheckFlags := LongWord(Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_CheckFlags,CF_NONE));
+    Module.FileName := Ini.ReadString(Section,Prefix + GDIN_GD_MOD_FileName,'');
+    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
+      Module.Size := Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_Size,0);
+    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
+      Module.CRC32 := TCRC32(Ini.ReadInteger(Section,Prefix + GDIN_GD_MOD_CRC32,0));
+    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
+      Module.MD5 := StrToMD5(Ini.ReadString(Section,Prefix + GDIN_GD_MOD_MD5,'00000000000000000000000000000000'));
+  end;
+
+  procedure ReadPointer(const Prefix: String; var Pointer: TPointerData);
+  var
     ii: Integer;
   begin
     Pointer.Flags := LongWord(Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Flags,CF_NONE));
+    Pointer.PtrInfo := LongWord(Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_PtrInfo,Integer(PTR_TYPE_Invalid)));
     Pointer.ModuleIndex := Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_ModuleIndex,-1);
     SetLength(Pointer.Offsets,Ini.ReadInteger(Section,Prefix + GDIN_GD_VAL_Offsets,0));
     For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
@@ -1065,9 +1422,90 @@ var
 
   procedure ReadPointer(EnStream: TStream; var Pointer: TPointerData);
   var
+    TempFlags:  LongWord;
+    ii:         Integer;
+  begin
+    TempFlags := LongWord(ReadIntegerFromStream(EnStream));
+    Pointer.Flags := TempFlags shr 9;
+    TPtrInfoRec(Pointer.PtrInfo).PtrData := TempFlags and $1FF;
+    Pointer.ModuleIndex := ReadIntegerFromStream(EnStream);
+    SetLength(Pointer.Offsets,ReadIntegerFromStream(EnStream));
+    For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
+      Pointer.Offsets[ii] := ReadInt64FromStream(EnStream);
+    Pointer.Coefficient := ReadFloatFromStream(EnStream);
+  end;
+
+begin
+try
+  EntryStream := TMemoryStream.Create;
+  try
+    Stream.Seek(Position,soBeginning);
+    EntryStream.CopyFrom(Stream,ReadIntegerFromStream(Stream));
+    ZDecompressStream(EntryStream);
+    EntryStream.Position := 0;
+
+    GameData.Protocol := TProtocolVersion(ReadIntegerFromStream(EntryStream));
+    EntryStream.ReadBuffer(GameData.Identifier,SizeOf(TMD5Hash));
+    GameData.Descriptor := ReadStringFromStream(EntryStream);
+    GameData.Version := LongWord(ReadIntegerFromStream(EntryStream));
+    GameData.Icon := ReadStringFromStream(EntryStream);
+    GameData.Date := UnixToDateTime(ReadInt64FromStream(EntryStream));
+    GameData.Author := ReadStringFromStream(EntryStream);
+    GameData.Title := ReadStringFromStream(EntryStream);
+    GameData.Info := ReadStringFromStream(EntryStream);
+    GameData.ExtendedTitle := ReadStringFromStream(EntryStream);
+
+    SetLength(GameData.Modules,ReadIntegerFromStream(EntryStream));
+    For i := Low(GameData.Modules) to High(GameData.Modules) do
+      ReadModule(EntryStream,GameData.Modules[i]);
+
+    ReadPointer(EntryStream,GameData.CCSpeed);
+    PointerTypeCorrection(GameData.CCSpeed);
+    ReadPointer(EntryStream,GameData.CCStatus);
+    PointerTypeCorrection(GameData.CCStatus,True);
+    ReadPointer(EntryStream,GameData.TruckSpeed);
+    PointerTypeCorrection(GameData.TruckSpeed);
+    SetLength(GameData.Values,ReadIntegerFromStream(EntryStream));
+    For i := Low(GameData.Values) to High(GameData.Values) do
+      begin
+        ReadPointer(EntryStream,GameData.Values[i]);
+        PointerTypeCorrection(GameData.Values[i]);
+      end;
+
+    Result := True;
+  finally
+    EntryStream.Free;
+  end;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadEntryFromBin_Struct00010001(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean;
+var
+  EntryStream:  TMemoryStream;
+  i:            Integer;
+
+  procedure ReadModule(EnStream: TStream; var Module: TModuleData);
+  begin
+    Module.CheckFlags := LongWord(ReadIntegerFromStream(EnStream));
+    Module.FileName := ReadStringFromStream(EnStream);
+    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
+      Module.Size := ReadInt64FromStream(EnStream);
+    If (Module.CheckFlags and CF_FILECRC32) <> 0 then
+      EnStream.ReadBuffer(Module.CRC32,SizeOf(TCRC32));
+    If (Module.CheckFlags and CF_FILEMD5) <> 0 then
+      EnStream.ReadBuffer(Module.MD5,SizeOf(TMD5Hash));
+  end;
+
+  procedure ReadPointer(EnStream: TStream; var Pointer: TPointerData);
+  var
     ii: Integer;
   begin
     Pointer.Flags := LongWord(ReadIntegerFromStream(EnStream));
+    Pointer.PtrInfo := LongWord(ReadIntegerFromStream(EnStream));
     Pointer.ModuleIndex := ReadIntegerFromStream(EnStream);
     SetLength(Pointer.Offsets,ReadIntegerFromStream(EnStream));
     For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
@@ -1179,6 +1617,35 @@ end;
 
 //------------------------------------------------------------------------------
 
+Function TGamesDataManager.SaveToIni_Struct00020001(Ini: TCustomIniFile): Boolean;
+var
+  i:  Integer;
+begin
+try
+  SaveIcons(Ini);
+  For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
+    begin
+      If Ini.SectionExists(Format(GDIN_Game,[i])) then
+        Ini.EraseSection(Format(GDIN_Game,[i]));
+      SaveEntryToIni_Struct00020001(Ini,Format(GDIN_Game,[i]),fGamesData.Entries[i]);
+    end;
+  SortHiddenForSaving;
+  For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
+    begin
+      If Ini.SectionExists(Format(GDIN_Game,[i + Length(fGamesData.Entries)])) then
+        Ini.EraseSection(Format(GDIN_Game,[i + Length(fGamesData.Entries)]));
+      SaveEntryToIni_Struct00020001(Ini,Format(GDIN_Game,[i + Length(fGamesData.Entries)]),fGamesData.Hidden[i]);
+    end;
+  If Ini.SectionExists(Format(GDIN_Game,[Length(fGamesData.Entries) + Length(fGamesData.Hidden)])) then
+    Ini.EraseSection(Format(GDIN_Game,[Length(fGamesData.Entries) + Length(fGamesData.Hidden)]));
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
 Function TGamesDataManager.SaveToBin_Struct00010000(Stream: TStream): Boolean;
 var
   i:          Integer;
@@ -1199,9 +1666,52 @@ end;
 
 //------------------------------------------------------------------------------
 
+Function TGamesDataManager.SaveToBin_Struct00010001(Stream: TStream): Boolean;
+var
+  i:          Integer;
+begin
+try
+  SaveIcons(Stream);
+  WriteIntegerToStream(Stream,Length(fGamesData.Entries) + Length(fGamesData.Hidden));
+  For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
+    SaveEntryToBin_Struct00010001(Stream,Stream.Position,fGamesData.Entries[i]);
+  SortHiddenForSaving;  
+  For i := Low(fGamesData.Hidden) to High(fGamesData.Hidden) do
+    SaveEntryToBin_Struct00010001(Stream,Stream.Position,fGamesData.Hidden[i]);
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TGamesDataManager.ProcessEntryByProtocol(const GameData: TGameData);
+var
+  i:  Integer;
+begin
+case GameData.Protocol of
+  PROTOCOL_NORMAL:  If not IsHidden(GameData.Identifier) then
+                      AddGameData(GameData);
+  PROTOCOL_HIDDEN:  AddHiddenGameData(GameData);
+  PROTOCOL_HIDE:    begin
+                      For i := Low(GameData.Modules) to High(GameData.Modules) do
+                        HideGameData(StringToGUID(GameData.Modules[i].FileName));
+                      AddHiddenGameData(GameData);
+                    end;
+  PROTOCOL_UPDHIDE: begin
+                      For i := Low(GameData.Modules) to High(GameData.Modules) do
+                        HideGameData(StringToGUID(GameData.Modules[i].FileName));
+                      AddGameData(GameData);
+                    end;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
 Function TGamesDataManager.LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean;
 var
-  i, Index:     Integer;
+  Index:        Integer;
   TempGameData: TGameData;
 begin
 try
@@ -1209,22 +1719,7 @@ try
   while Ini.SectionExists(Format(GDIN_Game,[Index])) do
     begin
       If LoadEntryFromIni_Struct00010000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
-        If IsValid(TempGameData) then
-          case TempGameData.Protocol of
-            PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
-                                AddGameData(TempGameData);
-            PROTOCOL_HIDDEN:  AddHiddenGameData(TempGameData);
-            PROTOCOL_HIDE:    begin
-                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
-                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
-                                AddHiddenGameData(TempGameData);  
-                              end;
-            PROTOCOL_UPDHIDE: begin
-                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
-                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
-                                AddGameData(TempGameData);
-                              end;
-          end;
+        If IsValid(TempGameData) then ProcessEntryByProtocol(TempGameData);
       Inc(Index);
     end;
   Result := True;
@@ -1237,7 +1732,7 @@ end;
 
 Function TGamesDataManager.LoadFromIni_Struct00020000(Ini: TCustomIniFile): Boolean;
 var
-  i, Index:     Integer;
+  Index:        Integer;
   TempGameData: TGameData;
 begin
 try
@@ -1245,22 +1740,29 @@ try
   while Ini.SectionExists(Format(GDIN_Game,[Index])) do
     begin
       If LoadEntryFromIni_Struct00020000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
-        If IsValid(TempGameData) then
-          case TempGameData.Protocol of
-            PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
-                                AddGameData(TempGameData);
-            PROTOCOL_HIDDEN:  AddHiddenGameData(TempGameData);
-            PROTOCOL_HIDE:    begin
-                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
-                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
-                                AddHiddenGameData(TempGameData);  
-                              end;
-            PROTOCOL_UPDHIDE: begin
-                                For i := Low(TempGameData.Modules) to High(TempGameData.Modules) do
-                                  HideGameData(StringToGUID(TempGameData.Modules[i].FileName));
-                                AddGameData(TempGameData);
-                              end;
-          end;
+        If IsValid(TempGameData) then ProcessEntryByProtocol(TempGameData);
+      Inc(Index);
+    end;
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadFromIni_Struct00020001(Ini: TCustomIniFile): Boolean;
+var
+  Index:        Integer;
+  TempGameData: TGameData;
+begin
+try
+  LoadIcons(Ini);
+  Index := 0;
+  while Ini.SectionExists(Format(GDIN_Game,[Index])) do
+    begin
+      If LoadEntryFromIni_Struct00020001(Ini,Format(GDIN_Game,[Index]),TempGameData) then
+        If IsValid(TempGameData) then ProcessEntryByProtocol(TempGameData);
       Inc(Index);
     end;
   Result := True;
@@ -1273,29 +1775,32 @@ end;
 
 Function TGamesDataManager.LoadFromBin_Struct00010000(Stream: TStream): Boolean;
 var
-  i,j:          Integer;
+  i:            Integer;
   TempGameData: TGameData;
 begin
 try
   LoadIcons(Stream);
   For i := 1 to ReadIntegerFromStream(Stream) do
     If LoadEntryFromBin_Struct00010000(Stream,Stream.Position,TempGameData) then
-      If IsValid(TempGameData) then
-        case TempGameData.Protocol of
-          PROTOCOL_NORMAL:  If not IsHidden(TempGameData.Identifier) then
-                              AddGameData(TempGameData);
-          PROTOCOL_HIDDEN:  AddHiddenGameData(TempGameData);
-          PROTOCOL_HIDE:    begin
-                              For j := Low(TempGameData.Modules) to High(TempGameData.Modules) do
-                                HideGameData(StringToGUID(TempGameData.Modules[j].FileName));
-                              AddHiddenGameData(TempGameData);
-                            end;
-          PROTOCOL_UPDHIDE: begin
-                              For j := Low(TempGameData.Modules) to High(TempGameData.Modules) do
-                                HideGameData(StringToGUID(TempGameData.Modules[j].FileName));
-                              AddGameData(TempGameData);
-                            end;
-        end;
+      If IsValid(TempGameData) then ProcessEntryByProtocol(TempGameData);
+  Result := True;
+except
+  Result := False;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TGamesDataManager.LoadFromBin_Struct00010001(Stream: TStream): Boolean;
+var
+  i:            Integer;
+  TempGameData: TGameData;
+begin
+try
+  LoadIcons(Stream);
+  For i := 1 to ReadIntegerFromStream(Stream) do
+    If LoadEntryFromBin_Struct00010001(Stream,Stream.Position,TempGameData) then
+      If IsValid(TempGameData) then ProcessEntryByProtocol(TempGameData);
   Result := True;
 except
   Result := False;
@@ -1411,7 +1916,7 @@ class Function TGamesDataManager.TruckSpeedSupported(const GameData: TGameData):
 begin
 If (GameData.TruckSpeed.ModuleIndex >= Low(GameData.Modules)) and
    (GameData.TruckSpeed.ModuleIndex <= High(GameData.Modules)) then Result := ssrDirect
-  else If (GameData.TruckSpeed.Flags and ACC_PTR_FLAGS_TelemetryTruckSpeed) <> 0 then Result := ssrPlugin
+  else If (GameData.TruckSpeed.Flags and PTR_FLAGS_TelemetryTruckSpeed) <> 0 then Result := ssrPlugin
     else Result := ssrNone;
 end;
 
@@ -1472,6 +1977,7 @@ If SupportsBinFileStructure(FileStructure) then
       WriteIntegerToStream(FileStream,LongWord(FileStructure));
       case FileStructure of
         BFS_1_0:  Result := SaveToBin_Struct00010000(FileStream);
+        BFS_1_1:  Result := SaveToBin_Struct00010001(FileStream);
       else
         Result := False;
       end;
@@ -1500,6 +2006,7 @@ If SupportsIniFileStructure(FileStructure) then
       case FileStructure of
         IFS_1_0:  Result := SaveToIni_Struct00010000(IniFile);
         IFS_2_0:  Result := SaveToIni_Struct00020000(IniFile);
+        IFS_2_1:  Result := SaveToIni_Struct00020001(IniFile);
       else
         Result := False;
       end;
@@ -1525,6 +2032,7 @@ try
       Clear;
       case FileStructure of
         BFS_1_0:  Result := LoadFromBin_Struct00010000(Stream);
+        BFS_1_1:  Result := LoadFromBin_Struct00010001(Stream);
       else
         Result := False;
       end;
@@ -1589,6 +2097,7 @@ try
         case FileStructure of
           IFS_1_0:  Result := LoadFromIni_Struct00010000(IniFile);
           IFS_2_0:  Result := LoadFromIni_Struct00020000(IniFile);
+          IFS_2_1:  Result := LoadFromIni_Struct00020001(IniFile);
         else
           Result := False;
         end;

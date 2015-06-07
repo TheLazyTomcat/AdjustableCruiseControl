@@ -12,6 +12,7 @@ uses
   DefRegistry          in '..\..\MainProgram\Libs\DefRegistry.pas',
   SimpleCompress       in '..\..\MainProgram\Libs\SimpleCompress.pas',
   StringEncryptionUnit in '..\..\MainProgram\Libs\StringEncryptionUnit.pas',
+  BintextEnc           in '..\..\MainProgram\Libs\BintextEnc.pas',  
 
   ACC_Common    in '..\..\MainProgram\ACC_Common.pas',
   ACC_GamesData in '..\..\MainProgram\ACC_GamesData.pas';
@@ -26,7 +27,7 @@ type
   end;
 
 const
-  FormatStrings: Array[0..4] of String = ('INI','BIN','INI1','INI2','BIN1');
+  FormatStrings: Array[0..6] of String = ('INI','BIN','INI1','INI2','INI2.1','BIN1','BIN1.1');
 
 var
   ProgramParams:  TProgramParams;
@@ -108,9 +109,11 @@ var
             end;
           end;
         case ProgramParams.OutputFormat of
-          0,3:  Result := DataManager.SaveToIni(ProgramParams.OutputFile,IFS_2_0);
           2:    Result := DataManager.SaveToIni(ProgramParams.OutputFile,IFS_1_0);
-          1,4:  Result := DataManager.SaveToBin(ProgramParams.OutputFile,BFS_1_0);
+          3:    Result := DataManager.SaveToIni(ProgramParams.OutputFile,IFS_2_0);
+          0,4:  Result := DataManager.SaveToIni(ProgramParams.OutputFile,IFS_2_1);
+          5:    Result := DataManager.SaveToBin(ProgramParams.OutputFile,BFS_1_0);          
+          1,6:  Result := DataManager.SaveToBin(ProgramParams.OutputFile,BFS_1_1);
         else
           Result := False;
         end;
@@ -140,8 +143,9 @@ else
     WriteLn;
     WriteLn('GamesDataConverter -i InputFile -of OtuputFileFormat [-o OutputFile] [-ic GameIconFile_1 [GameIconFile_2 ..]]');
     WriteLn;
-    WriteLn('OutputFileFormat - can be one of following: INI, BIN, INI1, INI2, BIN1');
-    WriteLn('                   INI maps to INI2; BIN maps to BIN1');
+    WriteLn('OutputFileFormat - can be one of following: INI, BIN, INI1, INI2, INI2.1, BIN1,');
+    WriteLn('                   BIN1.1');
+    WriteLn('                   INI maps to INI2.1; BIN maps to BIN1.1');
     WriteLn('      OutputFile - when not specified, output file has the same name as input');
     WriteLn; WriteLn;
     Write('Press enter to end the program...'); ReadLn;

@@ -196,7 +196,7 @@ end;
 
 procedure TACCManager.ProcessBinder_OnStateChange(Sender: TObject);
 begin
-If ProcessBinder.Binded then
+If fProcessBinder.Binded then
   begin
     TrayIcon.SetTipText(ACCSTR_TI_DefaultTipText + sLineBreak + ProcessBinder.GameData.ExtendedTitle);
     fMemoryOperator.Activate(ProcessBinder.GameData);

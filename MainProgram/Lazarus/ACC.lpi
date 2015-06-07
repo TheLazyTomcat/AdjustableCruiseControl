@@ -19,7 +19,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="3"/>
-      <BuildNr Value="159"/>
+      <BuildNr Value="162"/>
       <Language Value="0405"/>
       <StringTable Comments="Main program for ACC 2.3.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.3.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.3.0"/>
     </VersionInfo>
@@ -161,7 +161,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="32">
+    <Units Count="33">
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -221,6 +221,7 @@
       <Unit14>
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_GamesData"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\ACC_Input.pas"/>
@@ -309,6 +310,11 @@
         <Filename Value="..\ACC_PluginComm.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit31>
+      <Unit32>
+        <Filename Value="..\Libs\BinTextEnc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="BinTextEnc"/>
+      </Unit32>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

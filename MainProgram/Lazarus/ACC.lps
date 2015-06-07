@@ -4,12 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Debug_win_x86"/>
-    <Units Count="68">
+    <Units Count="69">
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="65"/>
-        <CursorPos Y="89"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="22"/>
+        <CursorPos X="3" Y="21"/>
         <UsageCount Value="133"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -96,14 +97,12 @@
       <Unit14>
         <Filename Value="..\ACC_GamesData.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1747"/>
-        <CursorPos X="76" Y="1767"/>
+        <UnitName Value="ACC_GamesData"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="962"/>
+        <CursorPos X="42" Y="982"/>
         <UsageCount Value="133"/>
-        <Bookmarks Count="2">
-          <Item0 X="5" Y="1206" ID="1"/>
-          <Item1 X="30" Y="1349" ID="2"/>
-        </Bookmarks>
+        <Loaded Value="True"/>
       </Unit14>
       <Unit15>
         <Filename Value="..\ACC_Input.pas"/>
@@ -164,8 +163,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <CursorPos X="8"/>
         <UsageCount Value="133"/>
         <Loaded Value="True"/>
@@ -458,6 +456,14 @@
         <CursorPos X="9" Y="20"/>
         <UsageCount Value="11"/>
       </Unit67>
+      <Unit68>
+        <Filename Value="..\Libs\BinTextEnc.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="BinTextEnc"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit68>
     </Units>
     <CustomDefines Count="5">
       <Define0 Value="FPC"/>
@@ -466,7 +472,7 @@
       <Define3 Value="Debug"/>
       <Define4 Value="Release"/>
     </CustomDefines>
-    <JumpHistory Count="4" HistoryIndex="3">
+    <JumpHistory Count="10" HistoryIndex="9">
       <Position1>
         <Filename Value="ACC.lpr"/>
         <Caret Line="82" TopLine="61"/>
@@ -483,6 +489,30 @@
         <Filename Value="ACC.lpr"/>
         <Caret Line="87" TopLine="65"/>
       </Position4>
+      <Position5>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <Caret Line="1767" Column="76" TopLine="1747"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <Caret Line="845" Column="30" TopLine="833"/>
+      </Position6>
+      <Position7>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <Caret Line="982" Column="30" TopLine="971"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <Caret Line="1206" Column="5" TopLine="1196"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <Caret Line="1349" Column="30" TopLine="1338"/>
+      </Position9>
+      <Position10>
+        <Filename Value="..\ACC_GamesData.pas"/>
+        <Caret Line="845" Column="42" TopLine="833"/>
+      </Position10>
     </JumpHistory>
   </ProjectSession>
   <Debugging>
