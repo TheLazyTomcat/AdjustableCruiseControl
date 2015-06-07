@@ -203,7 +203,11 @@ case fAnimationTimer.Tag of
                         begin
                           fApplication.ShowMainForm := True;
                           SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) and not WS_EX_TOOLWINDOW);
-                          SetForegroundWindow(fApplicationHandle);                          
+                          {$IFDEF FPC}
+                          ShowWindow(fApplicationHandle,SW_SHOW);
+                          {$ELSE}
+                          SetForegroundWindow(fApplicationHandle);
+                          {$ENDIF}
                           fApplication.MainForm.Show;
                           fApplication.MainForm.BringToFront;
                           fAnimationTimer.Tag := AnimState_FadeOut;

@@ -8,6 +8,8 @@ uses
   WinMsgComm, WinMsgCommServer,
   SCS_Telemetry_Condensed;
 
+const
+  PluginInstanceMutexName = 'ACC_IC_PLG_MTX_87F19E40-4CCB-4827-8039-47FB4B757AFF';
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -18,6 +20,7 @@ uses
 type
   TACCPluginManager = class(TObject)
   private
+    fInstanceMutex:   THandle;
     fAPIVersion:      scs_u32_t;
     fAPIParams:       scs_telemetry_init_params_t;
     fGameActive:      Boolean;
@@ -39,6 +42,7 @@ type
     procedure CheckFeatures; virtual;
     procedure WMCServer_OnValueRecived(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
   public
+    class Function InstanceAlreadyExists: Boolean; virtual;
     constructor Create(APIVersion: scs_u32_t; APIParams: scs_telemetry_init_params_t);
     destructor Destroy; override;
     procedure SetValue(Name: TelemetryString; {%H-}Index: scs_u32_t; Value: scs_value_t); virtual;
@@ -153,8 +157,8 @@ begin
 If Assigned(fAPIParams.register_for_channel) then
   begin
     fSpeedRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_speed),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
-    fCrConRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
-    fLimitRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
+    fCrConRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
+    fLimitRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
   end;
 end;
 
@@ -229,9 +233,23 @@ end;
 {   TACCPluginManager // Public methods                                        }
 {------------------------------------------------------------------------------}
 
+class Function TACCPluginManager.InstanceAlreadyExists: Boolean;
+var
+  Mutex:  THandle;
+begin
+Mutex := CreateMutex(nil,False,PluginInstanceMutexName);
+Result := GetLastError = ERROR_ALREADY_EXISTS;
+CloseHandle(Mutex);
+end;
+
+//------------------------------------------------------------------------------
+
 constructor TACCPluginManager.Create(APIVersion: scs_u32_t; APIParams: scs_telemetry_init_params_t);
 begin
 inherited Create;
+fInstanceMutex := CreateMutex(nil,False,PluginInstanceMutexName);
+If GetLastError = ERROR_ALREADY_EXISTS then
+  raise Exception.Create('TACCPluginManager.Create: At least one instance is already created.');
 fAPIVersion := APIVersion;
 fAPIParams := APIParams;
 fGameActive := False;
@@ -252,6 +270,7 @@ begin
 fWMCServer.Free;
 UnregisterChannels;
 UnregisterEvents;
+CloseHandle(fInstanceMutex);
 inherited;
 end;
 

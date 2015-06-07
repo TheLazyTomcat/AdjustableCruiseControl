@@ -12,10 +12,13 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Classes, Forms,
+  Messages, Classes, Forms,
   MulticastEvent, UtilityWindow, WinMsgComm, WinMsgCommClient,
   ACC_InstanceControl, ACC_Settings, ACC_GamesData, ACC_TrayIcon,
   ACC_SplashScreen, ACC_ProcessBinder, ACC_MemoryOps, ACC_Input;
+
+const
+  WM_SHOWNODISTURB = WM_USER + 101;
 
 type
   TLoadUpdateEvent = procedure(Sender: TObject; const UpdateFile: String) of object;
@@ -384,7 +387,17 @@ else
     else
       begin
         If FullscreenAppRunning then
-          SetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE) or WS_EX_NOACTIVATE);
+          begin
+            fApplication.ShowMainForm := False;
+            SetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE) or WS_EX_NOACTIVATE);
+            PostMessage(fApplication.MainForm.Handle,WM_SHOWNODISTURB,0,0);
+           end
+        else
+          {$IFDEF FPC}
+          ShowWindow(WidgetSet.AppHandle,SW_SHOW);
+          {$ELSE}
+          SetForegroundWindow(fApplication.Handle);
+          {$ENDIF}
         Load;
       end;
   end;

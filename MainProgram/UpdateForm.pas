@@ -53,9 +53,10 @@ var
 
 implementation
 
+{$R Resources\UpdateIcon.res}
+
 {$IFDEF FPC}
   {$R *.lfm}
-  {$R Resources\UpdateIcon.res}
 {$ELSE}
   {$R *.dfm}
 {$ENDIF}
@@ -378,7 +379,7 @@ procedure TfUpdateForm.btnAssociateFileClick(Sender: TObject);
       Reg.WriteString('','Binary update file for Adjustable Cruise Control 2');
       Reg.CloseKey;
       Reg.OpenKey('Software\Classes\ACCUpdateFile\DefaultIcon', True);
-      Reg.WriteString('',ParamStr(0) + {$IFDEF FPC}',1'{$ELSE}',0'{$ENDIF});
+      Reg.WriteString('',ParamStr(0) + ',1');
       Reg.CloseKey;
       Reg.OpenKey('Software\Classes\ACCUpdateFile\shell\open\command', True);
       Reg.WriteString('',ParamStr(0) + ' "%1"') ;

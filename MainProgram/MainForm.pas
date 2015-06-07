@@ -6,7 +6,8 @@ interface
 
 uses
   Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF};
+  StdCtrls, ComCtrls, Spin{$IFNDEF FPC}, XPMan{$ENDIF},
+  ACC_Manager;
 
 const
   WM_AFTERSHOW = WM_USER + 100;
@@ -82,6 +83,7 @@ type
     fUpdateFile:      String;
     fSpeedsChanging:  Boolean;
     procedure AfterShow(var {%H-}Msg: TMessage); message WM_AFTERSHOW;
+    procedure ShowNoDisturb(var {%H-}Msg: TMessage); message WM_SHOWNODISTURB;
     procedure OnBindStateChange(Sender: TObject);
     procedure OnPluginStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
@@ -161,6 +163,7 @@ type
     fUpdateFile:      String;
     fSpeedsChanging:  Boolean;
     procedure AfterShow(var Msg: TMessage); message WM_AFTERSHOW;
+    procedure ShowNoDisturb(var Msg: TMessage); message WM_SHOWNODISTURB;
     procedure OnBindStateChange(Sender: TObject);
     procedure OnPluginStateChange(Sender: TObject);
     procedure SpeedsToForm(Sender: TObject);
@@ -184,14 +187,20 @@ implementation
 
 uses
   Windows,
-  ACC_Manager, ACC_Settings, ACC_Strings, ACC_Input, ACC_PluginComm,
+  ACC_Settings, ACC_Strings, ACC_Input, ACC_PluginComm,
   AboutForm, SettingsForm, UpdateForm;
 
 procedure TfMainForm.AfterShow(var Msg: TMessage);
 begin
 If fLoadingUpdate then
   fUpdateForm.LoadUpdateFromFile(Self,fUpdateFile);
-SetWindowLong(Application.MainForm.Handle,GWL_EXSTYLE,GetWindowLong(Application.MainForm.Handle,GWL_EXSTYLE) and not WS_EX_NOACTIVATE);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TfMainForm.ShowNoDisturb(var Msg: TMessage);
+begin
+Application.MainForm.Visible := True
 end;
 
 //------------------------------------------------------------------------------
@@ -366,6 +375,7 @@ begin
 SettingsToForm;
 OnPluginStateChange(nil);
 btnAbout.SetFocus;
+SetWindowLong(Application.MainForm.Handle,GWL_EXSTYLE,GetWindowLong(Application.MainForm.Handle,GWL_EXSTYLE) and not WS_EX_NOACTIVATE);
 PostMessage(Self.WindowHandle,WM_AFTERSHOW,0,0);
 end;
 
