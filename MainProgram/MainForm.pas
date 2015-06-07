@@ -191,6 +191,7 @@ procedure TfMainForm.AfterShow(var Msg: TMessage);
 begin
 If fLoadingUpdate then
   fUpdateForm.LoadUpdateFromFile(Self,fUpdateFile);
+SetWindowLong(Application.MainForm.Handle,GWL_EXSTYLE,GetWindowLong(Application.MainForm.Handle,GWL_EXSTYLE) and not WS_EX_NOACTIVATE);
 end;
 
 //------------------------------------------------------------------------------

@@ -92,6 +92,10 @@ uses
 
 {$R 'Resources\GamesData.res'}
 
+{$If not declared(GetShellWindow)}
+Function GetShellWindow: HWND; stdcall; external 'user32.dll';
+{$IFEND}
+
 const
   GamesDataResName = 'GamesData';
 
@@ -164,22 +168,23 @@ var
 
   procedure DoRestore;
   begin
-    If fTrayIcon.Visible then
-      begin
-        fApplication.Restore;
-        fApplication.MainForm.Show;
-        SetForegroundWindow(fApplication.MainForm.Handle);
-        fTrayIcon.HideTrayIcon;
-      end
-    else
-      begin
-        fApplication.Restore;
-        {$IFDEF FPC}
-        SetForegroundWindow(WidgetSet.AppHandle);
-        {$ELSE}
-        SetForegroundWindow(fApplication.Handle);
-        {$ENDIF}
-      end;
+    If not fProcessBinder.Binded or not GameActive then
+      If fTrayIcon.Visible then
+        begin
+          fApplication.Restore;
+          fApplication.MainForm.Show;
+          SetForegroundWindow(fApplication.MainForm.Handle);
+          fTrayIcon.HideTrayIcon;
+        end
+      else
+        begin
+          fApplication.Restore;
+          {$IFDEF FPC}
+          SetForegroundWindow(WidgetSet.AppHandle);
+          {$ELSE}
+          SetForegroundWindow(fApplication.Handle);
+          {$ENDIF}
+        end;
   end;
   
 begin
@@ -339,6 +344,27 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TACCManager.Initialize(Application: TApplication; LoadingUpdate: Boolean);
+
+  Function FullscreenAppRunning: Boolean;
+  var
+    TopWindow:  HWND;
+    TopWndRect: TRect;
+    ScreenRect: TRect;
+  begin
+    Result := False;
+    TopWindow := GetForegroundWindow;
+    If (TopWindow <> INVALID_HANDLE_VALUE) and
+       (TopWindow <> GetShellWindow) and
+       (TopWindow <> GetDesktopWindow) then
+      If GetWindowRect(TopWindow,{%H-}TopWndRect) then
+        begin
+          FillChar({%H-}ScreenRect,SizeOf(ScreenRect),0);
+          ScreenRect := Screen.MonitorFromWindow(TopWindow).BoundsRect;
+          Result := (ScreenRect.Top = TopWndRect.Top) and (ScreenRect.Left = TopWndRect.Left) and
+                    (ScreenRect.Bottom = TopWndRect.Bottom) and (ScreenRect.Right = TopWndRect.Right);  
+        end;
+  end;
+
 begin
 fApplication := Application;
 fApplication.OnMinimize := Application_OnMinimize;
@@ -353,10 +379,14 @@ If Settings.StartMinimized and not LoadingUpdate then
   end
 else
   begin
-    If Settings.ShowSplashScreen then
+    If Settings.ShowSplashScreen and not FullscreenAppRunning then
       fSplashScreen := TSplashScreen.Create(fUtilityWindow,fApplication,Load)
     else
-      Load;
+      begin
+        If FullscreenAppRunning then
+          SetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE) or WS_EX_NOACTIVATE);
+        Load;
+      end;
   end;
 end;
 

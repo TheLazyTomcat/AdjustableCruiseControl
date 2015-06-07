@@ -19,7 +19,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="3"/>
-      <BuildNr Value="162"/>
+      <BuildNr Value="164"/>
       <Language Value="0405"/>
       <StringTable Comments="Main program for ACC 2.3.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Application" InternalName="ACC 2.3.x" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control" OriginalFilename="ACC.exe" ProductName="Adjustable Cruise Control" ProductVersion="2.3.0"/>
     </VersionInfo>
@@ -234,6 +234,7 @@
       <Unit17>
         <Filename Value="..\ACC_Manager.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="ACC_Manager"/>
       </Unit17>
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
