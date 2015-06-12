@@ -15,16 +15,6 @@ uses
   Forms;
 
 const
-  ACC_VersionShort = $00020003;
-  ACC_VersionLong  = $0002000300000000;
-
-  ACC_VersionShortStr = '2.3';
-  ACC_VersionLongStr  = '2.3.0';
-  ACC_VersionFullStr  = ACC_VersionLongStr
-                        {$IFDEF FPC}+ '  L'{$ELSE}+ '  D'{$ENDIF}
-                        {$IFDEF x64}+ '64'{$ELSE}+ '32'{$ENDIF}
-                        {$IFDEF Debug}+ ' debug'{$ENDIF};
-
   ACC_TIMER_ID_Splash = 1;
   ACC_TIMER_ID_Binder = 2;
 
@@ -37,12 +27,23 @@ type
   PtrUInt = LongWord;
 {$ENDIF}
 
+var
+  ACC_VersionShort: LongWord = 0;
+  ACC_VersionLong:  Int64    = 0;
+
+  ACC_VersionShortStr: String = '';
+  ACC_VersionLongStr:  String = '';
+  ACC_BuildStr:        String = '';
+
 Function UTF8ToString(UTF8Str: UTF8String): String;
 Function StringToUTF8(Str: String): UTF8String;
 
 procedure CenterFormToForm(Centered,CenterTo: TForm);
 
 implementation
+
+uses
+  SysUtils, WinFileInfo;
 
 Function UTF8ToString(UTF8Str: UTF8String): String;
 begin
@@ -80,5 +81,28 @@ If Assigned(Centered) and Assigned(CenterTo) then
         Centered.Top := (Centered.Monitor.WorkareaRect.Bottom - Centered.Monitor.WorkareaRect.Top) - Centered.Height;
   end;
 end;
+
+//------------------------------------------------------------------------------
+
+procedure InitVersionInfo;
+begin
+with TWinFileInfo.Create(WFI_LS_LoadVersionInfo or WFI_LS_LoadFixedFileInfo or WFI_LS_DecodeFixedFileInfo) do
+  begin
+    ACC_VersionShort := VersionInfoFixedFileInfo.dwProductVersionMS;
+    ACC_VersionLong := VersionInfoFixedFileInfoDecoded.ProductVersionFull;
+    ACC_VersionShortStr := IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Major) + '.' +
+                           IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Minor);
+    ACC_VersionLongStr := ACC_VersionShortStr + '.' + IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Release);
+    ACC_BuildStr := {$IFDEF FPC}'L'{$ELSE}'D'{$ENDIF}{$IFDEF x64}+ '64'{$ELSE}+ '32'{$ENDIF} +
+                    ' #' + IntToStr(VersionInfoFixedFileInfoDecoded.FileVersionMembers.Build)
+                    {$IFDEF Debug}+ ' debug'{$ENDIF};
+    Free;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+initialization
+  InitVersionInfo;
 
 end.

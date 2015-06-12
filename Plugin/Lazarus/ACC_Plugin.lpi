@@ -22,7 +22,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="1"/>
-      <BuildNr Value="44"/>
+      <BuildNr Value="46"/>
       <Language Value="0405"/>
       <StringTable Comments="Game plugin for ACC 2.3.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Plugin" InternalName="ACC 2.3.x Plugin" LegalCopyright="© 2013 - 2015 František Milt" LegalTrademarks="Adjustable Cruise Control Plugin" OriginalFilename="ACC_Plugin.dll" ProductName="Adjustable Cruise Control Plugin" ProductVersion="1.1.0.0"/>
     </VersionInfo>

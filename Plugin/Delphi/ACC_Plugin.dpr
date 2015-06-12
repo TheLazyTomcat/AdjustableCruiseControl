@@ -9,6 +9,7 @@ uses
   MulticastEvent   in '..\..\MainProgram\Libs\MulticastEvent.pas',
   WndAlloc         in '..\..\MainProgram\Libs\WndAlloc.pas',
   UtilityWindow    in '..\..\MainProgram\Libs\UtilityWindow.pas',
+  WinFileInfo      in '..\..\MainProgram\Libs\WinFileInfo.pas',
   WinMsgComm       in '..\..\MainProgram\Libs\WMC\WinMsgComm.pas',
   WinMsgCommServer in '..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas',
 

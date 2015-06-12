@@ -19,6 +19,7 @@ uses
   UtilityWindow,
   SimpleTimer,
   BinTextEnc,
+  WinFileInfo,
   WinMsgComm,
   WinMsgCommClient,
 

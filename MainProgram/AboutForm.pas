@@ -42,7 +42,7 @@ procedure TfAboutForm.FormCreate(Sender: TObject);
 begin
 lblTitle.Caption := ACCSTR_ApplicationName;
 lblTitleShadow.Caption := ACCSTR_ApplicationName;
-lblProgramVersion.Caption := ACCSTR_UI_CPY_ProgramVersion + ACC_VersionFullStr;
+lblProgramVersion.Caption := ACCSTR_UI_CPY_ProgramVersion + ACC_VersionLongStr + '  ' + ACC_BuildStr;
 lblAuthor.Caption := ACCSTR_UI_CPY_Author;
 lblCopyright.Caption := ACCSTR_UI_CPY_Copyright;
 end;
