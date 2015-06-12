@@ -1874,7 +1874,8 @@ var
 
   Function CheckPointer(Pointer: TPointerData): Boolean;
   begin
-    Result := (Pointer.ModuleIndex >= Low(GameData.Modules)) and
+    Result := (TPtrInfoRec(Pointer.PtrInfo).PtrType <> PTR_TYPE_Invalid) and
+              (Pointer.ModuleIndex >= Low(GameData.Modules)) and
               (Pointer.ModuleIndex <= High(GameData.Modules));
   end;
 

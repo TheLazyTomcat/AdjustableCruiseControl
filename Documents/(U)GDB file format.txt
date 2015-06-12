@@ -8,7 +8,7 @@ storage in Adjustable Cruise Control 2.2+ application.
 
 
 Primitives
-------------------------------
+----------------------------------------
 This file format is binary, so everything is stored in its binary form.
 All numbers are stored with little endianity (least significant byte first).
 Strings are stored as a two fields. First field is length of the string in
@@ -23,7 +23,7 @@ String storing:
 
 
 Genereal file structure
-------------------------------
+----------------------------------------
 
     4B    32bit uint    File signature
     4B    32bit uint    File structure
@@ -34,12 +34,13 @@ such file should be considered corrupted or of different type.
 File structure is a number that identifies how the Data block looks like and how
 it should be read. So when reading (U)GDB file, you should first read this
 number and based on its value select proper reading procedure for the rest of
-the file. Currently, only one structure is implemented - number 0x00010000.
+the file. Currently, two structures are implemented - number 0x00010000 and
+0x00010001.
 
 
 
 Data block structure (0x00010000)
-------------------------------
+----------------------------------------
 Data block in this structure can be divided into two parts. First contains game
 icons and second actual games data.
 
@@ -54,7 +55,8 @@ First part (icons) has this structure:
       end;
 
 Icon image is actually a complete PNG file - you can read it as if it were
-normal PNG file.
+normal PNG file. The image itself must be 32x32 pixels with 32bit colors 
+(8bit alpha).
 
 
 Second part (games data) has following structure:
@@ -87,7 +89,7 @@ meaning of individual fields, refer to "GamesData INI 2.0.txt" file):
       end;
     []    Pointer entry             Pointer entry for CC speed (following structure applies to all pointer entries)
       begin
-        4B    32bit int                 Flags
+        4B    32bit uint                Flags
         4B    32bit int                 Module index
         4B    32bit int                 Number of stored pointer offsets (length of the following array)
         []    Array of Int64            Array of pointer offsets
@@ -103,3 +105,20 @@ Optional fields:
   01 - present only when CF_FILESIZE flag is set in check flags
   02 - present only when CF_FILECRC32 flag is set in check flags
   03 - present only when CF_FILEMD5 flag is set in check flags
+
+
+
+Data block structure (0x00010001)
+----------------------------------------
+This structure is identical to structute 0x00010000 with one exception - pointer
+entries have one additional 32bit uint field called "Pointer info" right after
+field "Flags", so the pointer entry pseudostructure looks like this:
+
+    begin
+      4B    32bit uint                Flags
+      4B    32bit uint                Pointer info
+      4B    32bit int                 Module index
+      4B    32bit int                 Number of stored pointer offsets (length of the following array)
+      []    Array of Int64            Array of pointer offsets
+      4B    32bit float               Coefficient
+    end;
