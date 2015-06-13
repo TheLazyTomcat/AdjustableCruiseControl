@@ -1,10 +1,12 @@
 object fMainForm: TfMainForm
-  Left = 457
-  Top = 148
+  Left = 608
+  Top = 118
   Width = 648
   Height = 378
   Caption = 'Registry Cleaner'
   Color = clBtnFace
+  Constraints.MinHeight = 378
+  Constraints.MinWidth = 648
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

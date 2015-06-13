@@ -2,6 +2,7 @@ This version differs only in few details from version 2.0, therefore it won't be
 completely described in this document. Instead, only differences and new
 features will be described in here.
 Refer to file "GamesData INI 2.0 [Rev_0].txt" for details not documented here.
+This version is available from ACC 2.3.1 up.
 
 
 General file structure

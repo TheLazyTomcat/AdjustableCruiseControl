@@ -36,6 +36,7 @@ it should be read. So when reading (U)GDB file, you should first read this
 number and based on its value select proper reading procedure for the rest of
 the file. Currently, two structures are implemented - number 0x00010000 and
 0x00010001.
+Note that structure 0x00010001 is implemented only in ACC 2.3.1 and newer.
 
 
 
@@ -55,7 +56,7 @@ First part (icons) has this structure:
       end;
 
 Icon image is actually a complete PNG file - you can read it as if it were
-normal PNG file. The image itself must be 32x32 pixels with 32bit colors 
+normal PNG file. The image itself must be 32x32 pixels with 32bit colors
 (8bit alpha).
 
 
