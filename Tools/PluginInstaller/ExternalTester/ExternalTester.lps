@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <BuildModes Active="Debug_win_x86"/>
+    <BuildModes Active="Debug_win_x64"/>
     <Units Count="3">
       <Unit0>
         <Filename Value="ExternalTester.lpr"/>
