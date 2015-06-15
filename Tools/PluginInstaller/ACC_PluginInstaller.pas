@@ -1,3 +1,10 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 unit ACC_PluginInstaller;
 
 interface
@@ -42,7 +49,9 @@ type
     destructor Destroy; override;
     Function SelectGame(Index: Integer): Boolean; virtual;
     Function LoadIntalledPlugins: Integer; virtual;
-    Function RemoveInstalledPlugins(Index: Integer): Boolean; virtual;
+    Function RemoveInstalledPlugin(Index: Integer): Boolean; virtual;
+    Function InstallPlugin(const Description, FilePath: String): Boolean; virtual;
+    Function IndexOfInstalledPlugin(Str: String; FilePath: Boolean = False): Integer; virtual;
     property KnownGames[Index: Integer]: TGameEntry read GetKnownGames;
     property InstalledPlugins[Index: Integer]: TInstalledPlugin read GetInstalledPlugins;
   published
@@ -249,7 +258,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TACCPluginInstaller.RemoveInstalledPlugins(Index: Integer): Boolean;
+Function TACCPluginInstaller.RemoveInstalledPlugin(Index: Integer): Boolean;
 var
   Reg:  TRegistry;
 begin
@@ -275,6 +284,46 @@ If (Index >= Low(fInstalledPlugins)) and (Index <= High(fInstalledPlugins)) then
     end;
   end  
 else Result := False;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.InstallPlugin(const Description, FilePath: String): Boolean;
+var
+  Reg: TRegistry;
+begin
+Result := False;
+If SelectedGame.Valid and SelectedGame.SystemValid then
+  begin
+    Reg := TRegistry.Create;
+    try
+      Reg.RootKey := SelectedGame.RegistryRoot;
+      If Reg.OpenKey(SelectedGame.RegistryKey,True) then
+        begin
+          Reg.WriteString(Description,FilePath);
+          Reg.CloseKey;
+          Result := True;
+        end;
+    finally
+      Reg.Free;
+    end;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.IndexOfInstalledPlugin(Str: String; FilePath: Boolean = False): Integer;
+begin
+For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
+  If FilePath then
+    begin
+      If AnsiSameText(fInstalledPlugins[Result].FilePath,Str) then Exit;
+    end
+  else
+    begin
+      If AnsiSameText(fInstalledPlugins[Result].Description,Str) then Exit;
+    end;
+Result := -1;
 end;
 
 end.

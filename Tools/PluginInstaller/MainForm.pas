@@ -11,7 +11,7 @@ type
   TfMainForm = class(TForm)
     lbGame: TLabel;
     cbGame: TComboBox;
-    gbInstalledPlugins: TGroupBox;
+    gbPlugins: TGroupBox;
     lbeRegistryKey: TLabeledEdit;
     lvInstalledPlugins: TListView;
     oXPManifest: TXPManifest;
@@ -20,10 +20,13 @@ type
     lbl64bitWarning: TLabel;
     dlgAddPlugin: TOpenDialog;
     btnRefresh: TButton;
+    lblInstalledPlugins: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);    
     procedure cbGameChange(Sender: TObject);
+    procedure lvInstalledPluginsKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);    
     procedure btnAddClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
@@ -41,6 +44,9 @@ var
 implementation
 
 {$R *.dfm}
+
+uses
+  DescriptionForm;
 
 procedure TfMainForm.LoadIntalledPlugins;
 var
@@ -113,12 +119,22 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TfMainForm.lvInstalledPluginsKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+If Key = VK_DELETE then btnRemove.OnClick(nil);
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TfMainForm.btnAddClick(Sender: TObject);
 begin
 If dlgAddPlugin.Execute then
-  begin
-
-  end;
+  If ShowDescriptionPrompt(PluginInstaller,dlgAddPlugin.FileName,PluginInstaller.SelectedGame.Is64bit) then
+    begin
+      PluginInstaller.LoadIntalledPlugins;
+      LoadIntalledPlugins;
+    end;
 end;
 
 //------------------------------------------------------------------------------
@@ -128,7 +144,7 @@ begin
 If lvInstalledPlugins.ItemIndex >= 0 then
   If MessageDlg('Are you sure you want to uninstall plugin "' + lvInstalledPlugins.Selected.Caption + '"?',mtConfirmation,[mbYes,mbNo],0) = mrYes then
     begin
-      PluginInstaller.RemoveInstalledPlugins(lvInstalledPlugins.ItemIndex);
+      PluginInstaller.RemoveInstalledPlugin(lvInstalledPlugins.ItemIndex);
       PluginInstaller.LoadIntalledPlugins;
       LoadIntalledPlugins;
     end;

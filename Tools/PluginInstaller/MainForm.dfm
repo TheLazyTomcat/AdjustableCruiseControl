@@ -46,13 +46,13 @@ object fMainForm: TfMainForm
     TabOrder = 0
     OnChange = cbGameChange
   end
-  object gbInstalledPlugins: TGroupBox
+  object gbPlugins: TGroupBox
     Left = 8
     Top = 56
     Width = 649
     Height = 305
     Anchors = [akLeft, akTop, akRight, akBottom]
-    Caption = 'Registry data'
+    Caption = 'Plugins'
     TabOrder = 1
     DesignSize = (
       649
@@ -71,6 +71,13 @@ object fMainForm: TfMainForm
       Font.Style = [fsBold]
       ParentFont = False
       Visible = False
+    end
+    object lblInstalledPlugins: TLabel
+      Left = 8
+      Top = 72
+      Width = 81
+      Height = 13
+      Caption = 'Installed plugins:'
     end
     object lbeRegistryKey: TLabeledEdit
       Left = 8
@@ -93,9 +100,9 @@ object fMainForm: TfMainForm
     end
     object lvInstalledPlugins: TListView
       Left = 8
-      Top = 72
+      Top = 88
       Width = 633
-      Height = 193
+      Height = 177
       Anchors = [akLeft, akTop, akRight, akBottom]
       Columns = <
         item
@@ -110,31 +117,32 @@ object fMainForm: TfMainForm
       RowSelect = True
       TabOrder = 1
       ViewStyle = vsReport
+      OnKeyDown = lvInstalledPluginsKeyDown
     end
     object btnAdd: TButton
-      Left = 240
+      Left = 216
       Top = 272
-      Width = 129
+      Width = 137
       Height = 25
       Anchors = [akRight, akBottom]
-      Caption = 'Add plugin...'
+      Caption = 'Install plugin...'
       TabOrder = 2
       OnClick = btnAddClick
     end
     object btnRemove: TButton
-      Left = 376
+      Left = 360
       Top = 272
-      Width = 129
+      Width = 137
       Height = 25
       Anchors = [akRight, akBottom]
-      Caption = 'Remove selected plugin'
+      Caption = 'Uninstall selected plugin'
       TabOrder = 3
       OnClick = btnRemoveClick
     end
     object btnRefresh: TButton
-      Left = 512
+      Left = 504
       Top = 272
-      Width = 129
+      Width = 137
       Height = 25
       Anchors = [akRight, akBottom]
       Caption = 'Refresh list of plugins'
@@ -147,7 +155,7 @@ object fMainForm: TfMainForm
   end
   object dlgAddPlugin: TOpenDialog
     Filter = 'Dynamic-link library (*.dll)|*.dll|All files (*.*)|*.*'
-    Title = 'Select plugin to install'
+    Title = 'Select plugin'
     Left = 600
   end
 end
