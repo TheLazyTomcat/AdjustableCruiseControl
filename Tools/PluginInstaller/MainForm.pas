@@ -132,7 +132,7 @@ begin
 If dlgAddPlugin.Execute then
   If ShowDescriptionPrompt(PluginInstaller,dlgAddPlugin.FileName,PluginInstaller.SelectedGame.Is64bit) then
     begin
-      PluginInstaller.LoadIntalledPlugins;
+      PluginInstaller.LoadInstalledPlugins;
       LoadIntalledPlugins;
     end;
 end;
@@ -145,7 +145,7 @@ If lvInstalledPlugins.ItemIndex >= 0 then
   If MessageDlg('Are you sure you want to uninstall plugin "' + lvInstalledPlugins.Selected.Caption + '"?',mtConfirmation,[mbYes,mbNo],0) = mrYes then
     begin
       PluginInstaller.RemoveInstalledPlugin(lvInstalledPlugins.ItemIndex);
-      PluginInstaller.LoadIntalledPlugins;
+      PluginInstaller.LoadInstalledPlugins;
       LoadIntalledPlugins;
     end;
 end;
@@ -154,7 +154,7 @@ end;
 
 procedure TfMainForm.btnRefreshClick(Sender: TObject);
 begin
-PluginInstaller.LoadIntalledPlugins;
+PluginInstaller.LoadInstalledPlugins;
 LoadIntalledPlugins;
 end;
 

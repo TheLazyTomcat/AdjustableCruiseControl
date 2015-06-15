@@ -75,6 +75,7 @@ end;
 procedure TfDescriptionForm.btnAcceptClick(Sender: TObject);
 var
   Install:    Boolean;
+  CanClose:   Boolean;
   ErrorCode:  LongWord;
 begin
 If lbeDescription.Text <> '' then
@@ -82,9 +83,13 @@ If lbeDescription.Text <> '' then
     If PluginInstaller.IndexOfInstalledPlugin(FilePath,True) < 0 then
       begin
         Install := True;
+        CanClose := True;
         If PluginInstaller.IndexOfInstalledPlugin(lbeDescription.Text) >= 0 then
-          Install := MessageDlg('Plugin with this description is already installed.' + sLineBreak +
-                                'Replace installed plugin with selected file?',mtWarning,[mbYes,mbNo],0) = mrYes;
+          begin
+            Install := MessageDlg('Plugin with this description is already installed.' + sLineBreak +
+                                  'Replace installed plugin with selected file?',mtWarning,[mbYes,mbNo],0) = mrYes;
+            CanClose := Install;                      
+          end;
         If Install then
           begin
             ErrorCode := PluginCheck(FilePath,Is64bit);
@@ -97,17 +102,19 @@ If lbeDescription.Text <> '' then
               PCR_FinalNotExported: Install := MessageDlg(Format('Selected plugin is not exporting function "scs_telemetry_shutdown".' + sLineBreak +
                                                           'Do you want to install it anyway?',[ErrorCode]),mtError,[mbYes,mbNo],0) = mrYes;
             else
-              Install := MessageDlg(Format('An unknown error (%x) occured while checking the file.' + sLineBreak +
+              Install := MessageDlg(Format('An error (%.8x) occured while checking the file.' + sLineBreak +
                                     'Do you want to install it anyway?',[ErrorCode]),mtError,[mbYes,mbNo],0) = mrYes;
             end;
           end;
         If Install then
-          begin
-            Installed := PluginInstaller.InstallPlugin(lbeDescription.Text,FilePath);
-            Close;
-          end;
+          Installed := PluginInstaller.InstallPlugin(lbeDescription.Text,FilePath);
+        If CanClose then Close;
       end
-    else MessageDlg('Selected file is already installed.',mtError,[mbOK],0);
+    else
+      begin
+        MessageDlg('Selected file is already installed.',mtError,[mbOK],0);
+        Close;
+      end;
   end
 else
   begin

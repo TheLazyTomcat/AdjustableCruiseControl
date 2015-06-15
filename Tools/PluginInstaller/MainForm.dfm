@@ -113,6 +113,7 @@ object fMainForm: TfMainForm
           Caption = 'Plugin file'
           Width = 460
         end>
+      HideSelection = False
       ReadOnly = True
       RowSelect = True
       TabOrder = 1

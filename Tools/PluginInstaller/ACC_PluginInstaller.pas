@@ -41,14 +41,15 @@ type
     Function GetInstalledPluginCount: Integer;
     Function GetInstalledPlugins(Index: Integer): TInstalledPlugin;
   protected
-    Function KnownGamesCheckIndex(Index: Integer): Boolean;
+    Function KnownGamesCheckIndex(Index: Integer): Boolean; virtual;
+    Function GetRegistryViewFlag: LongWord; virtual;
     procedure CheckWoW64; virtual;
     procedure FillKnownGames; virtual;
   public
     constructor Create;
     destructor Destroy; override;
     Function SelectGame(Index: Integer): Boolean; virtual;
-    Function LoadIntalledPlugins: Integer; virtual;
+    Function LoadInstalledPlugins: Integer; virtual;
     Function RemoveInstalledPlugin(Index: Integer): Boolean; virtual;
     Function InstallPlugin(const Description, FilePath: String): Boolean; virtual;
     Function IndexOfInstalledPlugin(Str: String; FilePath: Boolean = False): Integer; virtual;
@@ -81,8 +82,8 @@ const
     (Valid:           True;
      Title:           'Euro Truck Simulator 2 64bit';
      RegistryRoot:    HKEY_LOCAL_MACHINE;
-     RegistryKey:     'Software\Wow6432Node\SCS Software\Euro Truck Simulator 2\Plugins';
-     FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\Wow6432Node\SCS Software\Euro Truck Simulator 2\Plugins';
+     RegistryKey:     'Software\SCS Software\Euro Truck Simulator 2\Plugins';
+     FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\SCS Software\Euro Truck Simulator 2\Plugins';
      Is64bit:         True;
      SystemValid:     False));
 
@@ -148,6 +149,26 @@ end;
 
 //------------------------------------------------------------------------------
 
+Function TACCPluginInstaller.GetRegistryViewFlag: LongWord;
+const
+  KEY_WOW64_64KEY = $0100;
+  KEY_WOW64_32KEY = $0200;
+begin
+{$IFDEF x64}
+If SelectedGame.Is64bit then Result := KEY_WOW64_64KEY
+  else Result := KEY_WOW64_32KEY;
+{$ELSE}
+If fRunningInWoW64 then
+  begin
+    If SelectedGame.Is64bit then Result := KEY_WOW64_64KEY
+      else Result := KEY_WOW64_32KEY;
+  end
+else Result := 0;
+{$ENDIF}
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TACCPluginInstaller.CheckWoW64;
 {$IFDEF x64}
 begin
@@ -165,7 +186,7 @@ fRunningInWoW64 := False;
 ModuleHandle := GetModuleHandle('kernel32.dll');
 If ModuleHandle <> 0 then
   begin
-    IsWoW64Process := GetProcAddress(ModuleHandle,'IsWoW64Process');
+    IsWoW64Process := GetProcAddress(ModuleHandle,'IsWow64Process');
     If Assigned(IsWoW64Process) then
       begin
         If IsWow64Process(GetCurrentProcess,@ResultValue) then fRunningInWoW64 := ResultValue
@@ -213,12 +234,12 @@ Function TACCPluginInstaller.SelectGame(Index: Integer): Boolean;
 begin
 fSelectedGameIdx := Index;
 Result := KnownGamesCheckIndex(Index);
-LoadIntalledPlugins;
+LoadInstalledPlugins;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TACCPluginInstaller.LoadIntalledPlugins: Integer;
+Function TACCPluginInstaller.LoadInstalledPlugins: Integer;
 var
   Reg:        TDefRegistry;
   TempList:   TStringList;
@@ -228,10 +249,10 @@ begin
 SetLength(fInstalledPlugins,0);
 If SelectedGame.Valid and SelectedGame.SystemValid then
   begin
-    Reg := TDefRegistry.Create;
+    Reg := TDefRegistry.Create(KEY_ALL_ACCESS or GetRegistryViewFlag);
     try
       Reg.RootKey := SelectedGame.RegistryRoot;
-      If Reg.OpenKeyReadOnly(SelectedGame.RegistryKey) then
+      If Reg.OpenKey(SelectedGame.RegistryKey,False) then
         begin
           TempList := TStringList.Create;
           try
@@ -264,7 +285,7 @@ var
 begin
 If (Index >= Low(fInstalledPlugins)) and (Index <= High(fInstalledPlugins)) then
   begin
-    Reg := TRegistry.Create;
+    Reg := TRegistry.Create(KEY_ALL_ACCESS or GetRegistryViewFlag);
     try
       with InstalledPlugins[Index] do
         begin
@@ -295,7 +316,7 @@ begin
 Result := False;
 If SelectedGame.Valid and SelectedGame.SystemValid then
   begin
-    Reg := TRegistry.Create;
+    Reg := TRegistry.Create(KEY_ALL_ACCESS or GetRegistryViewFlag);
     try
       Reg.RootKey := SelectedGame.RegistryRoot;
       If Reg.OpenKey(SelectedGame.RegistryKey,True) then
