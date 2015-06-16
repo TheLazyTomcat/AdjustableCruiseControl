@@ -11,6 +11,7 @@ type
   TfDescriptionForm = class(TForm)
     lbeSelectedFile: TLabeledEdit;
     lbeDescription: TLabeledEdit;
+    cbPerformChecks: TCheckBox;    
     btnAccept: TButton;
     btnCancel: TButton;
     procedure FormShow(Sender: TObject);
@@ -59,6 +60,7 @@ with TWinFileInfo.Create(FilePath,WFI_LS_LoadVersionInfo or WFI_LS_ParseVersionI
         end;
     Free;
   end;
+fDescriptionForm.cbPerformChecks.Checked := True;
 fDescriptionForm.ShowModal;
 Result := fDescriptionForm.Installed;
 end;
@@ -90,7 +92,7 @@ If lbeDescription.Text <> '' then
                                   'Replace installed plugin with selected file?',mtWarning,[mbYes,mbNo],0) = mrYes;
             CanClose := Install;                      
           end;
-        If Install then
+        If Install and cbPerformChecks.Checked then
           begin
             ErrorCode := PluginCheck(FilePath,Is64bit);
             case ErrorCode of

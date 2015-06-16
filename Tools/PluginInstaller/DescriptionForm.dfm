@@ -44,7 +44,7 @@ object fDescriptionForm: TfDescriptionForm
     Width = 73
     Height = 25
     Caption = 'Accept'
-    TabOrder = 2
+    TabOrder = 3
     OnClick = btnAcceptClick
   end
   object btnCancel: TButton
@@ -53,7 +53,17 @@ object fDescriptionForm: TfDescriptionForm
     Width = 73
     Height = 25
     Caption = 'Cancel'
-    TabOrder = 3
+    TabOrder = 4
     OnClick = btnCancelClick
+  end
+  object cbPerformChecks: TCheckBox
+    Left = 8
+    Top = 100
+    Width = 177
+    Height = 17
+    Caption = 'Perform basic file validity checks'
+    Checked = True
+    State = cbChecked
+    TabOrder = 2
   end
 end
