@@ -28,7 +28,11 @@ type
     FilePath:     String;  
   end;
 
-type
+{==============================================================================}
+{------------------------------------------------------------------------------}
+{                              TACCPluginInstaller                             }
+{------------------------------------------------------------------------------}
+{==============================================================================}
   TACCPluginInstaller = class(TObject)
   private
     fRunningInWoW64:    Boolean;
@@ -63,7 +67,6 @@ type
     property InstallegPluginCount: Integer read GetInstalledPluginCount;
   end;
 
-
 implementation
 
 uses
@@ -72,7 +75,7 @@ uses
 const
   KnownGamesList: array[0..1] of TGameEntry = (
     (Valid:           True;
-     Title:           'Euro Truck Simulator 2 32bit';
+     Title:           'Euro Truck Simulator 2 - 32bit';
      RegistryRoot:    HKEY_LOCAL_MACHINE;
      RegistryKey:     'Software\SCS Software\Euro Truck Simulator 2\Plugins';
      FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\SCS Software\Euro Truck Simulator 2\Plugins';
@@ -80,7 +83,7 @@ const
      SystemValid:     False),
      
     (Valid:           True;
-     Title:           'Euro Truck Simulator 2 64bit';
+     Title:           'Euro Truck Simulator 2 - 64bit';
      RegistryRoot:    HKEY_LOCAL_MACHINE;
      RegistryKey:     'Software\SCS Software\Euro Truck Simulator 2\Plugins';
      FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\SCS Software\Euro Truck Simulator 2\Plugins';
@@ -96,7 +99,15 @@ const
     Is64bit:          False;
     SystemValid:      True);
 
-//==============================================================================
+{==============================================================================}
+{------------------------------------------------------------------------------}
+{                              TACCPluginInstaller                             }
+{------------------------------------------------------------------------------}
+{==============================================================================}
+
+{------------------------------------------------------------------------------}
+{   TACCPluginInstaller - private methods                                      }
+{------------------------------------------------------------------------------}
 
 Function TACCPluginInstaller.GetKnownGameCount: Integer;
 begin
@@ -140,7 +151,9 @@ else
   raise Exception.CreateFmt('TACCPluginInstaller.GetInstalledPlugins: Index (%d) out of bounds.',[Index]);
 end;
 
-//==============================================================================
+{------------------------------------------------------------------------------}
+{   TACCPluginInstaller - protected methods                                    }
+{------------------------------------------------------------------------------}
 
 Function TACCPluginInstaller.KnownGamesCheckIndex(Index: Integer): Boolean;
 begin
@@ -190,10 +203,10 @@ If ModuleHandle <> 0 then
     If Assigned(IsWoW64Process) then
       begin
         If IsWow64Process(GetCurrentProcess,@ResultValue) then fRunningInWoW64 := ResultValue
-          else raise Exception.CreateFmt('TACCPluginInstaller.CheckWoW64: IsWoW64Process failed with error %x.',[GetLastError]);
+          else raise Exception.CreateFmt('TACCPluginInstaller.CheckWoW64: IsWoW64Process failed with error %.8x.',[GetLastError]);
       end;
   end
-else raise Exception.CreateFmt('TACCPluginInstaller.CheckWoW64: Unable to get handle to module kernel32.dll (%x).',[GetLastError]);
+else raise Exception.CreateFmt('TACCPluginInstaller.CheckWoW64: Unable to get handle to module kernel32.dll (%.8x).',[GetLastError]);
 end;
 {$ENDIF}
 
@@ -211,7 +224,9 @@ For i := Low(fKnownGames) to High(fKnownGames) do
   end;
 end;
 
-//==============================================================================
+{------------------------------------------------------------------------------}
+{   TACCPluginInstaller - public methods                                       }
+{------------------------------------------------------------------------------}
 
 constructor TACCPluginInstaller.Create;
 begin
@@ -335,15 +350,16 @@ end;
 
 Function TACCPluginInstaller.IndexOfInstalledPlugin(Str: String; FilePath: Boolean = False): Integer;
 begin
-For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
-  If FilePath then
-    begin
+If FilePath then
+  begin
+    For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
       If AnsiSameText(fInstalledPlugins[Result].FilePath,Str) then Exit;
-    end
-  else
-    begin
+  end
+else
+  begin
+    For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
       If AnsiSameText(fInstalledPlugins[Result].Description,Str) then Exit;
-    end;
+  end;
 Result := -1;
 end;
 
