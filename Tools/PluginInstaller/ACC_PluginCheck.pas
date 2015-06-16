@@ -130,6 +130,7 @@ If LibHandle <> 0 then
           Result := PCR_FinalNotExported;
       end
     else Result := PCR_InitNotExported;
+    FreeLibrary(LibHandle);
   end
 else Result := PCR_NotLibrary;
 end;

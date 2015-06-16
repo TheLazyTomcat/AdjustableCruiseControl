@@ -21,7 +21,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="7"/>
+      <BuildNr Value="8"/>
       <Language Value="0405"/>
       <StringTable Comments="Plugin tester for PluginInstaller tool" CompanyName="František Milt" FileDescription="External Plugin Tester Application" InternalName="External Plugin Tester" LegalCopyright="© 2015 František Milt" LegalTrademarks="External Plugin Tester" OriginalFilename="ExternalTester.exe" ProductName="External Plugin Tester" ProductVersion="1.0.0"/>
     </VersionInfo>

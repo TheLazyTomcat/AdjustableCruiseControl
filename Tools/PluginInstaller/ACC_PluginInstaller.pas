@@ -51,7 +51,6 @@ type
     procedure FillKnownGames; virtual;
   public
     constructor Create;
-    destructor Destroy; override;
     Function SelectGame(Index: Integer): Boolean; virtual;
     Function LoadInstalledPlugins: Integer; virtual;
     Function RemoveInstalledPlugin(Index: Integer): Boolean; virtual;
@@ -234,13 +233,6 @@ inherited Create;
 CheckWoW64;
 FillKnownGames;
 fSelectedGameIdx := -1;
-end;
-
-//------------------------------------------------------------------------------
-
-destructor TACCPluginInstaller.Destroy;
-begin
-inherited;
 end;
 
 //------------------------------------------------------------------------------
