@@ -2,7 +2,7 @@
 
                             Adjustable Cruise Control
 
-                                 version 2.3.0
+                                 version 2.3.1
 
 ================================================================================
 
@@ -16,18 +16,18 @@ which each part starts.
   Supported games .........................................  43
   Parts of the program .................................... 162
   Installation ............................................ 184
-  How to use the program .................................. 248
-  How to install an update ................................ 268
-  Program features ........................................ 300
-  Common problems ......................................... 358
-  How the program works ................................... 423
-  Changelog ............................................... 455
-  Known issues ............................................ 498
-  Source code ............................................. 510
-  Licensing ............................................... 519
-  Authors, contacts ....................................... 527
-  Links ................................................... 534
-  Copyright ............................................... 540
+  How to use the program .................................. 253
+  How to install an update ................................ 273
+  Program features ........................................ 303
+  Common problems ......................................... 363
+  How the program works ................................... 428
+  Changelog ............................................... 460
+  Known issues ............................................ 513
+  Source code ............................................. 525
+  Licensing ............................................... 534
+  Authors, contacts ....................................... 542
+  Links ................................................... 549
+  Copyright ............................................... 555
 
 
 
@@ -218,14 +218,13 @@ If you want to use Plugin, you have to do three things. First, make sure
 the program stays in the folder where you have put it. Second, run the program
 and then close it again - it will save its own path to the registry (plugin will
 use this information). And third, you have to install the plugin itself. There
-are two ways how to do it.
+are three ways how to do it.
 
-First way (recommended for inexperienced users) is to place the plugin (DLL
-file) to a default plugin folder. It is a subfolder named "plugins" located in
-the folder where game main binary is located. Here are some examples so you know
-what to look for (actual paths can differ significantly on your system,
-depending on how or where you have installed the game and what version (32 or
-64 bit) you are using):
+First way is to place the plugin (DLL file) to a default plugin folder. It is a
+subfolder named "plugins" located in the folder where game main binary is
+located. Here are some examples so you know what to look for (actual paths can
+differ significantly on your system, depending on how or where you have
+installed the game and what version (32 or 64 bit) you are using):
 
   C:\Program Files\Euro Truck Simulator 2\bin\win_x86\plugins
   C:\Steam\SteamApps\common\Euro Truck Simulator 2\bin\win_x86\plugins
@@ -242,6 +241,12 @@ select appropriate folder). Then open registry editor and navigate to key
 "Euro Truck Simulator 2"). If such key does not exist, create it. Create new
 string value (name of the value is irrelevant) in this key and store full path
 to the plugin file in the data of this value.
+
+Third way, recommended for most inexperienced users, is to use Plugin Installer
+tool distributed with the ACC. Technically, it is the same as the second way,
+but details are managed by the program, so even user that does not know anything
+about Windows registry can use it without wory.
+Please refer to readme file provided for Plugin Installer for more details.
 
 
 
@@ -455,6 +460,16 @@ And finally, settings of the program is stored in windows registry, key
 Changelog
 ------------------------------
 List of changes between individual versions of ACC.
+
+2.3.0 -> 2.3.1
+  - added new games data file structures (INI 2.1 and BIN 1.1)
+  - main program should not steal focus anymore when started
+  - Delphi builds now contains and uses extra icon for associated update files
+  - version information is now read runtime, it is not stored in the code
+    anymore
+  - added Plugin Installer tool
+  - large number of code corrections and changes
+
 
 2.2.1 -> 2.3.0
   - added posibility of reading actual vehicle speed by plugin using telemetry
