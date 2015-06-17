@@ -1,3 +1,10 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 unit ACC_PluginManager;
 
 interface
@@ -8,6 +15,8 @@ uses
   WinMsgComm, WinMsgCommServer,
   SCS_Telemetry_Condensed;
 
+const
+  PluginInstanceMutexName = 'ACC_IC_PLG_MTX_87F19E40-4CCB-4827-8039-47FB4B757AFF';
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -18,6 +27,7 @@ uses
 type
   TACCPluginManager = class(TObject)
   private
+    fInstanceMutex:   THandle;
     fAPIVersion:      scs_u32_t;
     fAPIParams:       scs_telemetry_init_params_t;
     fGameActive:      Boolean;
@@ -39,6 +49,7 @@ type
     procedure CheckFeatures; virtual;
     procedure WMCServer_OnValueRecived(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
   public
+    class Function InstanceAlreadyExists: Boolean; virtual;
     constructor Create(APIVersion: scs_u32_t; APIParams: scs_telemetry_init_params_t);
     destructor Destroy; override;
     procedure SetValue(Name: TelemetryString; {%H-}Index: scs_u32_t; Value: scs_value_t); virtual;
@@ -47,7 +58,12 @@ type
 implementation
 
 uses
-  Windows, SysUtils, ShellAPI, DefRegistry, ACC_Settings, ACC_PluginComm;
+  Windows, SysUtils, ShellAPI, Math, DefRegistry, WinFileInfo,
+  ACC_Settings, ACC_PluginComm;
+
+var
+  ACC_PLG_VersionStr: String = '';
+  ACC_PLG_BuildStr:   String = '';
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -95,7 +111,9 @@ procedure TACCPluginManager.RunMainProgram;
 var
   Registry:   TDefRegistry;
   ExecPath:   String;
+{$IFDEF Debug}
   ExecResult: Integer;
+{$ENDIF}
 begin
 Registry := TDefRegistry.Create;
 try
@@ -105,6 +123,7 @@ try
       ExecPath := Registry.ReadStringDef(SETN_VAL_REG_ProgramPath,'');
       If FileExists(ExecPath) then
         begin
+        {$IFDEF Debug}
           ExecResult := Integer(ShellExecute(0,'open',PChar(ExecPath),nil,nil,SW_SHOWNORMAL));
           case ExecResult of
             0:                      WriteToGameLog('[ACC] Exec: The operating system is out of memory or resources');
@@ -123,11 +142,14 @@ try
             SE_ERR_PNF:             WriteToGameLog('[ACC] Exec: The specified path was not found');
             SE_ERR_SHARE:           WriteToGameLog('[ACC] Exec: A sharing violation occurred');
           else
-            If ExecResult > 32 then WriteToGameLog('[ACC] Exec: Program executed',SCS_LOG_TYPE_message)
+            If ExecResult > 32 then WriteToGameLog('[ACC] Exec: Program started',SCS_LOG_TYPE_message)
               else WriteToGameLog(Format('[ACC] Exec: Unknown error (%d) occured',[ExecResult]));
           end;
+        {$ELSE}
+          ShellExecute(0,'open',PChar(ExecPath),nil,nil,SW_SHOWNORMAL);
+        {$ENDIF}
         end
-      else WriteToGameLog('[ACC] Exec: File not found.');
+      else {$IFDEF Debug}WriteToGameLog('[ACC] Exec: File not found.'){$ENDIF};
       Registry.CloseKey;
     end
 finally
@@ -153,8 +175,8 @@ begin
 If Assigned(fAPIParams.register_for_channel) then
   begin
     fSpeedRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_speed),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
-    fCrConRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
-    fLimitRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
+    fCrConRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
+    fLimitRegistered := fAPIParams.register_for_channel(APIString(SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit),SCS_U32_NIL,SCS_VALUE_TYPE_float,SCS_TELEMETRY_CHANNEL_FLAG_none,ChannelReceiver,Self) = SCS_RESULT_ok;
   end;
 end;
 
@@ -229,16 +251,33 @@ end;
 {   TACCPluginManager // Public methods                                        }
 {------------------------------------------------------------------------------}
 
+class Function TACCPluginManager.InstanceAlreadyExists: Boolean;
+var
+  Mutex:  THandle;
+begin
+Mutex := CreateMutex(nil,False,PluginInstanceMutexName);
+Result := GetLastError = ERROR_ALREADY_EXISTS;
+CloseHandle(Mutex);
+end;
+
+//------------------------------------------------------------------------------
+
 constructor TACCPluginManager.Create(APIVersion: scs_u32_t; APIParams: scs_telemetry_init_params_t);
 begin
 inherited Create;
+fInstanceMutex := CreateMutex(nil,False,PluginInstanceMutexName);
+If GetLastError = ERROR_ALREADY_EXISTS then
+  raise Exception.Create('TACCPluginManager.Create: At least one instance is already created.');
 fAPIVersion := APIVersion;
 fAPIParams := APIParams;
 fGameActive := False;
 RegisterEvents;
 RegisterChannels;
 CheckFeatures;
-WriteToGameLog('[ACC] Plugin loaded, features 0x' + IntToHex(fFeatures,8),SCS_LOG_TYPE_message);
+WriteToGameLog('[ACC] Plugin loaded (' + ACC_PLG_VersionStr + '  ' + ACC_PLG_BuildStr + ')',SCS_LOG_TYPE_message);
+{$IFDEF Debug}
+WriteToGameLog('[ACC] Features 0x' + IntToHex(fFeatures,8),SCS_LOG_TYPE_message);
+{$ENDIF}
 fLimitSending := False;
 fWMCServer := TWinMsgCommServer.Create(nil,False,WMC_MessageName);
 fWMCServer.OnValueReceived := WMCServer_OnValueRecived;
@@ -252,6 +291,7 @@ begin
 fWMCServer.Free;
 UnregisterChannels;
 UnregisterEvents;
+CloseHandle(fInstanceMutex);
 inherited;
 end;
 
@@ -263,11 +303,12 @@ If (Name = SCS_TELEMETRY_TRUCK_CHANNEL_speed) and (Value._type = SCS_VALUE_TYPE_
   fTruckSpeed := Value.value_float.value
 else If (Name = SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control) and (Value._type = SCS_VALUE_TYPE_float) then
   begin
-    If (Value.value_float.value <= 0) and fLimitSending then
-      begin
-        fLimitSending := False;
-        fWMCServer.SendInteger(0,0,WMC_CODE_LimitStop)
-      end;
+    If fLimitSending then
+      If (Value.value_float.value <= 0) or not SameValue(Value.value_float.value,fSpeedLimit,0.5) then
+        begin
+          fLimitSending := False;
+          fWMCServer.SendInteger(0,0,WMC_CODE_LimitStop)
+        end;
   end
 else If (Name = SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit) and (Value._type = SCS_VALUE_TYPE_float) then
   begin
@@ -277,6 +318,30 @@ else If (Name = SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit) and (Value._
   end;
 end;
 
+{==============================================================================}
+{------------------------------------------------------------------------------}
+{                          Version info initialization                         }
+{------------------------------------------------------------------------------}
+{==============================================================================}
+
+procedure InitVersionInfo;
+begin
+with TWinFileInfo.Create(WFI_LS_LoadVersionInfo or WFI_LS_LoadFixedFileInfo or WFI_LS_DecodeFixedFileInfo) do
+  begin
+    ACC_PLG_VersionStr := IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Major) + '.' +
+                          IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Minor) + '.' +
+                          IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Release);
+    ACC_PLG_BuildStr := {$IFDEF FPC}'L'{$ELSE}'D'{$ENDIF}{$IFDEF x64}+ '64'{$ELSE}+ '32'{$ENDIF} +
+                        ' #' + IntToStr(VersionInfoFixedFileInfoDecoded.FileVersionMembers.Build)
+                        {$IFDEF Debug}+ ' debug'{$ENDIF};
+    Free;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+initialization
+  InitVersionInfo;
 
 end.
 

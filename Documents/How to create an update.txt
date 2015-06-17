@@ -1,20 +1,22 @@
 Intent of this document is to provide simple walkthrough on how to create an
 update file for Adjustable Cruise Control application. It will not provide any
-information on how to obtain data necessary to build such file (memory 
+information on how to obtain data necessary to build such file (memory
 addresses, pointer offsets, checksums, ...).
-It is highly recommended you read following documents (files) before you start 
+It is highly recommended you read following documents (files) before you start
 creating your first update (they should be distributed along this document):
 
    #1 - (old)GamesData entries formatting [Rev_0].pdf
    #2 - GamesData INI 2.0 [Rev_0].txt
    #3 - (U)GDB file format.txt
+   #4 - GamesData INI 2.1 [Rev_0].txt
 
 This document also assumes you are experienced user, you know at least basics
 about working with console applications in Windows, and also you are able to
 write or edit batch scripts.
 Only two tools are required - a good plain-text editor (notepad will suffice;
-but no MS Word, OO Writer and similar!) and a Games Data Converter (it is part
-of the ACC repository, compiled binary can be found in "bin" branch).
+but no MS Word, OO Writer and similar!) and a Games Data Converter (further
+referred to only as GDC, it is part of the ACC repository, compiled binary can
+be found in "bin" branch).
 
 Generally, creating an update consist of only two steps - create INI file of
 structure 2.0 with your data stored in it, and convert this INI to UGDB file.
@@ -22,18 +24,18 @@ So, let's look at those two steps closely.
 
 NOTE - you can also distribute the update in the INI file, without converting it
 to UGDB file. But it is not recommended (UGDB is smaller, less prone to reading
-errors, normal user can't fiddle with its content and it is opaque to him, you
-can include game icon in it, and it is possible to associate this file type to
-ACC application).
+errors, normal user can't fiddle with its content and it is opaque to him and it
+is possible to associate this file type to ACC application).
 
 
 
 Creating an INI file
 ---------------------------------------
-INI file is normal text file, so use text editor to write create one. Internal
-structure of it is described in document #2 (see above).
-Writing it is straight forward and informations provided in document #2 should
-be enough. But for the sake of completeness, here are steps you should take:
+INI file is normal text file, so use text editor to write one.
+Internal structure of it is described in document #2 and #3 (see above).
+Writing it is straight forward and informations provided in mentioned documents
+should be enough. But for the sake of completeness, here are steps you should
+take:
 
   - create new text file and change its extension to "ini"
 
@@ -68,6 +70,14 @@ be enough. But for the sake of completeness, here are steps you should take:
   - add more entries, as many as needed ("[Game.1]", "[Game.2]", ...,
     "[Game.n]")
 
+With introduction of INI 2.1, it is now possible to store game icons inside
+the ini file. You can do it using the GDC and pretty much converting from one
+INI version to another.
+For example, if you want to store two icons (files icon1.png and icon2.png) to
+already existing ini file, you can do it by calling converter this way:
+
+  start GamesDataConverter.exe -i ini_file.ini -of ini2.1 -ic icon1.png icon2.png
+
 
 Done, just remember following:
 
@@ -77,7 +87,7 @@ Done, just remember following:
   - if you are adding support for new game/version, generate new GUID for
     "Identifier" (do not reuse old ones) and set "Version" to 0
   - to generate a valid GUID, you can use any tool available (for example
-    https://www.guidgenerator.com), do not write some random thing off top of 
+    https://www.guidgenerator.com), do not write some random thing off top of
     your head
   - if you want to provide update for already existing entry, be sure to set
     "Identifier" to the same GUID this entry have, and increase the "Version"
@@ -100,9 +110,8 @@ Converting INI to UGDB
 ---------------------------------------
 As was already said, this step is optional because you can distribute updates
 as INI files.
-Conversion is done using Games Data Converter (further referred to only as GDC),
-a small utility (console program) that can convert between any data formats used
-in ACC. GDC can be run with following parameters:
+Conversion is done using GDC. Following parameters are supported in current
+build:
 
   -i InputFile
 
@@ -124,21 +133,23 @@ in ACC. GDC can be run with following parameters:
   -of OutputFormat
 
       Sets format to which the data will be converted.
+      For details about individual formats, refer to documents #1 - #4.
       Following values can be used:
 
-        INI1 - stores data in INI file with formatting 1.0 (old format used in
-               ACC 2.1.3 and older)
-        INI2 - stores data in INI file with formatting 2.0 (new format used in
-               ACC 2.2.0 and newer)
-        INI  - alias for INI2
-        BIN1 - stores data in binary file with a structure 1.0 (see document #3
-               for details about this file format)
-        BIN  - alias for BIN1
+        INI1   - stores data in INI file with formatting 1.0
+                 (old format used in ACC 2.1.3 and older)
+        INI2   - stores data in INI file with formatting 2.0
+                 (new format used in ACC 2.2.0 and newer)
+        INI2.1 - stores data in INI file with formatting 2.1
+                 (new format implemented from ACC 2.3.1 up)
+        INI    - alias for INI2.1
+        BIN1   - stores data in binary file with a structure 1.0
+        BIN1.1 - stores data in binary file with a structure 1.1
+        BIN    - alias for BIN1.1
 
   -ic IconFile1 IconFile2 ... IconFileN (optional)
 
-      Stores icon from passed files (IconFileX) into output file. Works only
-      with binary output.
+      Stores icon from passed files (IconFileX) into output file.
       It must be placed at the end, because everything behind "-ic" is
       considered to be an icon file.
       Path of the icon files can be relative to current directory or absolute.
@@ -147,22 +158,22 @@ in ACC. GDC can be run with following parameters:
       and extension.
 
 
-Following example will show you how to do the actual conversion:     
- 
+Following example will show you how to do the actual conversion:
+
   Let's assume you have complete INI file, ready for conversion, named
   "Update.ini", and you want to convert it to binary file of name "Update.ugdb".
   And you also want to include a new icon that is stored in file "GameIcon.png".
-  All source files are in the same folder as GDC and output file should be 
+  All source files are in the same folder as GDC and output file should be
   stored there too.
-  You can call the GDC in many different ways, but probably the simplest is to 
-  create a batch script. So create a BAT file in the same folder where the GDC 
+  You can call the GDC in many different ways, but probably the simplest is to
+  create a batch script. So create a BAT file in the same folder where the GDC
   is located and write into it the following text:
-  
-    start GamesDataConverter.exe -i Update.ini -o Update.ugdb -of bin -ic GameIcon.png  
-    
-  Save the file an run it. You are done. 
-  
-  
+
+    start GamesDataConverter.exe -i Update.ini -o Update.ugdb -of bin -ic GameIcon.png
+
+  Save the file an run it. You are done.
+
+
 If you think anything is missing from this document or something is not clear
 enough, please send your suggestions to a contact you can find in the repository
 readme file.

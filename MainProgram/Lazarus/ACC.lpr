@@ -18,6 +18,8 @@ uses
   WndAlloc,
   UtilityWindow,
   SimpleTimer,
+  BinTextEnc,
+  WinFileInfo,
   WinMsgComm,
   WinMsgCommClient,
 

@@ -9,6 +9,7 @@ uses
   MulticastEvent   in '..\..\MainProgram\Libs\MulticastEvent.pas',
   WndAlloc         in '..\..\MainProgram\Libs\WndAlloc.pas',
   UtilityWindow    in '..\..\MainProgram\Libs\UtilityWindow.pas',
+  WinFileInfo      in '..\..\MainProgram\Libs\WinFileInfo.pas',
   WinMsgComm       in '..\..\MainProgram\Libs\WMC\WinMsgComm.pas',
   WinMsgCommServer in '..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas',
 
@@ -29,8 +30,15 @@ Function TelemetryLibraryInit(version: scs_u32_t; params: p_scs_telemetry_init_p
 begin
 try
   If not Assigned(PluginManager) then
-    PluginManager := TACCPluginManager.Create(version,params^);
-  Result := SCS_RESULT_ok;
+    begin
+      If not TACCPluginManager.InstanceAlreadyExists then
+        begin
+          PluginManager := TACCPluginManager.Create(version,params^);
+          Result := SCS_RESULT_ok;
+        end
+      else Result := SCS_RESULT_generic_error;
+    end
+  else Result := SCS_RESULT_ok;
 except
   Result := SCS_RESULT_generic_error;
 end;

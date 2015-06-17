@@ -12,10 +12,13 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Classes, Forms,
+  Messages, Classes, Forms,
   MulticastEvent, UtilityWindow, WinMsgComm, WinMsgCommClient,
   ACC_InstanceControl, ACC_Settings, ACC_GamesData, ACC_TrayIcon,
   ACC_SplashScreen, ACC_ProcessBinder, ACC_MemoryOps, ACC_Input;
+
+const
+  WM_SHOWNODISTURB = WM_USER + 101;
 
 type
   TLoadUpdateEvent = procedure(Sender: TObject; const UpdateFile: String) of object;
@@ -92,6 +95,10 @@ uses
 
 {$R 'Resources\GamesData.res'}
 
+{$If not declared(GetShellWindow)}
+Function GetShellWindow: HWND; stdcall; external 'user32.dll';
+{$IFEND}
+
 const
   GamesDataResName = 'GamesData';
 
@@ -164,22 +171,23 @@ var
 
   procedure DoRestore;
   begin
-    If fTrayIcon.Visible then
-      begin
-        fApplication.Restore;
-        fApplication.MainForm.Show;
-        SetForegroundWindow(fApplication.MainForm.Handle);
-        fTrayIcon.HideTrayIcon;
-      end
-    else
-      begin
-        fApplication.Restore;
-        {$IFDEF FPC}
-        SetForegroundWindow(WidgetSet.AppHandle);
-        {$ELSE}
-        SetForegroundWindow(fApplication.Handle);
-        {$ENDIF}
-      end;
+    If not fProcessBinder.Binded or not GameActive then
+      If fTrayIcon.Visible then
+        begin
+          fApplication.Restore;
+          fApplication.MainForm.Show;
+          SetForegroundWindow(fApplication.MainForm.Handle);
+          fTrayIcon.HideTrayIcon;
+        end
+      else
+        begin
+          fApplication.Restore;
+          {$IFDEF FPC}
+          SetForegroundWindow(WidgetSet.AppHandle);
+          {$ELSE}
+          SetForegroundWindow(fApplication.Handle);
+          {$ENDIF}
+        end;
   end;
   
 begin
@@ -196,7 +204,7 @@ end;
 
 procedure TACCManager.ProcessBinder_OnStateChange(Sender: TObject);
 begin
-If ProcessBinder.Binded then
+If fProcessBinder.Binded then
   begin
     TrayIcon.SetTipText(ACCSTR_TI_DefaultTipText + sLineBreak + ProcessBinder.GameData.ExtendedTitle);
     fMemoryOperator.Activate(ProcessBinder.GameData);
@@ -339,6 +347,27 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TACCManager.Initialize(Application: TApplication; LoadingUpdate: Boolean);
+
+  Function FullscreenAppRunning: Boolean;
+  var
+    TopWindow:  HWND;
+    TopWndRect: TRect;
+    ScreenRect: TRect;
+  begin
+    Result := False;
+    TopWindow := GetForegroundWindow;
+    If (TopWindow <> INVALID_HANDLE_VALUE) and
+       (TopWindow <> GetShellWindow) and
+       (TopWindow <> GetDesktopWindow) then
+      If GetWindowRect(TopWindow,{%H-}TopWndRect) then
+        begin
+          FillChar({%H-}ScreenRect,SizeOf(ScreenRect),0);
+          ScreenRect := Screen.MonitorFromWindow(TopWindow).BoundsRect;
+          Result := (ScreenRect.Top = TopWndRect.Top) and (ScreenRect.Left = TopWndRect.Left) and
+                    (ScreenRect.Bottom = TopWndRect.Bottom) and (ScreenRect.Right = TopWndRect.Right);  
+        end;
+  end;
+
 begin
 fApplication := Application;
 fApplication.OnMinimize := Application_OnMinimize;
@@ -353,10 +382,24 @@ If Settings.StartMinimized and not LoadingUpdate then
   end
 else
   begin
-    If Settings.ShowSplashScreen then
+    If Settings.ShowSplashScreen and not FullscreenAppRunning then
       fSplashScreen := TSplashScreen.Create(fUtilityWindow,fApplication,Load)
     else
-      Load;
+      begin
+        If FullscreenAppRunning then
+          begin
+            fApplication.ShowMainForm := False;
+            SetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE,GetWindowLong(fApplication.MainForm.Handle,GWL_EXSTYLE) or WS_EX_NOACTIVATE);
+            PostMessage(fApplication.MainForm.Handle,WM_SHOWNODISTURB,0,0);
+           end
+        else
+          {$IFDEF FPC}
+          ShowWindow(WidgetSet.AppHandle,SW_SHOW);
+          {$ELSE}
+          SetForegroundWindow(fApplication.Handle);
+          {$ENDIF}
+        Load;
+      end;
   end;
 end;
 

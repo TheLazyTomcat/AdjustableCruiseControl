@@ -31,8 +31,15 @@ Function TelemetryLibraryInit(version: scs_u32_t; params: p_scs_telemetry_init_p
 begin
 try
   If not Assigned(PluginManager) then
-    PluginManager := TACCPluginManager.Create(version,params^);
-  Result := SCS_RESULT_ok;
+    begin
+      If not TACCPluginManager.InstanceAlreadyExists then
+        begin
+          PluginManager := TACCPluginManager.Create(version,params^);
+          Result := SCS_RESULT_ok;
+        end
+      else Result := SCS_RESULT_generic_error;
+    end
+  else Result := SCS_RESULT_ok;
 except
   Result := SCS_RESULT_generic_error;
 end;

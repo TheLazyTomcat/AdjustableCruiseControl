@@ -8,7 +8,8 @@
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="3" Y="20"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="20"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -39,12 +40,10 @@
         <Filename Value="..\ACC_PluginManager.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_PluginManager"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="200"/>
-        <CursorPos Y="219"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="112"/>
+        <CursorPos X="72" Y="142"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="..\..\MainProgram\Libs\CRC32.pas"/>

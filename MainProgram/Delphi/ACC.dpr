@@ -17,6 +17,8 @@ uses
   WndAlloc             in '..\Libs\WndAlloc.pas',
   UtilityWindow        in '..\Libs\UtilityWindow.pas',
   SimpleTimer          in '..\Libs\SimpleTimer.pas',
+  BinTextEnc           in '..\Libs\BinTextEnc.pas',
+  WinFileInfo          in '..\Libs\WinFileInfo.pas',
   WinMsgComm           in '..\Libs\WMC\WinMsgComm.pas',
   WinMsgCommClient     in '..\Libs\WMC\WinMsgCommClient.pas',
 

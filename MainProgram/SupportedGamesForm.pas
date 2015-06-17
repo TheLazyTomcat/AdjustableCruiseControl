@@ -103,11 +103,15 @@ var
     ii: Integer;
   begin
     AddRow(ValuePrefix + GDIN_GD_VAL_Flags,IntToHex(Data.Flags,8));
-    AddRow(ValuePrefix + GDIN_GD_VAL_ModuleIndex,IntToStr(Data.ModuleIndex));
-    AddRow(ValuePrefix + GDIN_GD_VAL_Offsets,IntToStr(Length(Data.Offsets)));
-    For ii := Low(Data.Offsets) to High(Data.Offsets) do
-      AddRow(Format(ValuePrefix + GDIN_GD_VAL_Offset,[ii]),IntToHex(Data.Offsets[ii],16));
-    AddRow(ValuePrefix + GDIN_GD_VAL_Coefficient,FloatToStr(Data.Coefficient,FormatSettings));
+    If Data.ModuleIndex >= 0 then
+      begin
+        AddRow(ValuePrefix + GDIN_GD_VAL_PtrInfo,IntToHex(Data.PtrInfo,8));      
+        AddRow(ValuePrefix + GDIN_GD_VAL_ModuleIndex,IntToStr(Data.ModuleIndex));
+        AddRow(ValuePrefix + GDIN_GD_VAL_Offsets,IntToStr(Length(Data.Offsets)));
+        For ii := Low(Data.Offsets) to High(Data.Offsets) do
+          AddRow(Format(ValuePrefix + GDIN_GD_VAL_Offset,[ii]),IntToHex(Data.Offsets[ii],16));
+        AddRow(ValuePrefix + GDIN_GD_VAL_Coefficient,FloatToStr(Data.Coefficient,FormatSettings));
+      end;
   end;
 
 begin

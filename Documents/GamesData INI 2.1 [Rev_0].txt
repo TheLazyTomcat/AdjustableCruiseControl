@@ -1,0 +1,118 @@
+This version differs only in few details from version 2.0, therefore it won't be
+completely described in this document. Instead, only differences and new
+features will be described in here.
+Refer to file "GamesData INI 2.0 [Rev_0].txt" for details not documented here.
+This version is available from ACC 2.3.1 up.
+
+
+General file structure
+================================================================================
+Unlike older versions, this one contains three types of sections. There are the
+same two section types as in 2.0 and a new type of section designed to store
+game icons.
+
+Sections used to store icons are named "Icon.x", where x is a decimal number.
+Rules (numbering, ordering, ...) applied to game entries are the same here. Each
+section of this type contains exactly one icon, no more, no less.
+
+
+
+Icon sections
+================================================================================
+Technically, there are only three fields in this section.
+As in case of game entries, each field has default value that is read when such
+field does not exist or some error is raised when reading it. This default value
+is selected in a way that makes entire section invalid, resulting in a drop of
+such section - meaning the icon stored in such section will not be added to the
+list of game icons the reader holds.
+
+Name
+
+  Textual identifier of the icon. It should be unique, but it is not mandatory
+  (if new icon with the same name as an existing one is loaded, the older icon
+  is replaced by a newly read icon). Names are case insensitive.
+  Must not be empty. Do not use name "default".
+
+  Default: empty string (drop)
+
+
+DataCount
+
+  Length of the data array (next field).
+
+  Default: -1 (drop)
+
+
+Data[x]
+
+  Array of fields containing icon image data. These data are actually a complete
+  PNG file. The image must be 32x32 pixels with 32bit colors (8bit alpha).
+  Binary data of the image are encoded using base85 encoding (Z85 alphabet,
+  compressed and trimmed) and resulting string is then splitted into blocks
+  128 characters long. These blocks are then stored as individual items of this
+  array. Blocks are naturally ordered - "Data[0]" contains first block,
+  "Data[1]" contains second block and so on. Full encoded text can be
+  reconstructed by simple concatenation of items in this array.
+
+  Default: empty string
+
+
+
+Individual entry fields
+================================================================================
+Only differences from version 2.0 are in pointer-prefixed ("CCSpeed",
+"CCStatus", ...) fields. Specifically, ".Flags" field does not contain pointer
+type anymore (used to be in lower 9 bits) and a new field named ".PtrInfo" was
+added.
+
+Affected pointer-prefixed fields:
+
+  .Flags
+
+    Flags used when reading/writing value pointed to by this pointer.
+    Following flags are implemented:
+
+        bit 0 (flag ACC_PTR_FLAGS_TelemetryTruckSpeed)
+
+    Hexadecimal notation prefixed by $.
+
+    Default: 0
+
+
+  .PtrInfo
+
+    Informations about pointer type.
+    Lower 16 bits (interpreted as 16bit unsigned integer) are denoting type
+    of the pointer.
+    Higher 16 bits (interpreted as 16bit unsigned integer) are storing
+    additional data. Meaning of these data is different for each pointer type.
+    Following pointer types are implemented:
+
+      PTR_TYPE_Bool (0)
+
+        Pointer is pointing to a bool value (8bit boolean).
+
+      PTR_TYPE_Float (100)
+
+        Pointer is pointing to a 32bit floating point number.
+
+      PTR_TYPE_FloatCorrected (101)
+
+        Pointer is pointing to a 32bit floating point number, this number must
+        be corrected by a number stored in ".Coefficient" field of this pointer.
+
+      PTR_TYPE_FloatCorrectedRemote (102)
+
+        Pointer is pointing to a 32bit floating point number, this number must
+        be corrected by a number stored in "Value[x]" pointer, where x is number
+        stored as additional data (higher 16 bits of this field).
+
+      PTR_TYPE_Invalid ($FFFF)
+
+        Invalid type. If such type is encountered, then the entire entry is
+        dropped.
+
+    That the number is corrected means it must be divided by a correction number
+    when it is read from memory and multiplied when it is written.
+
+    Default: 0
