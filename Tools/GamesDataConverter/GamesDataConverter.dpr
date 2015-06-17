@@ -12,7 +12,8 @@ uses
   DefRegistry          in '..\..\MainProgram\Libs\DefRegistry.pas',
   SimpleCompress       in '..\..\MainProgram\Libs\SimpleCompress.pas',
   StringEncryptionUnit in '..\..\MainProgram\Libs\StringEncryptionUnit.pas',
-  BintextEnc           in '..\..\MainProgram\Libs\BintextEnc.pas',  
+  BintextEnc           in '..\..\MainProgram\Libs\BintextEnc.pas',
+  WinFileInfo          in '..\..\MainProgram\Libs\WinFileInfo.pas',     
 
   ACC_Common    in '..\..\MainProgram\ACC_Common.pas',
   ACC_GamesData in '..\..\MainProgram\ACC_GamesData.pas';
