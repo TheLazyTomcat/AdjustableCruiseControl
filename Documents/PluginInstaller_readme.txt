@@ -11,6 +11,10 @@ Description
 Purpose of this program is to ease installation and uninstallation of plugins
 for truck games by SCS Software.
 
+NOTE - The program does not enumerate plugins installed in default plugin
+       folder. If you have some plugins installed in there, be carefull what you
+       are installing with this program.
+
 WARNING - The program needs administrative privileges in order to work. If your
           operating system asks for those privileges, allow it. This behaviour
           is normal and cannot be evaded.
