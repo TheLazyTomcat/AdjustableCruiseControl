@@ -246,7 +246,7 @@ Third way, recommended for most inexperienced users, is to use Plugin Installer
 tool distributed with the ACC. Technically, it is the same as the second way,
 but details are managed by the program, so even user that does not know anything
 about Windows registry can use it without wory.
-Please refer to readme file provided for Plugin Installer for more details.
+Please refer to readme file provided with Plugin Installer for more details.
 
 
 
@@ -464,7 +464,7 @@ List of changes between individual versions of ACC.
 2.3.0 -> 2.3.1
   - added new games data file structures (INI 2.1 and BIN 1.1)
   - main program should not steal focus anymore when started
-  - Delphi builds now contains and uses extra icon for associated update files
+  - Delphi build now contains and uses extra icon for associated update files
   - version information is now read runtime, it is not stored in the code
     anymore
   - added Plugin Installer tool
@@ -531,7 +531,7 @@ https://github.com/ncs-sniper/AdjustableCruiseControl
 
 
 
-Licencing
+Licensing
 ------------------------------
 This program is licensed under the terms of Mozilla Public License Version 2.0.
 You can find full text of this license in file license.txt or on web page
