@@ -17,7 +17,7 @@ in the opened context menu.
 
 
 
-Licencing
+Licensing
 ------------------------------
 This program is licensed under the terms of Mozilla Public License Version 2.0. 
 You can find full text of this license on web page 

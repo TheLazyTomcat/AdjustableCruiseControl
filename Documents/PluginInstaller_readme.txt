@@ -10,6 +10,8 @@ Description
 ------------------------------
 Purpose of this program is to ease installation and uninstallation of plugins
 for truck games by SCS Software.
+Although this program is developed as part of Adjustable Cruise Control project,
+it can install ANY plugin, not just those distributed with ACC.
 
 NOTE - The program does not enumerate plugins installed in default plugin
        folder. If you have some plugins installed in there, be carefull what you
@@ -66,7 +68,7 @@ When uninstalling, the value is deleted from game-specific registry key.
 
 
 
-Licencing
+Licensing
 ------------------------------
 This program is licensed under the terms of Mozilla Public License Version 2.0.
 You can find full text of this license on web page
