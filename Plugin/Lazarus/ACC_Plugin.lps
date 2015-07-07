@@ -39,7 +39,6 @@
       <Unit5>
         <Filename Value="..\ACC_PluginManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_PluginManager"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="112"/>
         <CursorPos X="72" Y="142"/>
