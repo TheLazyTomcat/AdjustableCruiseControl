@@ -91,7 +91,8 @@ implementation
 
 uses
   Windows, SysUtils,{$IFDEF FPC}InterfaceBase,{$ENDIF}
-  ACC_Strings, ACC_PluginComm;
+  ACC_Strings, ACC_PluginComm,
+  ACC_Log;
 
 {$R 'Resources\GamesData.res'}
 
@@ -214,7 +215,8 @@ else
   begin
     fKeepCCSpeedOnLimit := False;  
     TrayIcon.SetTipText(ACCSTR_TI_DefaultTipText);
-    fMemoryOperator.Deactivate;
+    If fMemoryOperator.Active then
+      fMemoryOperator.Deactivate;
     fInputManager.Mode := fInputManager.Mode - [omTrigger];
   end;
 fOnBindStateChange.Call(Self);
@@ -510,11 +512,13 @@ end;
 
 procedure TACCManager.SetCCSpeed(NewSpeed: Single; DeactivateLimitSending: Boolean = True);
 begin
+ACC_Logger.AddLog(Format('TACCManager.SetCCSpeed(%f,' + BoolToStr(DeactivateLimitSending,True) + ')',[NewSpeed]));
 If DeactivateLimitSending or (NewSpeed <= 0) then
   begin
     fWMCClient.SendInteger(0,0,WMC_CODE_LimitStop);
     fKeepCCSpeedOnLimit := False;
   end;
+ACC_Logger.AddLog('  fMemoryOperator.Active: ' + BoolToStr(fMemoryOperator.Active,True));  
 If fMemoryOperator.Active then
   begin
     If NewSpeed > 0 then
@@ -524,6 +528,7 @@ If fMemoryOperator.Active then
       end
     else fMemoryOperator.WriteCCStatus(False);
   end;
+ACC_Logger.AddLog('TACCManager.SetCCSpeed <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -533,8 +538,10 @@ var
   CurrentSpeed: Single;
   CCStatus:     Boolean;
 begin
+ACC_Logger.AddLog(Format('TACCManager.IncreaseCCSpeed(%f)',[Increment]));
 fWMCClient.SendInteger(0,0,WMC_CODE_LimitStop);
 fKeepCCSpeedOnLimit := False;
+ACC_Logger.AddLog('  fMemoryOperator.Active: ' + BoolToStr(fMemoryOperator.Active,True));
 If fMemoryOperator.Active and (Increment <> 0) then
   If fMemoryOperator.ReadCCStatus(CCStatus) then
     begin
@@ -546,6 +553,7 @@ If fMemoryOperator.Active and (Increment <> 0) then
         end
       else
         begin
+          ACC_Logger.AddLog('  fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData): ' + IntToStr(Integer(fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData))));
           case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
             ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(CurrentSpeed) then
                           If fMemoryOperator.WriteCCSpeed(CurrentSpeed + Increment) then
@@ -554,6 +562,7 @@ If fMemoryOperator.Active and (Increment <> 0) then
           end;
         end;
     end;
+ACC_Logger.AddLog('TACCManager.IncreaseCCSpeed <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -562,12 +571,18 @@ Function TACCManager.GameActive: Boolean;
 var
   WindowPID:  LongWord;
 begin
+ACC_Logger.AddLog('TACCManager.GameActive');
 If fProcessBinder.Binded then
   begin
+    ACC_Logger.AddLog('  fProcessBinder.Binded: ' + BoolToStr(fProcessBinder.Binded,True));
     GetWindowThreadProcessID(GetForegroundWindow,{%H-}WindowPID);
+    ACC_Logger.AddLog('  WindowPID: ' + IntToStr(WindowPID));
+    ACC_Logger.AddLog('  fProcessBinder.GameData.ProcessInfo.ProcessID: ' + IntToStr(fProcessBinder.GameData.ProcessInfo.ProcessID));
     Result := WindowPID = fProcessBinder.GameData.ProcessInfo.ProcessID;
   end
 else Result := False;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TACCManager.GameActive <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -577,6 +592,8 @@ var
   TempSpeed:  Single;
   TempState:  Boolean;
 begin
+ACC_Logger.AddLog(Format('TACCManager.ExecuteTrigger(%p,%d,%d)',[Pointer(Sender),Trigger,Integer(Caller)]));
+ACC_Logger.AddLog('  Settings.GameActiveForTrigger: ' + BoolToStr(Settings.GameActiveForTrigger,True));
 If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
   case Trigger of
     ACC_TRIGGER_ArbitraryEngage:  //--------------------------------------------
@@ -667,6 +684,7 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
         else fWMCClient.SendInteger(0,0,WMC_CODE_LimitStart);
       end;
   end;
+ACC_Logger.AddLog('TACCManager.ExecuteTrigger <<');
 end;
 
 end.

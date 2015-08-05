@@ -23,6 +23,9 @@ uses
   WinMsgComm,
   WinMsgCommClient,
 
+  SimpleLog,
+  ACC_Log,
+
   ACC_Common,
   ACC_Strings,
   ACC_InstanceControl,

@@ -22,6 +22,9 @@ uses
   WinMsgComm           in '..\Libs\WMC\WinMsgComm.pas',
   WinMsgCommClient     in '..\Libs\WMC\WinMsgCommClient.pas',
 
+  SimpleLog   in '..\Libs\SimpleLog.pas',
+  ACC_Log     in '..\ACC_Log.pas',
+
   ACC_Common          in '..\ACC_Common.pas',
   ACC_Strings         in '..\ACC_Strings.pas',
   ACC_InstanceControl in '..\ACC_InstanceControl.pas',

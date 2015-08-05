@@ -53,7 +53,8 @@ implementation
 
 uses
   Windows, SysUtils,
-  ACC_Common;
+  ACC_Common,
+  ACC_Log;
 
 const
   PTR_IDX_CCSpeed    = -1;
@@ -72,28 +73,52 @@ const
 
 class Function TMemoryOperator.ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer): Boolean;
 var
-  i:    Integer;
-  Temp: LongWord;
+  i:        Integer;
+  Temp:     LongWord;
+  TempStr:  String;
 begin
+ACC_Logger.AddLog('TMemoryOperator.ResolveAddress');
+ACC_Logger.AddLog('  ' + IntToHex(ProcessHandle,SizeOf(THandle)*2));
+ACC_Logger.AddLog('  ' + IntToHex({%H-}PtrUInt(BaseAddress),SizeOf(Pointer)*2));
+ACC_Logger.AddLog('  ' + IntToHex(PointerData.Flags,8));
+ACC_Logger.AddLog('  ' + IntToHex(PointerData.PtrInfo,8));
+ACC_Logger.AddLog('  ' + IntToStr(PointerData.ModuleIndex));
+TempStr := '';
+For i := Low(PointerData.Offsets) to High(PointerData.Offsets) do
+  TempStr := TempStr + IntToHex(PointerData.Offsets[i],16) + ' ';
+ACC_Logger.AddLog('  ' + TempStr);
+ACC_Logger.AddLog('  ' + FloatToStr(PointerData.Coefficient));
+
 Result := False;
 try
   Address := BaseAddress;
   If Length(PointerData.Offsets) > 0 then
     Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[0]);
+  ACC_Logger.AddLog('  Iterating...');
   For i := Succ(Low(PointerData.Offsets)) to High(PointerData.Offsets) do
     begin
+      ACC_Logger.AddLog('  Address: ' + IntToHex({%H-}PtrUInt(Address),SizeOf(Pointer)*2));
       If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),{%H-}Temp) then
         begin
+          ACC_Logger.AddLog('  ' + IntToStr(i) + ': ReadProcessMemory successful');
+          ACC_Logger.AddLog('    ' + IntToHex({%H-}PtrUInt(Address),SizeOf(Pointer)*2) + ' (' + IntToStr(Temp) + ')');
           If Assigned(Address) and (Temp = SizeOf(Pointer)) then
             Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[i])
           else Exit;
         end
-      else Exit;
+      else
+        begin
+          ACC_Logger.AddLog('  ' + IntToStr(i) + ': ReadProcessMemory failed');
+          Exit;
+        end;
     end;
   Result := Assigned(Address);
 except
+  ACC_Logger.AddLog('  !!! Exception occured !!!');
   Result := False;
 end;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.ResolveAddress <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -102,13 +127,36 @@ class Function TMemoryOperator.WriteValue(ProcessHandle: THandle; BaseAddress: P
 var
   ValueAddress: Pointer;
   Temp:         LongWord;
+  i:            Integer;
+  TempStr:      String;
 begin
+ACC_Logger.AddLog('TMemoryOperator.WriteValue');
+ACC_Logger.AddLog('  ' + IntToHex(ProcessHandle,SizeOf(THandle)*2));
+ACC_Logger.AddLog('  ' + IntToHex({%H-}PtrUInt(BaseAddress),SizeOf(Pointer)*2));
+ACC_Logger.AddLog('  ' + IntToHex(PointerData.Flags,8));
+ACC_Logger.AddLog('  ' + IntToHex(PointerData.PtrInfo,8));
+ACC_Logger.AddLog('  ' + IntToStr(PointerData.ModuleIndex));
+TempStr := '';
+For i := Low(PointerData.Offsets) to High(PointerData.Offsets) do
+  TempStr := TempStr + IntToHex(PointerData.Offsets[i],16) + ' ';
+ACC_Logger.AddLog('  ' + TempStr);
+ACC_Logger.AddLog('  ' + FloatToStr(PointerData.Coefficient));
+ACC_Logger.AddLog('  ' + IntToStr(Size));
+ACC_Logger.AddLog('  ' + IntToHex({%H-}PtrUInt(Value),SizeOf(Pointer)*2));
+
 Result := False;
 If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
   begin
     If WriteProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
-      Result := Temp = Size;
+      begin
+        ACC_Logger.AddLog('  WriteProcessMemory successful (' + IntToStr(Temp) + ')');
+        Result := Temp = Size;
+      end
+    else
+      ACC_Logger.AddLog('  WriteProcessMemory failed (' + IntToStr(Temp) + ')');
   end;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.WriteValue <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -117,19 +165,46 @@ class Function TMemoryOperator.ReadValue(ProcessHandle: THandle; BaseAddress: Po
 var
   ValueAddress: Pointer;
   Temp:         LongWord;
+  i:            Integer;
+  TempStr:      String;
 begin
+ACC_Logger.AddLog('TMemoryOperator.ReadValue');
+ACC_Logger.AddLog('  ' + IntToHex(ProcessHandle,SizeOf(THandle)*2));
+ACC_Logger.AddLog('  ' + IntToHex({%H-}PtrUInt(BaseAddress),SizeOf(Pointer)*2));
+ACC_Logger.AddLog('  ' + IntToHex(PointerData.Flags,8));
+ACC_Logger.AddLog('  ' + IntToHex(PointerData.PtrInfo,8));
+ACC_Logger.AddLog('  ' + IntToStr(PointerData.ModuleIndex));
+TempStr := '';
+For i := Low(PointerData.Offsets) to High(PointerData.Offsets) do
+  TempStr := TempStr + IntToHex(PointerData.Offsets[i],16) + ' ';
+ACC_Logger.AddLog('  ' + TempStr);
+ACC_Logger.AddLog('  ' + FloatToStr(PointerData.Coefficient));
+ACC_Logger.AddLog('  ' + IntToStr(Size));
+ACC_Logger.AddLog('  ' + IntToHex({%H-}PtrUInt(Value),SizeOf(Pointer)*2));
+
 Result := False;
 If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
   begin
     If ReadProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
-      Result := Temp = Size;
+      begin
+        ACC_Logger.AddLog('  ReadProcessMemory successful (' + IntToStr(Temp) + ')');
+        Result := Temp = Size;
+      end
+    else
+      ACC_Logger.AddLog('  ReadProcessMemory failed (' + IntToStr(Temp) + ')');
   end;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.ReadValue <<');
 end;
 
 //------------------------------------------------------------------------------
 
 Function TMemoryOperator.PointerDataByIndex(Index: Integer): TPointerData;
+var
+  i:        Integer;
+  TempStr:  String;
 begin
+ACC_Logger.AddLog(Format('TMemoryOperator.PointerDataByIndex(%d)',[Index]));
 case Index of
   PTR_IDX_CCSpeed:    Result := fGameData.CCSpeed;
   PTR_IDX_CCStatus:   Result := fGameData.CCStatus;
@@ -140,6 +215,16 @@ else
   else
     raise Exception.CreateFmt('TMemoryOperator.PointerDataByIndex: Index (%d) out of bounds.',[Index]);
 end;
+ACC_Logger.AddLog('  Result:');
+ACC_Logger.AddLog('    ' + IntToHex(Result.Flags,8));
+ACC_Logger.AddLog('    ' + IntToHex(Result.PtrInfo,8));
+ACC_Logger.AddLog('    ' + IntToStr(Result.ModuleIndex));
+TempStr := '';
+For i := Low(Result.Offsets) to High(Result.Offsets) do
+  TempStr := TempStr + IntToHex(Result.Offsets[i],16) + ' ';
+ACC_Logger.AddLog('    ' + TempStr);
+ACC_Logger.AddLog('    ' + FloatToStr(Result.Coefficient));
+ACC_Logger.AddLog('TMemoryOperator.PointerDataByIndex <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -149,6 +234,7 @@ var
   PointerData:  TPointerData;
   Coefficient:  Single;
 begin
+ACC_Logger.AddLog(Format('TMemoryOperator.WriteFloat(%d,%f)',[PointerIndex,Value]));
 Result := False;
 try
   PointerData := PointerDataByIndex(PointerIndex);
@@ -167,8 +253,11 @@ try
                        fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
                        PointerData,SizeOf(Single),@Value);
 except
+  ACC_Logger.AddLog('  !!! Exception occured !!!');
   Result := False;
 end;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.WriteFloat <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -178,6 +267,7 @@ var
   PointerData:  TPointerData;
   Coefficient:  Single;
 begin
+ACC_Logger.AddLog(Format('TMemoryOperator.ReadFloat(%d)',[PointerIndex]));
 Result := False;
 try
   PointerData := PointerDataByIndex(PointerIndex);
@@ -196,8 +286,11 @@ try
                       PointerData,SizeOf(Single),@Value);
   Value := Value / Coefficient;
 except
+  ACC_Logger.AddLog('  !!! Exception occured !!!');
   Result := False;
 end;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.ReadFloat <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -206,10 +299,13 @@ Function TMemoryOperator.WriteBool(PointerIndex: Integer; Value: Boolean): Boole
 var
   PointerData:  TPointerData;
 begin
+ACC_Logger.AddLog(Format('TMemoryOperator.WriteBool(%d,',[PointerIndex]) + BoolToStr(Value,True) + ')');
 PointerData := PointerDataByIndex(PointerIndex);
 Result := WriteValue(fGameData.ProcessInfo.ProcessHandle,
                      fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
                      PointerData,SizeOf(Value),@Value);
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.WriteBool <<');
 end;
 
 //------------------------------------------------------------------------------
@@ -218,10 +314,13 @@ Function TMemoryOperator.ReadBool(PointerIndex: Integer; out Value: Boolean): Bo
 var
   PointerData:  TPointerData;
 begin
+ACC_Logger.AddLog(Format('TMemoryOperator.ReadBool(%d)',[PointerIndex]));
 PointerData := PointerDataByIndex(PointerIndex);
 Result := ReadValue(fGameData.ProcessInfo.ProcessHandle,
                      fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
                      PointerData,SizeOf(Value),@Value);
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.ReadBool <<');
 end;
 
 {------------------------------------------------------------------------------}
@@ -230,80 +329,108 @@ end;
 
 constructor TMemoryOperator.Create;
 begin
+ACC_Logger.AddLog('TMemoryOperator.Create');
 inherited Create;
 fActive := False;
 fCanReadVehicleSpeed := False;
+ACC_Logger.AddLog('TMemoryOperator.Create <<');
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TMemoryOperator.Activate(GameData: TGameData);
 begin
+ACC_Logger.AddLog('TMemoryOperator.Activate...');
+ACC_Logger.AddLog('  ' + GUIDToString(GameData.Identifier));
+ACC_Logger.AddLog('  ' + GameData.ExtendedTitle);
 fGameData := GameData;
+ACC_Logger.AddLog('  TGamesDataManager.TruckSpeedSupported(fGameData): ' + IntToStr(Integer(TGamesDataManager.TruckSpeedSupported(fGameData))));
 fCanReadVehicleSpeed := TGamesDataManager.TruckSpeedSupported(fGameData) = ssrDirect;
+ACC_Logger.AddLog('  fCanReadVehicleSpeed: ' + BoolToStr(fCanReadVehicleSpeed,True));
 fActive := TGamesDataManager.IsValid(fGameData);
+ACC_Logger.AddLog('  fActive: ' + BoolToStr(fActive,True));
+ACC_Logger.AddLog('TMemoryOperator.Activate <<');
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TMemoryOperator.Deactivate;
 begin
+ACC_Logger.AddLog('TMemoryOperator.Deactivate');
 fActive := False;
 fCanReadVehicleSpeed := False;
+ACC_Logger.AddLog('TMemoryOperator.Deactivate <<');
 end;
 
 //------------------------------------------------------------------------------
 
 Function TMemoryOperator.ReadVehicleSpeed(out Value: Single): Boolean;
 begin
+ACC_Logger.AddLog('TMemoryOperator.ReadVehicleSpeed');
+ACC_Logger.AddLog('  fActive: ' + BoolToStr(fActive,True));
+ACC_Logger.AddLog('  fCanReadVehicleSpeed: ' + BoolToStr(fCanReadVehicleSpeed,True));
 If fActive and fCanReadVehicleSpeed then
   Result := ReadFloat(PTR_IDX_TruckSpeed,Value)
 else
   Result := False;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True) + ' - ' + FloatToStr(Value));
+ACC_Logger.AddLog('TMemoryOperator.ReadVehicleSpeed <<');
 end;
 
 //------------------------------------------------------------------------------
 
 Function TMemoryOperator.ReadCCSpeed(out Value: Single): Boolean;
 begin
+ACC_Logger.AddLog('TMemoryOperator.ReadCCSpeed');
+ACC_Logger.AddLog('  fActive: ' + BoolToStr(fActive,True));
 If fActive then
-  begin
-    Result := ReadFloat(PTR_IDX_CCSpeed,Value);
-  end
-else Result := False;
+   Result := ReadFloat(PTR_IDX_CCSpeed,Value)
+else
+  Result := False;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True) + ' - ' + FloatToStr(Value));
+ACC_Logger.AddLog('TMemoryOperator.ReadCCSpeed <<');
 end;
 
 //------------------------------------------------------------------------------
 
 Function TMemoryOperator.ReadCCStatus(out Value: Boolean): Boolean;
 begin
+ACC_Logger.AddLog('TMemoryOperator.ReadCCSpeed');
+ACC_Logger.AddLog('  fActive: ' + BoolToStr(fActive,True));
 If fActive then
-  begin
-    Result := ReadBool(PTR_IDX_CCStatus,Value);
-  end
-else Result := False;
+  Result := ReadBool(PTR_IDX_CCStatus,Value)
+else
+  Result := False;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True) + ' - ' + BoolToStr(Value,True));
+ACC_Logger.AddLog('TMemoryOperator.ReadCCStatus <<');
 end;
 
 //------------------------------------------------------------------------------
 
 Function TMemoryOperator.WriteCCSpeed(Value: Single): Boolean;
 begin
+ACC_Logger.AddLog(Format('TMemoryOperator.WriteCCSpeed(%f)',[Value]));
+ACC_Logger.AddLog('  fActive: ' + BoolToStr(fActive,True));
 If fActive then
-  begin
-    Result := WriteFloat(PTR_IDX_CCSpeed,Value);
-  end
-else Result := False;
+  Result := WriteFloat(PTR_IDX_CCSpeed,Value)
+else
+  Result := False;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.WriteCCSpeed <<');
 end;
 
 //------------------------------------------------------------------------------
 
 Function TMemoryOperator.WriteCCStatus(Value: Boolean): Boolean;
 begin
+ACC_Logger.AddLog('TMemoryOperator.WriteCCStatus(' + BoolToStr(Value,True) + ')');
+ACC_Logger.AddLog('  fActive: ' + BoolToStr(fActive,True));
 If fActive then
-  begin
-    Result :=  WriteBool(PTR_IDX_CCStatus,Value);
-  end
-else Result := False;
+  Result := WriteBool(PTR_IDX_CCStatus,Value)
+else
+  Result := False;
+ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
+ACC_Logger.AddLog('TMemoryOperator.WriteCCStatus <<');
 end;
 
 end.
