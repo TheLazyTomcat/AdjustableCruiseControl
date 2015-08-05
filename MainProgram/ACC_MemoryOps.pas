@@ -108,7 +108,7 @@ try
         end
       else
         begin
-          ACC_Logger.AddLog('  ' + IntToStr(i) + ': ReadProcessMemory failed');
+          ACC_Logger.AddLog('  ' + IntToStr(i) + ': ReadProcessMemory failed 0x' + IntToHex(GetLastError,8));
           Exit;
         end;
     end;
@@ -153,7 +153,7 @@ If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
         Result := Temp = Size;
       end
     else
-      ACC_Logger.AddLog('  WriteProcessMemory failed (' + IntToStr(Temp) + ')');
+      ACC_Logger.AddLog('  WriteProcessMemory failed (' + IntToStr(Temp) + ') 0x' + IntToHex(GetLastError,8));
   end;
 ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
 ACC_Logger.AddLog('TMemoryOperator.WriteValue <<');
@@ -191,7 +191,7 @@ If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
         Result := Temp = Size;
       end
     else
-      ACC_Logger.AddLog('  ReadProcessMemory failed (' + IntToStr(Temp) + ')');
+      ACC_Logger.AddLog('  ReadProcessMemory failed (' + IntToStr(Temp) + ') 0x' + IntToHex(GetLastError,8));
   end;
 ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
 ACC_Logger.AddLog('TMemoryOperator.ReadValue <<');
