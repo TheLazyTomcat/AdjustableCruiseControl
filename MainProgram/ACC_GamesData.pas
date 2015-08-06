@@ -98,6 +98,7 @@ type
   TProcessInfo = record
     ProcessID:      LongWord;
     ProcessHandle:  THandle;
+    Is64bitProcess: Boolean;
   end;
 
   TUpdateInfo = record
