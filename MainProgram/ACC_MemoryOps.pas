@@ -26,9 +26,9 @@ type
     fActive:              Boolean;
     fCanReadVehicleSpeed: Boolean;
   protected
-    class Function ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer): Boolean; virtual;
-    class Function WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean; virtual;
-    class Function ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean; virtual;
+    class Function ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer; {%H-}Ptr64: Boolean): Boolean; virtual;
+    class Function WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
+    class Function ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
     Function PointerDataByIndex(Index: Integer): TPointerData; virtual;
     Function WriteFloat(PointerIndex: Integer; Value: Single): Boolean; virtual;
     Function ReadFloat(PointerIndex: Integer; out Value: Single): Boolean; virtual;
@@ -71,11 +71,12 @@ const
 {   TMemoryOperator // Protected methods                                       }
 {------------------------------------------------------------------------------}
 
-class Function TMemoryOperator.ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer): Boolean;
+class Function TMemoryOperator.ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer; Ptr64: Boolean): Boolean;
 var
   i:        Integer;
   Temp:     LongWord;
   TempStr:  String;
+  PtrSize:  LongWord;
 begin
 ACC_Logger.AddLog('TMemoryOperator.ResolveAddress');
 ACC_Logger.AddLog('  ' + IntToHex(ProcessHandle,SizeOf(THandle)*2));
@@ -90,6 +91,12 @@ ACC_Logger.AddLog('  ' + TempStr);
 ACC_Logger.AddLog('  ' + FloatToStr(PointerData.Coefficient));
 
 Result := False;
+{$IFDEF x64}
+If Ptr64 then PtrSize := 8
+  else PtrSize := 4;
+{$ELSE}
+PtrSize := 4;
+{$ENDIF}
 try
   Address := BaseAddress;
   If Length(PointerData.Offsets) > 0 then
@@ -97,12 +104,15 @@ try
   ACC_Logger.AddLog('  Iterating...');
   For i := Succ(Low(PointerData.Offsets)) to High(PointerData.Offsets) do
     begin
+    {$IFDEF x64}
+      If not Ptr64 then Address := {%H-}Pointer({%H-}PtrUInt(Address) and $FFFFFFFF);
+    {$ENDIF}
       ACC_Logger.AddLog('  Address: ' + IntToHex({%H-}PtrUInt(Address),SizeOf(Pointer)*2));
-      If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),{%H-}Temp) then
+      If ReadProcessMemory(ProcessHandle,Address,@Address,PtrSize,{%H-}Temp) then
         begin
           ACC_Logger.AddLog('  ' + IntToStr(i) + ': ReadProcessMemory successful');
           ACC_Logger.AddLog('    ' + IntToHex({%H-}PtrUInt(Address),SizeOf(Pointer)*2) + ' (' + IntToStr(Temp) + ')');
-          If Assigned(Address) and (Temp = SizeOf(Pointer)) then
+          If Assigned(Address) and (Temp = PtrSize) then
             Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[i])
           else Exit;
         end
@@ -112,6 +122,9 @@ try
           Exit;
         end;
     end;
+{$IFDEF x64}
+  If not Ptr64 then Address := {%H-}Pointer({%H-}PtrUInt(Address) and $FFFFFFFF);
+{$ENDIF}
   ACC_Logger.AddLog('  Final address: ' + IntToHex({%H-}PtrUInt(Address),SizeOf(Pointer)*2));
   Result := Assigned(Address);
 except
@@ -124,7 +137,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TMemoryOperator.WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean;
+class Function TMemoryOperator.WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean;
 var
   ValueAddress: Pointer;
   Temp:         LongWord;
@@ -146,7 +159,7 @@ ACC_Logger.AddLog('  ' + IntToStr(Size));
 ACC_Logger.AddLog('  ' + IntToHex({%H-}PtrUInt(Value),SizeOf(Pointer)*2));
 
 Result := False;
-If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
+If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress,Ptr64) then
   begin
     If WriteProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
       begin
@@ -162,7 +175,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TMemoryOperator.ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean;
+class Function TMemoryOperator.ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean;
 var
   ValueAddress: Pointer;
   Temp:         LongWord;
@@ -184,7 +197,7 @@ ACC_Logger.AddLog('  ' + IntToStr(Size));
 ACC_Logger.AddLog('  ' + IntToHex({%H-}PtrUInt(Value),SizeOf(Pointer)*2));
 
 Result := False;
-If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
+If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress,Ptr64) then
   begin
     If ReadProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
       begin
@@ -252,7 +265,7 @@ try
   Value := Value * Coefficient;
   Result := WriteValue(fGameData.ProcessInfo.ProcessHandle,
                        fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                       PointerData,SizeOf(Single),@Value);
+                       PointerData,SizeOf(Single),@Value,fGameData.ProcessInfo.Is64bitProcess);
 except
   ACC_Logger.AddLog('  !!! Exception occured !!!');
   Result := False;
@@ -284,7 +297,7 @@ try
   end;
   Result := ReadValue(fGameData.ProcessInfo.ProcessHandle,
                       fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                      PointerData,SizeOf(Single),@Value);
+                      PointerData,SizeOf(Single),@Value,fGameData.ProcessInfo.Is64bitProcess);
   Value := Value / Coefficient;
 except
   ACC_Logger.AddLog('  !!! Exception occured !!!');
@@ -304,7 +317,7 @@ ACC_Logger.AddLog(Format('TMemoryOperator.WriteBool(%d,',[PointerIndex]) + BoolT
 PointerData := PointerDataByIndex(PointerIndex);
 Result := WriteValue(fGameData.ProcessInfo.ProcessHandle,
                      fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                     PointerData,SizeOf(Value),@Value);
+                     PointerData,SizeOf(Value),@Value,fGameData.ProcessInfo.Is64bitProcess);
 ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
 ACC_Logger.AddLog('TMemoryOperator.WriteBool <<');
 end;
@@ -319,7 +332,7 @@ ACC_Logger.AddLog(Format('TMemoryOperator.ReadBool(%d)',[PointerIndex]));
 PointerData := PointerDataByIndex(PointerIndex);
 Result := ReadValue(fGameData.ProcessInfo.ProcessHandle,
                      fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                     PointerData,SizeOf(Value),@Value);
+                     PointerData,SizeOf(Value),@Value,fGameData.ProcessInfo.Is64bitProcess);
 ACC_Logger.AddLog('  Result: ' + BoolToStr(Result,True));
 ACC_Logger.AddLog('TMemoryOperator.ReadBool <<');
 end;

@@ -149,6 +149,38 @@ If FindFirst(FilePath,faAnyFile,SearchResult) = 0 then
   else Result := 0;
 end;
 
+//------------------------------------------------------------------------------
+
+Function Is64bitProcess({%H-}ProcessHandle: THandle): Boolean;
+{$IFDEF x64}
+type
+  TIsWoW64Process = Function(hProcess: THandle; Wow64Process: PBOOL): BOOL; stdcall;
+var
+  ModuleHandle:   THandle;
+  IsWow64Process: TIsWoW64Process;
+  ResultValue:    BOOL;
+begin
+Result := False;
+ModuleHandle := GetModuleHandle('kernel32.dll');
+If ModuleHandle <> 0 then
+  begin
+    IsWoW64Process := GetProcAddress(ModuleHandle,'IsWow64Process');
+    If Assigned(IsWoW64Process) then
+      begin
+        If IsWow64Process(ProcessHandle,@ResultValue) then
+          Result := not ResultValue
+        else
+          raise Exception.CreateFmt('Is64bitProcess: IsWow64Process failed with error %.8x.',[GetLastError]);
+      end;
+  end
+else raise Exception.CreateFmt('Is64bitProcess: Unable to get handle to module kernel32.dll (%.8x).',[GetLastError]);
+end;
+{$ELSE}
+begin
+Result := False;
+end;
+{$ENDIF}
+
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                                 TProcessList                                 }
@@ -453,8 +485,11 @@ try
               begin
                 fGameData := fGamesDataPtr^.Entries[i];
                   fGameData.ProcessInfo.ProcessID := fPossibleGameProcess.ProcessID;
-                fWaitObjects.GameProcess := OpenProcess(PROCESS_VM_READ or PROCESS_VM_WRITE or PROCESS_VM_OPERATION or $00100000{SYNCHRONIZE},False,fGameData.ProcessInfo.ProcessID);
+                fWaitObjects.GameProcess := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ or
+                                                        PROCESS_VM_WRITE or PROCESS_VM_OPERATION or $00100000{SYNCHRONIZE},
+                                                        False,fGameData.ProcessInfo.ProcessID);
                 fGameData.ProcessInfo.ProcessHandle := fWaitObjects.GameProcess;
+                fGameData.ProcessInfo.Is64bitProcess := Is64bitProcess(fWaitObjects.GameProcess);
                 Result := fWaitObjects.GameProcess <> 0;
                 Break{i};
               end
