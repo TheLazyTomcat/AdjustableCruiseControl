@@ -112,6 +112,7 @@ try
           Exit;
         end;
     end;
+  ACC_Logger.AddLog('  Final address: ' + IntToHex({%H-}PtrUInt(Address),SizeOf(Pointer)*2));
   Result := Assigned(Address);
 except
   ACC_Logger.AddLog('  !!! Exception occured !!!');
