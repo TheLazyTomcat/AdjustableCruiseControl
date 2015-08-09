@@ -128,22 +128,19 @@
         <Filename Value="..\ACC_MemoryOps.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_MemoryOps"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="17"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="76"/>
         <CursorPos Y="29"/>
         <UsageCount Value="137"/>
-        <Loaded Value="True"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ACC_ProcessBinder"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="148"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="154"/>
         <CursorPos X="25" Y="154"/>
         <UsageCount Value="137"/>
-        <Loaded Value="True"/>
       </Unit19>
       <Unit20>
         <Filename Value="..\ACC_Settings.pas"/>
@@ -167,6 +164,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainForm"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="15"/>
         <UsageCount Value="137"/>
@@ -210,8 +208,9 @@
         <ComponentName Value="fSupportedGamesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SupportedGamesForm"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="211"/>
+        <TopLine Value="13"/>
         <CursorPos X="75" Y="225"/>
         <UsageCount Value="137"/>
       </Unit26>
@@ -482,7 +481,7 @@
       <Define3 Value="Debug"/>
       <Define4 Value="Release"/>
     </CustomDefines>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="28" HistoryIndex="27">
       <Position1>
         <Filename Value="ACC.lpr"/>
         <Caret Line="71" TopLine="64"/>
@@ -595,14 +594,6 @@
         <Filename Value="..\MainForm.pas"/>
         <Caret Line="193" Column="37" TopLine="181"/>
       </Position28>
-      <Position29>
-        <Filename Value="..\ACC_ProcessBinder.pas"/>
-        <Caret Line="489" Column="5" TopLine="470"/>
-      </Position29>
-      <Position30>
-        <Filename Value="..\ACC_MemoryOps.pas"/>
-        <Caret Line="88" Column="42" TopLine="76"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
   <Debugging>
