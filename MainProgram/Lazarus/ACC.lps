@@ -127,7 +127,6 @@
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_MemoryOps"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="76"/>
         <CursorPos Y="29"/>
@@ -136,7 +135,6 @@
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_ProcessBinder"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="154"/>
         <CursorPos X="25" Y="154"/>
@@ -208,7 +206,6 @@
         <ComponentName Value="fSupportedGamesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="SupportedGamesForm"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="75" Y="225"/>

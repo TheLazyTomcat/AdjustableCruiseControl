@@ -11,9 +11,9 @@
 
   Server endpoint class
 
-  ©František Milt 2015-05-14
+  ©František Milt 2015-07-17
 
-  Version 1.0
+  Version 1.1
 
 ===============================================================================}
 unit WinMsgCommServer;
@@ -77,7 +77,7 @@ case MessageCode of
   WMC_SERVEROFFLINE:  Result := WMC_RESULT_error;
   WMC_CLIENTONLINE:   begin
                         New(NewClient);
-                        NewClient^.ConnectionID := GetFreeID;
+                        NewClient^.ConnectionID := AcquireID;
                         NewClient^.WindowHandle := HWND(Payload);
                         NewClient^.Transacting := False;
                         Result := lResult(NewClient^.ConnectionID);
@@ -90,6 +90,7 @@ case MessageCode of
                           begin
                             If Assigned(fOnClientDisconnect) then fOnClientDisconnect(Self,Connections[Index],Index);
                             DeleteConnection(Index);
+                            ReleaseID(SenderID);
                             Result := WMC_RESULT_ok;
                           end
                         else Result := WMC_RESULT_error;
@@ -124,6 +125,7 @@ end;
 constructor TWinMsgCommServer.Create(Window: TUtilityWindow = nil; Synchronous: Boolean = False; const MessageName: String = WMC_MessageName);
 begin
 inherited Create(Window,Synchronous,MessageName);
+InitIDArray;
 fControlMutex := CreateMutex(nil,False,PChar(MessageName + '_mutex'));
 If GetLastError = ERROR_ALREADY_EXISTS then
   raise Exception.Create('Server on this domain is already running.');
@@ -137,6 +139,7 @@ destructor TWinMsgCommServer.Destroy;
 begin
 SendMessageTo(HWND_BROADCAST,BuildWParam(ID,WMC_SERVEROFFLINE,0),lParam(WindowHandle),False);
 CloseHandle(fControlMutex);
+FinalIDArray;
 inherited;
 end;
 
@@ -146,7 +149,7 @@ Function TWinMsgCommServer.SendMessage(MessageCode, UserCode: Byte; Payload: lPa
 var
   Index:  Integer;
 begin
-If RecipientID = 0 then
+If RecipientID = WMC_SendToAll then
   Result := SendMessageToAll(BuildWParam(ID,MessageCode,UserCode),Payload)
 else
   begin

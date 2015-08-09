@@ -11,9 +11,9 @@
 
   Client endpoint class
 
-  ©František Milt 2015-05-14
+  ©František Milt 2015-07-17
 
-  Version 1.0
+  Version 1.1
 
 ===============================================================================}
 unit WinMsgCommClient;
@@ -97,7 +97,7 @@ case MessageCode of
                           Server^.WindowHandle := HWND(Payload);
                           Server^.Transacting := False;
                           AssignedID := SendMessageTo(HWND(Payload),BuildWParam(ID,WMC_CLIENTONLINE,0),lParam(WindowHandle),True);
-                          If (AssignedID > 0) and (AssignedID < $FFFF) then
+                          If (AssignedID > 0) and (AssignedID <= $FFFF) then
                             begin
                               SetID(TWMCConnectionID(AssignedID));
                               AddConnection(Server);
