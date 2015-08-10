@@ -11,9 +11,9 @@
 
   Base class
 
-  ©František Milt 2015-05-14
+  ©František Milt 2015-08-10
 
-  Version 1.0
+  Version 1.2
 
 ===============================================================================}
 unit WinMsgComm;
@@ -113,6 +113,9 @@ type
 
   TWMCConnectionID = Word;
 
+  TWMCConnectionIDArray = array[TWMCConnectionID] of Boolean;
+  PWMCConnectionIDArray = ^TWMCConnectionIDArray;
+
   TWMCMultiValueType = (mvtBool,mvtByte,mvtShortInt,mvtWord,mvtSmallInt,
                         mvtLongWord,mvtLongInt,mvtUInt64,mvtInt64,mvtSingle,
                         mvtDouble,mvtData,mvtString);
@@ -157,7 +160,6 @@ type
   TWMCMessageEvent = procedure(var Msg: TMessage; var Handled: Boolean) of object;
   TWMCConnectionEvent = procedure(Sender: TObject; ConnectionInfo: TWMCConnectionInfo; ConnectionIndex: Integer) of object;
 
-
 {==============================================================================}
 {------------------------------------------------------------------------------}
 {                               TWinMsgCommBase                                }
@@ -165,13 +167,16 @@ type
 {==============================================================================}
   TWinMsgCommBase = class(TObject)
   private
+    fIDArraySynchro:  THandle;
+    fIDArrayObject:   THandle;
+    fIDArray:         PWMCConnectionIDArray;
     fID:              TWMCConnectionID;
     fMessageName:     String;
     fMessageID:       LongWord;
     fSynchronous:     Boolean;
     fOwnsWindow:      Boolean;
     fWindow:          TUtilityWindow;
-    fConnections:     TList;   
+    fConnections:     TList;
     fOnValueReceived: TWMCValueReceivedEvent;
     fOnDataReceived:  TWMCDataReceivedEvent;
     fOnMessage:       TWMCMessageEvent;
@@ -179,7 +184,10 @@ type
     Function GetConnectionCount: Integer;
     Function GetConnection(Index: Integer): TWMCConnectionInfo;
   protected
-    Function GetFreeID: TWMCConnectionID; virtual;
+    procedure InitIDArray; virtual;
+    procedure FinalIDArray; virtual;
+    Function AcquireID: TWMCConnectionID; virtual;
+    procedure ReleaseID(ConnectionID: TWMCConnectionID); virtual;
     procedure SetID(NewID: TWMCConnectionID); virtual;
     Function AddConnection(ConnectionInfo: PWMCConnectionInfo): Integer; virtual;
     procedure DeleteConnection(Index: Integer); virtual;
@@ -318,25 +326,68 @@ end;
 {   TWinMsgCommBase - Protected methods                                        }
 {==============================================================================}
 
-Function TWinMsgCommBase.GetFreeID: TWMCConnectionID;
-
-  Function IDUsed(ID: Word): Boolean;
-  var
-    i:  Integer;
-  begin
-    Result := False;
-    For i := 0 to Pred(fConnections.Count) do
-      If PWMCConnectionInfo(fConnections[i])^.ConnectionID = ID then
-        begin
-          Result := True;
-          Exit;
-        end;
-  end;
-
+procedure TWinMsgCommBase.InitIDArray;
 begin
-Result := 1;
-while IDUsed(Result) and (Result < $FFFF) do
-  Inc(Result);
+fIDArraySynchro := CreateMutex(nil,False,PChar(fMessageName + '_idsync'));
+If fIDArraySynchro = 0 then
+  raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not create ID-sync mutex (0x%.8x).',[GetLastError]);
+fIDArrayObject := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,SizeOf(TWMCConnectionIDArray),PChar(fMessageName + '_idarray'));
+If fIDArrayObject = 0 then
+  raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not create ID array (0x%.8x).',[GetLastError]);
+fIDArray := MapViewOfFile(fIDArrayObject,FILE_MAP_ALL_ACCESS,0,0,0);
+If not Assigned(fIDArray) then
+  raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not map ID array (0x%.8x).',[GetLastError]);
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TWinMsgCommBase.FinalIDArray;
+begin
+UnmapViewOfFile(fIDArray);
+CloseHandle(fIDArrayObject);
+CloseHandle(fIDArraySynchro);
+end;
+
+//------------------------------------------------------------------------------
+
+Function TWinMsgCommBase.AcquireID: TWMCConnectionID;
+var
+  i:  Integer;
+begin
+Result := WMC_SendToAll;
+If Assigned(fIDArray) then
+  begin
+    If WaitForSingleObject(fIDArraySynchro,30000) = WAIT_OBJECT_0 then
+      try
+        For i := 1 to High(TWMCConnectionIDArray) do
+          If not fIDArray^[i] then
+            begin
+              fIDArray^[i] := True;
+              Result := TWMCConnectionID(i);
+              Exit;
+            end;
+        raise Exception.Create('TWinMsgCommBase.AcquireID: No free ID found.');
+      finally
+        ReleaseMutex(fIDArraySynchro);
+      end
+    else raise Exception.Create('TWinMsgCommBase.AcquireID: Synchronization failed.');
+  end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TWinMsgCommBase.ReleaseID(ConnectionID: TWMCConnectionID);
+begin
+If Assigned(fIDArray) then
+  begin
+    If WaitForSingleObject(fIDArraySynchro,30000) = WAIT_OBJECT_0 then
+      try
+        fIDArray^[ConnectionID] := False;
+      finally
+        ReleaseMutex(fIDArraySynchro);
+      end
+    else raise Exception.Create('TWinMsgCommBase.ReleaseID: Synchronization failed.');
+  end;
 end;
 
 //------------------------------------------------------------------------------
@@ -681,11 +732,13 @@ Function TWinMsgCommBase.SendMessageToAll(wParam: wParam; lParam: lParam; Synchr
 var
   i:  Integer;
 begin
-If fConnections.Count > 0 then Result := WMC_RESULT_ok
-  else Result := WMC_RESULT_error;
+If fConnections.Count > 0 then
+  Result := WMC_RESULT_ok
+else
+  Result := WMC_RESULT_error;
 For i := 0 to Pred(fConnections.Count) do
   begin
-    If SendMessageTo(PWMCConnectionInfo(fConnections[i])^.WindowHandle,wParam,lParam,Synchronous) <> WMC_RESULT_ok then
+    If SendMessageTo(PWMCConnectionInfo(fConnections[i])^.WindowHandle,wParam,lParam,Synchronous) = WMC_RESULT_error then
       Result := WMC_RESULT_error;
   end;
 end;
@@ -750,42 +803,42 @@ end;
 
 Function TWinMsgCommBase.SendBool(Value: Boolean; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_BOOL,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_BOOL,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
 Function TWinMsgCommBase.SendByte(Value: Byte; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_BYTE,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_BYTE,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
 Function TWinMsgCommBase.SendShortInt(Value: ShortInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_SHORTINT,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_SHORTINT,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
 Function TWinMsgCommBase.SendWord(Value: Word; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_WORD,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_WORD,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
 Function TWinMsgCommBase.SendSmallInt(Value: SmallInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_SMALLINT,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_SMALLINT,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
 Function TWinMsgCommBase.SendLongWord(Value: LongWord; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_LONGWORD,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_LONGWORD,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
@@ -799,7 +852,7 @@ end;
 
 Function TWinMsgCommBase.SendSingle(Value: Single; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_SINGLE,UserCode,lParam(Addr(Value)^),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_SINGLE,UserCode,lParam(Addr(Value)^),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
@@ -807,7 +860,7 @@ end;
 Function TWinMsgCommBase.SendUInt64(Value: UInt64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
 {$IFDEF WMC64}
-Result := SendMessage(WMC_VALUE_UINT64,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_UINT64,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 {$ELSE}
 Result := SendData(Value,SizeOf(Value),RecipientID,UserCode,WMC_TRANSACTION_END_UINT64);
 {$ENDIF}
@@ -818,7 +871,7 @@ end;
 Function TWinMsgCommBase.SendInt64(Value: Int64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
 {$IFDEF WMC64}
-Result := SendMessage(WMC_VALUE_INT64,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_INT64,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 {$ELSE}
 Result := SendData(Value,SizeOf(Value),RecipientID,UserCode,WMC_TRANSACTION_END_INT64);
 {$ENDIF}
@@ -829,7 +882,7 @@ end;
 Function TWinMsgCommBase.SendDouble(Value: Double; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
 begin
 {$IFDEF WMC64}
-Result := SendMessage(WMC_VALUE_DOUBLE,UserCode,lParam(Addr(Value)^),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_DOUBLE,UserCode,lParam(Addr(Value)^),RecipientID) <> WMC_RESULT_error;
 {$ELSE}
 Result := SendData(Value,SizeOf(Value),RecipientID,UserCode,WMC_TRANSACTION_END_DOUBLE);
 {$ENDIF}
@@ -854,7 +907,7 @@ var
   begin
     Result := False;
     CheckSum := 0;
-    If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_START,UserCode),lParam(Size),True) = WMC_RESULT_ok then
+    If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_START,UserCode),lParam(Size),True) <> WMC_RESULT_error then
       try
         Position := 0;
         while (Position + BuffSize) <= Size do
@@ -862,9 +915,9 @@ var
             Buffer := 0;
             Move({%H-}Pointer({%H-}PtrUInt(@Data) + Position)^,Buffer,BuffSize);
           {$IFDEF WMC64}
-            If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_BUFF8,UserCode),Buffer,True) <> WMC_RESULT_ok then Exit;
+            If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_BUFF8,UserCode),Buffer,True) = WMC_RESULT_error then Exit;
           {$ELSE}
-            If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_BUFF4,UserCode),Buffer,True) <> WMC_RESULT_ok then Exit;
+            If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_BUFF4,UserCode),Buffer,True) = WMC_RESULT_error then Exit;
           {$ENDIF}
             CheckSum := CalcCheckSum(CheckSum,Buffer,BuffSize);
             Inc(Position,BuffSize);
@@ -873,7 +926,7 @@ var
           begin
             Buffer := 0;
             Move({%H-}Pointer({%H-}PtrUInt(@Data) + Position)^,Buffer,Size - Position);
-            If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_BUFF1 + (Size - Position) - 1,UserCode),Buffer,True) <> WMC_RESULT_ok then Exit;
+            If SendMessageTo(TargetWindow,BuildWParam(fID,WMC_TRANSACTION_BUFF1 + (Size - Position) - 1,UserCode),Buffer,True) = WMC_RESULT_error then Exit;
             CheckSum := CalcCheckSum(CheckSum,Buffer,Size - Position);
           end;
         Result := True;
@@ -920,7 +973,7 @@ If Size > 0 then
       begin
         Index := IndexOfConnection(RecipientID);
         If Index >= 0 then
-            SendAsTransaction(PWMCConnectionInfo(fConnections[Index])^.WindowHandle);
+          SendAsTransaction(PWMCConnectionInfo(fConnections[Index])^.WindowHandle);
       end;
   end;
 {$ENDIF}  
@@ -969,7 +1022,7 @@ begin
 Result := 0;
 For i := Pred(fConnections.Count) downto 0 do
   begin
-    If SendMessageTo(PWMCConnectionInfo(fConnections[i])^.WindowHandle,BuildWParam(0,WMC_PING,0),lParam(WindowHandle),True) <> WMC_RESULT_ok then
+    If SendMessageTo(PWMCConnectionInfo(fConnections[i])^.WindowHandle,BuildWParam(0,WMC_PING,0),lParam(WindowHandle),True) = WMC_RESULT_error then
       begin
         Inc(Result);
         DeleteConnection(i);

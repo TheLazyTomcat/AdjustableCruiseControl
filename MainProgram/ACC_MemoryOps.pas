@@ -26,9 +26,9 @@ type
     fActive:              Boolean;
     fCanReadVehicleSpeed: Boolean;
   protected
-    class Function ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer): Boolean; virtual;
-    class Function WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean; virtual;
-    class Function ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean; virtual;
+    class Function ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer; {%H-}Ptr64: Boolean): Boolean; virtual;
+    class Function WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
+    class Function ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
     Function PointerDataByIndex(Index: Integer): TPointerData; virtual;
     Function WriteFloat(PointerIndex: Integer; Value: Single): Boolean; virtual;
     Function ReadFloat(PointerIndex: Integer; out Value: Single): Boolean; virtual;
@@ -70,26 +70,39 @@ const
 {   TMemoryOperator // Protected methods                                       }
 {------------------------------------------------------------------------------}
 
-class Function TMemoryOperator.ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer): Boolean;
+class Function TMemoryOperator.ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer; Ptr64: Boolean): Boolean;
 var
-  i:    Integer;
-  Temp: LongWord;
+  i:        Integer;
+  Temp:     LongWord;
+  PtrSize:  LongWord;
 begin
 Result := False;
+{$IFDEF x64}
+If Ptr64 then PtrSize := 8
+  else PtrSize := 4;
+{$ELSE}
+PtrSize := 4;
+{$ENDIF}
 try
   Address := BaseAddress;
   If Length(PointerData.Offsets) > 0 then
     Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[0]);
   For i := Succ(Low(PointerData.Offsets)) to High(PointerData.Offsets) do
     begin
-      If ReadProcessMemory(ProcessHandle,Address,@Address,SizeOf(Pointer),{%H-}Temp) then
+    {$IFDEF x64}
+      If not Ptr64 then Address := {%H-}Pointer({%H-}PtrUInt(Address) and $FFFFFFFF);
+    {$ENDIF}
+      If ReadProcessMemory(ProcessHandle,Address,@Address,PtrSize,{%H-}Temp) then
         begin
-          If Assigned(Address) and (Temp = SizeOf(Pointer)) then
+          If Assigned(Address) and (Temp = PtrSize) then
             Address := {%H-}Pointer({%H-}PtrUInt(Address) + PointerData.Offsets[i])
           else Exit;
         end
       else Exit;
     end;
+{$IFDEF x64}
+  If not Ptr64 then Address := {%H-}Pointer({%H-}PtrUInt(Address) and $FFFFFFFF);
+{$ENDIF}
   Result := Assigned(Address);
 except
   Result := False;
@@ -98,13 +111,13 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TMemoryOperator.WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean;
+class Function TMemoryOperator.WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean;
 var
   ValueAddress: Pointer;
   Temp:         LongWord;
 begin
 Result := False;
-If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
+If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress,Ptr64) then
   begin
     If WriteProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
       Result := Temp = Size;
@@ -113,13 +126,13 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TMemoryOperator.ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer): Boolean;
+class Function TMemoryOperator.ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean;
 var
   ValueAddress: Pointer;
   Temp:         LongWord;
 begin
 Result := False;
-If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress) then
+If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress,Ptr64) then
   begin
     If ReadProcessMemory(ProcessHandle,ValueAddress,Value,Size,{%H-}Temp) then
       Result := Temp = Size;
@@ -165,7 +178,7 @@ try
   Value := Value * Coefficient;
   Result := WriteValue(fGameData.ProcessInfo.ProcessHandle,
                        fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                       PointerData,SizeOf(Single),@Value);
+                       PointerData,SizeOf(Single),@Value,fGameData.ProcessInfo.Is64bitProcess);
 except
   Result := False;
 end;
@@ -193,7 +206,7 @@ try
   end;
   Result := ReadValue(fGameData.ProcessInfo.ProcessHandle,
                       fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                      PointerData,SizeOf(Single),@Value);
+                      PointerData,SizeOf(Single),@Value,fGameData.ProcessInfo.Is64bitProcess);
   Value := Value / Coefficient;
 except
   Result := False;
@@ -209,7 +222,7 @@ begin
 PointerData := PointerDataByIndex(PointerIndex);
 Result := WriteValue(fGameData.ProcessInfo.ProcessHandle,
                      fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                     PointerData,SizeOf(Value),@Value);
+                     PointerData,SizeOf(Value),@Value,fGameData.ProcessInfo.Is64bitProcess);
 end;
 
 //------------------------------------------------------------------------------
@@ -221,7 +234,7 @@ begin
 PointerData := PointerDataByIndex(PointerIndex);
 Result := ReadValue(fGameData.ProcessInfo.ProcessHandle,
                      fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                     PointerData,SizeOf(Value),@Value);
+                     PointerData,SizeOf(Value),@Value,fGameData.ProcessInfo.Is64bitProcess);
 end;
 
 {------------------------------------------------------------------------------}

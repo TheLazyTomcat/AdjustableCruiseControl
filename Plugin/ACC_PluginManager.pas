@@ -304,10 +304,10 @@ If (Name = SCS_TELEMETRY_TRUCK_CHANNEL_speed) and (Value._type = SCS_VALUE_TYPE_
 else If (Name = SCS_TELEMETRY_TRUCK_CHANNEL_cruise_control) and (Value._type = SCS_VALUE_TYPE_float) then
   begin
     If fLimitSending then
-      If (Value.value_float.value <= 0) or not SameValue(Value.value_float.value,fSpeedLimit,0.5) then
+      If (Value.value_float.value <= 0) or ((fSpeedLimit <> 0) and not SameValue(Value.value_float.value,fSpeedLimit,0.25)) then
         begin
           fLimitSending := False;
-          fWMCServer.SendInteger(0,0,WMC_CODE_LimitStop)
+          fWMCServer.SendInteger(0,0,WMC_CODE_LimitStop);
         end;
   end
 else If (Name = SCS_TELEMETRY_TRUCK_CHANNEL_navigation_speed_limit) and (Value._type = SCS_VALUE_TYPE_float) then

@@ -74,7 +74,6 @@
       <Unit11>
         <Filename Value="..\ACC_Common.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="ACC_Common"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos X="22" Y="47"/>
@@ -128,17 +127,17 @@
       <Unit18>
         <Filename Value="..\ACC_MemoryOps.pas"/>
         <IsPartOfProject Value="True"/>
-        <WindowIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="76"/>
-        <CursorPos X="42" Y="88"/>
+        <CursorPos Y="29"/>
         <UsageCount Value="137"/>
       </Unit18>
       <Unit19>
         <Filename Value="..\ACC_ProcessBinder.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="470"/>
-        <CursorPos X="5" Y="489"/>
+        <TopLine Value="154"/>
+        <CursorPos X="25" Y="154"/>
         <UsageCount Value="137"/>
       </Unit19>
       <Unit20>
@@ -162,8 +161,6 @@
         <ComponentName Value="fMainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="MainForm"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="15"/>
         <UsageCount Value="137"/>
@@ -207,10 +204,12 @@
         <ComponentName Value="fSupportedGamesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="211"/>
-        <CursorPos X="75" Y="225"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="39"/>
+        <CursorPos X="20" Y="46"/>
         <UsageCount Value="137"/>
+        <Loaded Value="True"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -479,7 +478,7 @@
       <Define3 Value="Debug"/>
       <Define4 Value="Release"/>
     </CustomDefines>
-    <JumpHistory Count="28" HistoryIndex="27">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="ACC.lpr"/>
         <Caret Line="71" TopLine="64"/>
@@ -592,6 +591,14 @@
         <Filename Value="..\MainForm.pas"/>
         <Caret Line="193" Column="37" TopLine="181"/>
       </Position28>
+      <Position29>
+        <Filename Value="..\SupportedGamesForm.pas"/>
+        <Caret Line="14" Column="53"/>
+      </Position29>
+      <Position30>
+        <Filename Value="..\SupportedGamesForm.pas"/>
+        <Caret Line="48" TopLine="34"/>
+      </Position30>
     </JumpHistory>
   </ProjectSession>
   <Debugging>
