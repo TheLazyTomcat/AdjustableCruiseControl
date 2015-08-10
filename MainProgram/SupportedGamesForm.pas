@@ -6,30 +6,10 @@ interface
 
 uses
   Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, ComCtrls, StdCtrls, {$IFDEF FPC}LCLVersion, LMessages,{$ENDIF}
+  ExtCtrls, ComCtrls, StdCtrls,
   ACC_GamesData;
 
 type
-{
-Interposer class for TListBox intended as at least partial workaround for
-LCL 1.4 bug #0028146 (http://bugs.freepascal.org/view.php?id=28146).
-Will be removed when official patch (new Lazarus/LCL) will be released.
-}
-{$IFNDEF FPC}{$WARNINGS OFF}{$ENDIF}  // because Delphi 7 are parsing {$IF ...} when they shouldn't
-{$IFDEF FPC}
-  {$IF declared(lcl_fullversion) and (lcl_fullversion = 1040004)}
-    {$DEFINE LCL0028146fix}
-  {$IFEND}
-{$ENDIF}
-{$IFNDEF FPC}{$WARNINGS ON}{$ENDIF}
-
-{$IFDEF LCL0028146fix}
-  TListBox = class(StdCtrls.TListBox)
-  protected
-    procedure WM_EraseBackground(var Msg: TLMEraseBkgnd); message LM_ERASEBKGND;
-  end;
-{$ENDIF}
-
   TfSupportedGamesForm = class(TForm)
     lbGamesList: TListBox;
     lvGameDetails: TListView;
@@ -66,13 +46,6 @@ uses
   {$IFDEF FPC}LCLType,{$ENDIF}
   CRC32, MD5,
   ACC_Strings, ACC_Manager;
-
-{$IFDEF LCL0028146fix}
-procedure TListBox.WM_EraseBackground(var Msg: TLMEraseBkgnd);
-begin
-Msg.Result := 1;
-end;
-{$ENDIF}
 
 //==============================================================================
 
