@@ -11,9 +11,9 @@
 
   Client endpoint class
 
-  ©František Milt 2015-07-17
+  ©František Milt 2015-08-10
 
-  Version 1.1
+  Version 1.2
 
 ===============================================================================}
 unit WinMsgCommClient;
