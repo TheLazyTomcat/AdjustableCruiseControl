@@ -1,6 +1,6 @@
 object fMainForm: TfMainForm
-  Left = 608
-  Top = 118
+  Left = 614
+  Top = 128
   BorderStyle = bsSingle
   Caption = 'Registry Cleaner'
   ClientHeight = 344
