@@ -23,7 +23,7 @@ type
     SystemValid:      Boolean;
   end;
 
-  TInstalledPlugin = record
+  TPluginData = record
     Description:  String;
     FilePath:     String;  
   end;
@@ -38,32 +38,45 @@ type
     fRunningInWoW64:    Boolean;
     fKnownGames:        Array of TGameEntry;
     fSelectedGameIdx:   Integer;
-    fInstalledPlugins:  Array of TInstalledPlugin;
+    fInstalledPlugins:  Array of TPluginData;
+    fPluginsLibrary:    Array of TPluginData;
     Function GetKnownGameCount: Integer;
     Function GetKnownGames(Index: Integer): TGameEntry;
-    Function GetSelectedGame: TGameEntry;
     Function GetInstalledPluginCount: Integer;
-    Function GetInstalledPlugins(Index: Integer): TInstalledPlugin;
+    Function GetInstalledPlugins(Index: Integer): TPluginData;
+    Function GetPluginsLibraryCount: Integer;
+    Function GetPluginsLibraryItem(Index: Integer): TPluginData;
   protected
-    Function KnownGamesCheckIndex(Index: Integer): Boolean; virtual;
     Function GetRegistryViewFlag: LongWord; virtual;
+    Function GetSelectedGame: TGameEntry; virtual;
     procedure CheckWoW64; virtual;
     procedure FillKnownGames; virtual;
+    Function LoadInstalledPlugins: Integer; virtual;
+    procedure LoadPluginsLibrary; virtual;
+    procedure SavePluginsLibrary; virtual;
   public
     constructor Create;
+    destructor Destroy; override;
     Function SelectGame(Index: Integer): Boolean; virtual;
-    Function LoadInstalledPlugins: Integer; virtual;
-    Function RemoveInstalledPlugin(Index: Integer): Boolean; virtual;
+    Function InstalledPluginsIndexOfDescription(const Description: String): Integer; virtual;
+    Function InstalledPluginsIndexOfFilePath(const FilePath: String): Integer; virtual;
     Function InstallPlugin(const Description, FilePath: String): Boolean; virtual;
-    Function IndexOfInstalledPlugin(Str: String; FilePath: Boolean = False): Integer; virtual;
+    Function UninstallPlugin(Index: Integer): Boolean; virtual;
+    Function PluginsLibraryIndexOfDescription(const Description: String): Integer; virtual;
+    Function PluginsLibraryIndexOfFilePath(const FilePath: String): Integer; virtual;
+    Function PluginsLibraryAdd(const Description, FilePath: String): Integer; virtual;
+    Function PluginsLibraryRemove(Index: Integer): Boolean; virtual;
+    procedure PluginsLibraryValidate; virtual;
     property KnownGames[Index: Integer]: TGameEntry read GetKnownGames;
-    property InstalledPlugins[Index: Integer]: TInstalledPlugin read GetInstalledPlugins;
+    property InstalledPlugins[Index: Integer]: TPluginData read GetInstalledPlugins;
+    property PluginsLibrary[Index: Integer]: TPluginData read GetPluginsLibraryItem;
   published
     property RunningInWoW64: Boolean read fRunningInWoW64;
     property KnownGameCount: Integer read GetKnownGameCount;
     property SelectedGameIdx: Integer read fSelectedGameIdx;
     property SelectedGame: TGameEntry read GetSelectedGame;
     property InstallegPluginCount: Integer read GetInstalledPluginCount;
+    property PluginsLibraryCount: Integer read GetPluginsLibraryCount;
   end;
 
 implementation
@@ -72,6 +85,8 @@ uses
   SysUtils, Classes, Registry, DefRegistry;
 
 const
+  PluginsLibraryRegKey = 'Software\NcS Soft\PluginInstaller\Library';
+
   KnownGamesList: array[0..1] of TGameEntry = (
     (Valid:           True;
      Title:           'Euro Truck Simulator 2 - 32bit';
@@ -117,20 +132,10 @@ end;
 
 Function TACCPluginInstaller.GetKnownGames(Index: Integer): TGameEntry;
 begin
-If KnownGamesCheckIndex(Index) then
+If (Index >= Low(fKnownGames)) and (Index <= High(fKnownGames)) then
   Result := fKnownGames[Index]
 else
   raise Exception.CreateFmt('TACCPluginInstaller.GetKnownGames: Index (%d) out of bounds.',[Index]);
-end;
-
-//------------------------------------------------------------------------------
-
-Function TACCPluginInstaller.GetSelectedGame: TGameEntry;
-begin
-If KnownGamesCheckIndex(fSelectedGameIdx) then
-  Result := GetKnownGames(fSelectedGameIdx)
-else
-  Result := EmptyGameEntry;
 end;
 
 //------------------------------------------------------------------------------
@@ -142,24 +147,34 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TACCPluginInstaller.GetInstalledPlugins(Index: Integer): TInstalledPlugin;
+Function TACCPluginInstaller.GetInstalledPlugins(Index: Integer): TPluginData;
 begin
 If (Index >= Low(fInstalledPlugins)) and (Index <= High(fInstalledPlugins)) then
   Result := fInstalledPlugins[Index]
 else
-  raise Exception.CreateFmt('TACCPluginInstaller.GetInstalledPlugins: Index (%d) out of bounds.',[Index]);
+  raise Exception.CreateFmt('TACCPluginInstaller.GeTPluginDatas: Index (%d) out of bounds.',[Index]);
+end;
+ 
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.GetPluginsLibraryCount: Integer;
+begin
+Result := Length(fPluginsLibrary);
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.GetPluginsLibraryItem(Index: Integer): TPluginData;
+begin
+If (Index >= Low(fPluginsLibrary)) and (Index <= High(fPluginsLibrary)) then
+  Result := fPluginsLibrary[Index]
+else
+  raise Exception.CreateFmt('TACCPluginInstaller.GetPluginsLibraryItem: Index (%d) out of bounds.',[Index]);
 end;
 
 {------------------------------------------------------------------------------}
 {   TACCPluginInstaller - protected methods                                    }
 {------------------------------------------------------------------------------}
-
-Function TACCPluginInstaller.KnownGamesCheckIndex(Index: Integer): Boolean;
-begin
-Result := (Index >= Low(fKnownGames)) and (Index <= High(fKnownGames));
-end;
-
-//------------------------------------------------------------------------------
 
 Function TACCPluginInstaller.GetRegistryViewFlag: LongWord;
 const
@@ -177,6 +192,16 @@ If fRunningInWoW64 then
   end
 else Result := 0;
 {$ENDIF}
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.GetSelectedGame: TGameEntry;
+begin
+If (fSelectedGameIdx >= Low(fKnownGames)) and (fSelectedGameIdx <= High(fKnownGames)) then
+  Result := GetKnownGames(fSelectedGameIdx)
+else
+  Result := EmptyGameEntry;
 end;
 
 //------------------------------------------------------------------------------
@@ -200,12 +225,8 @@ If ModuleHandle <> 0 then
   begin
     IsWoW64Process := GetProcAddress(ModuleHandle,'IsWow64Process');
     If Assigned(IsWoW64Process) then
-      begin
-        If IsWow64Process(GetCurrentProcess,@ResultValue) then fRunningInWoW64 := ResultValue
-          else raise Exception.CreateFmt('TACCPluginInstaller.CheckWoW64: IsWoW64Process failed with error %.8x.',[GetLastError]);
-      end;
-  end
-else raise Exception.CreateFmt('TACCPluginInstaller.CheckWoW64: Unable to get handle to module kernel32.dll (%.8x).',[GetLastError]);
+      If IsWow64Process(GetCurrentProcess,@ResultValue) then fRunningInWoW64 := ResultValue;
+  end;
 end;
 {$ENDIF}
 
@@ -221,27 +242,6 @@ For i := Low(fKnownGames) to High(fKnownGames) do
     fKnownGames[i] := KnownGamesList[i];
     fKnownGames[i].SystemValid := not fKnownGames[i].Is64bit or fRunningInWoW64;
   end;
-end;
-
-{------------------------------------------------------------------------------}
-{   TACCPluginInstaller - public methods                                       }
-{------------------------------------------------------------------------------}
-
-constructor TACCPluginInstaller.Create;
-begin
-inherited Create;
-CheckWoW64;
-FillKnownGames;
-fSelectedGameIdx := -1;
-end;
-
-//------------------------------------------------------------------------------
-
-Function TACCPluginInstaller.SelectGame(Index: Integer): Boolean;
-begin
-fSelectedGameIdx := Index;
-Result := KnownGamesCheckIndex(Index);
-LoadInstalledPlugins;
 end;
 
 //------------------------------------------------------------------------------
@@ -286,32 +286,117 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TACCPluginInstaller.RemoveInstalledPlugin(Index: Integer): Boolean;
+procedure TACCPluginInstaller.LoadPluginsLibrary;
 var
-  Reg:  TRegistry;
+  Reg:        TDefRegistry;
+  TempList:   TStringList;
+  i:          Integer;
+  ValueInfo:  TRegDataInfo;
 begin
-If (Index >= Low(fInstalledPlugins)) and (Index <= High(fInstalledPlugins)) then
-  begin
-    Reg := TRegistry.Create(KEY_ALL_ACCESS or GetRegistryViewFlag);
-    try
-      with InstalledPlugins[Index] do
-        begin
-          Reg.RootKey := SelectedGame.RegistryRoot;
-          If Reg.OpenKey(SelectedGame.RegistryKey,False) then
-            begin
-              If Reg.ValueExists(Description) then
-                Result := Reg.DeleteValue(Description)
-              else
-                Result := False;
-              Reg.CloseKey;
-            end
-          else Result := False;  
-        end;
-    finally
-      Reg.Free;
+SetLength(fPluginsLibrary,0);
+Reg := TDefRegistry.Create;
+try
+  Reg.RootKey := HKEY_CURRENT_USER;
+  If Reg.OpenKeyReadOnly(PluginsLibraryRegKey) then
+    begin
+      TempList := TStringList.Create;
+      try
+        Reg.GetValueNames(TempList);
+        For i := 0 to Pred(TempList.Count) do
+          If Reg.GetDataInfo(TempList[i],ValueInfo) then
+            If ValueInfo.RegData = rdString then
+              begin
+                SetLength(fPluginsLibrary,Length(fPluginsLibrary) + 1);
+                fPluginsLibrary[High(fPluginsLibrary)].Description := TempList[i];
+                fPluginsLibrary[High(fPluginsLibrary)].FilePath := Reg.ReadStringDef(TempList[i],'')
+              end;
+      finally
+        TempList.Free;
+      end;
+      Reg.CloseKey;
     end;
-  end  
-else Result := False;
+finally
+  Reg.Free;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TACCPluginInstaller.SavePluginsLibrary;
+var
+  Reg:      TRegistry;
+  TempList: TStringList;
+  i:        Integer;
+begin
+Reg := TRegistry.Create;
+try
+  Reg.RootKey := HKEY_CURRENT_USER;
+  If Reg.OpenKey(PluginsLibraryRegKey,True) then
+    begin
+      TempList := TStringList.Create;
+      try
+        Reg.GetValueNames(TempList);
+        For i := 0 to Pred(TempList.Count) do
+          Reg.DeleteValue(TempList[i]);
+      finally
+        TempList.Free;
+      end;
+      For i := Low(fPluginsLibrary) to High(fPluginsLibrary) do
+        Reg.WriteString(fPluginsLibrary[i].Description,fPluginsLibrary[i].FilePath);
+      Reg.CloseKey;
+    end;
+finally
+  Reg.Free;
+end;
+end;
+
+{------------------------------------------------------------------------------}
+{   TACCPluginInstaller - public methods                                       }
+{------------------------------------------------------------------------------}
+
+constructor TACCPluginInstaller.Create;
+begin
+inherited Create;
+CheckWoW64;
+FillKnownGames;
+LoadPluginsLibrary;
+fSelectedGameIdx := -1;
+end;
+
+//------------------------------------------------------------------------------
+
+destructor TACCPluginInstaller.Destroy;
+begin
+SavePluginsLibrary;
+inherited;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.SelectGame(Index: Integer): Boolean;
+begin
+fSelectedGameIdx := Index;
+LoadInstalledPlugins;
+Result := (Index >= Low(fKnownGames)) and (Index <= High(fKnownGames));
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.InstalledPluginsIndexOfDescription(const Description: String): Integer;
+begin
+For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
+  If AnsiSameText(fInstalledPlugins[Result].Description,Description) then Exit;
+Result := -1;
+end;
+
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.InstalledPluginsIndexOfFilePath(const FilePath: String): Integer;
+begin
+For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
+  If AnsiSameText(fInstalledPlugins[Result].FilePath,FilePath) then Exit;
+Result := -1;
 end;
 
 //------------------------------------------------------------------------------
@@ -340,19 +425,89 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TACCPluginInstaller.IndexOfInstalledPlugin(Str: String; FilePath: Boolean = False): Integer;
+Function TACCPluginInstaller.UninstallPlugin(Index: Integer): Boolean;
+var
+  Reg:  TRegistry;
 begin
-If FilePath then
+If (Index >= Low(fInstalledPlugins)) and (Index <= High(fInstalledPlugins)) then
   begin
-    For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
-      If AnsiSameText(fInstalledPlugins[Result].FilePath,Str) then Exit;
-  end
+    Reg := TRegistry.Create(KEY_ALL_ACCESS or GetRegistryViewFlag);
+    try
+      Reg.RootKey := SelectedGame.RegistryRoot;
+      If Reg.OpenKey(SelectedGame.RegistryKey,False) then
+        begin
+          If Reg.ValueExists(InstalledPlugins[Index].Description) then
+            Result := Reg.DeleteValue(InstalledPlugins[Index].Description)
+          else
+            Result := False;
+          Reg.CloseKey;
+        end
+      else Result := False;
+    finally
+      Reg.Free;
+    end;
+  end  
+else Result := False;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.PluginsLibraryIndexOfDescription(const Description: String): Integer;
+begin
+For Result := Low(fPluginsLibrary) to High(fPluginsLibrary) do
+  If AnsiSameText(fPluginsLibrary[Result].Description,Description) then Exit;
+Result := -1;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.PluginsLibraryIndexOfFilePath(const FilePath: String): Integer;
+begin
+For Result := Low(fPluginsLibrary) to High(fPluginsLibrary) do
+  If AnsiSameText(fPluginsLibrary[Result].FilePath,FilePath) then Exit;
+Result := -1;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.PluginsLibraryAdd(const Description, FilePath: String): Integer;
+begin
+Result := PluginsLibraryIndexOfDescription(Description);
+If Result >= 0 then
+  fPluginsLibrary[Result].FilePath := FilePath
 else
   begin
-    For Result := Low(fInstalledPlugins) to High(fInstalledPlugins) do
-      If AnsiSameText(fInstalledPlugins[Result].Description,Str) then Exit;
+    SetLength(fPluginsLibrary,Length(fPluginsLibrary) + 1);
+    Result := High(fPluginsLibrary);
+    fPluginsLibrary[Result].Description := Description;
+    fPluginsLibrary[Result].FilePath := FilePath;
   end;
-Result := -1;
+end;
+
+//------------------------------------------------------------------------------
+
+Function TACCPluginInstaller.PluginsLibraryRemove(Index: Integer): Boolean;
+var
+  i:  Integer;
+begin
+If (Index >= Low(fPluginsLibrary)) and (Index <= High(fPluginsLibrary)) then
+  begin
+    For i := Index to Pred(High(fPluginsLibrary)) do
+      fPluginsLibrary[i] := fPluginsLibrary[i + 1];
+    SetLength(fPluginsLibrary,Length(fPluginsLibrary) - 1);
+    Result := True;   
+  end
+else Result := False;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TACCPluginInstaller.PluginsLibraryValidate;
+var
+  i:  Integer;
+begin
+For i := High(fPluginsLibrary) downto Low(fPluginsLibrary) do
+  If not FileExists(fPluginsLibrary[i].FilePath) then PluginsLibraryRemove(i);
 end;
 
 end.

@@ -1,13 +1,13 @@
 object fMainForm: TfMainForm
-  Left = 607
+  Left = 488
   Top = 113
   BorderStyle = bsSingle
   Caption = 'Plugin Installer'
-  ClientHeight = 368
-  ClientWidth = 664
+  ClientHeight = 464
+  ClientWidth = 784
   Color = clBtnFace
-  Constraints.MinHeight = 368
-  Constraints.MinWidth = 664
+  Constraints.MinHeight = 498
+  Constraints.MinWidth = 792
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -110,21 +110,21 @@ object fMainForm: TfMainForm
   OnDestroy = FormDestroy
   OnResize = FormResize
   DesignSize = (
-    664
-    368)
+    784
+    464)
   PixelsPerInch = 96
   TextHeight = 13
-  object lbGame: TLabel
+  object lblGame: TLabel
     Left = 8
     Top = 8
     Width = 31
     Height = 13
     Caption = 'Game:'
   end
-  object cbGame: TComboBox
+  object cmbGame: TComboBox
     Left = 8
     Top = 24
-    Width = 649
+    Width = 769
     Height = 21
     Style = csDropDownList
     Anchors = [akLeft, akTop, akRight]
@@ -136,22 +136,22 @@ object fMainForm: TfMainForm
     ItemHeight = 13
     ParentFont = False
     TabOrder = 0
-    OnChange = cbGameChange
+    OnChange = cmbGameChange
   end
   object gbPlugins: TGroupBox
     Left = 8
     Top = 56
-    Width = 649
-    Height = 305
+    Width = 769
+    Height = 369
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = 'Plugins'
     TabOrder = 1
     DesignSize = (
-      649
-      305)
+      769
+      369)
     object lbl64bitWarning: TLabel
       Left = 8
-      Top = 280
+      Top = 344
       Width = 170
       Height = 13
       Anchors = [akLeft, akBottom]
@@ -174,7 +174,7 @@ object fMainForm: TfMainForm
     object lbeRegistryKey: TLabeledEdit
       Left = 8
       Top = 40
-      Width = 633
+      Width = 753
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       Color = clBtnFace
@@ -193,17 +193,17 @@ object fMainForm: TfMainForm
     object lvInstalledPlugins: TListView
       Left = 8
       Top = 88
-      Width = 633
-      Height = 177
+      Width = 753
+      Height = 241
       Anchors = [akLeft, akTop, akRight, akBottom]
       Columns = <
         item
           Caption = 'Plugin description'
-          Width = 150
+          Width = 190
         end
         item
           Caption = 'Plugin file'
-          Width = 460
+          Width = 540
         end>
       HideSelection = False
       ReadOnly = True
@@ -212,43 +212,63 @@ object fMainForm: TfMainForm
       ViewStyle = vsReport
       OnKeyDown = lvInstalledPluginsKeyDown
     end
-    object btnAdd: TButton
-      Left = 216
-      Top = 272
-      Width = 137
+    object btnInstall: TButton
+      Left = 224
+      Top = 336
+      Width = 129
       Height = 25
       Anchors = [akRight, akBottom]
       Caption = 'Install plugin...'
       TabOrder = 2
-      OnClick = btnAddClick
+      OnClick = btnInstallClick
     end
-    object btnRemove: TButton
-      Left = 360
-      Top = 272
-      Width = 137
+    object btnUninstall: TButton
+      Left = 496
+      Top = 336
+      Width = 129
       Height = 25
       Anchors = [akRight, akBottom]
       Caption = 'Uninstall selected plugin'
-      TabOrder = 3
-      OnClick = btnRemoveClick
+      TabOrder = 4
+      OnClick = btnUninstallClick
     end
     object btnRefresh: TButton
-      Left = 504
-      Top = 272
-      Width = 137
+      Left = 632
+      Top = 336
+      Width = 129
       Height = 25
       Anchors = [akRight, akBottom]
       Caption = 'Refresh list of plugins'
-      TabOrder = 4
+      TabOrder = 5
       OnClick = btnRefreshClick
     end
+    object btnInstallFromLibrary: TButton
+      Left = 360
+      Top = 336
+      Width = 129
+      Height = 25
+      Anchors = [akRight, akBottom]
+      Caption = 'Install from library...'
+      TabOrder = 3
+      OnClick = btnInstallFromLibraryClick
+    end
+  end
+  object btnPluginsLibrary: TButton
+    Left = 640
+    Top = 432
+    Width = 131
+    Height = 25
+    Anchors = [akRight, akBottom]
+    Caption = 'Plugins library...'
+    TabOrder = 2
+    OnClick = btnPluginsLibraryClick
   end
   object oXPManifest: TXPManifest
-    Left = 632
+    Left = 744
   end
-  object dlgAddPlugin: TOpenDialog
+  object dlgSelectPlugin: TOpenDialog
     Filter = 'Dynamic-link library (*.dll)|*.dll|All files (*.*)|*.*'
     Title = 'Select plugin'
-    Left = 600
+    Left = 712
   end
 end
