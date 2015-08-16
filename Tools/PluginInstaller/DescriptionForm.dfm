@@ -1,6 +1,6 @@
 object fDescriptionForm: TfDescriptionForm
-  Left = 798
-  Top = 520
+  Left = 801
+  Top = 111
   BorderStyle = bsDialog
   Caption = 'Plugin description'
   ClientHeight = 128
@@ -37,6 +37,7 @@ object fDescriptionForm: TfDescriptionForm
     EditLabel.Height = 13
     EditLabel.Caption = 'Description:'
     TabOrder = 1
+    OnKeyPress = lbeDescriptionKeyPress
   end
   object btnAccept: TButton
     Left = 312

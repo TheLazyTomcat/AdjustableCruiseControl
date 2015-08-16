@@ -110,8 +110,8 @@ IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=1
 MinorVer=0
-Release=0
-Build=9
+Release=1
+Build=10
 Debug=0
 PreRelease=0
 Special=0
@@ -122,13 +122,13 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=František Milt
 FileDescription=Registry Cleaner Application
-FileVersion=1.0.0.9
+FileVersion=1.0.1.10
 InternalName=Registry Cleaner
 LegalCopyright=© 2015 František Milt
 LegalTrademarks=Registry Cleaner
 OriginalFilename=RegistryCleaner.exe
 ProductName=Registry Cleaner
-ProductVersion=1.0.0
+ProductVersion=1.0.1
 Comments=Utility designed for a registry cleanup from programs settings
 [HistoryLists\hlUnitAliases]
 Count=1

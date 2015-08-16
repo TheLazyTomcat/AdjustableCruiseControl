@@ -53,7 +53,7 @@ type
   end;
 
 const
-  KnownPrograms: Array[0..10] of TKnowProgram = (
+  KnownPrograms: Array[0..11] of TKnowProgram = (
     (ProgramName: '18WoS ALH Mouse Steering';               Subkey: '18WoS ALH Mouse Steering'),
     (ProgramName: 'Adjustable Cruise Control up to 2.1.3';  Subkey: 'Adjustable Cruise Control'),
     (ProgramName: 'Adjustable Cruise Control from 2.2.0';   Subkey: 'Adjustable Cruise Control 2'),
@@ -64,7 +64,8 @@ const
     (ProgramName: 'Minecraft Server Restarter';             Subkey: 'MCSR'),
     (ProgramName: 'SCS Extractor GUI';                      Subkey: 'SCS Extractor GUI'),
     (ProgramName: 'SvìtSim Background Creator';             Subkey: 'SSBC'),
-    (ProgramName: 'Minecraft Slime Spawn Chunk Test (dev)'; Subkey: 'SSCT'));
+    (ProgramName: 'Minecraft Slime Spawn Chunk Test (dev)'; Subkey: 'SSCT'),
+    (ProgramName: 'Plugin Installer';                       Subkey: 'PluginInstaller'));
 
   REG_Root      = HKEY_CURRENT_USER;
   REG_RootName  = 'HKEY_CURRENT_USER';

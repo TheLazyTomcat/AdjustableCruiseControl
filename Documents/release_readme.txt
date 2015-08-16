@@ -2,7 +2,7 @@
 
                             Adjustable Cruise Control
 
-                                 version 2.3.1
+                                 version 2.3.2
 
 ================================================================================
 
@@ -14,20 +14,20 @@ which each part starts.
   Index ...................................................   9
   Description .............................................  34
   Supported games .........................................  43
-  Parts of the program .................................... 162
-  Installation ............................................ 184
-  How to use the program .................................. 253
-  How to install an update ................................ 273
-  Program features ........................................ 303
-  Common problems ......................................... 363
-  How the program works ................................... 428
-  Changelog ............................................... 460
-  Known issues ............................................ 513
-  Source code ............................................. 525
-  Licensing ............................................... 534
-  Authors, contacts ....................................... 542
-  Links ................................................... 549
-  Copyright ............................................... 555
+  Parts of the program .................................... 169
+  Installation ............................................ 191
+  How to use the program .................................. 260
+  How to install an update ................................ 280
+  Program features ........................................ 310
+  Common problems ......................................... 370
+  How the program works ................................... 435
+  Changelog ............................................... 467
+  Known issues ............................................ 531
+  Source code ............................................. 538
+  Licensing ............................................... 547
+  Authors, contacts ....................................... 555
+  Links ................................................... 562
+  Copyright ............................................... 568
 
 
 
@@ -134,7 +134,14 @@ Fully supported with plugin:
   Euro Truck Simulator 2 1.18.1.3 Multi, DD & CD version
   Euro Truck Simulator 2 1.18.1.3 Multi, Steam version
   Euro Truck Simulator 2 1.18.1.3 Multi 64bit, DD & CD version
-  Euro Truck Simulator 2 1.18.1.3 Multi 64bit, Steam version
+  Euro Truck Simulator 2 1.18.1.3 Multi 64bit, Steam version  
+  Euro Truck Simulator 2 1.19.1 Multi, DD & CD version
+  Euro Truck Simulator 2 1.19.1 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.19.1 Multi 64bit, Steam version  
+  Euro Truck Simulator 2 1.19.2.1 Multi, DD & CD version
+  Euro Truck Simulator 2 1.19.2.1 Multi, Steam version
+  Euro Truck Simulator 2 1.19.2.1 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.19.2.1 Multi 64bit, Steam version
 
 Partially supported:
 
@@ -461,6 +468,17 @@ Changelog
 ------------------------------
 List of changes between individual versions of ACC.
 
+2.3.1 -> 2.3.2
+  - corrected bug in system that is keeping CC speed on current limit (unwanted 
+    shutdown of the system when you drove from road with specified limit to a 
+    road with limit of 0)
+  - corrected critical bug in memory operations that manifested itself when 
+    64bit build of ACC was used with 32bit game
+  - added support for new versions of ETS2
+  - added Plugins library feature to the Plugin Installer tool
+  - other code changes and corrections  
+
+
 2.3.0 -> 2.3.1
   - added new games data file structures (INI 2.1 and BIN 1.1)
   - main program should not steal focus anymore when started
@@ -514,11 +532,6 @@ Known issues
 ------------------------------
 This section lists all known issues and bugs that, for some reason, made their
 way to the final release.
-
-* The list of supported games might flicker when scrolled wery fast (using
-  scroll bar). This affects only Lazarus builds, and only when they were
-  compiled in Lazarus 1.4.0.
-  Temporary fix applied.
 
 
 
