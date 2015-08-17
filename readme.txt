@@ -10,7 +10,7 @@ It is configured in a way that you should be able to compile it without any
 preparations. It is also possible to compile it into both 32bit and 64bit 
 binaries, the source code (including used libraries) is ready for this.
 For more informations about the program itself and about its features, please 
-refer to ./Documents/readme.txt file.
+refer to ./Documents/release_readme.txt file.
 
 
 
