@@ -81,7 +81,7 @@ Affected pointer-prefixed fields:
 
   .PtrInfo
 
-    Informations about pointer type.
+    Information about pointer type.
     Lower 16 bits (interpreted as 16bit unsigned integer) are denoting type
     of the pointer.
     Higher 16 bits (interpreted as 16bit unsigned integer) are storing

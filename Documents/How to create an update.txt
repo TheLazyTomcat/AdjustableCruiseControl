@@ -33,7 +33,7 @@ Creating an INI file
 ---------------------------------------
 INI file is normal text file, so use text editor to write one.
 Internal structure of it is described in document #2 and #3 (see above).
-Writing it is straight forward and informations provided in mentioned documents
+Writing it is straight forward and information provided in mentioned documents
 should be enough. But for the sake of completeness, here are steps you should
 take:
 

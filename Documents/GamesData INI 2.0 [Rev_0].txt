@@ -102,7 +102,7 @@ Version
 
 Icon
 
-  Textual identifier of icon that should be used when displaying informations
+  Textual identifier of icon that should be used when displaying information
   about the game.
   Following icons are distributed with ACC of version 2.3.0 - ALH, AuTS, ET,
   ET2, ETS, ETS2, GTS, STDS, TaT, UKTS, HAUL and CONV.
@@ -166,7 +166,7 @@ Modules
 
 Module[x] (prefix)
 
-  Prefix for fields that are storing actual informations about the module of
+  Prefix for fields that are storing actual information about the module of
   index x. Each module is a binary module that must be loaded into memory before
   ACC can start to work with a running game. They are also used when obtaining
   memory addresses for required pointers (each pointers might require different
@@ -226,7 +226,7 @@ Module[x] (prefix)
 
 CCSpeed
 
-  Prefix for fields that are storing informations necessary for obtaining memory
+  Prefix for fields that are storing information necessary for obtaining memory
   address (further referred to as pointer) of speed the cruise control system
   is set to in game.
 
@@ -297,7 +297,7 @@ CCSpeed
 
 CCStatus
 
-  Prefix for fields that are storing informations necessary for obtaining memory
+  Prefix for fields that are storing information necessary for obtaining memory
   address of game cruise control status.
   Individual fields with this prefix have exactly the same meaning as in case of
   "CCSpeed" prefix with one exception:
@@ -309,7 +309,7 @@ CCStatus
 
 TruckSpeed (optional)
 
-  Prefix for fields that are storing informations necessary for obtaining memory
+  Prefix for fields that are storing information necessary for obtaining memory
   address of actual speed of the vehicle. Fields with this prefix are optional
   and are present only when current entry supports reading of this variable.
   All fields with this prefix have exactly the same meaning as in case of
@@ -329,7 +329,7 @@ Values
 
 Value[x]
 
-  Prefix for fields that are storing informations necessary for obtaining memory
+  Prefix for fields that are storing information necessary for obtaining memory
   address of a special value.
   Fields with this prefix have exactly the same meaning as in case of "CCSpeed".
   This entire prefix is optional and fields with it might not be present at all,

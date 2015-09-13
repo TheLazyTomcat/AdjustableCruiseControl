@@ -39,7 +39,7 @@ const
 
   // User interface - game info
   ACCSTR_UI_GAM_NoGameTitle = '>>> None of the supported games is running <<<';
-  ACCSTR_UI_GAM_NoGameInfo  = 'No further informations';
+  ACCSTR_UI_GAM_NoGameInfo  = 'No further information';
 
   // User interface - buttons
   ACCSTR_UI_BTN_Keys = ' [%s]';

@@ -161,6 +161,7 @@
         <ComponentName Value="fMainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="15"/>
         <UsageCount Value="137"/>
@@ -204,12 +205,10 @@
         <ComponentName Value="fSupportedGamesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="39"/>
         <CursorPos X="20" Y="46"/>
         <UsageCount Value="137"/>
-        <Loaded Value="True"/>
       </Unit26>
       <Unit27>
         <Filename Value="..\UpdateForm.pas"/>
@@ -478,7 +477,7 @@
       <Define3 Value="Debug"/>
       <Define4 Value="Release"/>
     </CustomDefines>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="28" HistoryIndex="27">
       <Position1>
         <Filename Value="ACC.lpr"/>
         <Caret Line="71" TopLine="64"/>
@@ -591,14 +590,6 @@
         <Filename Value="..\MainForm.pas"/>
         <Caret Line="193" Column="37" TopLine="181"/>
       </Position28>
-      <Position29>
-        <Filename Value="..\SupportedGamesForm.pas"/>
-        <Caret Line="14" Column="53"/>
-      </Position29>
-      <Position30>
-        <Filename Value="..\SupportedGamesForm.pas"/>
-        <Caret Line="48" TopLine="34"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
   <Debugging>
