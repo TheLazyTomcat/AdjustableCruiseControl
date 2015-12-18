@@ -7,3 +7,4 @@ start ..\..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i 2015-08-10-00.
 start ..\..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i 2015-09-14-00.ini -o 2015-09-14-00.ugdb -of bin1
 start ..\..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i 2015-10-07-00.ini -o 2015-10-07-00.ugdb -of bin1
 start ..\..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i 2015-12-17-00.ini -o 2015-12-17-00.ugdb -of bin1
+start ..\..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i 2015-12-18-CA[2.3.2].ini -o 2015-12-18-CA[2.3.2].ugdb -of bin1
