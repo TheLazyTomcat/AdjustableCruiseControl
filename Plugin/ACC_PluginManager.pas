@@ -47,7 +47,7 @@ type
     procedure UnregisterEvents; virtual;
     procedure UnregisterChannels; virtual;
     procedure CheckFeatures; virtual;
-    procedure WMCServer_OnValueRecived(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
+    procedure WMCServer_OnValueReceived(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
   public
     class Function InstanceAlreadyExists: Boolean; virtual;
     constructor Create(APIVersion: scs_u32_t; APIParams: scs_telemetry_init_params_t);
@@ -220,7 +220,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TACCPluginManager.WMCServer_OnValueRecived(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue);
+procedure TACCPluginManager.WMCServer_OnValueReceived(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue);
 begin
 case Value.UserCode of
   WMC_CODE_SpeedInc:    If fSpeedRegistered and (Value.ValueType = mvtSingle) then
@@ -280,7 +280,7 @@ WriteToGameLog('[ACC] Features 0x' + IntToHex(fFeatures,8),SCS_LOG_TYPE_message)
 {$ENDIF}
 fLimitSending := False;
 fWMCServer := TWinMsgCommServer.Create(nil,False,WMC_MessageName);
-fWMCServer.OnValueReceived := WMCServer_OnValueRecived;
+fWMCServer.OnValueReceived := WMCServer_OnValueReceived;
 RunMainProgram;
 end;
 
