@@ -76,4 +76,4 @@ František Milt, frantisek.milt@gmail.com
 
 Copyright
 ----------------------------------------
-©2013-2015 František Milt, all rights reserved
+©2013-2016 František Milt, all rights reserved

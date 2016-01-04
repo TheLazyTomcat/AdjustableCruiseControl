@@ -68,7 +68,7 @@ const
 {$IFDEF FPC}
   ACCSTR_UI_CPY_Author         = #194 + #169 + ' 2013-2015 Franti' + #197 + #161 + 'ek Milt';
 {$ELSE}
-  ACCSTR_UI_CPY_Author         = '© 2013-2015 František Milt';
+  ACCSTR_UI_CPY_Author         = '© 2013-2016 František Milt';
 {$ENDIF}
   ACCSTR_UI_CPY_Copyright      = 'All rights reserved';
 
