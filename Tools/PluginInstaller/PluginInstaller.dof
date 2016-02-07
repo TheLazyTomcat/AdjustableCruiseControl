@@ -110,8 +110,8 @@ IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=1
 MinorVer=1
-Release=0
-Build=29
+Release=1
+Build=32
 Debug=0
 PreRelease=0
 Special=0
@@ -122,13 +122,13 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=František Milt
 FileDescription=Plugin Installer Application
-FileVersion=1.1.0.29
+FileVersion=1.1.1.32
 InternalName=Plugin Installer
 LegalCopyright=© 2015 - 2016 František Milt
 LegalTrademarks=Plugin Installer
 OriginalFilename=PluginInstaller.exe
 ProductName=Plugin Installer
-ProductVersion=1.1.0
+ProductVersion=1.1.1
 Comments=Utility designed to ease (un)installation of plugins for truck games developed by SCS Software
 [HistoryLists\hlUnitAliases]
 Count=1

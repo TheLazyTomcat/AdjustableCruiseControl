@@ -8,7 +8,6 @@
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="4"/>
         <CursorPos Y="9"/>
         <UsageCount Value="137"/>
@@ -162,6 +161,7 @@
         <ComponentName Value="fMainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos Y="377"/>
         <UsageCount Value="137"/>
@@ -185,7 +185,7 @@
         <ComponentName Value="fSettingsForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="3"/>
+        <EditorIndex Value="-1"/>
         <CursorPos Y="13"/>
         <UsageCount Value="137"/>
       </Unit24>
@@ -206,8 +206,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="39"/>
-        <CursorPos X="20" Y="46"/>
+        <TopLine Value="129"/>
+        <CursorPos X="6" Y="139"/>
         <UsageCount Value="137"/>
       </Unit26>
       <Unit27>

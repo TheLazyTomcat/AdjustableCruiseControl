@@ -28,7 +28,7 @@ type
     procedure FillGameDetails(Index: Integer);
     procedure OnBindChange(Sender: TObject);
   public
-    { Public declarations }
+    procedure FillList(Sender: TObject);
   end;
 
 var
@@ -133,6 +133,27 @@ end;
 
 //------------------------------------------------------------------------------
 
+procedure TfSupportedGamesForm.FillList(Sender: TObject);
+var
+  i:  Integer;
+begin
+ClearGameDetails;
+lbGamesList.Items.BeginUpdate;
+try
+  lbGamesList.Items.Clear;
+  For i := 0 to Pred(ACCManager.GamesDataManager.GamesDataCount) do
+    lbGamesList.Items.Add(ACCManager.GamesDataManager.GameData[i].ExtendedTitle);
+finally
+  lbGamesList.Items.EndUpdate;
+end;
+fSupportedGamesForm.Caption := Format(ACCSTR_UI_SUPG_SupportedList,[ACCManager.GamesDataManager.GamesDataCount]);
+If lbGamesList.Items.Count > 0 then
+  lbGamesList.ItemIndex := 0;
+lbGamesList.OnClick(nil);
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TfSupportedGamesForm.OnBindChange(Sender: TObject);
 begin
 fGameIsBinded := ACCManager.ProcessBinder.Binded;
@@ -153,22 +174,8 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TfSupportedGamesForm.FormShow(Sender: TObject);
-var
-  i:  Integer;
 begin
-ClearGameDetails;
-lbGamesList.Items.BeginUpdate;
-try
-  lbGamesList.Items.Clear;
-  For i := 0 to Pred(ACCManager.GamesDataManager.GamesDataCount) do
-    lbGamesList.Items.Add(ACCManager.GamesDataManager.GameData[i].ExtendedTitle);
-finally
-  lbGamesList.Items.EndUpdate;
-end;
-fSupportedGamesForm.Caption := Format(ACCSTR_UI_SUPG_SupportedList,[ACCManager.GamesDataManager.GamesDataCount]);
-If lbGamesList.Items.Count > 0 then
-  lbGamesList.ItemIndex := 0;
-lbGamesList.OnClick(nil);
+FillList(Self);
 end;
 
 //------------------------------------------------------------------------------
