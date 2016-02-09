@@ -2,7 +2,7 @@
 
                             Adjustable Cruise Control
 
-                                 version 2.3.2
+                                 version 2.3.3
 
 ================================================================================
 
@@ -14,20 +14,20 @@ which each part starts.
   Index ...................................................   9
   Description .............................................  34
   Supported games .........................................  43
-  Parts of the program .................................... 169
-  Installation ............................................ 191
-  How to use the program .................................. 260
-  How to install an update ................................ 280
-  Program features ........................................ 310
-  Common problems ......................................... 370
-  How the program works ................................... 435
-  Changelog ............................................... 467
-  Known issues ............................................ 531
-  Source code ............................................. 538
-  Licensing ............................................... 547
-  Authors, contacts ....................................... 555
-  Links ................................................... 562
-  Copyright ............................................... 568
+  Parts of the program .................................... 186
+  Installation ............................................ 209
+  How to use the program .................................. 278
+  How to install an update ................................ 298
+  Program features ........................................ 330
+  Common problems ......................................... 388
+  How the program works ................................... 453
+  Changelog ............................................... 485
+  Known issues ............................................ 556
+  Source code ............................................. 570
+  Licensing ............................................... 579
+  Authors, contacts ....................................... 587
+  Links ................................................... 594
+  Copyright ............................................... 600
 
 
 
@@ -134,14 +134,31 @@ Fully supported with plugin:
   Euro Truck Simulator 2 1.18.1.3 Multi, DD & CD version
   Euro Truck Simulator 2 1.18.1.3 Multi, Steam version
   Euro Truck Simulator 2 1.18.1.3 Multi 64bit, DD & CD version
-  Euro Truck Simulator 2 1.18.1.3 Multi 64bit, Steam version  
+  Euro Truck Simulator 2 1.18.1.3 Multi 64bit, Steam version
   Euro Truck Simulator 2 1.19.1 Multi, DD & CD version
   Euro Truck Simulator 2 1.19.1 Multi 64bit, DD & CD version
-  Euro Truck Simulator 2 1.19.1 Multi 64bit, Steam version  
+  Euro Truck Simulator 2 1.19.1 Multi 64bit, Steam version
   Euro Truck Simulator 2 1.19.2.1 Multi, DD & CD version
   Euro Truck Simulator 2 1.19.2.1 Multi, Steam version
   Euro Truck Simulator 2 1.19.2.1 Multi 64bit, DD & CD version
   Euro Truck Simulator 2 1.19.2.1 Multi 64bit, Steam version
+  Euro Truck Simulator 2 1.20.1 Multi, DD & CD version
+  Euro Truck Simulator 2 1.20.1 Multi, Steam version
+  Euro Truck Simulator 2 1.20.1 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.20.1 Multi 64bit, Steam version
+  Euro Truck Simulator 2 1.21.1 Multi, DD & CD version
+  Euro Truck Simulator 2 1.21.1 Multi, Steam version
+  Euro Truck Simulator 2 1.21.1 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.21.1 Multi 64bit, Steam version
+  Euro Truck Simulator 2 1.22.2 Multi, DD & CD version
+  Euro Truck Simulator 2 1.22.2 Multi, Steam version
+  Euro Truck Simulator 2 1.22.2 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.22.2 Multi 64bit, Steam version
+  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.4 Multi, DD & CD version
+  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.6 Multi, Steam version
+  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.4 Multi 64bit, DD & CD version
+  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.6 Multi 64bit, Steam version
+  American Truck Simulator 1.0.0 Multi, Steam version
 
 Partially supported:
 
@@ -184,7 +201,8 @@ there is no rounding error when changing from one speed unit to another
 version you should choose.
 
 NOTE - Plugin can be used only in games supporting Telemetry API. At this
-       moment, only in Euro Truck Simulator 2 from version 1.4 up.
+       moment, Euro Truck Simulator 2 from version 1.4 up and any public version
+       of American Truck Simulator.
 
 
 
@@ -408,7 +426,7 @@ NOTE - Many of the problems can be resolved by running the ACC.exe with
     - check whether you are using right version of the program (see
       "Installation" section)
     - do not use modifications or programs that alters name of the main game
-      executable (eurotrucks2.exe)
+      executable
     - do not use modified main game executable (cracks for example)
 
 * Program finds the game but fails to set the cruise control speed when I press
@@ -468,15 +486,22 @@ Changelog
 ------------------------------
 List of changes between individual versions of ACC.
 
+2.3.2 -> 2.3.3
+  - added support for new games and their versions
+  - upadted Plugin Installer tool to support American Truck Simulator
+  - list of supported games is now updated when a games data update is installed
+  - number of corrections and optimizations
+
+
 2.3.1 -> 2.3.2
-  - corrected bug in system that is keeping CC speed on current limit (unwanted 
-    shutdown of the system when you drove from road with specified limit to a 
+  - corrected bug in system that is keeping CC speed on current limit (unwanted
+    shutdown of the system when you drove from road with specified limit to a
     road with limit of 0)
-  - corrected critical bug in memory operations that manifested itself when 
+  - corrected critical bug in memory operations that manifested itself when
     64bit build of ACC was used with 32bit game
   - added support for new versions of ETS2
   - added Plugins library feature to the Plugin Installer tool
-  - other code changes and corrections  
+  - other code changes and corrections
 
 
 2.3.0 -> 2.3.1
@@ -532,6 +557,13 @@ Known issues
 ------------------------------
 This section lists all known issues and bugs that, for some reason, made their
 way to the final release.
+
+  - When the ACC program is launched by a plugin from steam version of a game,
+    Steam takes the ACC process (created as a child process of the game) as a
+    part of the game. This results in a behavior where Steam thinks the game is
+    still running as long as the ACC is running, even when the actual game was
+    already closed.
+    Temporary solution - make sure to close ACC after exiting the game.
 
 
 
