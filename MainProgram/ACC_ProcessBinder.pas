@@ -151,35 +151,40 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function Is64bitProcess({%H-}ProcessHandle: THandle): Boolean;
-{$IFDEF x64}
 type
   TIsWoW64Process = Function(hProcess: THandle; Wow64Process: PBOOL): BOOL; stdcall;
+
 var
-  ModuleHandle:   THandle;
-  IsWow64Process: TIsWoW64Process;
-  ResultValue:    BOOL;
+  IsWow64Process: TIsWoW64Process = nil;
+
+//   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   
+
+procedure Is64bitProcessInit;
+var
+  ModuleHandle: THandle;
 begin
-Result := False;
 ModuleHandle := GetModuleHandle('kernel32.dll');
 If ModuleHandle <> 0 then
-  begin
-    IsWoW64Process := GetProcAddress(ModuleHandle,'IsWow64Process');
-    If Assigned(IsWoW64Process) then
-      begin
-        If IsWow64Process(ProcessHandle,@ResultValue) then
-          Result := not ResultValue
-        else
-          raise Exception.CreateFmt('Is64bitProcess: IsWow64Process failed with error %.8x.',[GetLastError]);
-      end;
-  end
-else raise Exception.CreateFmt('Is64bitProcess: Unable to get handle to module kernel32.dll (%.8x).',[GetLastError]);
+  IsWoW64Process := GetProcAddress(ModuleHandle,'IsWow64Process')
+else
+  raise Exception.CreateFmt('Is64bitProcessInit: Unable to get handle to module kernel32.dll (%.8x).',[GetLastError]);
 end;
-{$ELSE}
+
+//   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---
+
+Function Is64bitProcess({%H-}ProcessHandle: THandle): Boolean;
+var
+  ResultValue:  BOOL;
 begin
-Result := False;
+If Assigned(IsWoW64Process) then
+  begin
+    If IsWow64Process(ProcessHandle,@ResultValue) then
+      Result := not ResultValue
+    else
+      raise Exception.CreateFmt('Is64bitProcess: IsWow64Process failed with error %.8x.',[GetLastError]);
+  end
+else Result := False;
 end;
-{$ENDIF}
 
 {==============================================================================}
 {------------------------------------------------------------------------------}
@@ -732,5 +737,10 @@ begin
 fBinderThread.Rebind := True;
 SetEvent(fControlEvent);
 end;
+
+//==============================================================================
+
+initialization
+  Is64bitProcessInit;
 
 end.

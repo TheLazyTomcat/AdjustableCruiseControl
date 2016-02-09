@@ -11,12 +11,16 @@
 {                                                                              }
 {   Non visual variant of TTimer component                                     }
 {                                                                              }
-{   ©František Milt 2015-01-11                                                 }
+{   ©František Milt 2015-12-13                                                 }
 {                                                                              }
-{   Version 1.1                                                                }
+{   Version 1.1.1                                                              }
 {                                                                              }
 {==============================================================================}
 unit SimpleTimer;
+
+{$IF not(defined(WINDOWS) or defined(MSWINDOWS))}
+  {$MESSAGE FATAL 'Unsupported operating system.'}
+{$IFEND}
 
 {$IFDEF FPC}
   {$MODE Delphi}
@@ -26,34 +30,34 @@ interface
 
 uses
   Windows, Messages, Classes,
-  UtilityWindow;
+  UtilityWindow, AuxTypes;
 
 type
   TSimpleTimer = class(TObject)
   private
     fWindow:      TUtilityWindow;
-    fTimerID:     Integer;
+    fTimerID:     PtrUInt;
     fOwnsWindow:  Boolean;
-    fInterval:    LongWord;
+    fInterval:    UInt32;
     fEnabled:     Boolean;
     fTag:         Integer;
     fOnTimer:     TNotifyEvent;
     Function GetWindowHandle: HWND;
-    procedure SetInterval(Value: LongWord);
+    procedure SetInterval(Value: UInt32);
     procedure SetEnabled(Value: Boolean);
   protected
     procedure SetupTimer;
     procedure MessagesHandler(var Msg: TMessage; var Handled: Boolean);
   public
-    constructor Create(Window: TUtilityWindow = nil; TimerID: Integer = 1);
+    constructor Create(Window: TUtilityWindow = nil; TimerID: PtrUInt = 1);
     destructor Destroy; override;
     procedure ProcessMassages;
   published
     property WindowHandle: HWND read GetWindowHandle;
     property Window: TUtilityWindow read fWindow;
-    property TimerID: Integer read fTimerID;
+    property TimerID: PtrUInt read fTimerID;
     property OwnsWindow: Boolean read fOwnsWindow;
-    property Interval: LongWord read fInterval write SetInterval;
+    property Interval: UInt32 read fInterval write SetInterval;
     property Enabled: Boolean read fEnabled write SetEnabled;
     property Tag: Integer read fTag write fTag;
     property OnTimer: TNotifyEvent read fOnTimer write fOnTimer;
@@ -73,7 +77,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TSimpleTimer.SetInterval(Value: LongWord);
+procedure TSimpleTimer.SetInterval(Value: UInt32);
 begin
 fInterval := Value;
 SetupTimer;
@@ -97,24 +101,22 @@ If (fInterval > 0) and fEnabled then
     raise EOutOfResources.Create('Not enough timers available.');
 end;
 
+//------------------------------------------------------------------------------
+
 procedure TSimpleTimer.MessagesHandler(var Msg: TMessage; var Handled: Boolean);
 begin
-with Msg do
-  case Msg of
-    WM_TIMER: If wParam = fTimerID then
-                begin
-                  If Assigned(fOnTimer) then fOnTimer(Self);
-                  Result := 0;
-                  Handled := True;
-                end;
-  else
-    Handled := False;
-  end;
+If (Msg.Msg = WM_TIMER) and (PtrUInt(Msg.wParam) = fTimerID) then
+  begin
+    If Assigned(fOnTimer) then fOnTimer(Self);
+    Msg.Result := 0;
+    Handled := True;
+  end
+else Handled := False;
 end;
 
 {=== TSimpleTimer // Public methods ===========================================}
 
-constructor TSimpleTimer.Create(Window: TUtilityWindow = nil; TimerID: Integer = 1);
+constructor TSimpleTimer.Create(Window: TUtilityWindow = nil; TimerID: PtrUInt = 1);
 begin
 inherited Create;
 If Assigned(Window) then

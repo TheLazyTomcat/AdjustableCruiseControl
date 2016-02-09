@@ -30,7 +30,8 @@ the same place they were when installed. Meaning if you want to install any
 plugin using this program, place the plugin file (DLL) in a well selected folder
 where it stays the entire time you want to use it in a game. If you move or
 delete the plugin file after installation, the game will be unable to load it
-and it will not work.
+and it will not work. Also make sure full path of the plugin file contains only
+ASCII characters (no diacritics, cyrillics, ...).
 
 Installation of a plugin can be summarized into following steps:
 
@@ -84,4 +85,4 @@ František Milt, frantisek.milt@gmail.com
 
 Copyright
 ------------------------------
-©2015 František Milt, all rights reserved
+©2015-2016 František Milt, all rights reserved

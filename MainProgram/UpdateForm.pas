@@ -63,7 +63,7 @@ implementation
 
 uses
   ShlObj, {$IFNDEF FPC}MsgForm,{$ELSE}LCLType,{$ENDIF} Registry,
-  ACC_Common, ACC_Strings, ACC_Manager;
+  ACC_Common, ACC_Strings, ACC_Manager, SupportedGamesForm;
 
 {$IFDEF FPC}
 const
@@ -336,6 +336,7 @@ If AddCount > 0 then
     ACCManager.ProcessBinder.Rebind;
     ACCManager.GamesDataManager.Save;
     fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
+    SupportedGamesForm.fSupportedGamesForm.FillList(nil);    
     FillList;
   end
 else

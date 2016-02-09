@@ -39,7 +39,7 @@ const
 
   // User interface - game info
   ACCSTR_UI_GAM_NoGameTitle = '>>> None of the supported games is running <<<';
-  ACCSTR_UI_GAM_NoGameInfo  = 'No further informations';
+  ACCSTR_UI_GAM_NoGameInfo  = 'No further information';
 
   // User interface - buttons
   ACCSTR_UI_BTN_Keys = ' [%s]';
@@ -68,7 +68,7 @@ const
 {$IFDEF FPC}
   ACCSTR_UI_CPY_Author         = #194 + #169 + ' 2013-2015 Franti' + #197 + #161 + 'ek Milt';
 {$ELSE}
-  ACCSTR_UI_CPY_Author         = '© 2013-2015 František Milt';
+  ACCSTR_UI_CPY_Author         = '© 2013-2016 František Milt';
 {$ENDIF}
   ACCSTR_UI_CPY_Copyright      = 'All rights reserved';
 

@@ -87,9 +87,9 @@ uses
 const
   PluginsLibraryRegKey = 'Software\NcS Soft\PluginInstaller\Library';
 
-  KnownGamesList: array[0..1] of TGameEntry = (
+  KnownGamesList: array[0..3] of TGameEntry = (
     (Valid:           True;
-     Title:           'Euro Truck Simulator 2 - 32bit';
+     Title:           'Euro Truck Simulator 2 (32bit)';
      RegistryRoot:    HKEY_LOCAL_MACHINE;
      RegistryKey:     'Software\SCS Software\Euro Truck Simulator 2\Plugins';
      FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\SCS Software\Euro Truck Simulator 2\Plugins';
@@ -97,10 +97,26 @@ const
      SystemValid:     False),
      
     (Valid:           True;
-     Title:           'Euro Truck Simulator 2 - 64bit';
+     Title:           'Euro Truck Simulator 2 (64bit)';
      RegistryRoot:    HKEY_LOCAL_MACHINE;
      RegistryKey:     'Software\SCS Software\Euro Truck Simulator 2\Plugins';
      FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\SCS Software\Euro Truck Simulator 2\Plugins';
+     Is64bit:         True;
+     SystemValid:     False),
+
+    (Valid:           True;
+     Title:           'American Truck Simulator (32bit - unsupported)';
+     RegistryRoot:    HKEY_LOCAL_MACHINE;
+     RegistryKey:     'Software\SCS Software\American Truck Simulator\Plugins';
+     FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\SCS Software\American Truck Simulator\Plugins';
+     Is64bit:         False;
+     SystemValid:     False),
+
+    (Valid:           True;
+     Title:           'American Truck Simulator (64bit)';
+     RegistryRoot:    HKEY_LOCAL_MACHINE;
+     RegistryKey:     'Software\SCS Software\American Truck Simulator\Plugins';
+     FullRegistryKey: 'HKEY_LOCAL_MACHINE\Software\SCS Software\American Truck Simulator\Plugins';
      Is64bit:         True;
      SystemValid:     False));
 

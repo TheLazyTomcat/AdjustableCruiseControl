@@ -61,9 +61,9 @@ else
       If VersionInfoPresent then
         If VersionInfoStringTableCount > 0 then
           begin
-            Index := IndexOfStringInVersionInfoStringTable(0,'FileDescription');
+            Index := IndexOfVersionInfoString(0,'FileDescription');
             If Index >= 0 then
-              fDescriptionForm.lbeDescription.Text := VersionInfoStrings[0,Index].Value;
+              fDescriptionForm.lbeDescription.Text := VersionInfoString[0,Index].Value;
           end;
       Free;
     end;
@@ -91,9 +91,9 @@ with TWinFileInfo.Create(FilePath,WFI_LS_LoadVersionInfo or WFI_LS_ParseVersionI
     If VersionInfoPresent then
       If VersionInfoStringTableCount > 0 then
         begin
-          Index := IndexOfStringInVersionInfoStringTable(0,'FileDescription');
+          Index := IndexOfVersionInfoString(0,'FileDescription');
           If Index >= 0 then
-            lbeDescription.Text := VersionInfoStrings[0,Index].Value;
+            lbeDescription.Text := VersionInfoString[0,Index].Value;
         end;
     Free;
   end;

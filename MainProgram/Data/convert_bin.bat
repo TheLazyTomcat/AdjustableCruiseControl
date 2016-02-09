@@ -10,4 +10,5 @@ start ..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i new_GamesData.ini
   ..\Resources\GameIcons\TaT.png^
   ..\Resources\GameIcons\UKTS.png^
   ..\Resources\GameIcons\HAUL.png^
-  ..\Resources\GameIcons\CONV.png
+  ..\Resources\GameIcons\CONV.png^
+  ..\Resources\GameIcons\ATS.png

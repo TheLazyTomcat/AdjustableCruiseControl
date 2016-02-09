@@ -11,9 +11,9 @@
 
   Server endpoint class
 
-  ©František Milt 2015-08-10
+  ©František Milt 2016-01-05
 
-  Version 1.2
+  Version 1.3.1
 
 ===============================================================================}
 unit WinMsgCommServer;
@@ -37,12 +37,12 @@ type
     fOnClientConnect:     TWMCConnectionEvent;
     fOnClientDisconnect:  TWMCConnectionEvent;
   protected
-    Function ProcessMessage(SenderID: TWMCConnectionID; MessageCode, UserCode: Byte; Payload: lParam): lResult; override;
+    Function ProcessMessage(SenderID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam): lResult; override;
   public
     class Function OtherServerRuning(const MessageName: String): Boolean; virtual;
     constructor Create(Window: TUtilityWindow = nil; Synchronous: Boolean = False; const MessageName: String = WMC_MessageName); override;
     destructor Destroy; override;
-    Function SendMessage(MessageCode, UserCode: Byte; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult; override;
+    Function SendMessage(MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult; override;
   published
     property OnClientConnect: TWMCConnectionEvent read fOnClientConnect write fOnClientConnect;
     property OnClientDisconnect: TWMCConnectionEvent read fOnClientDisconnect write fOnClientDisconnect;
@@ -63,7 +63,7 @@ uses
 {   TWinMsgCommServer - Protected methods                                      }
 {==============================================================================}
 
-Function TWinMsgCommServer.ProcessMessage(SenderID: TWMCConnectionID; MessageCode, UserCode: Byte; Payload: lParam): lResult;
+Function TWinMsgCommServer.ProcessMessage(SenderID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam): lResult;
 var
   NewClient:  PWMCConnectionInfo;
   Index:      Integer;
@@ -145,7 +145,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommServer.SendMessage(MessageCode, UserCode: Byte; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult;
+Function TWinMsgCommServer.SendMessage(MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult;
 var
   Index:  Integer;
 begin
