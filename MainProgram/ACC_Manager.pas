@@ -284,9 +284,9 @@ case Value.UserCode of
                               else SetCCSpeed(0);
                           end
                         else fWMCClient.SendInteger(0,SenderID,WMC_CODE_LimitStop);
-  WMC_CODE_Features:    If Value.ValueType = mvtLongWord then
+  WMC_CODE_Features:    If Value.ValueType = mvtUInt32 then
                           begin
-                            fPluginFeatures := Value.LongWordValue;
+                            fPluginFeatures := Value.UInt32Value;
                             If Assigned(fOnPluginStateChange) then fOnPluginStateChange(Self);
                           end;
 end;

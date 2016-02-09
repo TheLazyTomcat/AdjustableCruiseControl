@@ -243,7 +243,7 @@ case Value.UserCode of
                           fLimitSending := False;
                           fWMCServer.SendInteger(0,0,WMC_CODE_LimitStop);
                         end;
-  WMC_CODE_Features:    fWMCServer.SendLongWord(fFeatures,SenderID,WMC_CODE_Features);
+  WMC_CODE_Features:    fWMCServer.SendUInt32(fFeatures,SenderID,WMC_CODE_Features);
 end
 end;
 

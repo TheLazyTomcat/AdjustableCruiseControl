@@ -11,11 +11,31 @@
 
   Base class
 
-  ©František Milt 2015-08-10
+  ©František Milt 2016-01-05
 
-  Version 1.2
+  Version 1.3.1
 
 ===============================================================================}
+{-------------------------------------------------------------------------------
+
+  Possible cross-connection combinations
+
+  Endpoints in rows represent destinations, endpoints in columns represent
+  sources.
+
+                 |     32bit     |     64bit     | 64bit + WMC64 |
+  ---------------|---------------|---------------|---------------|
+       32bit     |       +       |       +       |       -       |
+  ---------------|---------------|---------------|---------------|
+       64bit     |       +       |       +       |       +       |
+  ---------------|---------------|---------------|---------------|
+   64bit + WMC64 |       +       |       +       |       +       |
+
+  + fully compatible
+  - partially compatible (will not communicate 64bit primitives and data longer
+                          than 4 bytes)
+
+-------------------------------------------------------------------------------}
 unit WinMsgComm;
 
 interface
@@ -24,7 +44,7 @@ interface
 
 uses
   Windows, Messages, Classes,
-  CRC32, UtilityWindow;
+  CRC32, UtilityWindow, BitVector, AuxTypes;
 
 const
   WMC_MessageName = 'WMC_MsgName_72084D2C-7D6A-4EEE-A1C3-9FA36397075E';
@@ -61,13 +81,13 @@ const
   WMC_PEERONLINE     = $08;         // peer HWND                        |   +    |  n/a  |  peer
   WMC_PEEROFFLINE    = $09;         // peer HWND                        |   -    |  n/a  |  peer
 
-  WMC_VALUE_BOOL     = $10;         // boolean value (8bit)             |   ?    |  n/a  |  any
-  WMC_VALUE_BYTE     = $11;         // 8bit unsigned integer value      |   ?    |  n/a  |  any
-  WMC_VALUE_SHORTINT = $12;         // 8bit signed integer value        |   ?    |  n/a  |  any
-  WMC_VALUE_WORD     = $13;         // 16bit unsigned integer value     |   ?    |  n/a  |  any
-  WMC_VALUE_SMALLINT = $14;         // 16bit signed integer value       |   ?    |  n/a  |  any
-  WMC_VALUE_LONGWORD = $15;         // 32bit unsigned integer value     |   ?    |  n/a  |  any
-  WMC_VALUE_LONGINT  = $16;         // 32bit signed integer value       |   ?    |  n/a  |  any
+  WMC_VALUE_BOOL     = $10;         // 8bit boolean value (ByteBool)    |   ?    |  n/a  |  any
+  WMC_VALUE_UINT8    = $11;         // 8bit unsigned integer value      |   ?    |  n/a  |  any
+  WMC_VALUE_INT8     = $12;         // 8bit signed integer value        |   ?    |  n/a  |  any
+  WMC_VALUE_UINT16   = $13;         // 16bit unsigned integer value     |   ?    |  n/a  |  any
+  WMC_VALUE_INT16    = $14;         // 16bit signed integer value       |   ?    |  n/a  |  any
+  WMC_VALUE_UINT32   = $15;         // 32bit unsigned integer value     |   ?    |  n/a  |  any
+  WMC_VALUE_INT32    = $16;         // 32bit signed integer value       |   ?    |  n/a  |  any
   WMC_VALUE_SINGLE   = $17;         // 32bit float value                |   ?    |  n/a  |  any
   WMC_VALUE_UINT64   = $18;         // 64bit unsigned integer value     |   ?    |  n/a  |  any
   WMC_VALUE_INT64    = $19;         // 64bit signed integer value       |   ?    |  n/a  |  any
@@ -93,50 +113,35 @@ const
 
 
 type
-{$IFDEF x64}
-  PtrUInt = UInt64;
-{$ELSE}
-  PtrUInt = LongWord;
-{$ENDIF}
+  TWMCSize     = UInt32;
+  TWMCPosition = UInt32;
 
-{$IFDEF WMC64}
-  TWMCSize     = UInt64;
-  TWMCPosition = UInt64;
-{$ELSE}
-  TWMCSize     = LongWord;
-  TWMCPosition = LongWord;
-{$ENDIF}
+  TWMCCheckSum     = TCRC32;
+  TWMCConnectionID = UInt16;
+  TWMCMessageCode  = UInt8;
+  TWMCUserCode     = UInt8;
 
-  TWMCCheckSum = TCRC32;
-
-  PUTF8Char = ^AnsiChar;
-
-  TWMCConnectionID = Word;
-
-  TWMCConnectionIDArray = array[TWMCConnectionID] of Boolean;
-  PWMCConnectionIDArray = ^TWMCConnectionIDArray;
-
-  TWMCMultiValueType = (mvtBool,mvtByte,mvtShortInt,mvtWord,mvtSmallInt,
-                        mvtLongWord,mvtLongInt,mvtUInt64,mvtInt64,mvtSingle,
+  TWMCMultiValueType = (mvtBool,mvtUInt8,mvtInt8,mvtUInt16,mvtInt16,
+                        mvtUInt32,mvtInt32,mvtUInt64,mvtInt64,mvtSingle,
                         mvtDouble,mvtData,mvtString);
 
   TWMCMultiValue = record
-    UserCode:    Byte;
+    UserCode:    TWMCUserCode;
     StringValue: String;
     case ValueType: TWMCMultiValueType of
-      mvtBool:      (BoolValue:     Boolean);
-      mvtByte:      (ByteValue:     Byte);
-      mvtShortInt:  (ShortIntValue: ShortInt);
-      mvtWord:      (WordValue:     Word);
-      mvtSmallInt:  (SmallIntValue: SmallInt);
-      mvtLongWord:  (LongWordValue: LongWord);
-      mvtLongInt:   (LongIntValue:  LongInt);
-      mvtUInt64:    (UInt64Value:   UInt64);
-      mvtInt64:     (Int64Value:    Int64);      
-      mvtSingle:    (SingleValue:   Single);
-      mvtDouble:    (DoubleValue:   Double);
-      mvtData:      (DataSize:      TWMCSize;
-                     DataPtr:       Pointer)
+      mvtBool:    (BoolValue:     ByteBool);
+      mvtUInt8:   (UInt8Value:    UInt8);
+      mvtInt8:    (Int8Value:     Int8);
+      mvtUInt16:  (UInt16Value:   UInt16);
+      mvtInt16:   (Int16Value:    Int16);
+      mvtUInt32:  (UInt32Value:   UInt32);
+      mvtInt32:   (Int32Value:    Int32);
+      mvtUInt64:  (UInt64Value:   UInt64);
+      mvtInt64:   (Int64Value:    Int64);
+      mvtSingle:  (SingleValue:   Single);
+      mvtDouble:  (DoubleValue:   Double);
+      mvtData:    (DataSize:      TWMCSize;
+                   DataPtr:       Pointer)
   end;
 
   TWMCTransactionContext = record
@@ -156,7 +161,7 @@ type
   PWMCConnectionInfo = ^TWMCConnectionInfo;
 
   TWMCValueReceivedEvent = procedure(Sender: TObject; SenderID: TWMCConnectionID; Value: TWMCMultiValue) of object;
-  TWMCDataReceivedEvent = procedure(Sender: TObject; SenderID: TWMCConnectionID; MessageCode, UserCode: Byte; Payload: lParam) of object;
+  TWMCDataReceivedEvent = procedure(Sender: TObject; SenderID: TWMCConnectionID; MessageCode, UserCode: TWMCUserCode; Payload: lParam) of object;
   TWMCMessageEvent = procedure(var Msg: TMessage; var Handled: Boolean) of object;
   TWMCConnectionEvent = procedure(Sender: TObject; ConnectionInfo: TWMCConnectionInfo; ConnectionIndex: Integer) of object;
 
@@ -169,10 +174,10 @@ type
   private
     fIDArraySynchro:  THandle;
     fIDArrayObject:   THandle;
-    fIDArray:         PWMCConnectionIDArray;
+    fIDArrayMemory:   Pointer;
     fID:              TWMCConnectionID;
     fMessageName:     String;
-    fMessageID:       LongWord;
+    fMessageID:       UInt32;
     fSynchronous:     Boolean;
     fOwnsWindow:      Boolean;
     fWindow:          TUtilityWindow;
@@ -192,10 +197,10 @@ type
     Function AddConnection(ConnectionInfo: PWMCConnectionInfo): Integer; virtual;
     procedure DeleteConnection(Index: Integer); virtual;
     procedure TransactionStart(var Transaction: TWMCTransactionContext; Size: TWMCSize; SenderID: TWMCConnectionID); virtual;
-    Function TransactionAdd(var Transaction: TWMCTransactionContext; Data: lParam; Bytes: Byte): Boolean; virtual;
-    Function TransactionEnd(var Transaction: TWMCTransactionContext; CheckSum: TWMCCheckSum; MessageCode, UserCode: Byte): Boolean; virtual;
+    Function TransactionAdd(var Transaction: TWMCTransactionContext; Data: lParam; Bytes: UInt8): Boolean; virtual;
+    Function TransactionEnd(var Transaction: TWMCTransactionContext; CheckSum: TWMCCheckSum; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode): Boolean; virtual;
     procedure MessagesHandler(var Msg: TMessage; var Handled: Boolean); virtual;
-    Function ProcessMessage(SenderID: TWMCConnectionID; MessageCode, UserCode: Byte; Payload: lParam): lResult; virtual;
+    Function ProcessMessage(SenderID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam): lResult; virtual;
     procedure Process_WM_COPYDATA(const Msg: TMessage); virtual;
     Function SendMessageTo(TargetWindow: HWND; wParam: wParam; lParam: lParam; Synchronous: Boolean): lResult; overload; virtual;
     Function SendMessageTo(TargetWindow: HWND; wParam: wParam; lParam: lParam): lResult; overload; virtual;
@@ -206,29 +211,29 @@ type
     destructor Destroy; override;
     procedure ProcessMessages(Synchronous: Boolean); overload; virtual;
     procedure ProcessMessages; overload; virtual;
-    Function SendMessage(MessageCode, UserCode: Byte; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult; virtual; abstract;
-    Function SendBool(Value: Boolean; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendByte(Value: Byte; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendShortInt(Value: ShortInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendWord(Value: Word; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendSmallInt(Value: SmallInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendLongWord(Value: LongWord; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendLongInt(Value: LongInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendSingle(Value: Single; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendUInt64(Value: UInt64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendInt64(Value: Int64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendDouble(Value: Double; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendData(const Data; Size: TWMCSize; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0; MessageCode: Byte = WMC_TRANSACTION_END_DATA): Boolean; virtual;
-    Function SendString(const Value: String; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendInteger(Value: Integer; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
-    Function SendFloat(Value: Single; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean; virtual;
+    Function SendMessage(MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult; virtual; abstract;
+    Function SendBool(Value: ByteBool; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendUInt8(Value: UInt8; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendInt8(Value: Int8; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendUInt16(Value: UInt16; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendInt16(Value: Int16; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendUInt32(Value: UInt32; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendInt32(Value: Int32; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendSingle(Value: Single; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendUInt64(Value: UInt64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendInt64(Value: Int64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendDouble(Value: Double; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendData(const Data; Size: TWMCSize; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0; MessageCode: TWMCMessageCode = WMC_TRANSACTION_END_DATA): Boolean; virtual;
+    Function SendString(const Value: String; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendInteger(Value: Integer; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
+    Function SendFloat(Value: Double; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean; virtual;
     Function ClearInvalidConnections: Integer; virtual;
     Function IndexOfConnection(ConnectionID: TWMCConnectionID): Integer; virtual;
     property Connections[Index: Integer]: TWMCConnectionInfo read GetConnection; default;
   published
-    property ID: Word read fID;
+    property ID: TWMCConnectionID read fID;
     property MessageName: String read fMessageName;
-    property MessageID: LongWord read fMessageID;
+    property MessageID: UInt32 read fMessageID;
     property Synchronous: Boolean read fSynchronous write fSynchronous;
     property OwnsWindow: Boolean read fOwnsWindow;
     property Window: TUtilityWindow read fWindow;
@@ -243,10 +248,10 @@ type
 {   Auxiliary functions                                                        }
 {==============================================================================}
 
-Function BuildWParam(ConnectionID: TWMCConnectionID; MessageCode, UserCode: Byte): wParam;
+Function BuildWParam(ConnectionID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode): wParam;
 Function GetConnectionID(wParam: wParam): TWMCConnectionID;
-Function GetMessageCode(wParam: wParam): Byte;
-Function GetUserCode(wParam: wParam): Byte;  
+Function GetMessageCode(wParam: wParam): TWMCMessageCode;
+Function GetUserCode(wParam: wParam): TWMCUserCode;
 
 implementation
 
@@ -257,7 +262,7 @@ uses
 {   Auxiliary functions                                                        }
 {==============================================================================}  
 
-Function BuildWParam(ConnectionID: TWMCConnectionID; MessageCode, UserCode: Byte): wParam;
+Function BuildWParam(ConnectionID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode): wParam;
 begin
 Result := wParam((ConnectionID shl 16) or (UserCode shl 8) or MessageCode);
 end;
@@ -271,21 +276,21 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function GetMessageCode(wParam: wParam): Byte;
+Function GetMessageCode(wParam: wParam): TWMCMessageCode;
 begin
-Result := Byte(wParam);
+Result := TWMCMessageCode(wParam);
 end;
 
 //------------------------------------------------------------------------------
 
-Function GetUserCode(wParam: wParam): Byte;
+Function GetUserCode(wParam: wParam): TWMCUserCode;
 begin
-Result := Byte(wParam shr 8);
+Result := TWMCUserCode(wParam shr 8);
 end;
 
 //------------------------------------------------------------------------------
 
-Function CalcCheckSum(OldSum: TWMCCheckSum; Value: lParam; Bytes: Byte): TWMCCheckSum;
+Function CalcCheckSum(OldSum: TWMCCheckSum; Value: lParam; Bytes: UInt8): TWMCCheckSum;
 begin
 Result := BufferCRC32(OldSum,Value,Bytes);
 end;
@@ -331,11 +336,11 @@ begin
 fIDArraySynchro := CreateMutex(nil,False,PChar(fMessageName + '_idsync'));
 If fIDArraySynchro = 0 then
   raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not create ID-sync mutex (0x%.8x).',[GetLastError]);
-fIDArrayObject := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,SizeOf(TWMCConnectionIDArray),PChar(fMessageName + '_idarray'));
+fIDArrayObject := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,$FFFF div 8,PChar(fMessageName + '_idarray'));
 If fIDArrayObject = 0 then
   raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not create ID array (0x%.8x).',[GetLastError]);
-fIDArray := MapViewOfFile(fIDArrayObject,FILE_MAP_ALL_ACCESS,0,0,0);
-If not Assigned(fIDArray) then
+fIDArrayMemory := MapViewOfFile(fIDArrayObject,FILE_MAP_ALL_ACCESS,0,0,0);
+If not Assigned(fIDArrayMemory) then
   raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not map ID array (0x%.8x).',[GetLastError]);
 end;
 
@@ -343,7 +348,7 @@ end;
 
 procedure TWinMsgCommBase.FinalIDArray;
 begin
-UnmapViewOfFile(fIDArray);
+UnmapViewOfFile(fIDArrayMemory);
 CloseHandle(fIDArrayObject);
 CloseHandle(fIDArraySynchro);
 end;
@@ -352,21 +357,26 @@ end;
 
 Function TWinMsgCommBase.AcquireID: TWMCConnectionID;
 var
-  i:  Integer;
+  Index:  Integer;
 begin
 Result := WMC_SendToAll;
-If Assigned(fIDArray) then
+If Assigned(fIDArrayMemory) then
   begin
     If WaitForSingleObject(fIDArraySynchro,30000) = WAIT_OBJECT_0 then
       try
-        For i := 1 to High(TWMCConnectionIDArray) do
-          If not fIDArray^[i] then
-            begin
-              fIDArray^[i] := True;
-              Result := TWMCConnectionID(i);
-              Exit;
-            end;
-        raise Exception.Create('TWinMsgCommBase.AcquireID: No free ID found.');
+        with TBitVectorStatic32.Create(fIdArrayMemory,Succ(High(TWMCConnectionID))) do
+          try
+            Bits[0] := True;
+            Index := FirstClean;
+            If (Index > 0) and (Index <= HighIndex) then
+              begin
+                Bits[Index] := True;
+                Result := TWMCConnectionID(Index);
+              end
+            else raise Exception.Create('TWinMsgCommBase.AcquireID: No free ID found.');
+          finally
+            Free;
+          end;
       finally
         ReleaseMutex(fIDArraySynchro);
       end
@@ -378,11 +388,16 @@ end;
 
 procedure TWinMsgCommBase.ReleaseID(ConnectionID: TWMCConnectionID);
 begin
-If Assigned(fIDArray) then
+If Assigned(fIDArrayMemory) then
   begin
     If WaitForSingleObject(fIDArraySynchro,30000) = WAIT_OBJECT_0 then
       try
-        fIDArray^[ConnectionID] := False;
+        with TBitVectorStatic32.Create(fIdArrayMemory,Succ(High(TWMCConnectionID))) do
+          try
+            Bits[Integer(ConnectionID)] := False;
+          finally
+            Free;
+          end;
       finally
         ReleaseMutex(fIDArraySynchro);
       end
@@ -436,7 +451,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.TransactionAdd(var Transaction: TWMCTransactionContext; Data: lParam; Bytes: Byte): Boolean;
+Function TWinMsgCommBase.TransactionAdd(var Transaction: TWMCTransactionContext; Data: lParam; Bytes: UInt8): Boolean;
 begin
 If Transaction.Position + Bytes <= Transaction.DataSize then
   begin
@@ -450,7 +465,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.TransactionEnd(var Transaction: TWMCTransactionContext; CheckSum: TWMCCheckSum; MessageCode, UserCode: Byte): Boolean;
+Function TWinMsgCommBase.TransactionEnd(var Transaction: TWMCTransactionContext; CheckSum: TWMCCheckSum; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode): Boolean;
 var
   TempValue:  TWMCMultiValue;
   TempStr:    UTF8String;
@@ -534,14 +549,14 @@ If not Handled then
   else If Msg.Msg = WM_COPYDATA then
     begin
       Process_WM_COPYDATA(Msg);
-      Msg.Result := lResult(True);
+      Msg.Result := lResult(WMC_RESULT_ok);
       Handled := True;
     end;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.ProcessMessage(SenderID: TWMCConnectionID; MessageCode, UserCode: Byte; Payload: lParam): lResult;
+Function TWinMsgCommBase.ProcessMessage(SenderID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam): lResult;
 var
   Index:  Integer;
 
@@ -556,15 +571,15 @@ var
         TempValue.StringValue := '';        
         TempValue.ValueType := ValueType;
         case TempValue.ValueType of
-          mvtBool:      TempValue.BoolValue := Boolean(Payload);
-          mvtByte:      TempValue.ByteValue := Byte(Payload);
-          mvtShortInt:  TempValue.ShortIntValue := ShortInt(Payload);
-          mvtWord:      TempValue.WordValue := Word(Payload);
-          mvtSmallInt:  TempValue.SmallIntValue := SmallInt(Payload);
-          mvtLongWord:  TempValue.LongWordValue := LongWord(Payload);
-          mvtLongInt:   TempValue.LongIntValue := LongInt(Payload);
+          mvtBool:      TempValue.BoolValue := ByteBool(Payload);
+          mvtUInt8:     TempValue.UInt8Value := UInt8(Payload);
+          mvtInt8:      TempValue.Int8Value := Int8(Payload);
+          mvtUInt16:    TempValue.UInt16Value := UInt16(Payload);
+          mvtInt16:     TempValue.Int16Value := Int16(Payload);
+          mvtUInt32:    TempValue.UInt32Value := UInt32(Payload);
+          mvtInt32:     TempValue.Int32Value := Int32(Payload);
           mvtSingle:    TempValue.SingleValue := PSingle(@Payload)^;
-        {$IFDEF WMC64}
+        {$IFDEF 64bit}
           mvtUInt64:    TempValue.UInt64Value := UInt64(Payload);
           mvtInt64:     TempValue.Int64Value := Int64(Payload);
           mvtDouble:    TempValue.DoubleValue := PDouble(@Payload)^;
@@ -578,19 +593,19 @@ var
 
 begin
 case MessageCode of
-  WMC_PING:           Result := WMC_RESULT_ok;
-  WMC_VALUE_BOOL:     ProcessValue(mvtBool);
-  WMC_VALUE_BYTE:     ProcessValue(mvtByte);
-  WMC_VALUE_SHORTINT: ProcessValue(mvtShortInt);
-  WMC_VALUE_WORD:     ProcessValue(mvtWord);
-  WMC_VALUE_SMALLINT: ProcessValue(mvtSmallInt);
-  WMC_VALUE_LONGWORD: ProcessValue(mvtLongWord);
-  WMC_VALUE_LONGINT:  ProcessValue(mvtLongInt);
-  WMC_VALUE_SINGLE:   ProcessValue(mvtSingle);
-{$IFDEF WMC64}
-  WMC_VALUE_UINT64:   ProcessValue(mvtUInt64);
-  WMC_VALUE_INT64:    ProcessValue(mvtInt64);
-  WMC_VALUE_DOUBLE:   ProcessValue(mvtDouble);
+  WMC_PING:         Result := WMC_RESULT_ok;
+  WMC_VALUE_BOOL:   ProcessValue(mvtBool);
+  WMC_VALUE_UINT8:  ProcessValue(mvtUInt8);
+  WMC_VALUE_INT8:   ProcessValue(mvtInt8);
+  WMC_VALUE_UINT16: ProcessValue(mvtUInt16);
+  WMC_VALUE_INT16:  ProcessValue(mvtInt16);
+  WMC_VALUE_UINT32: ProcessValue(mvtUInt32);
+  WMC_VALUE_INT32:  ProcessValue(mvtInt32);
+  WMC_VALUE_SINGLE: ProcessValue(mvtSingle);
+{$IFDEF 64bit}
+  WMC_VALUE_UINT64: ProcessValue(mvtUInt64);
+  WMC_VALUE_INT64:  ProcessValue(mvtInt64);
+  WMC_VALUE_DOUBLE: ProcessValue(mvtDouble);
 {$ENDIF}
   WMC_TRANSACTION_START:  begin
                             Index := IndexOfConnection(SenderID);
@@ -602,7 +617,7 @@ case MessageCode of
                               end
                             else Result := WMC_RESULT_error;
                           end;
-{$IFDEF WMC64}
+{$IFDEF 64bit}
   WMC_TRANSACTION_BUFF5,
   WMC_TRANSACTION_BUFF6,
   WMC_TRANSACTION_BUFF7,
@@ -801,63 +816,63 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendBool(Value: Boolean; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendBool(Value: ByteBool; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
 Result := SendMessage(WMC_VALUE_BOOL,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendByte(Value: Byte; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendUInt8(Value: UInt8; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_BYTE,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
+Result := SendMessage(WMC_VALUE_UINT8,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendShortInt(Value: ShortInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendInt8(Value: Int8; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_SHORTINT,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
+Result := SendMessage(WMC_VALUE_INT8,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendWord(Value: Word; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendUInt16(Value: UInt16; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_WORD,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
+Result := SendMessage(WMC_VALUE_UINT16,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendSmallInt(Value: SmallInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendInt16(Value: Int16; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_SMALLINT,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
+Result := SendMessage(WMC_VALUE_INT16,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendLongWord(Value: LongWord; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendUInt32(Value: UInt32; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_LONGWORD,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
+Result := SendMessage(WMC_VALUE_UINT32,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendLongInt(Value: LongInt; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendInt32(Value: Int32; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendMessage(WMC_VALUE_LONGINT,UserCode,lParam(Value),RecipientID) = WMC_RESULT_ok;
+Result := SendMessage(WMC_VALUE_INT32,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendSingle(Value: Single; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendSingle(Value: Single; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
 Result := SendMessage(WMC_VALUE_SINGLE,UserCode,lParam(Addr(Value)^),RecipientID) <> WMC_RESULT_error;
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendUInt64(Value: UInt64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendUInt64(Value: UInt64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
 {$IFDEF WMC64}
 Result := SendMessage(WMC_VALUE_UINT64,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
@@ -868,7 +883,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendInt64(Value: Int64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendInt64(Value: Int64; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
 {$IFDEF WMC64}
 Result := SendMessage(WMC_VALUE_INT64,UserCode,lParam(Value),RecipientID) <> WMC_RESULT_error;
@@ -879,7 +894,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendDouble(Value: Double; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendDouble(Value: Double; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
 {$IFDEF WMC64}
 Result := SendMessage(WMC_VALUE_DOUBLE,UserCode,lParam(Addr(Value)^),RecipientID) <> WMC_RESULT_error;
@@ -890,7 +905,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendData(const Data; Size: TWMCSize; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0; MessageCode: Byte = WMC_TRANSACTION_END_DATA): Boolean;
+Function TWinMsgCommBase.SendData(const Data; Size: TWMCSize; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0; MessageCode: TWMCMessageCode = WMC_TRANSACTION_END_DATA): Boolean;
 var
   Index:      Integer;
 {$IFDEF UseWMCopyData}
@@ -941,21 +956,21 @@ Result := False;
 If Size > 0 then
 {$IFDEF UseWMCopyData}
   begin
-    WMCopyData.dwData := BuildWParam(fID,MessageCode,UserCode);
-    WMCopyData.cbData := Size;
+    WMCopyData.dwData := PtrUInt(BuildWParam(fID,MessageCode,UserCode));
+    WMCopyData.cbData := DWord(Size);
     WMCopyData.lpData := @Data;
     If RecipientID = WMC_SendToAll then
       begin
         Result := fConnections.Count > 0;
         For Index := 0 to Pred(fConnections.Count) do
-          If Windows.SendMessage(PWMCConnectionInfo(fConnections[Index])^.WindowHandle,WM_COPYDATA,wParam(WindowHandle),{%H-}lParam(@WMCopyData)) = 0 then
+          If Windows.SendMessage(PWMCConnectionInfo(fConnections[Index])^.WindowHandle,WM_COPYDATA,wParam(WindowHandle),{%H-}lParam(@WMCopyData)) = WMC_RESULT_error then
             Result := False;
       end
     else
       begin
         Index := IndexOfConnection(RecipientID);
         If Index >= 0 then
-          Result := Windows.SendMessage(PWMCConnectionInfo(fConnections[Index])^.WindowHandle,WM_COPYDATA,wParam(WindowHandle),{%H-}lParam(@WMCopyData)) <> 0;
+          Result := Windows.SendMessage(PWMCConnectionInfo(fConnections[Index])^.WindowHandle,WM_COPYDATA,wParam(WindowHandle),{%H-}lParam(@WMCopyData)) <> WMC_RESULT_error;
       end;
   end;
 {$ELSE}
@@ -973,7 +988,7 @@ If Size > 0 then
       begin
         Index := IndexOfConnection(RecipientID);
         If Index >= 0 then
-          SendAsTransaction(PWMCConnectionInfo(fConnections[Index])^.WindowHandle);
+          Result := SendAsTransaction(PWMCConnectionInfo(fConnections[Index])^.WindowHandle);
       end;
   end;
 {$ENDIF}  
@@ -981,7 +996,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendString(const Value: String; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendString(const Value: String; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 {$IFDEF FPC}
 begin
 Result := SendData(PUTF8Char(Value)^,Length(Value),RecipientID,UserCode,WMC_TRANSACTION_END_STRING);
@@ -1001,16 +1016,16 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendInteger(Value: Integer; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendInteger(Value: Integer; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendLongInt(Value,RecipientID,UserCode);
+Result := SendInt32(Value,RecipientID,UserCode);
 end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommBase.SendFloat(Value: Single; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: Byte = 0): Boolean;
+Function TWinMsgCommBase.SendFloat(Value: Double; RecipientID: TWMCConnectionID = WMC_SendToAll; UserCode: TWMCUserCode = 0): Boolean;
 begin
-Result := SendSingle(Value,RecipientID,UserCode);
+Result := SendDouble(Value,RecipientID,UserCode);
 end;
 
 //------------------------------------------------------------------------------

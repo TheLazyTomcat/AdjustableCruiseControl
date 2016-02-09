@@ -11,9 +11,9 @@
 
   Client endpoint class
 
-  ©František Milt 2015-08-10
+  ©František Milt 2016-01-05
 
-  Version 1.2
+  Version 1.3.1
 
 ===============================================================================}
 unit WinMsgCommClient;
@@ -37,11 +37,11 @@ type
     Function GetServerOnline: Boolean;
     Function GetServerWindow: HWND;
   protected
-    Function ProcessMessage(SenderID: TWMCConnectionID; MessageCode, UserCode: Byte; Payload: lParam): lResult; override;
+    Function ProcessMessage(SenderID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam): lResult; override;
   public
     constructor Create(Window: TUtilityWindow = nil; Synchronous: Boolean = False; const MessageName: String = WMC_MessageName); override;
     destructor Destroy; override;
-    Function SendMessage(MessageCode, UserCode: Byte; Payload: lParam; {%H-}RecipientID: TWMCConnectionID = WMC_SendToAll): lResult; override;
+    Function SendMessage(MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam; {%H-}RecipientID: TWMCConnectionID = WMC_SendToAll): lResult; override;
     Function PingServer: Boolean;
   published
     property ServerOnline: Boolean read GetServerOnline;
@@ -83,7 +83,7 @@ end;
 {   TWinMsgCommClient - Protected methods                                      }
 {==============================================================================}
 
-Function TWinMsgCommClient.ProcessMessage(SenderID: TWMCConnectionID; MessageCode, UserCode: Byte; Payload: lParam): lResult;
+Function TWinMsgCommClient.ProcessMessage(SenderID: TWMCConnectionID; MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam): lResult;
 var
   Server:     PWMCConnectionInfo;
   AssignedID: lResult;
@@ -149,7 +149,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TWinMsgCommClient.SendMessage(MessageCode, UserCode: Byte; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult;
+Function TWinMsgCommClient.SendMessage(MessageCode: TWMCMessageCode; UserCode: TWMCUserCode; Payload: lParam; RecipientID: TWMCConnectionID = WMC_SendToAll): lResult;
 begin
 If ServerOnline then
   Result := SendMessageTo(ServerWindow,BuildWParam(ID,MessageCode,UserCode),Payload)
