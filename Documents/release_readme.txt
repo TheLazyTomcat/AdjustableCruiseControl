@@ -155,9 +155,9 @@ Fully supported with plugin:
   Euro Truck Simulator 2 1.22.2 Multi 64bit, DD & CD version
   Euro Truck Simulator 2 1.22.2 Multi 64bit, Steam version
   Euro Truck Simulator 2 1.22.2.3 - 1.22.2.4 Multi, DD & CD version
-  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.6 Multi, Steam version
+  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.7 Multi, Steam version
   Euro Truck Simulator 2 1.22.2.3 - 1.22.2.4 Multi 64bit, DD & CD version
-  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.6 Multi 64bit, Steam version
+  Euro Truck Simulator 2 1.22.2.3 - 1.22.2.7 Multi 64bit, Steam version
   American Truck Simulator 1.0.0 Multi, Steam version
 
 Partially supported:

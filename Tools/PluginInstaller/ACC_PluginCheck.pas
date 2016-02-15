@@ -41,7 +41,10 @@ uses
   {$ELSE}
     {$R '.\Resources\ExternalTester_64.res'}
   {$ENDIF}
-{$ENDIF}  
+{$ENDIF}
+
+var
+  DeferredDelete: String = '';
 
 //------------------------------------------------------------------------------
 
@@ -99,7 +102,13 @@ If ExtractTester(ExecFile) then
           end;
       end
     else Result := PCR_ET_NotStarted;
-    If not DeleteFile(ExecFile) then Result := PCR_ET_NotDeleted;
+    If DeleteFile(ExecFile) then
+      DeferredDelete := ''
+    else
+      begin
+        Result := PCR_ET_NotDeleted;
+        DeferredDelete := ExecFile;
+      end;
   end
 else Result := PCR_ET_NotExtracted;
 end;
@@ -148,5 +157,13 @@ If Is64bit then
 else
   Result := InternalPluginCheck(FilePath);
 end;
+ 
+//------------------------------------------------------------------------------
+
+initialization
+
+finalization
+  If DeferredDelete <> '' then
+    DeleteFile(DeferredDelete);
 
 end.
