@@ -18,15 +18,6 @@ const
   ACC_TIMER_ID_Splash = 1;
   ACC_TIMER_ID_Binder = 2;
 
-type
-{$IFDEF x64}
-  PtrInt  = Int64;
-  PtrUInt = UInt64;
-{$ELSE}
-  PtrInt  = LongInt;
-  PtrUInt = LongWord;
-{$ENDIF}
-
 var
   ACC_VersionShort: LongWord = 0;
   ACC_VersionLong:  Int64    = 0;
@@ -45,6 +36,7 @@ implementation
 uses
   SysUtils, WinFileInfo;
 
+{$message 'revisit'}
 Function UTF8ToString(UTF8Str: UTF8String): String;
 begin
 {$IFDEF Unicode}
@@ -87,17 +79,18 @@ end;
 procedure InitVersionInfo;
 begin
 with TWinFileInfo.Create(WFI_LS_LoadVersionInfo or WFI_LS_LoadFixedFileInfo or WFI_LS_DecodeFixedFileInfo) do
-  begin
-    ACC_VersionShort := VersionInfoFixedFileInfo.dwProductVersionMS;
-    ACC_VersionLong := VersionInfoFixedFileInfoDecoded.ProductVersionFull;
-    ACC_VersionShortStr := IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Major) + '.' +
-                           IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Minor);
-    ACC_VersionLongStr := ACC_VersionShortStr + '.' + IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Release);
-    ACC_BuildStr := {$IFDEF FPC}'L'{$ELSE}'D'{$ENDIF}{$IFDEF x64}+ '64'{$ELSE}+ '32'{$ENDIF} +
-                    ' #' + IntToStr(VersionInfoFixedFileInfoDecoded.FileVersionMembers.Build)
-                    {$IFDEF Debug}+ ' debug'{$ENDIF};
-    Free;
-  end;
+try
+  ACC_VersionShort := VersionInfoFixedFileInfo.dwProductVersionMS;
+  ACC_VersionLong := VersionInfoFixedFileInfoDecoded.ProductVersionFull;
+  ACC_VersionShortStr := IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Major) + '.' +
+                         IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Minor);
+  ACC_VersionLongStr := ACC_VersionShortStr + '.' + IntToStr(VersionInfoFixedFileInfoDecoded.ProductVersionMembers.Release);
+  ACC_BuildStr := {$IFDEF FPC}'L'{$ELSE}'D'{$ENDIF}{$IFDEF x64}+ '64'{$ELSE}+ '32'{$ENDIF} +
+                  ' #' + IntToStr(VersionInfoFixedFileInfoDecoded.FileVersionMembers.Build)
+                  {$IFDEF Debug}+ ' debug'{$ENDIF};
+finally
+  Free;
+end;
 end;
 
 //------------------------------------------------------------------------------

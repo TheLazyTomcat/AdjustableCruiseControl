@@ -52,6 +52,7 @@ type
 implementation
 
 uses
+  AuxTypes,
   ACC_Common, ACC_Strings;
 
 const

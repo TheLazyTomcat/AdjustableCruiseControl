@@ -64,12 +64,10 @@ const
   ACCSTR_UI_LIM_ActionsOnZeroLimit: Array[0..1] of String = ('Turn CC off','Set CC speed to...');
 
   // User interface - About
+var
+  ACCSTR_UI_CPY_Author: String = '';
+const
   ACCSTR_UI_CPY_ProgramVersion = 'Version of the program: ';
-{$IFDEF FPC}
-  ACCSTR_UI_CPY_Author         = #194 + #169 + ' 2013-2015 Franti' + #197 + #161 + 'ek Milt';
-{$ELSE}
-  ACCSTR_UI_CPY_Author         = '© 2013-2016 František Milt';
-{$ENDIF}
   ACCSTR_UI_CPY_Copyright      = 'All rights reserved';
 
   // User interface - Settings form - Bindings table
@@ -110,6 +108,7 @@ const
   ACCSTR_UI_SET_TIH_ModuleLoadTimer  = 'Time granted to a process to load all its modules before such process is accepted or rejected.' + sLineBreak +
                                        'Recommended value: 5000ms; Minimum value: 1000ms; Maximum value: 30000ms';
 
+  // User interface - Settings form - loading default settings
   ACCSTR_UI_SET_DEF_LoadDefaultSettings = 'All program settings, including speeds, key bindings or hidden variables, will be se to their default values.' + sLineBreak +
                                           'Are you sure you want to load default settings?';
 
@@ -133,7 +132,8 @@ const
 implementation
 
 uses
-  SysUtils;
+  SysUtils,
+  WinFileInfo;
 
 Function ACCSTR_UI_SET_BIND_InputText(Index: Integer): String;
 begin
@@ -159,5 +159,23 @@ else
   Result := '';
 end;
 end;
+
+//------------------------------------------------------------------------------
+
+procedure InitStrings;
+begin
+with TWinFileInfo.Create(WFI_LS_LoadVersionInfo) do
+try
+  If VersionInfoTranslationCount > 0 then
+    ACCSTR_UI_CPY_Author := VersionInfoValues[VersionInfoTranslations[0].LanguageStr,'LegalCopyright'];
+finally
+  Free;
+end;
+end;
+
+//==============================================================================
+
+initialization
+  InitStrings;
 
 end.
