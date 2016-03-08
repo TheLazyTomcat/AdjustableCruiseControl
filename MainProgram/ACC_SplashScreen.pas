@@ -12,7 +12,7 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Windows, Messages, Forms, Graphics,
+  Windows, Messages, Forms, Graphics, Classes,
   UtilityWindow, SimpleTimer;
 
 type
@@ -38,7 +38,6 @@ type
   private
     fApplication:         TApplication;
     fApplicationHandle:   HWND;
-    fLoadCallback:        TLoadCallback;
     fSplashForm:          TSplashForm;
     fAnimationTimer:      TSimpleTimer;
     fSplashBitmap:        TBitmap;
@@ -46,14 +45,18 @@ type
     fSplashSize:          TSize;
     fSplashBlendFunction: TBlendFunction;
     fAnimationTimeStamp:  TDateTime;
+    fOnLoadRequest:       TNotifyEvent;
   protected
     procedure PrepareSplash; virtual;
     Function ProgressFadeIn: Boolean; virtual;
     Function ProgressFadeOut: Boolean; virtual;
     procedure OnAnimationTimer(Sender: TObject); virtual;
+    procedure DoLoadRequest; virtual;
   public
-    constructor Create(UtilityWindow: TUtilityWindow; Application: TApplication; LoadCallback: TLoadCallback);
+    constructor Create(UtilityWindow: TUtilityWindow; Application: TApplication);
     destructor Destroy; override;
+    procedure Start; virtual;
+    property OnLoadRequest: TNotifyEvent read fOnLoadRequest write fOnLoadRequest;
   end;
 
 implementation
@@ -61,18 +64,18 @@ implementation
 {$R 'Resources\SplashImg.res'}
 
 uses
-  SysUtils, Classes, DateUtils,{$IFDEF FPC} Controls, InterfaceBase, Win32Extra,{$ENDIF}
+  SysUtils, DateUtils,{$IFDEF FPC} Controls, InterfaceBase, Win32Extra,{$ENDIF}
   ACC_Common;
 
 const
   // Splash screen constants
   
-  AnimState_Start        = 0;
-  AnimState_FadeIn       = 1;
-  AnimState_Loading      = 2;
-  AnimState_Waiting      = 3;
-  AnimState_FadeOut      = 4;
-  AnimState_Done         = 5;
+  AnimState_Start   = 0;
+  AnimState_FadeIn  = 1;
+  AnimState_Loading = 2;
+  AnimState_Waiting = 3;
+  AnimState_FadeOut = 4;
+  AnimState_Done    = 5;
 
   FadeInTime  = 500{ms};
   FadeOutTime = 250{ms};
@@ -109,13 +112,10 @@ end;
 procedure TSplashScreen.PrepareSplash;
 var
   ResourceStream: TResourceStream;
-{$IFDEF FPC}
   MemoryStream:   TMemoryStream;
-{$ENDIF}
 begin
 ResourceStream := TResourceStream.Create(hInstance,'splash_image',RT_RCDATA);
 try
-{$IFDEF FPC}
   MemoryStream := TMemoryStream.Create;
   try
     MemoryStream.CopyFrom(ResourceStream,0);
@@ -124,9 +124,6 @@ try
   finally
     MemoryStream.Free;
   end;
-{$ELSE}
-  fSplashBitmap.LoadFromStream(ResourceStream);
-{$ENDIF}
 finally
   ResourceStream.Free;
 end;
@@ -143,13 +140,11 @@ fSplashForm.ClientWidth := fSplashBitmap.Width;
 fSplashForm.ClientHeight := fSplashBitmap.Height;
 fSplashForm.ParentWindow := GetDesktopWindow;
 fSplashForm.Position := poScreenCenter;
-{$IFDEF FPC}
 fSplashForm.Left := fSplashForm.Monitor.Left + (fSplashForm.Monitor.Width - fSplashForm.ClientWidth) div 2;
 fSplashForm.Top := fSplashForm.Monitor.Top + (fSplashForm.Monitor.Height - fSplashForm.ClientHeight) div 2;
-{$ENDIF}
 SetWindowLong(fSplashForm.Handle,GWL_EXSTYLE,GetWindowLong(fSplashForm.Handle,GWL_EXSTYLE) or WS_EX_LAYERED or WS_EX_TOPMOST or WS_EX_TOOLWINDOW);
+// remove program from task bar
 SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) or WS_EX_TOOLWINDOW);
-fSplashForm.Show;
 end;
 
 //------------------------------------------------------------------------------
@@ -195,7 +190,7 @@ case fAnimationTimer.Tag of
 {---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   }
   AnimState_Loading:  begin
                         fAnimationTimeStamp := Now;
-                        fLoadCallback;
+                        DoLoadRequest;
                         fAnimationTimer.Tag := AnimState_Waiting;
                       end;
 {---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   }
@@ -203,11 +198,8 @@ case fAnimationTimer.Tag of
                         begin
                           fApplication.ShowMainForm := True;
                           SetWindowLong(fApplicationHandle,GWL_EXSTYLE,GetWindowLong(fApplicationHandle,GWL_EXSTYLE) and not WS_EX_TOOLWINDOW);
-                          {$IFDEF FPC}
                           ShowWindow(fApplicationHandle,SW_SHOW);
-                          {$ELSE}
                           SetForegroundWindow(fApplicationHandle);
-                          {$ENDIF}
                           fApplication.MainForm.Show;
                           fApplication.MainForm.BringToFront;
                           fAnimationTimer.Tag := AnimState_FadeOut;
@@ -224,11 +216,18 @@ case fAnimationTimer.Tag of
 end;
 end;
 
+//------------------------------------------------------------------------------
+
+procedure TSplashScreen.DoLoadRequest;
+begin
+If Assigned(fOnLoadRequest) then fOnLoadRequest(Self);
+end;
+
 {------------------------------------------------------------------------------}
 {   TSplashScreen // Public methods                                            }
 {------------------------------------------------------------------------------}
 
-constructor TSplashScreen.Create(UtilityWindow: TUtilityWindow; Application: TApplication; LoadCallback: TLoadCallback);
+constructor TSplashScreen.Create(UtilityWindow: TUtilityWindow; Application: TApplication);
 begin
 inherited Create;
 fApplication := Application;
@@ -237,7 +236,6 @@ fApplicationHandle := WidgetSet.AppHandle;
 {$ELSE}
 fApplicationHandle := fApplication.Handle;
 {$ENDIF}
-fLoadCallback := LoadCallback;
 fSplashForm := TSplashForm.CreateNew(nil);
 fAnimationTimer := TSimpleTimer.Create(UtilityWindow,ACC_TIMER_ID_Splash);
 fAnimationTimer.Interval := AnimationTimerInterval;
@@ -245,7 +243,6 @@ fAnimationTimer.Tag := AnimState_Start;
 fAnimationTimer.OnTimer := OnAnimationTimer;
 fSplashBitmap := TBitmap.Create;
 PrepareSplash;
-fAnimationTimer.OnTimer(nil);
 end;
 
 //------------------------------------------------------------------------------
@@ -256,6 +253,14 @@ fSplashBitmap.Free;
 fAnimationTimer.Free;
 fSplashForm.Free;
 inherited;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSplashScreen.Start;
+begin
+fSplashForm.Show;
+fAnimationTimer.OnTimer(nil);
 end;
 
 end.

@@ -56,6 +56,7 @@ type
     procedure WMCClient_OnValueRecived(Sender: TObject; {%H-}SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
     procedure DoPluginStateChange(Sender: TObject); virtual;
     procedure DoApplicationRestore(Sender: TObject); virtual;
+    procedure SplashScreen_OnLoadRequest(Sender: TObject); virtual;
   public
     constructor Create(LoadingUpdate: Boolean; const UpdateFile: String = '');
     destructor Destroy; override;
@@ -175,10 +176,7 @@ var
     If not fProcessBinder.Binded or not GameActive then
       If fTrayIcon.Visible then
         begin
-          fApplication.Restore;
-          fApplication.MainForm.Show;
-          SetForegroundWindow(fApplication.MainForm.Handle);
-          fTrayIcon.HideTrayIcon;
+          DoApplicationRestore(Self);
         end
       else
         begin
@@ -312,6 +310,13 @@ SetForegroundWindow(fApplication.MainForm.Handle);
 fTrayIcon.HideTrayIcon;
 end;
 
+//------------------------------------------------------------------------------
+
+procedure TACCManager.SplashScreen_OnLoadRequest(Sender: TObject);
+begin
+Load;
+end;
+
 {------------------------------------------------------------------------------}
 {   TACCManager // Public methods                                              }
 {------------------------------------------------------------------------------}
@@ -395,7 +400,11 @@ If Settings.StartMinimized and not LoadingUpdate then
 else
   begin
     If Settings.ShowSplashScreen and not FullscreenAppRunning then
-      fSplashScreen := TSplashScreen.Create(fUtilityWindow,fApplication,Load)
+      begin
+        fSplashScreen := TSplashScreen.Create(fUtilityWindow,fApplication);
+        fSplashScreen.OnLoadRequest := SplashScreen_OnLoadRequest;
+        fSplashScreen.Start;
+      end
     else
       begin
         If FullscreenAppRunning then
