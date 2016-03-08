@@ -93,8 +93,6 @@ Result := ShellAPI.Shell_NotifyIconW(dwMessage,PNOTIFYICONDATAW(lpData));
 Result := ShellAPI.Shell_NotifyIconA(dwMessage,PNOTIFYICONDATAA(lpData));
 {$ENDIF}
 end;
-
-end;
 {$ENDIF}
 
 {==============================================================================}
