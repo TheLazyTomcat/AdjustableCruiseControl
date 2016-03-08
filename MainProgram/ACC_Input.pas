@@ -17,7 +17,7 @@ uses
   ACC_Settings;
 
 const
-  InvalidInput: TInput = (PrimaryKey: -1; ShiftKey: -1);  
+  InvalidInput: TInput = (PrimaryKey: -1; ShiftKey: -1);
 
 type
 {==============================================================================}
@@ -99,7 +99,10 @@ type
 implementation
 
 uses
-  SysUtils;
+  SysUtils
+  {$IF Defined(FPC) and not Defined(Unicode)}
+  , LazUTF8
+  {$IFEND};
 
 const
   MAPVK_VK_TO_VSC    = 0;
@@ -219,8 +222,12 @@ procedure TInputManager.MessageHandler(var Msg: TMessage; var Handled: Boolean);
 begin
 If Msg.Msg = WM_INPUT then
   begin
-    If fMode <> [] then ProcessRawInput(Msg.LParam,Msg.WParam);
-    Handled := True;
+    If fMode <> [] then
+      begin
+        ProcessRawInput(Msg.LParam,Msg.WParam);
+        Handled := True;
+      end
+    else Handled := False;
   end;
 end;
 
@@ -367,6 +374,9 @@ end;
 If Flag_E0 then ScanCode := ScanCode or $100;
 SetLength(Result,32);
 SetLength(Result,GetKeyNameText(ScanCode shl 16,PChar(Result),Length(Result)));
+{$IF Defined(FPC) and not Defined(Unicode)}
+Result := WinCPToUTF8(Result);
+{$IFEND}
 If (Length(Result) <= 0) and NumberForUnknown then
   Result := '0x' + IntToHex(VirtualKey,2);
 end;
@@ -424,7 +434,7 @@ try
   RawInputDevice^.dwFlags := RIDEV_INPUTSINK;
   RawInputDevice^.hwndTarget := fUtilityWindow.WindowHandle;
   If not RegisterRawInputDevices(RawInputDevice,1,SizeOf(TRawInputDevice)) then
-    raise Exception.Create('TInputManager.Create: Raw input registration failed.');
+    raise Exception.CreateFmt('TInputManager.Create: Raw input registration failed (0x.8x).',[GetLastError]);
 finally
   Dispose(RawInputDevice);
 end;
