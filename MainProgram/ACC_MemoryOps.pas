@@ -12,6 +12,7 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
+  AuxTypes,
   ACC_GamesData;
 
 type
@@ -27,8 +28,8 @@ type
     fCanReadVehicleSpeed: Boolean;
   protected
     class Function ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer; {%H-}Ptr64: Boolean): Boolean; virtual;
-    class Function WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
-    class Function ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
+    class Function WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: PtrUInt; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
+    class Function ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: PtrUInt; Value: Pointer; Ptr64: Boolean): Boolean; virtual;
     Function PointerDataByIndex(Index: Integer): TPointerData; virtual;
     Function WriteFloat(PointerIndex: Integer; Value: Single): Boolean; virtual;
     Function ReadFloat(PointerIndex: Integer; out Value: Single): Boolean; virtual;
@@ -73,8 +74,8 @@ const
 class Function TMemoryOperator.ResolveAddress(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; out Address: Pointer; Ptr64: Boolean): Boolean;
 var
   i:        Integer;
-  Temp:     LongWord;
-  PtrSize:  LongWord;
+  Temp:     PtrUInt;
+  PtrSize:  PtrUInt;
 begin
 Result := False;
 {$IFDEF x64}
@@ -111,10 +112,10 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TMemoryOperator.WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean;
+class Function TMemoryOperator.WriteValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: PtrUInt; Value: Pointer; Ptr64: Boolean): Boolean;
 var
   ValueAddress: Pointer;
-  Temp:         LongWord;
+  Temp:         PtrUInt;
 begin
 Result := False;
 If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress,Ptr64) then
@@ -126,10 +127,10 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TMemoryOperator.ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: LongWord; Value: Pointer; Ptr64: Boolean): Boolean;
+class Function TMemoryOperator.ReadValue(ProcessHandle: THandle; BaseAddress: Pointer; const PointerData: TPointerData; Size: PtrUInt; Value: Pointer; Ptr64: Boolean): Boolean;
 var
   ValueAddress: Pointer;
-  Temp:         LongWord;
+  Temp:         PtrUInt;
 begin
 Result := False;
 If ResolveAddress(ProcessHandle,BaseAddress,PointerData,ValueAddress,Ptr64) then
@@ -218,11 +219,13 @@ end;
 Function TMemoryOperator.WriteBool(PointerIndex: Integer; Value: Boolean): Boolean;
 var
   PointerData:  TPointerData;
+  TempValue:    ByteBool;
 begin
 PointerData := PointerDataByIndex(PointerIndex);
+TempValue := Value;
 Result := WriteValue(fGameData.ProcessInfo.ProcessHandle,
                      fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                     PointerData,SizeOf(Value),@Value,fGameData.ProcessInfo.Is64bitProcess);
+                     PointerData,SizeOf(TempValue),@TempValue,fGameData.ProcessInfo.Is64bitProcess);
 end;
 
 //------------------------------------------------------------------------------
@@ -230,11 +233,13 @@ end;
 Function TMemoryOperator.ReadBool(PointerIndex: Integer; out Value: Boolean): Boolean;
 var
   PointerData:  TPointerData;
+  TempValue:    ByteBool;
 begin
 PointerData := PointerDataByIndex(PointerIndex);
 Result := ReadValue(fGameData.ProcessInfo.ProcessHandle,
-                     fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
-                     PointerData,SizeOf(Value),@Value,fGameData.ProcessInfo.Is64bitProcess);
+                    fGameData.Modules[PointerData.ModuleIndex].RuntimeInfo.BaseAddress,
+                    PointerData,SizeOf(TempValue),@TempValue,fGameData.ProcessInfo.Is64bitProcess);
+Value := TempValue;
 end;
 
 {------------------------------------------------------------------------------}
@@ -280,10 +285,9 @@ end;
 Function TMemoryOperator.ReadCCSpeed(out Value: Single): Boolean;
 begin
 If fActive then
-  begin
-    Result := ReadFloat(PTR_IDX_CCSpeed,Value);
-  end
-else Result := False;
+  Result := ReadFloat(PTR_IDX_CCSpeed,Value)
+else
+  Result := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -291,10 +295,9 @@ end;
 Function TMemoryOperator.ReadCCStatus(out Value: Boolean): Boolean;
 begin
 If fActive then
-  begin
-    Result := ReadBool(PTR_IDX_CCStatus,Value);
-  end
-else Result := False;
+  Result := ReadBool(PTR_IDX_CCStatus,Value)
+else
+  Result := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -302,10 +305,9 @@ end;
 Function TMemoryOperator.WriteCCSpeed(Value: Single): Boolean;
 begin
 If fActive then
-  begin
-    Result := WriteFloat(PTR_IDX_CCSpeed,Value);
-  end
-else Result := False;
+  Result := WriteFloat(PTR_IDX_CCSpeed,Value)
+else
+  Result := False;
 end;
 
 //------------------------------------------------------------------------------
@@ -313,10 +315,9 @@ end;
 Function TMemoryOperator.WriteCCStatus(Value: Boolean): Boolean;
 begin
 If fActive then
-  begin
-    Result :=  WriteBool(PTR_IDX_CCStatus,Value);
-  end
-else Result := False;
+  Result :=  WriteBool(PTR_IDX_CCStatus,Value)
+else
+  Result := False;
 end;
 
 end.
