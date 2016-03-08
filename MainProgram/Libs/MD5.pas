@@ -9,9 +9,9 @@
 
   MD5 Hash Calculation
 
-  ©František Milt 2015-12-13
+  ©František Milt 2016-03-01
 
-  Version 1.5.4
+  Version 1.5.5
 
 ===============================================================================}
 unit MD5;
@@ -98,7 +98,14 @@ Function MD5_Hash(const Buffer; Size: TMemSize): TMD5Hash;
 implementation
 
 uses
-  SysUtils, Math;
+  SysUtils, Math
+  {$IF Defined(FPC) and not Defined(Unicode)}
+  (*
+    If compiler throws error that LazUTF8 unit cannot be found, you have to
+    add LazUtils to required packages (Project > Project Inspector).
+  *)
+  , LazUTF8
+  {$IFEND};
 
 const
   ChunkSize       = 64;                           // 512 bits
@@ -378,7 +385,11 @@ Function FileMD5(const FileName: String): TMD5Hash;
 var
   FileStream: TFileStream;
 begin
+{$IF Defined(FPC) and not Defined(Unicode)}
+FileStream := TFileStream.Create(UTF8ToSys(FileName), fmOpenRead or fmShareDenyWrite);
+{$ELSE}
 FileStream := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+{$IFEND}
 try
   Result := StreamMD5(FileStream);
 finally

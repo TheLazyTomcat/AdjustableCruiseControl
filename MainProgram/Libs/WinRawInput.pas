@@ -1,30 +1,78 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
+{===============================================================================
+
+  WinRawInput
+  
+  Constants, structures, external functions definitions and macros (here
+  implemented as normal functions) used in handling of raw input in Windows OS.
+
+  ©František Milt 2016-02-12
+
+  Version 1.0
+
+===============================================================================}
 unit WinRawInput;
+
+{$IF defined(CPU64) or defined(CPU64BITS)}
+  {$DEFINE 64bit}
+{$ELSEIF defined(CPU16)}
+  {$MESSAGE FATAL 'Unsupported CPU.'}
+{$ELSE}
+  {$DEFINE 32bit}
+{$IFEND}
+
+{$IF not(defined(MSWINDOWS) or defined(WINDOWS))}
+  {$MESSAGE FATAL 'Unsupported operating system.'}
+{$IFEND}
 
 interface
 
 uses
   Windows;
 
+{
+  Basic types used in Raw Input structures and function parameters.
+}
 type
   USHORT = Word;
   LONG   = LongInt;
   INT    = Integer;
   HANDLE = THandle;
-  QWORD  = UInt64; 
+  QWORD  = UInt64;
 
+  HRAWINPUT = THandle;
+
+{==============================================================================}
+{   Raw Input constants                                                        }
+{==============================================================================}
 const
+{
+  Codes of windows messages tied to raw input.
+}
   WM_INPUT               = $00FF;
   WM_INPUT_DEVICE_CHANGE = $00FE;
 
-  //WM_INPUT / wParam
+{
+  Possible values of wParam in WM_INPUT message.
+}
   RIM_INPUT     = 0;
   RIM_INPUTSINK = 1;
 
-  //WM_INPUT_DEVICE_CHANGE / wParam
+{
+  Possible values of wParam in WM_INPUT_DEVICE_CHANGEmessage.
+}
   GIDC_ARRIVAL = 1;
   GIDC_REMOVAL = 2;
 
-  //RAWINPUTDEVICE.dwFlags
+{
+  Values for field RAWINPUTDEVICE.dwFlags.
+}
   RIDEV_APPKEYS      = $00000400;
   RIDEV_CAPTUREMOUSE = $00000200;
   RIDEV_DEVNOTIFY    = $00002000;
@@ -36,18 +84,25 @@ const
   RIDEV_PAGEONLY     = $00000020;
   RIDEV_REMOVE       = $00000001;
 
-  //RAWINPUTDEVICELIST.dwType, RAWINPUTHEADER.dwType, RID_DEVICE_INFO.dwType
+{
+  Values for fields RAWINPUTDEVICELIST.dwType, RAWINPUTHEADER.dwType and
+  RID_DEVICE_INFO.dwType.
+}
   RIM_TYPEHID      = 2;
   RIM_TYPEKEYBOARD = 1;
   RIM_TYPEMOUSE    = 0;
 
-  //RAWMOUSE.usFlags
+{
+  Values for field RAWMOUSE.usFlags.
+}
   MOUSE_ATTRIBUTES_CHANGED = $04;
   MOUSE_MOVE_RELATIVE      = $00;
   MOUSE_MOVE_ABSOLUTE      = $01;
   MOUSE_VIRTUAL_DESKTOP    = $02;
 
-  //RAWMOUSE.usButtonFlags
+{
+  Values for field RAWMOUSE.usButtonFlags.
+}
   RI_MOUSE_LEFT_BUTTON_DOWN   = $0001;
   RI_MOUSE_LEFT_BUTTON_UP     = $0002;
   RI_MOUSE_MIDDLE_BUTTON_DOWN = $0010;
@@ -66,30 +121,41 @@ const
   RI_MOUSE_BUTTON_5_UP        = $0200;
   RI_MOUSE_WHEEL              = $0400;
 
-  //RAWKEYBOARD.Flags
+{
+  Values for field RAWKEYBOARD.Flags.
+}
   RI_KEY_BREAK = 1;
   RI_KEY_E0    = 2;
   RI_KEY_E1    = 4;
   RI_KEY_MAKE  = 0;
 
-
-  //GetRawInputData / uiCommand
+{
+  Values for parameter uiCommand in function GetRawInputData.
+}
   RID_HEADER = $10000005;
   RID_INPUT  = $10000003;
 
-  //GetRawInputDeviceInfo / uiCommand
+{
+  Values for parameter uiCommand in function GetRawInputDeviceInfo.
+}
   RIDI_DEVICENAME    = $20000007;
   RIDI_DEVICEINFO    = $2000000b;
   RIDI_PREPARSEDDATA = $20000005;
 
+{
+  Other raw input constants.
+}
+  KEYBOARD_OVERRUN_MAKE_CODE = $FF;
 
-//==============================================================================
+
+{==============================================================================}
+{   Raw Input structures                                                       }
+{==============================================================================}
 
 type
-  HRAWINPUT = THandle;
-
-//------------------------------------------------------------------------------
-
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645565(v=vs.85).aspx
+}
   tagRAWINPUTDEVICE = record
     usUsagePage:  USHORT;
     usUsage:      USHORT;
@@ -102,11 +168,14 @@ type
   PRAWINPUTDEVICE = ^TRAWINPUTDEVICE;
  LPRAWINPUTDEVICE = ^TRAWINPUTDEVICE;
 
-  TRAWINPUTDEVICEARRAY = Array[0..High(Word)] of TRAWINPUTDEVICE;
+  TRAWINPUTDEVICEARRAY = array[0..High(Word)] of TRAWINPUTDEVICE;
   PRAWINPUTDEVICEARRAY = ^TRAWINPUTDEVICEARRAY;
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645568(v=vs.85).aspx
+}
   tagRAWINPUTDEVICELIST = record
     hDevice:  HANDLE;
     dwType:   DWORD;
@@ -116,8 +185,11 @@ type
   TRAWINPUTDEVICELIST = tagRAWINPUTDEVICELIST;
   PRAWINPUTDEVICELIST = ^TRAWINPUTDEVICELIST;
 
-//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------  
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645571(v=vs.85).aspx
+}
   tagRAWINPUTHEADER = record
     dwType:   DWORD;
     dwSize:   DWORD;
@@ -131,10 +203,13 @@ type
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645578(v=vs.85).aspx
+}
   tagRAWMOUSE = record
     usFlags:  USHORT;
     case Integer of
-      0:  (ulButtons: ULONG);
+      0:  (ulButtons:     ULONG);
       1:  (usButtonFlags: USHORT;
            usButtonsData: USHORT;
     ulRawButtons:       ULONG;
@@ -150,6 +225,9 @@ type
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645575(v=vs.85).aspx
+}
   tagRAWKEYBOARD = record
     MakeCode:         USHORT;
     Flags:            USHORT;
@@ -166,19 +244,25 @@ type
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645549(v=vs.85).aspx
+}
   tagRAWHID = record
     dwSizeHid:  DWORD;
     dwCount:    DWORD;
-    bRawData:   Byte;
+    bRawData:   Byte;   // this is actually a variable-length array of bytes
   end;
 
    RAWHID = tagRAWHID;
   TRAWHID = tagRAWHID;
   PRAWHID = ^TRAWHID;
- LPRAWHID = ^TRAWHID; 
+ LPRAWHID = ^TRAWHID;
 
 //------------------------------------------------------------------------------
-
+ 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645562(v=vs.85).aspx
+}
   tagRAWINPUT = record
     header: RAWINPUTHEADER;
     case Integer of
@@ -196,11 +280,14 @@ type
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645589(v=vs.85).aspx
+}
   tagRID_DEVICE_INFO_MOUSE = record
     dwId:                 DWORD;
     dwNumberOfButtons:    DWORD;
     dwSampleRate:         DWORD;
-    fHasHorizontalWheel:  BOOL;
+    fHasHorizontalWheel:  BOOL;   // supported only from Windows Vista up
   end;
 
    RID_DEVICE_INFO_MOUSE = tagRID_DEVICE_INFO_MOUSE;
@@ -209,6 +296,9 @@ type
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645587(v=vs.85).aspx
+}
   tagRID_DEVICE_INFO_KEYBOARD = record
     dwType:                 DWORD;
     dwSubType:              DWORD;
@@ -224,6 +314,9 @@ type
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645584(v=vs.85).aspx
+}
   tagRID_DEVICE_INFO_HID = record
     dwVendorId:       DWORD;
     dwProductId:      DWORD;
@@ -238,6 +331,9 @@ type
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645581(v=vs.85).aspx
+}
   tagRID_DEVICE_INFO = record
     cbSize: DWORD;
     case dwType: DWORD of
@@ -251,8 +347,13 @@ type
   PRID_DEVICE_INFO = ^TRID_DEVICE_INFO;
  LPRID_DEVICE_INFO = ^TRID_DEVICE_INFO;  
 
-//==============================================================================
+{==============================================================================}
+{   Raw Input functions                                                        }
+{==============================================================================}
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645594(v=vs.85).aspx
+}
 Function DefRawInputProc(
             paRawInput:   PPRAWINPUT;
             nInput:       INT;
@@ -260,22 +361,33 @@ Function DefRawInputProc(
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645595(v=vs.85).aspx
+
+  There are issues with memory alignment, see linked description for details.
+}
 Function GetRawInputBuffer(
             pData:        PRAWINPUT;
-            pcbSize:      PUINT;
+            pcbSize:      PUINT; 
             cbSizeHeader: UINT): UINT; stdcall; external user32;
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645596(v=vs.85).aspx
+}
 Function GetRawInputData(
             hRawInput:    HRAWINPUT;
             uiCommand:    UINT;
-            pData:        Pointer;
+            pData:        Pointer;  // must be aligned by 8 bytes on Win64
             pcbSize:      PUINT;
             cbSizeHeader: UINT): UINT; stdcall; external user32;
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645597(v=vs.85).aspx
+}
 Function GetRawInputDeviceInfo(
             hDevice:    THandle;
             uiCommand:  UINT;
@@ -286,16 +398,19 @@ Function GetRawInputDeviceInfoA(
             hDevice:    THandle;
             uiCommand:  UINT;
             pData:      Pointer;
-            pcbSize:    PUINT): UINT; stdcall; external user32 name 'GetRawInputDeviceInfoA';
+            pcbSize:    PUINT): UINT; stdcall; external user32;
 
 Function GetRawInputDeviceInfoW(
             hDevice:    THandle;
             uiCommand:  UINT;
             pData:      Pointer;
-            pcbSize:    PUINT): UINT; stdcall; external user32 name 'GetRawInputDeviceInfoW';
+            pcbSize:    PUINT): UINT; stdcall; external user32;
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645598(v=vs.85).aspx
+}
 Function GetRawInputDeviceList(
             pRawInputDeviceLis: PRAWINPUTDEVICELIST;
             puiNumDevices:      PUINT;
@@ -303,6 +418,9 @@ Function GetRawInputDeviceList(
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645599(v=vs.85).aspx
+}
 Function GetRegisteredRawInputDevices(
             pRawInputDevices: PRAWINPUTDEVICE;
             puiNumDevices:    PUINT;
@@ -310,46 +428,50 @@ Function GetRegisteredRawInputDevices(
 
 //------------------------------------------------------------------------------
 
+{
+  https://msdn.microsoft.com/en-us/library/windows/desktop/ms645600(v=vs.85).aspx
+}
 Function RegisterRawInputDevices(
             pRawInputDevices: PRAWINPUTDEVICE;
             uiNumDevices:     UINT;
             cbSize:           UINT): BOOL; stdcall; external user32;
 
-//==============================================================================
+{==============================================================================}
+{   Raw Input macros                                                           }
+{==============================================================================}
 
 Function GET_RAWINPUT_CODE_WPARAM(wParam: WPARAM): WPARAM;
+Function RAWINPUT_ALIGN(x: Pointer): Pointer;
 Function NEXTRAWINPUTBLOCK(ptr: PRAWINPUT): PRAWINPUT;
 
 implementation
 
-type
-{$IFDEF x64}
-  PtrUInt = UInt64;
-{$ELSE}
-  PtrUint = LongWord;
-{$ENDIF}
+uses
+  AuxTypes;
+
+//------------------------------------------------------------------------------
 
 Function GET_RAWINPUT_CODE_WPARAM(wParam: WPARAM): WPARAM;
 begin
 Result := wParam and $FF;
 end;
 
+//------------------------------------------------------------------------------
+
 Function RAWINPUT_ALIGN(x: Pointer): Pointer;
 begin
-{$IFDEF x64}
-Result := {%H-}Pointer(({%H-}PtrUInt(x) + SizeOf(QWORD) - 1) and not (SizeOf(QWORD) - 1));
+{$IFDEF 64bit}
+Result := {%H-}Pointer(({%H-}PtrUInt(x) + (SizeOf(QWORD) - 1)) and not (SizeOf(QWORD) - 1));
 {$ELSE}
-Result := {%H-}Pointer((Int64({%H-}PtrUInt(x)) + SizeOf(DWORD) - 1) and not (SizeOf(DWORD) - 1));
+Result := {%H-}Pointer(({%H-}PtrUInt(x) + (SizeOf(DWORD) - 1)) and not (SizeOf(DWORD) - 1));
 {$ENDIF}
 end;
 
+//------------------------------------------------------------------------------
+
 Function NEXTRAWINPUTBLOCK(ptr: PRAWINPUT): PRAWINPUT;
 begin
-{$IFDEF x64}
 Result := PRAWINPUT(RAWINPUT_ALIGN({%H-}Pointer({%H-}PtrUInt(ptr) + ptr^.header.dwSize)));
-{$ELSE}
-Result := PRAWINPUT(RAWINPUT_ALIGN({%H-}Pointer(Int64({%H-}PtrUInt(ptr)) + ptr^.header.dwSize)));
-{$ENDIF}
 end;
 
 end.

@@ -12,7 +12,7 @@ interface
 {$INCLUDE ACC_Defs.inc}
 
 uses
-  Windows, Messages, Graphics, Forms, Menus,
+  Windows, Messages, Graphics, Forms, Menus, Classes,
   UtilityWindow;
 
 type
@@ -44,14 +44,16 @@ type
 {==============================================================================}
   TTrayIcon = class(TObject)
   private
-    fUtilityWindow:   TUtilityWindow;
-    fApplication:     TApplication;
-    fPopupMenu:       TPopupMenu;
-    fMessageID:       LongWord;
-    fIcon:            TIcon;
-    fIconData:        TNotifyIconData;
-    fVisible:         Boolean;
+    fUtilityWindow:     TUtilityWindow;
+    fApplication:       TApplication;
+    fPopupMenu:         TPopupMenu;
+    fMessageID:         LongWord;
+    fIcon:              TIcon;
+    fIconData:          TNotifyIconData;
+    fVisible:           Boolean;
+    fOnRestoreRequest:  TNotifyEvent;
   protected
+    procedure DoRestoreRequest; virtual;
     procedure LoadIconFromResources; virtual;
     procedure MessageHandler(var Msg: TMessage; var Handled: Boolean); virtual;
     procedure PopupMenu_Restore(Sender: TObject); virtual;
@@ -66,6 +68,7 @@ type
     procedure HideTrayIcon; virtual;
   published
     property Visible: Boolean read fVisible;
+    property OnRestoreRequest: TNotifyEvent read fOnRestoreRequest write fOnRestoreRequest;
   end;
 
 implementation
@@ -73,12 +76,24 @@ implementation
 {$R 'Resources\TrayIcon.res'}
 
 uses
-  SysUtils, Classes, ShellAPI, ACC_Strings;
+  SysUtils, ShellAPI, Math, ACC_Strings
+{$IFDEF FPC}
+  ,InterfaceBase
+  {$IFNDEF Unicode}
+  ,LazUTF8
+  {$ENDIF}
+{$ENDIF};
 
 {$IFDEF FPC}
 Function Shell_NotifyIcon(dwMessage: DWORD; lpdata: PNotifyIconData): BOOL;
 begin
+{$IFDEF Unicode}
+Result := ShellAPI.Shell_NotifyIconW(dwMessage,PNOTIFYICONDATAW(lpData));
+{$ELSE}
 Result := ShellAPI.Shell_NotifyIconA(dwMessage,PNOTIFYICONDATAA(lpData));
+{$ENDIF}
+end;
+
 end;
 {$ENDIF}
 
@@ -91,7 +106,14 @@ end;
 {------------------------------------------------------------------------------}
 {   TTrayIcon // Protected methods                                             }
 {------------------------------------------------------------------------------}
-  
+
+procedure TTrayIcon.DoRestoreRequest;
+begin
+If Assigned(fOnRestoreRequest) then fOnRestoreRequest(Self);
+end;
+
+//------------------------------------------------------------------------------
+
 procedure TTrayIcon.LoadIconFromResources;
 var
   ResStream:  TResourceStream;
@@ -114,16 +136,17 @@ Handled := False;
 If Msg.Msg = fMessageID then
   case Msg.LParam of
     WM_RBUTTONDOWN: begin
-                      SetForegroundWindow(fApplication.MainForm.Handle);
+                    {$IFDEF FPC}
+                      SetForegroundWindow(WidgetSet.AppHandle);
+                    {$ELSE}
+                      SetForegroundWindow(fApplication.Handle);
+                    {$ENDIF}
                       GetCursorPos({%H-}PopupPoint);
                       fPopupMenu.Popup(PopupPoint.X,PopupPoint.Y);
                       Handled := True;
                     end;
     WM_LBUTTONDOWN: begin
-                      Application.Restore;
-                      fApplication.MainForm.Show;
-                      SetForegroundWindow(fApplication.MainForm.Handle);
-                      HideTrayIcon;
+                      DoRestoreRequest;
                       Handled := True;
                     end;
   end
@@ -133,10 +156,7 @@ end;
 
 procedure TTrayIcon.PopupMenu_Restore(Sender: TObject);
 begin
-fApplication.Restore;
-fApplication.MainForm.Show;
-SetForegroundWindow(fApplication.MainForm.Handle);
-HideTrayIcon;
+DoRestoreRequest;
 end;
 
 //------------------------------------------------------------------------------
@@ -175,7 +195,11 @@ fUtilityWindow := UtilityWindow;
 fUtilityWindow.OnMessage.Add(MessageHandler);
 fApplication := Application;
 BuildPopupMenu;
+{$IF Defined(FPC) and not Defined(Unicode)}
+fMessageID := RegisterWindowMessage(PChar(UTF8ToWinCP(ACCSTR_TI_MessageName)));
+{$ELSE}
 fMessageID := RegisterWindowMessage(PChar(ACCSTR_TI_MessageName));
+{$IFEND}
 fIcon := TIcon.Create;
 LoadIconFromResources;
 with fIconData do
@@ -213,7 +237,11 @@ end;
 
 procedure TTrayIcon.SetTipText(IconTipText: String);
 begin
-StrPLCopy(PChar(@fIconData.szTip),IconTipText,SizeOf(fIconData.szTip) - 1);
+FillChar(fIconData.szTip,SizeOf(fIconData.szTip),0);
+{$IF Defined(FPC) and not Defined(Unicode)}
+IconTipText := UTF8ToWinCP(IconTipText);
+{$IFEND}
+Move(PChar(IconTipText)^,Addr(fIconData.szTip)^,Min(Length(IconTipText),Length(fIconData.szTip) - 1) * SizeOf(Char));
 UpdateTrayIcon;
 end;
 

@@ -9,9 +9,9 @@
 
   BitVector classes
 
-  ©František Milt 2016-01-05
+  ©František Milt 2016-03-01
 
-  Version 1.0 alpha (needs testing) 
+  Version 1.0.1 
 
 ===============================================================================}
 unit BitVector;
@@ -140,7 +140,14 @@ type
 implementation
 
 uses
-  SysUtils, Math;
+  SysUtils, Math
+  {$IF Defined(FPC) and not Defined(Unicode)}
+  (*
+    If compiler throws error that LazUTF8 unit cannot be found, you have to
+    add LazUtils to required packages (Project > Project Inspector).
+  *)
+  , LazUTF8
+  {$IFEND};
 
 const
   AllocDeltaBits  = 32;
@@ -784,9 +791,15 @@ var
   WorkByte: Byte;
 
   Function ScanByte(Value: Byte): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 0 to 7 do
-      If (Value shr Result) and 1 <> 0 then Exit;
+    For ii := 0 to 7 do
+      If (Value shr ii) and 1 <> 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVector.FirstSet.ScanByte: Operation not allowed.');
   end;
 
@@ -802,8 +815,12 @@ If fCount > 0 then
             Exit;
           end;
       end;
-    For Result := (fCount and not 7) to Pred(fCount) do
-      If GetBit_LL(Result) then Exit;
+    For i := (fCount and not 7) to Pred(fCount) do
+      If GetBit_LL(i) then
+        begin
+          Result := i;
+          Exit;
+        end;
     Result := -1;
   end
 else Result := -1;
@@ -817,9 +834,15 @@ var
   WorkByte: Byte;
 
   Function ScanByte(Value: Byte): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 0 to 7 do
-      If (Value shr Result) and 1 = 0 then Exit;
+    For ii := 0 to 7 do
+      If (Value shr ii) and 1 = 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVector.FirstClean.ScanByte: Operation not allowed.');
   end;
 
@@ -835,8 +858,12 @@ If fCount > 0 then
             Exit;
           end;
       end;
-    For Result := (fCount and not 7) to Pred(fCount) do
-      If not GetBit_LL(Result) then Exit;
+    For i := (fCount and not 7) to Pred(fCount) do
+      If not GetBit_LL(i) then
+        begin
+          Result := i;
+          Exit;
+        end;
     Result := -1;
   end
 else Result := -1;
@@ -850,17 +877,27 @@ var
   WorkByte: Byte;
 
   Function ScanByte(Value: Byte): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 7 downto 0 do
-      If (Value shr Result) and 1 <> 0 then Exit;
+    For ii := 7 downto 0 do
+      If (Value shr ii) and 1 <> 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVector.LastSet.ScanByte: Operation not allowed.');
   end;
 
 begin
 If fCount > 0 then
   begin
-    For Result := Pred(fCount) downto (fCount and not 7) do
-      If GetBit_LL(Result) then Exit;
+    For i := Pred(fCount) downto (fCount and not 7) do
+      If GetBit_LL(i) then
+        begin
+          Result := i;
+          Exit;
+        end;
     For i := Pred(fCount shr 3) downto 0 do
       begin
         WorkByte := {%H-}PByte({%H-}PtrUInt(fMemory) + PtrUInt(i))^;
@@ -883,17 +920,27 @@ var
   WorkByte: Byte;
 
   Function ScanByte(Value: Byte): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 7 downto 0 do
-      If (Value shr Result) and 1 = 0 then Exit;
+    For ii := 7 downto 0 do
+      If (Value shr ii) and 1 = 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVector.LastSet.ScanByte: Operation not allowed.');
   end;
 
 begin
 If fCount > 0 then
   begin
-    For Result := Pred(fCount) downto (fCount and not 7) do
-      If not GetBit_LL(Result) then Exit;
+    For i := Pred(fCount) downto (fCount and not 7) do
+      If not GetBit_LL(i) then
+        begin
+          Result := i;
+          Exit;
+        end;
     For i := Pred(fCount shr 3) downto 0 do
       begin
         WorkByte := {%H-}PByte({%H-}PtrUInt(fMemory) + PtrUInt(i))^;
@@ -1164,7 +1211,11 @@ procedure TBitVector.SaveToFile(const FileName: String);
 var
   FileStream: TFileStream;
 begin
+{$IF Defined(FPC) and not Defined(Unicode)}
+FileStream := TFileStream.Create(UTF8ToSys(FileName),fmCreate or fmShareExclusive);
+{$ELSE}
 FileStream := TFileStream.Create(FileName,fmCreate or fmShareExclusive);
+{$IFEND}
 try
   SaveToStream(FileStream);
 finally
@@ -1178,7 +1229,11 @@ procedure TBitVector.LoadFromFile(const FileName: String);
 var
   FileStream: TFileStream;
 begin
+{$IF Defined(FPC) and not Defined(Unicode)}
+FileStream := TFileStream.Create(UTF8ToSys(FileName),fmOpenRead or fmShareDenyWrite);
+{$ELSE}
 FileStream := TFileStream.Create(FileName,fmOpenRead or fmShareDenyWrite);
+{$IFEND}
 try
   LoadFromStream(FileStream);
 finally
@@ -1239,9 +1294,15 @@ var
   Buffer: UInt32;
 
   Function ScanBuffer(Value: UInt32): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 0 to 31 do
-      If (Value shr Result) and 1 <> 0 then Exit;
+    For ii := 0 to 31 do
+      If (Value shr ii) and 1 <> 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVectorStatic32.FirstSet.ScanBuffer: Operation not allowed.');
   end;
 
@@ -1271,9 +1332,15 @@ var
   Buffer: UInt32;
 
   Function ScanBuffer(Value: UInt32): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 0 to 31 do
-      If (Value shr Result) and 1 = 0 then Exit;
+    For ii := 0 to 31 do
+      If (Value shr ii) and 1 = 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVectorStatic32.FirstClean.ScanBuffer: Operation not allowed.');
   end;
 
@@ -1303,9 +1370,15 @@ var
   Buffer: UInt32;
 
   Function ScanBuffer(Value: UInt32): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 31 downto 0 do
-      If (Value shr Result) and 1 <> 0 then Exit;
+    For ii := 31 downto 0 do
+      If (Value shr ii) and 1 <> 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVectorStatic32.LastSet.ScanBuffer: Operation not allowed.');
   end;
 
@@ -1335,9 +1408,15 @@ var
   Buffer: UInt32;
 
   Function ScanBuffer(Value: UInt32): Integer;
+  var
+    ii: Integer;
   begin
-    For Result := 31 downto 0 do
-      If (Value shr Result) and 1 = 0 then Exit;
+    For ii := 31 downto 0 do
+      If (Value shr ii) and 1 = 0 then
+        begin
+          Result := ii;
+          Exit;
+        end;
     raise Exception.Create('TBitVectorStatic32.LastClean.ScanBuffer: Operation not allowed.');
   end;
 

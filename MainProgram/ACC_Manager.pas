@@ -55,6 +55,7 @@ type
     procedure ProcessBinder_OnGameUnbind(Sender: TObject); virtual;
     procedure WMCClient_OnValueRecived(Sender: TObject; {%H-}SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
     procedure DoPluginStateChange(Sender: TObject); virtual;
+    procedure DoApplicationRestore(Sender: TObject); virtual;
   public
     constructor Create(LoadingUpdate: Boolean; const UpdateFile: String = '');
     destructor Destroy; override;
@@ -301,6 +302,16 @@ If Assigned(fOnPluginStateChange) then fOnPluginStateChange(Self);
 If fWMCClient.ServerOnline then fWMCClient.SendInteger(0,0,WMC_CODE_Features);
 end;
 
+//------------------------------------------------------------------------------
+
+procedure TACCManager.DoApplicationRestore(Sender: TObject);
+begin
+fApplication.Restore;
+fApplication.MainForm.Show;
+SetForegroundWindow(fApplication.MainForm.Handle);
+fTrayIcon.HideTrayIcon;
+end;
+
 {------------------------------------------------------------------------------}
 {   TACCManager // Public methods                                              }
 {------------------------------------------------------------------------------}
@@ -373,6 +384,7 @@ fApplication := Application;
 fApplication.OnMinimize := Application_OnMinimize;
 SettingsManager.PreloadSettings;
 fTrayIcon := TTrayIcon.Create(fUtilityWindow,fApplication);
+fTrayIcon.OnRestoreRequest := DoApplicationRestore;
 fInstanceControl.OnRestoreMessage := InstaceControl_OnRestoreMessage;
 If Settings.StartMinimized and not LoadingUpdate then
   begin

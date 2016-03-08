@@ -9,9 +9,9 @@
 {                                                                              }
 {   Multicast event handling class                                             }
 {                                                                              }
-{   ©František Milt 2014-05-07                                                 }
+{   ©František Milt 2016-03-01                                                 }
 {                                                                              }
-{   Version 1.0.2                                                              }
+{   Version 1.0.3                                                              }
 {                                                                              }
 {==============================================================================}
 unit MulticastEvent;
@@ -103,11 +103,17 @@ end;
 //------------------------------------------------------------------------------
 
 Function TMulticastEvent.IndexOf(const Handler: TEvent): Integer;
+var
+  i:  Integer;
 begin
-For Result := 0 to Pred(fMethods.Count) do
-  If (PMethod(fMethods[Result])^.Code = TMethod(Handler).Code) and
-     (PMethod(fMethods[Result])^.Data = TMethod(Handler).Data) then Exit;
 Result := -1;
+For i := 0 to Pred(fMethods.Count) do
+  If (PMethod(fMethods[i])^.Code = TMethod(Handler).Code) and
+     (PMethod(fMethods[i])^.Data = TMethod(Handler).Data) then
+    begin
+      Result := i;
+      Exit;
+    end
 end;
 
 //------------------------------------------------------------------------------

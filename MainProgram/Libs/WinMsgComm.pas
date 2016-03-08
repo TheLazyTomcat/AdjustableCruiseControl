@@ -11,9 +11,9 @@
 
   Base class
 
-  ©František Milt 2016-01-05
+  ©František Milt 2016-03-01
 
-  Version 1.3.1
+  Version 1.3.2
 
 ===============================================================================}
 {-------------------------------------------------------------------------------
@@ -256,7 +256,14 @@ Function GetUserCode(wParam: wParam): TWMCUserCode;
 implementation
 
 uses
-  SysUtils;
+  SysUtils
+  {$IF Defined(FPC) and not Defined(Unicode)}
+  (*
+    If compiler throws error that LazUTF8 unit cannot be found, you have to
+    add LazUtils to required packages (Project > Project Inspector).
+  *)
+  , LazUTF8
+  {$IFEND};
 
 {==============================================================================}
 {   Auxiliary functions                                                        }
@@ -333,10 +340,18 @@ end;
 
 procedure TWinMsgCommBase.InitIDArray;
 begin
+{$IF Defined(FPC) and not Defined(Unicode)}
+fIDArraySynchro := CreateMutex(nil,False,PChar(UTF8ToWinCP(fMessageName + '_idsync')));
+{$ELSE}
 fIDArraySynchro := CreateMutex(nil,False,PChar(fMessageName + '_idsync'));
+{$IFEND}
 If fIDArraySynchro = 0 then
   raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not create ID-sync mutex (0x%.8x).',[GetLastError]);
+{$IF Defined(FPC) and not Defined(Unicode)}
+fIDArrayObject := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,$FFFF div 8,PChar(UTF8ToWinCP(fMessageName + '_idarray')));
+{$ELSE}
 fIDArrayObject := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,$FFFF div 8,PChar(fMessageName + '_idarray'));
+{$IFEND}
 If fIDArrayObject = 0 then
   raise Exception.CreateFmt('TWinMsgCommBase.InitIDArray: Could not create ID array (0x%.8x).',[GetLastError]);
 fIDArrayMemory := MapViewOfFile(fIDArrayObject,FILE_MAP_ALL_ACCESS,0,0,0);
@@ -592,6 +607,7 @@ var
   end;
 
 begin
+Result := WMC_RESULT_error;
 case MessageCode of
   WMC_PING:         Result := WMC_RESULT_ok;
   WMC_VALUE_BOOL:   ProcessValue(mvtBool);
@@ -774,7 +790,11 @@ begin
 inherited Create;
 fID := 0;
 fMessageName := MessageName;
+{$IF Defined(FPC) and not Defined(Unicode)}
+fMessageID := RegisterWindowMessage(PChar(UTF8ToWinCP(MessageName))); ;
+{$ELSE}
 fMessageID := RegisterWindowMessage(PChar(MessageName));
+{$IFEND}
 fSynchronous := Synchronous;
 fOwnsWindow := not Assigned(Window);
 If fOwnsWindow then
@@ -1048,10 +1068,16 @@ end;
 //------------------------------------------------------------------------------
 
 Function TWinMsgCommBase.IndexOfConnection(ConnectionID: TWMCConnectionID): Integer;
+var
+  i:  Integer;
 begin
-For Result := 0 to Pred(fConnections.Count) do
-  If PWMCConnectionInfo(fConnections[Result])^.ConnectionID = ConnectionID then Exit;
 Result := -1;
+For i := 0 to Pred(fConnections.Count) do
+  If PWMCConnectionInfo(fConnections[i])^.ConnectionID = ConnectionID then
+    begin
+      Result := i;
+      Exit;
+    end;
 end;
 
 end.
