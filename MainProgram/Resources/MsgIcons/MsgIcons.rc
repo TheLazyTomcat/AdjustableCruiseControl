@@ -1,4 +1,0 @@
-info     RCDATA "info.png"
-question RCDATA "question.png"
-warning  RCDATA "warning.png"
-error    RCDATA "error.png"

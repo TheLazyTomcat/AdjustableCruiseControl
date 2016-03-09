@@ -2,12 +2,13 @@ program PluginInstaller;
 
 uses
   Forms,
-  SCS_Telemetry_Condensed in '..\..\Plugin\SCS_Telemetry_Condensed.pas',
-  ACC_PluginInstaller in 'ACC_PluginInstaller.pas',
-  ACC_PluginCheck in 'ACC_PluginCheck.pas',
-  MainForm in 'MainForm.pas' {fMainForm},
+
+  ACC_PluginInstaller in '..\..\Source\ACC_PluginInstaller.pas',
+  ACC_PluginCheck     in '..\..\Source\ACC_PluginCheck.pas',
+
+  MainForm        in 'MainForm.pas' {fMainForm},
   DescriptionForm in 'DescriptionForm.pas' {fDescriptionForm},
-  LibraryForm in 'LibraryForm.pas' {fLibraryForm};
+  LibraryForm     in 'LibraryForm.pas' {fLibraryForm};
 
 {$R *.res}
 

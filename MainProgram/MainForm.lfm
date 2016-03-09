@@ -54,7 +54,7 @@ object fMainForm: TfMainForm
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.4.0.4'
+  LCLVersion = '1.4.4.0'
   object shpTitleBackground: TShape
     Left = 0
     Height = 49
@@ -603,16 +603,6 @@ object fMainForm: TfMainForm
       TabOrder = 3
       Value = 0
     end
-    object lblActionOnZero: TLabel
-      Left = 13
-      Height = 13
-      Top = 43
-      Width = 124
-      Alignment = taRightJustify
-      Anchors = [akTop, akRight]
-      Caption = 'Action on speed limit of 0:'
-      ParentColor = False
-    end
     object cbActionOnZero: TComboBox
       Left = 144
       Height = 21
@@ -622,6 +612,16 @@ object fMainForm: TfMainForm
       OnChange = cbActionOnZeroChange
       Style = csDropDownList
       TabOrder = 2
+    end
+    object lblActionOnZero: TLabel
+      Left = 13
+      Height = 13
+      Top = 43
+      Width = 124
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      Caption = 'Action on speed limit of 0:'
+      ParentColor = False
     end
   end
   object cbShowKeyBindings: TCheckBox

@@ -36,7 +36,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..;..\..\..\Plugin"/>
+            <OtherUnitFiles Value="..\..\..\Source;..\..\..\Source\Libs"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -71,7 +71,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..;..\..\..\Plugin"/>
+            <OtherUnitFiles Value="..\..\..\Source;..\..\..\Source\Libs"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -101,6 +101,15 @@
 -dDebug
 -dx64
 -dExternalTester"/>
+            <OtherDefines Count="7">
+              <Define0 Value="FPC"/>
+              <Define1 Value="Windows"/>
+              <Define2 Value="Debug"/>
+              <Define3 Value="Release"/>
+              <Define4 Value="x86"/>
+              <Define5 Value="x64"/>
+              <Define6 Value="ExternalTester"/>
+            </OtherDefines>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -113,7 +122,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..;..\..\..\Plugin"/>
+            <OtherUnitFiles Value="..\..\..\Source;..\..\..\Source\Libs"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -148,6 +157,11 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="LazUtils"/>
+      </Item1>
+    </RequiredPackages>
     <Units Count="3">
       <Unit0>
         <Filename Value="ExternalTester.lpr"/>
@@ -171,7 +185,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..;..\..\..\Plugin"/>
+      <OtherUnitFiles Value="..\..\..\Source;..\..\..\Source\Libs"/>
       <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
@@ -201,6 +215,15 @@
 -dDebug
 -dx86
 -dExternalTester"/>
+      <OtherDefines Count="7">
+        <Define0 Value="FPC"/>
+        <Define1 Value="Windows"/>
+        <Define2 Value="Debug"/>
+        <Define3 Value="Release"/>
+        <Define4 Value="x86"/>
+        <Define5 Value="x64"/>
+        <Define6 Value="ExternalTester"/>
+      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>
