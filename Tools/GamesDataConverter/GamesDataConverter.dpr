@@ -135,7 +135,7 @@ else
     WriteLn;
     WriteLn('GamesDataConverter -i InputFile -of OtuputFileFormat [-o OutputFile] [-ic GameIconFile_1 [GameIconFile_2 ...]]');
     WriteLn;
-    WriteLn('OutputFileFormat - can be one of following: INI, BIN, INI1, INI2, INI2.1, BIN1,');
+    WriteLn('OutputFileFormat - can be one of following: INI, BIN, INI2, INI2.1, BIN1,');
     WriteLn('                   BIN1.1');
     WriteLn('                   INI maps to INI2.1; BIN maps to BIN1.1');
     WriteLn('      OutputFile - when not specified, output file has the same name as input');
