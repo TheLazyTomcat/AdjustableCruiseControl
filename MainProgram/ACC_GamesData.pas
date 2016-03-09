@@ -1941,36 +1941,36 @@ end;
 
 Function TGamesDataManager.Load: Boolean;
 var
-  FileName: String;
+  FilePath: String;
 begin
 {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
-FileName := ExtractFilePath(SysToUTF8(ParamStr(0))) + GamesDataFileIni;
-If FileExistsUTF8(FileName) then
+FilePath := ExtractFilePath(SysToUTF8(ParamStr(0)));
+If FileExistsUTF8(FilePath + GamesDataFileIni) then
 {$ELSE}
-FileName := ExtractFilePath(ParamStr(0)) + GamesDataFileIni;
-If FileExists(FileName) then
+FilePath := ExtractFilePath(ParamStr(0));
+If FileExists(FilePath + GamesDataFileIni) then
 {$IFEND}
-  Result := LoadFromIni(FileName)
+  Result := LoadFromIni(FilePath + GamesDataFileIni)
 else
-  Result := LoadFromBin(FileName);
+  Result := LoadFromBin(FilePath + GamesDataFileBin);
 end;
 
 //------------------------------------------------------------------------------
 
 Function TGamesDataManager.Save: Boolean;
 var
-  FileName: String;
+  FilePath: String;
 begin
 {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
-FileName := ExtractFilePath(SysToUTF8(ParamStr(0))) + GamesDataFileIni;
-If FileExistsUTF8(FileName) then
+FilePath := ExtractFilePath(SysToUTF8(ParamStr(0)));
+If FileExistsUTF8(FilePath + GamesDataFileIni) then
 {$ELSE}
-FileName := ExtractFilePath(ParamStr(0)) + GamesDataFileIni;
-If FileExists(FileName) then
+FilePath := ExtractFilePath(ParamStr(0));
+If FileExists(FilePath + GamesDataFileIni) then
 {$IFEND}
-  Result := SaveToIni(FileName,IFS_2_1)
+  Result := SaveToIni(FilePath + GamesDataFileIni,IFS_2_1)
 else
-  Result := SaveToBin(FileName,BFS_1_1);
+  Result := SaveToBin(FilePath + GamesDataFileBin,BFS_1_1);
 end;
 
 //------------------------------------------------------------------------------
