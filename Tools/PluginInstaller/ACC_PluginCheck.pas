@@ -29,11 +29,22 @@ Function InternalPluginCheck(const FilePath: String): LongWord;
 
 Function PluginCheck(const FilePath: String; Is64bit: Boolean): LongWord;
 
+{$IF not Declared(FPC_FULLVERSION)}
+const
+  FPC_FULLVERSION = Integer(0);
+{$IFEND}
+
 implementation
 
 uses
   Windows, SysUtils, Classes, ShellAPI,
-  SCS_Telemetry_Condensed;
+  SCS_Telemetry_Condensed
+  {$IF Defined(FPC) and not Defined(Unicode)}
+  , LazUTF8
+  {$IF FPC_FULLVERSION < 20701}
+  , LazFileUtils
+  {$IFEND}
+  {$IFEND};
 
 {$IFNDEF ExternalTester}
   {$IFDEF x64}
@@ -55,7 +66,11 @@ begin
 try
   ResStream := TResourceStream.Create(hInstance,'tester',RT_RCDATA);
   try
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    ResStream.SaveToFile(UTF8ToSys(ToFile));
+  {$ELSE}
     ResStream.SaveToFile(ToFile);
+  {$IFEND}
     Result := True;
   finally
     ResStream.Free;
@@ -74,15 +89,24 @@ var
   ExecInfo:   TShellExecuteInfo;
 begin
 Result := PCR_Ok;
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+ExecFile := ExtractFilePath(SysToUTF8(ParamStr(0))) + 'external_tester.exe';
+{$ELSE}
 ExecFile := ExtractFilePath(ParamStr(0)) + 'external_tester.exe';
+{$IFEND}
 ExecParam := '"' + FilePath + '"';
 If ExtractTester(ExecFile) then
   begin
     FillChar({%H-}ExecInfo,SizeOf(ExecInfo),0);
     ExecInfo.cbSize := SizeOf(TShellExecuteInfo);
     ExecInfo.fMask := SEE_MASK_NOCLOSEPROCESS;
+  {$IF Defined(FPC) and not Defined(Unicode)}
+    ExecInfo.lpFile := PChar(UTF8ToWinCP(ExecFile));
+    ExecInfo.lpParameters := PChar(UTF8ToWinCP(ExecParam));
+  {$ELSE}
     ExecInfo.lpFile := PChar(ExecFile);
     ExecInfo.lpParameters := PChar(ExecParam);
+  {$IFEND}
     ExecInfo.nShow := SW_HIDE;
   {$IFDEF FPC}
     If ShellExecuteEx(LPShellExecuteInfoA(@ExecInfo)) then
@@ -102,7 +126,11 @@ If ExtractTester(ExecFile) then
           end;
       end
     else Result := PCR_ET_NotStarted;
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    If DeleteFileUTF8(ExecFile) then
+  {$ELSE}
     If DeleteFile(ExecFile) then
+  {$IFEND}
       DeferredDelete := ''
     else
       begin
@@ -125,7 +153,11 @@ begin
 Result := PCR_Ok;
 ErrorMode := SetErrorMode(SEM_FAILCRITICALERRORS);
 try
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  LibHandle := LoadLibrary(PChar(UTF8ToWinCP(FilePath)));
+{$ELSE}
   LibHandle := LoadLibrary(PChar(FilePath));
+{$IFEND}
 finally
   SetErrorMode(ErrorMode);
 end;
@@ -164,6 +196,10 @@ initialization
 
 finalization
   If DeferredDelete <> '' then
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    DeleteFileUTF8(DeferredDelete);
+  {$ELSE}
     DeleteFile(DeferredDelete);
+  {$IFEND}
 
 end.

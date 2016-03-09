@@ -5,7 +5,7 @@ program ACC;
 uses
   SysUtils,
   Forms,
-
+  
   ACC_Common          in '..\ACC_Common.pas',
   ACC_Strings         in '..\ACC_Strings.pas',
   ACC_InstanceControl in '..\ACC_InstanceControl.pas',
@@ -20,12 +20,12 @@ uses
   ACC_PluginComm      in '..\ACC_PluginComm.pas',
 
   MainForm           in '..\MainForm.pas' {fMainForm},
-  MsgForm            in '..\Libs\Msg\MsgForm.pas' {fMsgForm},
   AboutForm          in '..\AboutForm.pas' {fAboutForm},
   SettingsForm       in '..\SettingsForm.pas' {fSettingsForm},
   KeyBindForm        in '..\KeyBindForm.pas' {fKeyBindForm},
   SupportedGamesForm in '..\SupportedGamesForm.pas' {fSupportedGamesForm},
   UpdateForm         in '..\UpdateForm.pas' {fUpdateForm};
+
 
 {$R *.res}
 
@@ -52,7 +52,6 @@ try
       Application.Title := 'Adjustable Cruise Control';
       Application.CreateForm(TfMainForm, fMainForm);
       If LoadingUpdate then fMainForm.LoadUpdate(UpdateFile);
-      Application.CreateForm(TfMsgForm, fMsgForm);
       Application.CreateForm(TfAboutForm, fAboutForm);
       Application.CreateForm(TfSettingsForm, fSettingsForm);
       Application.CreateForm(TfKeyBindForm, fKeyBindForm);

@@ -5,6 +5,9 @@ program ACC;
 uses
   Interfaces, // this includes the LCL widgetset
   SysUtils,
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  LazUTF8,
+{$IFEND}
   Forms,
 
   ACC_Common,
@@ -35,9 +38,15 @@ var
 
   procedure CheckStartedForUpdate;
   begin
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    If (ParamCount > 0) and FileExists(ParamStr(1)) then
+      begin
+        UpdateFile := SysToUTF8(ParamStr(1));
+  {$ELSE}
     If (ParamCount > 0) and FileExists(ParamStr(1)) then
       begin
         UpdateFile := ParamStr(1);
+  {$IFEND}
         LoadingUpdate := True;
       end;
   end;

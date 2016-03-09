@@ -94,7 +94,7 @@ OutputDir=.\Release\win_x86
 UnitOutputDir=.\DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\Libs;..\Libs\WMC
+SearchPath=..\Libs
 Packages=vcl;rtl;vclx;VclSmp;vclshlctrls;AdvCircularProgressPkgD7;TMSMenusD7;AdvShaperPkgD7;alpb;sulab;butcmps;EZJTexturePanelD6;FormShapePkgD7;GradientLabelPkgD7;ic;l3d;lfr;fw;mmjl;ash;tqpb;shlab;vaf;ish;xib;TPNGButton;wbme;verinf;aled;DelphiX70
 Conditionals=Delphi;x86;Release
 DebugSourceDirs=
@@ -139,8 +139,8 @@ Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
 Count=3
-Item0=..\Libs;..\Libs\WMC
-Item1=..\Libs
+Item0=..\Libs
+Item1=..\Libs;..\Libs\WMC
 Item2=D:\Program Files\Borland\cmps temp\pngdelphi
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
