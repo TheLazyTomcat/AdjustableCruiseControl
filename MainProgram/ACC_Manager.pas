@@ -93,7 +93,10 @@ implementation
 
 uses
   Windows, SysUtils,{$IFDEF FPC}InterfaceBase,{$ENDIF}
-  ACC_Strings, ACC_PluginComm;
+  ACC_Strings, ACC_PluginComm
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  , LazUTF8, LazFileUtils
+  {$IFEND};
 
 {$R 'Resources\GamesData.res'}
 
@@ -413,7 +416,7 @@ else
            end
         else
           {$IFDEF FPC}
-          ShowWindow(WidgetSet.AppHandle,SW_SHOW);
+          SetForegroundWindow(WidgetSet.AppHandle);
           {$ELSE}
           SetForegroundWindow(fApplication.Handle);
           {$ENDIF}
@@ -459,9 +462,13 @@ var
 begin
 ResourceStream := TResourceStream.Create(hInstance,GamesDataResName,RT_RCDATA);
 try
-  FileName := ExtractFilePath(ParamStr(0)) + GamesDataFileBin;
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  If DirectoryExistsUTF8(ExtractFileDir(FileName)) or CreateDirUTF8(ExtractFileDir(FileName)) then
+    ResourceStream.SaveToFile(UTF8ToSys(FileName));
+{$ELSE}
   If DirectoryExists(ExtractFileDir(FileName)) or CreateDir(ExtractFileDir(FileName)) then
     ResourceStream.SaveToFile(FileName);
+{$IFEND}
 finally
   ResourceStream.Free;
 end;
