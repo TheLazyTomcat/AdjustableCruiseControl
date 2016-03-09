@@ -545,15 +545,7 @@ var
   TempStr:  UTF8String;
   TempInt:  Integer;
 begin
-{$IFDEF Unicode}
-TempStr := UTF8Encode(Str);
-{$ELSE}
-{$IFNDEF FPC}
-TempStr := AnsiToUTF8(Str);
-{$ELSE}
-TempStr := Str;
-{$ENDIF}
-{$ENDIF}
+TempStr := StringToUTF8(Str);
 TempInt := Length(TempStr);
 Stream.WriteBuffer(TempInt,SizeOf(TempInt));
 Stream.WriteBuffer(PUTF8Char(TempStr)^,TempInt);
@@ -569,15 +561,7 @@ begin
 Stream.ReadBuffer({%H-}TempInt,SizeOf(TempInt));
 SetLength(TempStr,TempInt);
 Stream.ReadBuffer(PAnsiChar(TempStr)^,TempInt);
-{$IFDEF Unicode}
-Str := UTF8Decode(TempStr);
-{$ELSE}
-{$IFNDEF FPC}
-Str := UTF8ToAnsi(TempStr);
-{$ELSE}
-Str := TempStr;
-{$ENDIF}
-{$ENDIF}
+Str := UTF8ToString(TempStr);
 end;
 
 //------------------------------------------------------------------------------

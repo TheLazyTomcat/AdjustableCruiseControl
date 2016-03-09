@@ -36,13 +36,17 @@ implementation
 uses
   SysUtils, WinFileInfo;
 
-{$message 'revisit'}
+
 Function UTF8ToString(UTF8Str: UTF8String): String;
 begin
 {$IFDEF Unicode}
 Result := UTF8Decode(UTF8Str);
 {$ELSE}
+{$IFDEF FPC}
+Result := UTF8Str;
+{$ELSE}
 Result := UTF8ToAnsi(UTF8Str);
+{$ENDIF}
 {$ENDIF}
 end;
 
@@ -53,7 +57,11 @@ begin
 {$IFDEF Unicode}
 Result := UTF8Encode(Str);
 {$ELSE}
+{$IFDEF FPC}
+Result := Str;
+{$ELSE}
 Result := AnsiToUTF8(Str);
+{$ENDIF}
 {$ENDIF}
 end;
 

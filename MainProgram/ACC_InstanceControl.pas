@@ -163,15 +163,7 @@ var
 begin
 If WaitForSingleObject(fMutexHandle,10000) in [WAIT_OBJECT_0,WAIT_ABANDONED] then
   try
-  {$IFDEF Unicode}
-    TempStr := UTF8Encode(Str);
-  {$ELSE}
-    {$IFDEF FPC}
-    TempStr := Str;
-    {$ELSE}
-    TempStr := AnsiToUTF8(Str);
-    {$ENDIF}
-  {$ENDIF}
+    TempStr := StringToUTF8(Str);
     {%H-}PInteger({%H-}PtrUInt(fMapMemory) + SharedStringOffset)^ := Length(TempStr);
     Move(PUTF8Char(TempStr)^,{%H-}Pointer({%H-}PtrUInt(fMapMemory) + SharedStringOffset + SizeOf(Integer))^,Length(TempStr))
   finally
@@ -189,15 +181,7 @@ If WaitForSingleObject(fMutexHandle,10000) in [WAIT_OBJECT_0,WAIT_ABANDONED] the
   try
     SetLength(TempStr,{%H-}PInteger({%H-}PtrUInt(fMapMemory) + SharedStringOffset)^);
     Move({%H-}Pointer({%H-}PtrUInt(fMapMemory) + SharedStringOffset + SizeOf(Integer))^,PUTF8Char(TempStr)^,Length(TempStr));
-  {$IFDEF Unicode}
-    Result := UTF8Decode(TempStr);
-  {$ELSE}
-    {$IFDEF FPC}
-    Result := TempStr;
-    {$ELSE}
-    Result := UTF8ToAnsi(TempStr);
-    {$ENDIF}
-  {$ENDIF}
+    Result := UTF8ToString(TempStr);
   finally
     ReleaseMutex(fMutexHandle);
   end;
