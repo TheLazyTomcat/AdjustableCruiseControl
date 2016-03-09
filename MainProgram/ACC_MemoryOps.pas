@@ -258,7 +258,7 @@ end;
 procedure TMemoryOperator.Activate(GameData: TGameData);
 begin
 fGameData := GameData;
-fCanReadVehicleSpeed := TGamesDataManager.TruckSpeedSupported(fGameData) = ssrDirect;
+fCanReadVehicleSpeed := TGamesDataManager.TruckSpeedSupport(fGameData) = ssrDirect;
 fActive := TGamesDataManager.IsValid(fGameData);
 end;
 

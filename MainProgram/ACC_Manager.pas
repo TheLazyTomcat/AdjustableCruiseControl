@@ -567,7 +567,7 @@ If fMemoryOperator.Active and (Increment <> 0) then
         end
       else
         begin
-          case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+          case fGamesDataManager.TruckSpeedSupport(fMemoryOperator.GameData) of
             ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(CurrentSpeed) then
                           If fMemoryOperator.WriteCCSpeed(CurrentSpeed + Increment) then
                             fMemoryOperator.WriteCCStatus(True);
@@ -623,7 +623,7 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
     ACC_TRIGGER_CityEngage:       //--------------------------------------------
       SetCCSpeed(Settings.Speeds.City);
     ACC_TRIGGER_CityVehicle:      //--------------------------------------------
-      case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+      case fGamesDataManager.TruckSpeedSupport(fMemoryOperator.GameData) of
         ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
                       begin
                         Settings.Speeds.City := TempSpeed;
@@ -640,7 +640,7 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
     ACC_TRIGGER_RoadsEngage:      //--------------------------------------------
       SetCCSpeed(Settings.Speeds.Roads);
     ACC_TRIGGER_RoadsVehicle:     //--------------------------------------------
-      case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+      case fGamesDataManager.TruckSpeedSupport(fMemoryOperator.GameData) of
         ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
                       begin
                         Settings.Speeds.Roads := TempSpeed;
@@ -659,7 +659,7 @@ If (Caller <> tcInput) or (GameActive or not Settings.GameActiveForTrigger) then
       SetCCSpeed(Settings.Speeds.User[Trigger - ACC_TRIGGER_UserEngage_0]);
     ACC_TRIGGER_UserVehicle_0..   //--------------------------------------------
     ACC_TRIGGER_UserVehicle_9:
-      case fGamesDataManager.TruckSpeedSupported(fMemoryOperator.GameData) of
+      case fGamesDataManager.TruckSpeedSupport(fMemoryOperator.GameData) of
         ssrDirect:  If fMemoryOperator.ReadVehicleSpeed(TempSpeed) then
                       begin
                         Settings.Speeds.User[Trigger - ACC_TRIGGER_UserVehicle_0] := TempSpeed;

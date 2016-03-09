@@ -13,7 +13,7 @@ interface
 
 uses
   Classes, IniFiles, {$IFNDEF FPC}PNGImage{$ELSE}Graphics{$ENDIF},
-  CRC32, MD5, SimpleCompress, FloatHex, StringEncryptionUnit,
+  CRC32, MD5, SimpleCompress, FloatHex,
   ACC_Common;
 
 const
@@ -234,25 +234,21 @@ type
     procedure LoadIcons(Stream: TStream); overload; virtual;
     procedure SaveIcons(Ini: TCustomIniFile); overload; virtual;
     procedure LoadIcons(Ini: TCustomIniFile); overload; virtual;
-    procedure SaveEntryToIni_Struct00010000(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
     procedure SaveEntryToIni_Struct00020000(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
     procedure SaveEntryToIni_Struct00020001(Ini: TCustomIniFile; Section: String; const GameData: TGameData); virtual;
     procedure SaveEntryToBin_Struct00010000(Stream: TStream; Position: Int64; const GameData: TGameData); virtual;
     procedure SaveEntryToBin_Struct00010001(Stream: TStream; Position: Int64; const GameData: TGameData); virtual;
     procedure PointerTypeCorrection(var Pointer: TPointerData; Bool: Boolean = False); virtual;
-    Function LoadEntryFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromIni_Struct00020000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromIni_Struct00020001(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromBin_Struct00010000(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean; virtual;
     Function LoadEntryFromBin_Struct00010001(Stream: TStream; Position: Int64; out GameData: TGameData): Boolean; virtual;
     procedure SortHiddenForSaving; virtual;
-    Function SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToIni_Struct00020001(Ini: TCustomIniFile): Boolean; virtual;
     Function SaveToBin_Struct00010000(Stream: TStream): Boolean; virtual;
     Function SaveToBin_Struct00010001(Stream: TStream): Boolean; virtual;
     procedure ProcessEntryByProtocol(const GameData: TGameData); virtual;
-    Function LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean; virtual;
     Function LoadFromIni_Struct00020000(Ini: TCustomIniFile): Boolean; virtual;
     Function LoadFromIni_Struct00020001(Ini: TCustomIniFile): Boolean; virtual;
     Function LoadFromBin_Struct00010000(Stream: TStream): Boolean; virtual;
@@ -262,7 +258,7 @@ type
     class Function SupportsIniFileStructure(FileStructure: TFileStructure): Boolean; virtual;
     class Function SupportsProtocolVersion(ProtocolVersion: TProtocolVersion): Boolean; virtual;
     class Function IsValid(GameData: TGameData): Boolean; virtual;
-    class Function TruckSpeedSupported(const GameData: TGameData): TSupportedSpeedReading; virtual;
+    class Function TruckSpeedSupport(const GameData: TGameData): TSupportedSpeedReading; virtual;
     constructor Create;
     destructor Destroy; override;
     Function IndexOf(Identifier: TGUID): Integer; virtual;
@@ -301,14 +297,17 @@ implementation
 {$R 'Resources\DefGameIcon.res'}
 
 uses
-  Windows, SysUtils, DateUtils, StrUtils, Math, BinTextEnc;
+  Windows, SysUtils, DateUtils, Math, BinTextEnc, AuxTypes
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  , LazUTF8, LazFileUtils
+  {$IFEND};
 
 const
   InvalidFileStructure = TFileStructure(-1);
 
   // Supported gamesdata file structures
   SupportedBinFileStructure: Array[0..1] of TFileStructure = (BFS_1_0,BFS_1_1);
-  SupportedIniFileStructure: Array[0..2] of TFileStructure = (IFS_1_0,IFS_2_0,IFS_2_1);
+  SupportedIniFileStructure: Array[0..1] of TFileStructure = ((*IFS_1_0,*)IFS_2_0,IFS_2_1);
 
   // Supported protocols
   // Note that protocol affects the entire program, not just games data
@@ -320,7 +319,7 @@ const
   SupportedProtocolVersions: Array[0..3] of TProtocolVersion = (
     PROTOCOL_NORMAL,PROTOCOL_HIDDEN,PROTOCOL_HIDE,PROTOCOL_UPDHIDE);
 
-  // Signature of binarz games data file
+  // Signature of binary games data file
   ACCBinFileSignature = $64636361;
 
   DefaultGameIconName    = 'default';
@@ -455,8 +454,10 @@ If Index >= 0 then
   Result := ListItems[Index].Icon
 else
   begin
-    If Count > 0 then Result := ListItems[0].Icon
-      else raise Exception.Create('TIconList.GetIcon: Game icons list is empty.');
+    If Count > 0 then
+      Result := ListItems[0].Icon
+    else
+      raise Exception.Create('TIconList.GetIcon: Game icons list is empty.'); // there must be at least default icon
   end;
 end;
 
@@ -544,10 +545,18 @@ var
   TempStr:  UTF8String;
   TempInt:  Integer;
 begin
-TempStr := StringToUTF8(Str);
+{$IFDEF Unicode}
+TempStr := UTF8Encode(Str);
+{$ELSE}
+{$IFNDEF FPC}
+TempStr := AnsiToUTF8(Str);
+{$ELSE}
+TempStr := Str;
+{$ENDIF}
+{$ENDIF}
 TempInt := Length(TempStr);
 Stream.WriteBuffer(TempInt,SizeOf(TempInt));
-Stream.WriteBuffer(PAnsiChar(TempStr)^,TempInt);
+Stream.WriteBuffer(PUTF8Char(TempStr)^,TempInt);
 end;
 
 //------------------------------------------------------------------------------
@@ -560,7 +569,15 @@ begin
 Stream.ReadBuffer({%H-}TempInt,SizeOf(TempInt));
 SetLength(TempStr,TempInt);
 Stream.ReadBuffer(PAnsiChar(TempStr)^,TempInt);
-Str := UTF8ToString(TempStr);
+{$IFDEF Unicode}
+Str := UTF8Decode(TempStr);
+{$ELSE}
+{$IFNDEF FPC}
+Str := UTF8ToAnsi(TempStr);
+{$ELSE}
+Str := TempStr;
+{$ENDIF}
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------
@@ -762,59 +779,6 @@ try
 finally
   WorkStream.Free;
 end;
-end;
-
-//------------------------------------------------------------------------------
-
-procedure TGamesDataManager.SaveEntryToIni_Struct00010000(Ini: TCustomIniFile; Section: String; const GameData: TGameData);
-var
-  TempStr:  String;
-  i:        Integer;
-
-  procedure AddModuleToStr(var Str: String; Module: TModuleData);
-  begin
-    If (Module.CheckFlags and CF_FILESIZE) <> 0 then
-      Str := Str + '$' + IntToHex(Module.Size,8) + '%';
-    Str := Str + '$' + IntToHex(Module.CRC32,8) + '@' + Module.FileName;
-  end;
-
-  procedure WritePointer(const ValueName: String; Pointer: TPointerData);
-  var
-    iTempStr: String;
-    ii:       Integer;
-  begin
-    If Pointer.ModuleIndex >= 0 then
-      begin
-        If TPtrInfoRec(Pointer.PtrInfo).PtrType = PTR_TYPE_FloatCorrectedRemote then
-          ii := (TPtrInfoRec(Pointer.PtrInfo).PtrData + $100) and $1FF
-        else
-          ii := 0;
-        iTempStr := '$' + IntToHex(ii,3) + '@' + '$' + IntToHex(Pointer.ModuleIndex,1) + '+';
-        For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
-          iTempStr := iTempStr + '$' + IntToHex(Pointer.Offsets[ii],16) + '>';
-        iTempStr := iTempStr + SingleToHex(Pointer.Coefficient);
-        Ini.WriteString(Section,ValueName,iTempStr);
-      end
-    else Ini.WriteString(Section,ValueName,'0');
-  end;
-
-begin
-Ini.WriteString(Section,GDIN_GD_LEG_Identificator,GameData.Descriptor);
-Ini.WriteString(Section,GDIN_GD_LEG_GameInfo,GameData.Title + '&&' + GameData.Info);
-
-TempStr := '$0^';
-For i := Low(GameData.Modules) to High(GameData.Modules) do
-  begin
-    AddModuleToStr(TempStr,GameData.Modules[i]);
-    If i < High(GameData.Modules) then TempStr := TempStr + '&';
-  end;
-Ini.WriteString(Section,GDIN_GD_LEG_Process,TempStr);
-
-WritePointer(GDIN_GD_CCStatus,GameData.CCStatus);
-WritePointer(GDIN_GD_CCSpeed,GameData.CCSpeed);
-WritePointer(GDIN_GD_TruckSpeed,GameData.TruckSpeed);
-For i := Low(GameData.Values) to High(GameData.Values) do
-  WritePointer(Format(GDIN_GD_LEG_Special,[i]),GameData.Values[i]);
 end;
 
 //------------------------------------------------------------------------------
@@ -1111,157 +1075,6 @@ else
         TPtrInfoRec(Pointer.PtrInfo).PtrData := 0;
       end;
   end;
-end;
-
-//------------------------------------------------------------------------------
-
-Function TGamesDataManager.LoadEntryFromIni_Struct00010000(Ini: TCustomIniFile; Section: String; out GameData: TGameData): Boolean;
-var
-  i:        Integer;
-  TempStr:  String;
-
-  Function Decrypt(const Text: String): String;
-  begin
-    If Length(Text) > 0 then
-      begin
-        If Text[1] = StringEncryptionUnit.EncryptedChar then
-          Result := StringEncryptionUnit.DecryptString(Text)
-        else
-          Result := Text;
-      end
-    else Result := Text;
-  end;
-
-  procedure ParseInfo(const Text: String);
-  begin
-    GameData.Title := AnsiLeftStr(Text,AnsiPos('&&',Text) - 1);
-    GameData.Info := AnsiRightStr(Text,Length(Text) - AnsiPos('&&',Text) - 1);
-  end;
-
-  Function ParseProcess(Text: String): Boolean;
-  var
-    ii,Counter: Integer;
-    iTempStr:   String;
-
-    Function ParseModule(ModText: String; var Module: TModuleData; MainModule: Boolean): Boolean;
-    begin
-      If Length(ModText) > 0 then
-        try
-          Module.CheckFlags := CF_FILECRC32;
-          If AnsiContainsStr(ModText,'%') then
-            begin
-              Module.CheckFlags := Module.CheckFlags or CF_FILESIZE;
-              Module.Size := StrToInt(AnsiLeftStr(ModText,AnsiPos('%',ModText) - 1));
-              Delete(ModText,1,AnsiPos('%',ModText));
-            end
-          else Module.Size := 0;
-          Module.CRC32 := TCRC32(StrToInt(AnsiLeftStr(ModText,AnsiPos('@',ModText) - 1)));
-          Delete(ModText,1,AnsiPos('@',ModText));
-          Module.FileName := ExtractFileName(ModText);
-          Module.MD5 := StrToMD5('00000000000000000000000000000000');
-          Result := (ExtractFilePath(ModText) = '') or not MainModule;
-        except
-          Result := False;
-        end
-      else Result := False;
-    end;
-
-  begin
-    If Length(Text) > 0 then
-      try
-        Result := False;
-        Text := Text + '&';
-        Delete(Text,1,AnsiPos('^',Text));
-        Counter := 0;
-        For ii := 1 to Length(Text) do
-          If Text[ii] = '&' then Inc(Counter);
-        SetLength(GameData.Modules,Counter);
-        For ii := Low(GameData.Modules) to High(GameData.Modules) do
-          begin
-            iTempStr := AnsiLeftStr(Text,AnsiPos('&',Text) - 1);
-            Delete(Text,1,AnsiPos('&',Text));
-            If not ParseModule(iTempStr,GameData.Modules[ii],ii = Low(GameData.Modules)) then Exit;
-          end;
-        Result := True;  
-      except
-        Result := False;
-      end
-    else Result := False;
-  end;
-
-  Function ParsePointer(Text: String; var Pointer: TPointerData): Boolean;
-  var
-    ii,Counter:  Integer;
-  begin
-    If Length(Text) > 0 then
-      try
-        Result := False;
-        Pointer.Flags := 0;
-        TPtrInfoRec(Pointer.PtrInfo).PtrData := LongWord(StrToInt(AnsiLeftStr(Text,AnsiPos('@',Text) - 1)) and $1FF);
-        Delete(Text,1,AnsiPos('@',Text));
-        Pointer.ModuleIndex := StrToInt(AnsiLeftStr(Text,AnsiPos('+',Text) - 1));
-        Delete(Text,1,AnsiPos('+',Text));
-        Counter := 0;
-        For ii := 1 to Length(Text) do
-          If Text[ii] = '>' then Inc(Counter);
-        SetLength(Pointer.Offsets,Counter);
-        For ii := Low(Pointer.Offsets) to High(Pointer.Offsets) do
-          begin
-            Pointer.Offsets[ii] := StrToInt(AnsiLeftStr(Text,AnsiPos('>',Text) - 1));
-            Delete(Text,1,AnsiPos('>',Text));
-          end;
-        Pointer.Coefficient := HexToSingleDef(Text,0);
-        If Pointer.Coefficient = 0 then Exit;
-        Result := True;
-      except
-        Result := False;
-      end
-    else Result := False;
-  end;
-
-begin
-try
-  Result := False;
-  GameData.Protocol := SupportedProtocolVersions[Low(SupportedProtocolVersions)];
-  If CreateGUID(GameData.Identifier) <> S_OK then
-    GameData.Identifier := StringToGUID('{00000000-0000-0000-0000-000000000000}');
-  GameData.Descriptor := Decrypt(Ini.ReadString(Section,GDIN_GD_LEG_Identificator,''));
-  GameData.Version := 0;
-  GameData.Icon := DefaultGameIconName;
-  GameData.Date := Now;
-  GameData.Author := '';
-  ParseInfo(Decrypt(Ini.ReadString(Section,GDIN_GD_LEG_GameInfo,'')));
-  GameData.ExtendedTitle := GameData.Title;
-  If not ParseProcess(Decrypt(Ini.ReadString(Section,GDIN_GD_LEG_Process,''))) then Exit;
-  If not ParsePointer(Decrypt(Ini.ReadString(Section,GDIN_GD_CCStatus,'')),GameData.CCStatus) then Exit;
-  PointerTypeCorrection(GameData.CCStatus,True);
-  If not ParsePointer(Decrypt(Ini.ReadString(Section,GDIN_GD_CCSpeed,'')),GameData.CCSpeed) then Exit;
-  PointerTypeCorrection(GameData.CCSpeed);
-  TempStr := Decrypt(Ini.ReadString(Section,GDIN_GD_TruckSpeed,''));
-  If TempStr <> '0' then
-    begin
-      If not ParsePointer(TempStr,GameData.TruckSpeed) then Exit;
-      PointerTypeCorrection(GameData.TruckSpeed);
-    end
-  else
-    begin
-      GameData.TruckSpeed.Flags := 0;
-      GameData.TruckSpeed.ModuleIndex := -1;
-      SetLength(GameData.TruckSpeed.Offsets,0);
-      GameData.TruckSpeed.Coefficient := 0;
-    end;
-  i := 0;
-  while Ini.ValueExists(Section,Format(GDIN_GD_LEG_Special,[i])) do
-    begin
-      SetLength(GameData.Values,Length(GameData.Values) + 1);
-      If not ParsePointer(Decrypt(Ini.ReadString(Section,Format(GDIN_GD_LEG_Special,[i]),'')),GameData.Values[i]) then Exit;
-      PointerTypeCorrection(GameData.Values[i]);
-      Inc(i);
-    end;
-  Result := True;
-except
-  Result := False;
-end;
 end;
 
 //------------------------------------------------------------------------------
@@ -1573,23 +1386,6 @@ end;
 
 //------------------------------------------------------------------------------
 
-Function TGamesDataManager.SaveToIni_Struct00010000(Ini: TCustomIniFile): Boolean;
-var
-  i:  Integer;
-begin
-try
-  For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
-    SaveEntryToIni_Struct00010000(Ini,Format(GDIN_Game,[i]),fGamesData.Entries[i]);
-  If Ini.SectionExists(Format(GDIN_Game,[Length(fGamesData.Entries)])) then
-    Ini.EraseSection(Format(GDIN_Game,[Length(fGamesData.Entries)]));
-  Result := True;
-except
-  Result := False;
-end;
-end;
-
-//------------------------------------------------------------------------------
-
 Function TGamesDataManager.SaveToIni_Struct00020000(Ini: TCustomIniFile): Boolean;
 var
   i:  Integer;
@@ -1705,27 +1501,6 @@ case GameData.Protocol of
                         HideGameData(StringToGUID(GameData.Modules[i].FileName));
                       AddGameData(GameData);
                     end;
-end;
-end;
-
-//------------------------------------------------------------------------------
-
-Function TGamesDataManager.LoadFromIni_Struct00010000(Ini: TCustomIniFile): Boolean;
-var
-  Index:        Integer;
-  TempGameData: TGameData;
-begin
-try
-  Index := 0;
-  while Ini.SectionExists(Format(GDIN_Game,[Index])) do
-    begin
-      If LoadEntryFromIni_Struct00010000(Ini,Format(GDIN_Game,[Index]),TempGameData) then
-        If IsValid(TempGameData) then ProcessEntryByProtocol(TempGameData);
-      Inc(Index);
-    end;
-  Result := True;
-except
-  Result := False;
 end;
 end;
 
@@ -1902,7 +1677,7 @@ case GameData.Protocol of
         Result := Result and (Length(GameData.Modules) > 0);
         try
           For i := Low(GameData.Modules) to High(GameData.Modules) do
-            StringtoGUID(GameData.Modules[i].FileName);
+            StringToGUID(GameData.Modules[i].FileName);
         except
           Result := False;
         end;
@@ -1914,7 +1689,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-class Function TGamesDataManager.TruckSpeedSupported(const GameData: TGameData): TSupportedSpeedReading;
+class Function TGamesDataManager.TruckSpeedSupport(const GameData: TGameData): TSupportedSpeedReading;
 begin
 If (GameData.TruckSpeed.ModuleIndex >= Low(GameData.Modules)) and
    (GameData.TruckSpeed.ModuleIndex <= High(GameData.Modules)) then Result := ssrDirect
@@ -1984,7 +1759,11 @@ If SupportsBinFileStructure(FileStructure) then
         Result := False;
       end;
       FileStream.Size := FileStream.Position;
+    {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+      FileStream.SaveToFile(UTF8ToSys(FileName));
+    {$ELSE}
       FileStream.SaveToFile(FileName);
+    {$IFEND}
     finally
       FileStream.Free;
     end;
@@ -2002,11 +1781,14 @@ var
 begin
 If SupportsIniFileStructure(FileStructure) then
   try
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    IniFile := TMemIniFile.Create(UTF8ToSys(FileName));
+  {$ELSE}
     IniFile := TMemIniFile.Create(FileName);
+  {$IFEND}
     try
       IniFile.WriteString(GDIN_MainSection,GDIN_MS_FileStructure,'$' + IntToHex(FileStructure,8));
       case FileStructure of
-        IFS_1_0:  Result := SaveToIni_Struct00010000(IniFile);
         IFS_2_0:  Result := SaveToIni_Struct00020000(IniFile);
         IFS_2_1:  Result := SaveToIni_Struct00020001(IniFile);
       else
@@ -2064,7 +1846,11 @@ begin
 try
   FileStream := TMemoryStream.Create;
   try
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    FileStream.LoadFromFile(UTF8ToSys(FileName));
+  {$ELSE}
     FileStream.LoadFromFile(FileName);
+  {$IFEND}
     Result := LoadFromBin(FileStream,FileStructure);
   finally
     FileStream.Free;
@@ -2090,14 +1876,17 @@ var
   IniFile:  TMemIniFile;
 begin
 try
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  IniFile := TMemIniFile.Create(UTF8ToSys(FileName));
+{$ELSE}
   IniFile := TMemIniFile.Create(FileName);
+{$IFEND}
   try
     FileStructure := TFileStructure(IniFile.ReadInteger(GDIN_MainSection,GDIN_MS_FileStructure,Integer(InvalidFileStructure)));
     If SupportsIniFileStructure(FileStructure) then
       begin
         Clear;
         case FileStructure of
-          IFS_1_0:  Result := LoadFromIni_Struct00010000(IniFile);
           IFS_2_0:  Result := LoadFromIni_Struct00020000(IniFile);
           IFS_2_1:  Result := LoadFromIni_Struct00020001(IniFile);
         else
@@ -2130,7 +1919,11 @@ var
   FileStream: TFileStream;
 begin
 try
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  FileStream := TFileStream.Create(UTF8ToSys(FileName),fmOpenRead or fmShareDenyWrite);
+{$ELSE}
   FileStream := TFileStream.Create(FileName,fmOpenRead or fmShareDenyWrite);
+{$IFEND}
   try
     If ReadIntegerFromStream(FileStream) = ACCBinFileSignature then
       Result := LoadFromBin(FileName)
@@ -2147,21 +1940,37 @@ end;
 //------------------------------------------------------------------------------
 
 Function TGamesDataManager.Load: Boolean;
+var
+  FileName: String;
 begin
-If FileExists(ExtractFilePath(ParamStr(0)) + GamesDataFileIni) then
-  Result := LoadFromIni(ExtractFilePath(ParamStr(0)) + GamesDataFileIni)
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+FileName := ExtractFilePath(SysToUTF8(ParamStr(0))) + GamesDataFileIni;
+If FileExistsUTF8(FileName) then
+{$ELSE}
+FileName := ExtractFilePath(ParamStr(0)) + GamesDataFileIni;
+If FileExists(FileName) then
+{$IFEND}
+  Result := LoadFromIni(FileName)
 else
-  Result := LoadFromBin(ExtractFilePath(ParamStr(0)) + GamesDataFileBin);
+  Result := LoadFromBin(FileName);
 end;
 
 //------------------------------------------------------------------------------
 
 Function TGamesDataManager.Save: Boolean;
+var
+  FileName: String;
 begin
-If FileExists(ExtractFilePath(ParamStr(0)) + GamesDataFileIni) then
-  Result := SaveToIni(ExtractFilePath(ParamStr(0)) + GamesDataFileIni,IFS_2_0)
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+FileName := ExtractFilePath(SysToUTF8(ParamStr(0))) + GamesDataFileIni;
+If FileExistsUTF8(FileName) then
+{$ELSE}
+FileName := ExtractFilePath(ParamStr(0)) + GamesDataFileIni;
+If FileExists(FileName) then
+{$IFEND}
+  Result := SaveToIni(FileName,IFS_2_1)
 else
-  Result := SaveToBin(ExtractFilePath(ParamStr(0)) + GamesDataFileBin,BFS_1_0);
+  Result := SaveToBin(FileName,BFS_1_1);
 end;
 
 //------------------------------------------------------------------------------
