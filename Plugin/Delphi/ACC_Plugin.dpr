@@ -14,7 +14,7 @@ uses
 var
   PluginManager: TACCPluginManager = nil;
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 Function TelemetryLibraryInit(version: scs_u32_t; params: p_scs_telemetry_init_params_t): scs_result_t; stdcall;
 begin

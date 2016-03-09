@@ -55,11 +55,22 @@ type
     procedure SetValue(Name: TelemetryString; {%H-}Index: scs_u32_t; Value: scs_value_t); virtual;
   end;
 
+{$IF not Declared(FPC_FULLVERSION)}
+const
+  FPC_FULLVERSION = Integer(0);
+{$IFEND}
+
 implementation
 
 uses
   Windows, SysUtils, ShellAPI, Math, DefRegistry, WinFileInfo,
-  ACC_Settings, ACC_PluginComm;
+  ACC_Settings, ACC_PluginComm
+  {$IF Defined(FPC) and not Defined(Unicode)}
+  , LazUTF8
+  {$IF FPC_FULLVERSION < 20701}
+  , LazFileUtils
+  {$IFEND}
+  {$IFEND};
 
 var
   ACC_PLG_VersionStr: String = '';
@@ -120,11 +131,23 @@ try
   Registry.RootKey := HKEY_CURRENT_USER;
   If Registry.OpenKeyReadOnly(SettingsRegistryKey) then
     begin
+    {$IF Defined(FPC) and not Defined(Unicode)}
+      ExecPath := WinCPToUTF8(Registry.ReadStringDef(SETN_VAL_REG_ProgramPath,''));
+    {$ELSE}
       ExecPath := Registry.ReadStringDef(SETN_VAL_REG_ProgramPath,'');
+    {$IFEND}
+    {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+      If FileExistsUTF8(ExecPath) then
+    {$ELSE}
       If FileExists(ExecPath) then
+    {$IFEND}
         begin
         {$IFDEF Debug}
+        {$IF Defined(FPC) and not Defined(Unicode)}
+          ExecResult := Integer(ShellExecute(0,'open',PChar(UTF8ToWinCP(ExecPath)),nil,nil,SW_SHOWNORMAL));
+        {$ELSE}
           ExecResult := Integer(ShellExecute(0,'open',PChar(ExecPath),nil,nil,SW_SHOWNORMAL));
+        {$IFEND}
           case ExecResult of
             0:                      WriteToGameLog('[ACC] Exec: The operating system is out of memory or resources');
           //ERROR_FILE_NOT_FOUND:   WriteToGameLog('[ACC] Exec: The specified file was not found');
@@ -146,7 +169,11 @@ try
               else WriteToGameLog(Format('[ACC] Exec: Unknown error (%d) occured',[ExecResult]));
           end;
         {$ELSE}
+        {$IF Defined(FPC) and not Defined(Unicode)}
+          ShellExecute(0,'open',PChar(UTF8ToWinCP(ExecPath)),nil,nil,SW_SHOWNORMAL);
+        {$ELSE}
           ShellExecute(0,'open',PChar(ExecPath),nil,nil,SW_SHOWNORMAL);
+        {$IFEND}
         {$ENDIF}
         end
       else {$IFDEF Debug}WriteToGameLog('[ACC] Exec: File not found.'){$ENDIF};
@@ -255,9 +282,16 @@ class Function TACCPluginManager.InstanceAlreadyExists: Boolean;
 var
   Mutex:  THandle;
 begin
-Mutex := CreateMutex(nil,False,PluginInstanceMutexName);
-Result := GetLastError = ERROR_ALREADY_EXISTS;
-CloseHandle(Mutex);
+{$IF Defined(FPC) and not Defined(Unicode)}
+Mutex := CreateMutex(nil,False,PChar(UTF8ToWinCP(PluginInstanceMutexName)));
+{$ELSE}
+Mutex := CreateMutex(nil,False,PChar(PluginInstanceMutexName));
+{$IFEND}
+try
+  Result := GetLastError = ERROR_ALREADY_EXISTS;
+finally
+  CloseHandle(Mutex);
+end;
 end;
 
 //------------------------------------------------------------------------------
@@ -265,7 +299,11 @@ end;
 constructor TACCPluginManager.Create(APIVersion: scs_u32_t; APIParams: scs_telemetry_init_params_t);
 begin
 inherited Create;
-fInstanceMutex := CreateMutex(nil,False,PluginInstanceMutexName);
+{$IF Defined(FPC) and not Defined(Unicode)}
+fInstanceMutex := CreateMutex(nil,False,PChar(UTF8ToWinCP(PluginInstanceMutexName)));
+{$ELSE}
+fInstanceMutex := CreateMutex(nil,False,PChar(PluginInstanceMutexName));
+{$IFEND}
 If GetLastError = ERROR_ALREADY_EXISTS then
   raise Exception.Create('TACCPluginManager.Create: At least one instance is already created.');
 fAPIVersion := APIVersion;

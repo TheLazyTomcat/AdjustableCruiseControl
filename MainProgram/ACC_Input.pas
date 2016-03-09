@@ -161,7 +161,6 @@ var
   i:            Integer;
   TempItemPtr:  PTriggerListItem;
 begin
-Result := -1;
 For i := 0 to Pred(Count) do
   begin
     TempItemPtr := PTriggerListItem(Items[i]);

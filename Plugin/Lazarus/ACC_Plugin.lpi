@@ -38,7 +38,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
+            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -75,7 +75,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
+            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -120,7 +120,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
+            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -157,59 +157,32 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <Units Count="13">
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="LazUtils"/>
+      </Item1>
+    </RequiredPackages>
+    <Units Count="5">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="..\..\MainProgram\Libs\DefRegistry.pas"/>
+        <Filename Value="..\..\MainProgram\ACC_Settings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="..\..\MainProgram\Libs\FloatHex.pas"/>
+        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="..\..\MainProgram\ACC_Settings.pas"/>
+        <Filename Value="..\ACC_PluginManager.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit5>
-      <Unit6>
-        <Filename Value="..\..\MainProgram\Libs\CRC32.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit6>
-      <Unit7>
-        <Filename Value="..\..\MainProgram\Libs\WndAlloc.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="..\..\MainProgram\Libs\MulticastEvent.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit8>
-      <Unit9>
-        <Filename Value="..\..\MainProgram\Libs\UtilityWindow.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit9>
-      <Unit10>
-        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit10>
-      <Unit11>
-        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgComm.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit11>
-      <Unit12>
         <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit12>
+      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -220,7 +193,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;..;..\..\MainProgram\Libs\WMC"/>
+      <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
       <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
@@ -253,6 +226,13 @@
       <CustomOptions Value="-dFPC
 -dDebug
 -dx86"/>
+      <OtherDefines Count="5">
+        <Define0 Value="FPC"/>
+        <Define1 Value="Release"/>
+        <Define2 Value="Debug"/>
+        <Define3 Value="x86"/>
+        <Define4 Value="x64"/>
+      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>

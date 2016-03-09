@@ -214,7 +214,7 @@ implementation
 uses
   Windows, SysUtils, IniFiles,
   DefRegistry, FloatHex
-  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  {$IF Defined(FPC) and not Defined(Unicode)}
   , LazUTF8
   {$IFEND};
 
@@ -534,8 +534,12 @@ try
     If Registry.OpenKey(SettingsRegistryKey,True) then
       begin
         ValidateSettings;
-        
+
+      {$IF Defined(FPC) and not Defined(Unicode)}
+        Registry.WriteString(SETN_VAL_REG_ProgramPath,UTF8ToWinCP(fSettings^.ProgramPath));
+      {$ELSE}
         Registry.WriteString(SETN_VAL_REG_ProgramPath,fSettings^.ProgramPath);
+      {$IFEND}
         Registry.WriteBool(SETN_VAL_REG_ShowSplashScreen,fSettings^.ShowSplashScreen);
         Registry.WriteBool(SETN_VAL_REG_MinimizeToTray,fSettings^.MinimizeToTray);
         Registry.WriteBool(SETN_VAL_REG_StartMinimized,fSettings^.StartMinimized);
