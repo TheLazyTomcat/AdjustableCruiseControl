@@ -54,7 +54,7 @@ implementation
 uses
   AuxTypes,
   ACC_Common, ACC_Strings
-  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  {$IF Defined(FPC) and not Defined(Unicode)}
   , LazUTF8
   {$IFEND};
 
@@ -116,7 +116,7 @@ inherited Create;
 fUtilityWindow := UtilityWindow;
 fUtilityWindow.OnMessage.Add(MessageHandler);
 fInstanceName := InstanceName;
-{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+{$IF Defined(FPC) and not Defined(Unicode)}
 fRestoreMessageCode := RegisterWindowMessage(PChar(UTF8ToWinCP(ACCSTR_IC_MessagePrefix + fInstanceName)));
 fMapHandle := CreateFileMapping(INVALID_HANDLE_VALUE,nil,PAGE_READWRITE,0,SharedMemorySize,PChar(UTF8ToWinCP(ACCSTR_IC_MapPrefix + fInstanceName)));
 fMapMemory := MapViewOfFile(fMapHandle,FILE_MAP_ALL_ACCESS,0,0,SharedMemorySize);

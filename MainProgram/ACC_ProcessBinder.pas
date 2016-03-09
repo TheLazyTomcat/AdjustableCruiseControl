@@ -127,24 +127,43 @@ type
     property OnGameUnbind: TNotifyEvent read fOnGameUnbind write fOnGameUnbind;
   end;
 
+{$IF not Declared(FPC_FULLVERSION)}
+const
+  FPC_FULLVERSION = Integer(0);
+{$IFEND}
+
 implementation
 
 uses
   {$IFNDEF FPC}PSApi,{$ENDIF}
   CRC32, MD5,
-  ACC_Common;
+  ACC_Common
+{$IF Defined(FPC) and not Defined(Unicode)}
+  , LazUTF8
+  {$IF FPC_FULLVERSION < 20701}
+  , LazFileUtils
+  {$IFEND}
+{$IFEND};
 
 Function GetFileSize(const FilePath: String): Int64;
 var
   SearchResult: TSearchRec;
 begin
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+If FindFirstUTF8(FilePath,faAnyFile,SearchResult) = 0 then
+{$ELSE}
 If FindFirst(FilePath,faAnyFile,SearchResult) = 0 then
+{$IFEND}
   begin
     {$WARN SYMBOL_PLATFORM OFF}
     Int64Rec(Result).Hi := SearchResult.FindData.nFileSizeHigh;
     Int64Rec(Result).Lo := SearchResult.FindData.nFileSizeLow;
     {$WARN SYMBOL_PLATFORM ON}
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    FindCloseUTF8(SearchResult);
+  {$ELSE}
     FindClose(SearchResult);
+  {$IFEND}
     end
   else Result := 0;
 end;
@@ -272,7 +291,11 @@ else
     NewListItem := PProcessListItem(Items[fRealCount]);
     Result := fRealCount;
   end;
+{$IF Defined(FPC) and not Defined(Unicode)}
+NewListItem^.ExecName := WinCPToUTF8(Process.szExeFile);
+{$ELSE}
 NewListItem^.ExecName := Process.szExeFile;
+{$IFEND}
 NewListItem^.ProcessID := Process.th32ProcessID;
 Inc(fRealCount);
 end;
@@ -472,8 +495,13 @@ If SnapshotHandle <> INVALID_HANDLE_VALUE then
         with ProcessModules[High(ProcessModules)] do
           begin
             CheckFlags := CF_NONE;
+          {$IF Defined(FPC) and not Defined(Unicode)}
+            FileName := WinCPToUTF8(ModuleEntry.szModule);
+            RuntimeInfo.FullPath := WinCPToUTF8(ModuleEntry.szExePath);
+          {$ELSE}
             FileName := ModuleEntry.szModule;
             RuntimeInfo.FullPath := ModuleEntry.szExePath;
+          {$IFEND}
             RuntimeInfo.BaseAddress := ModuleEntry.modBaseAddr;
           end;
       until not Module32Next(SnapshotHandle,ModuleEntry);
