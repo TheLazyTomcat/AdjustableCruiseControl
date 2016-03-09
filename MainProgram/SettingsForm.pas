@@ -84,7 +84,10 @@ implementation
 
 uses
   MainForm, KeyBindForm, SupportedGamesForm, UpdateForm,
-  ACC_Common, ACC_Strings, ACC_Input, ACC_Manager;
+  ACC_Common, ACC_Strings, ACC_Input, ACC_Manager
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  , LazUTF8
+{$IFEND};
 
 
 procedure TfSettingsForm.PrepareBindTable;
@@ -152,8 +155,13 @@ end;
 procedure TfSettingsForm.FormCreate(Sender: TObject);
 begin
 sgBindings.DoubleBuffered := True;
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+diaExportSettings.InitialDir := ExtractFileDir(SysToUTF8(ParamStr(0)));
+diaImportSettings.InitialDir := ExtractFileDir(SysToUTF8(ParamStr(0)));
+{$ELSE}
 diaExportSettings.InitialDir := ExtractFileDir(ParamStr(0));
 diaImportSettings.InitialDir := ExtractFileDir(ParamStr(0));
+{$IFEND}
 PrepareBindTable;
 LocalSettingsManager := TSettingsManager.Create(Addr(fLocalSettings));
 end;

@@ -389,7 +389,11 @@ var
   i:  Integer;
 begin
 fSettings^ := def_Settings;
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+fSettings^.ProgramPath := SysToUTF8(ParamStr(0));
+{$ELSE}
 fSettings^.ProgramPath := ParamStr(0);
+{$IFEND}
 SetLength(fSettings^.SpeedUnits,Length(def_SpeedUnits));
 For i := Low(def_SpeedUnits) to High(def_SpeedUnits) do
   fSettings^.SpeedUnits[i] := def_SpeedUnits[i];

@@ -64,7 +64,7 @@ implementation
 uses
   ShlObj, Registry, {$IFDEF FPC}LCLType,{$ENDIF}
   ACC_Common, ACC_Strings, ACC_Manager, SupportedGamesForm
-  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION >= 20701)}
+  {$IF Defined(FPC) and not Defined(Unicode)}
   , LazUTF8
   {$IFEND};
 
@@ -133,7 +133,11 @@ procedure TfUpdateForm.FormCreate(Sender: TObject);
 begin
 fDontClearOnShow := False;
 clbUpdateData.DoubleBuffered := True;
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+diaLoadUpdate.InitialDir := ExtractFileDir(SysToUTF8(ParamStr(0)));
+{$ELSE}
 diaLoadUpdate.InitialDir := ExtractFileDir(ParamStr(0));
+{$IFEND}
 fUpdateDataManager := TGamesDataManager.Create;
 fUpdateDataManager.GameIcons.DefaultIcon := False;
 end;
