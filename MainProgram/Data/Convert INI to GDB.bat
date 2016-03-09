@@ -1,4 +1,4 @@
-start ..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i new_GamesData.ini -o GamesData.gdb -of bin -ic^
+start ..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i GamesData.ini -o GamesData.gdb -of bin -ic^
   ..\Resources\GameIcons\ALH.png^
   ..\Resources\GameIcons\AuTS.png^
   ..\Resources\GameIcons\ET.png^
