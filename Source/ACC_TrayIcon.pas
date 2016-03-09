@@ -73,7 +73,7 @@ type
 
 implementation
 
-{$R 'Resources\TrayIcon.res'}
+{$R '..\MainProgram\Resources\TrayIcon.res'}
 
 uses
   SysUtils, ShellAPI, Math, ACC_Strings

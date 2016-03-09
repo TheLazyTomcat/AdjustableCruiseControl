@@ -3,12 +3,13 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="9"/>
-    <BuildModes Active="Debug_win_x86"/>
+    <BuildModes Active="Release_win_x86"/>
     <Units Count="13">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="81" Y="39"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="3" Y="8"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -31,21 +32,18 @@
       <Unit3>
         <Filename Value="..\ACC_PluginManager.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="56"/>
         <CursorPos X="30" Y="135"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="21" Y="25"/>
         <UsageCount Value="22"/>
-        <Loaded Value="True"/>
       </Unit4>
       <Unit5>
         <Filename Value="..\..\MainProgram\Libs\DefRegistry.pas"/>
@@ -83,79 +81,23 @@
         <UsageCount Value="22"/>
       </Unit12>
     </Units>
-    <JumpHistory Count="18" HistoryIndex="17">
+    <JumpHistory Count="4" HistoryIndex="3">
       <Position1>
         <Filename Value="ACC_Plugin.lpr"/>
         <Caret Line="6" TopLine="2"/>
       </Position1>
       <Position2>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="64" Column="5" TopLine="46"/>
-      </Position2>
-      <Position3>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="17" Column="55" TopLine="11"/>
-      </Position3>
-      <Position4>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="61" Column="58" TopLine="39"/>
-      </Position4>
-      <Position5>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="128" Column="14" TopLine="106"/>
-      </Position5>
-      <Position6>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="130" Column="14" TopLine="108"/>
-      </Position6>
-      <Position7>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="141" Column="83" TopLine="120"/>
-      </Position7>
-      <Position8>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="143" Column="78" TopLine="122"/>
-      </Position8>
-      <Position9>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="144" Column="121" TopLine="123"/>
-      </Position9>
-      <Position10>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="145" Column="73" TopLine="124"/>
-      </Position10>
-      <Position11>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="150" Column="83" TopLine="129"/>
-      </Position11>
-      <Position12>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="151" Column="119" TopLine="130"/>
-      </Position12>
-      <Position13>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="167" Column="58" TopLine="146"/>
-      </Position13>
-      <Position14>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="355" Column="102" TopLine="333"/>
-      </Position14>
-      <Position15>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="357" Column="56" TopLine="335"/>
-      </Position15>
-      <Position16>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="358" Column="56" TopLine="336"/>
-      </Position16>
-      <Position17>
-        <Filename Value="..\ACC_PluginManager.pas"/>
-        <Caret Line="359" Column="56" TopLine="337"/>
-      </Position17>
-      <Position18>
         <Filename Value="ACC_Plugin.lpr"/>
         <Caret Line="15" Column="37"/>
-      </Position18>
+      </Position2>
+      <Position3>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="39" Column="81"/>
+      </Position3>
+      <Position4>
+        <Filename Value="ACC_Plugin.lpr"/>
+        <Caret Line="5" Column="26"/>
+      </Position4>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

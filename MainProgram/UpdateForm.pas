@@ -2,7 +2,7 @@ unit UpdateForm;
 
 interface
 
-{$INCLUDE ACC_Defs.inc}
+{$INCLUDE '..\Source\ACC_Defs.inc'}
 
 uses
   Windows, SysUtils, Variants, Classes, Graphics, Controls,

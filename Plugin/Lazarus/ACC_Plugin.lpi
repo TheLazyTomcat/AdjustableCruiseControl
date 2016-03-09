@@ -38,7 +38,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+            <OtherUnitFiles Value="..\..\Source\Libs;..\..\Source"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -75,7 +75,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+            <OtherUnitFiles Value="..\..\Source\Libs;..\..\Source"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -120,7 +120,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+            <OtherUnitFiles Value="..\..\Source\Libs;..\..\Source"/>
             <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -193,7 +193,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\MainProgram\Libs;..\..\MainProgram;.."/>
+      <OtherUnitFiles Value="..\..\Source\Libs;..\..\Source"/>
       <UnitOutputDirectory Value="out_temp\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
@@ -226,13 +226,6 @@
       <CustomOptions Value="-dFPC
 -dDebug
 -dx86"/>
-      <OtherDefines Count="5">
-        <Define0 Value="FPC"/>
-        <Define1 Value="Release"/>
-        <Define2 Value="Debug"/>
-        <Define3 Value="x86"/>
-        <Define4 Value="x64"/>
-      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>

@@ -1,13 +1,15 @@
 library ACC_Plugin;
 
+{$INCLUDE ..\..\Source\ACC_Defs.inc} 
+
 uses
   SysUtils,
 
-  SCS_Telemetry_Condensed in '..\SCS_Telemetry_Condensed.pas',
+  SCS_Telemetry_Condensed,
 
-  ACC_Settings      in '..\..\MainProgram\ACC_Settings.pas',
-  ACC_PluginComm    in '..\..\MainProgram\ACC_PluginComm.pas',
-  ACC_PluginManager in '..\ACC_PluginManager.pas';
+  ACC_Settings      in '..\..\Source\ACC_Settings.pas',
+  ACC_PluginComm    in '..\..\Source\ACC_PluginComm.pas',
+  ACC_PluginManager in '..\..\Source\ACC_PluginManager.pas';
 
 {$R *.res}
 

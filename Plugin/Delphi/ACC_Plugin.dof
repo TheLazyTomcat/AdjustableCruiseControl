@@ -94,7 +94,7 @@ OutputDir=.\Release\win_x86
 UnitOutputDir=.\DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\..\MainProgram\Libs
+SearchPath=..\..\Source\Libs
 Packages=vcl;rtl;vclx;VclSmp;vclshlctrls;AdvCircularProgressPkgD7;TMSMenusD7;AdvShaperPkgD7;alpb;sulab;butcmps;EZJTexturePanelD6;FormShapePkgD7;GradientLabelPkgD7;ic;l3d;lfr;fw;mmjl;ash;tqpb;shlab;vaf;ish;xib;TPNGButton;wbme;verinf;aled;DelphiX70
 Conditionals=
 DebugSourceDirs=
@@ -134,9 +134,10 @@ Comments=Game plugin for ACC 2.3.x
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=2
-Item0=..\..\MainProgram\Libs
-Item1=..\..\MainProgram\Libs;..\..\MainProgram\Libs\WMC
+Count=3
+Item0=..\..\Source\Libs
+Item1=..\..\MainProgram\Libs
+Item2=..\..\MainProgram\Libs;..\..\MainProgram\Libs\WMC
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\DCU

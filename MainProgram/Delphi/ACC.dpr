@@ -1,23 +1,23 @@
 program ACC;
 
-{$INCLUDE ..\ACC_Defs.inc}
+{$INCLUDE '..\..\Source\ACC_Defs.inc'}
 
 uses
   SysUtils,
   Forms,
   
-  ACC_Common          in '..\ACC_Common.pas',
-  ACC_Strings         in '..\ACC_Strings.pas',
-  ACC_InstanceControl in '..\ACC_InstanceControl.pas',
-  ACC_TrayIcon        in '..\ACC_TrayIcon.pas',
-  ACC_Settings        in '..\ACC_Settings.pas',
-  ACC_GamesData       in '..\ACC_GamesData.pas',
-  ACC_SplashScreen    in '..\ACC_SplashScreen.pas',
-  ACC_ProcessBinder   in '..\ACC_ProcessBinder.pas',
-  ACC_MemoryOps       in '..\ACC_MemoryOps.pas',
-  ACC_Input           in '..\ACC_Input.pas',
-  ACC_Manager         in '..\ACC_Manager.pas',
-  ACC_PluginComm      in '..\ACC_PluginComm.pas',
+  ACC_Common          in '..\..\Source\ACC_Common.pas',
+  ACC_Strings         in '..\..\Source\ACC_Strings.pas',
+  ACC_InstanceControl in '..\..\Source\ACC_InstanceControl.pas',
+  ACC_TrayIcon        in '..\..\Source\ACC_TrayIcon.pas',
+  ACC_Settings        in '..\..\Source\ACC_Settings.pas',
+  ACC_GamesData       in '..\..\Source\ACC_GamesData.pas',
+  ACC_SplashScreen    in '..\..\Source\ACC_SplashScreen.pas',
+  ACC_ProcessBinder   in '..\..\Source\ACC_ProcessBinder.pas',
+  ACC_MemoryOps       in '..\..\Source\ACC_MemoryOps.pas',
+  ACC_Input           in '..\..\Source\ACC_Input.pas',
+  ACC_Manager         in '..\..\Source\ACC_Manager.pas',
+  ACC_PluginComm      in '..\..\Source\ACC_PluginComm.pas',
 
   MainForm           in '..\MainForm.pas' {fMainForm},
   AboutForm          in '..\AboutForm.pas' {fAboutForm},

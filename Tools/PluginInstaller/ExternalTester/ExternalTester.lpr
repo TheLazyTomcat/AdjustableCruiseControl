@@ -3,11 +3,6 @@ program ExternalTester;
 {$mode objfpc}{$H+}
 
 uses
-  {$IFDEF UNIX}{$IFDEF UseCThreads}
-  cthreads,
-  {$ENDIF}{$ENDIF}
-  Classes,
-  SCS_Telemetry_Condensed,
   ACC_PluginCheck
   {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
   , LazUTF8

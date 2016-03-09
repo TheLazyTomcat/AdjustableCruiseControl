@@ -9,7 +9,7 @@ unit ACC_PluginManager;
 
 interface
 
-{$INCLUDE ..\MainProgram\ACC_Defs.inc}
+{$INCLUDE ACC_Defs.inc}
 
 uses
   WinMsgComm, WinMsgCommServer,

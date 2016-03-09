@@ -6,8 +6,8 @@ uses
   SysUtils,
   Classes,
 
-  ACC_Common    in '..\..\MainProgram\ACC_Common.pas',
-  ACC_GamesData in '..\..\MainProgram\ACC_GamesData.pas';
+  ACC_Common    in '..\..\Source\ACC_Common.pas',
+  ACC_GamesData in '..\..\Source\ACC_GamesData.pas';
 
 
 type

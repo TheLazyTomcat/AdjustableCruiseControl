@@ -98,7 +98,7 @@ uses
   , LazUTF8, LazFileUtils
   {$IFEND};
 
-{$R 'Resources\GamesData.res'}
+{$R '..\MainProgram\Resources\GamesData.res'}
 
 {$If not declared(GetShellWindow)}
 Function GetShellWindow: HWND; stdcall; external 'user32.dll';

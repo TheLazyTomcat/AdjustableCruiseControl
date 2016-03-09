@@ -61,7 +61,7 @@ type
 
 implementation
 
-{$R 'Resources\SplashImg.res'}
+{$R '..\MainProgram\Resources\SplashImg.res'}
 
 uses
   SysUtils, DateUtils,{$IFDEF FPC} Controls, InterfaceBase, Win32Extra,{$ENDIF}

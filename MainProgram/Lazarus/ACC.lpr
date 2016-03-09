@@ -1,6 +1,6 @@
 program ACC;
 
-{$INCLUDE ..\ACC_Defs.inc}
+{$INCLUDE '..\..\Source\ACC_Defs.inc'}
 
 uses
   Interfaces, // this includes the LCL widgetset

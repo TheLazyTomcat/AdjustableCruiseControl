@@ -294,7 +294,7 @@ type
 
 implementation
 
-{$R 'Resources\DefGameIcon.res'}
+{$R '..\MainProgram\Resources\DefGameIcon.res'}
 
 uses
   Windows, SysUtils, DateUtils, Math, BinTextEnc, AuxTypes

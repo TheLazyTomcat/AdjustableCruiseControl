@@ -1,6 +1,6 @@
 library ACC_Plugin;
 
-{$INCLUDE ..\..\MainProgram\ACC_Defs.inc}
+{$INCLUDE ..\..\Source\ACC_Defs.inc}
 
 uses
   SysUtils,
