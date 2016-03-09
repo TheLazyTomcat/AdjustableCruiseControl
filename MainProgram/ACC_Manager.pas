@@ -195,7 +195,12 @@ If UpdateLoad then
   begin
     DoUpdateRestore;
     TempStr := fInstanceControl.ReadSharedString;
-    If Assigned(fOnLoadUpdate) and FileExists(TempStr) then fOnLoadUpdate(Self,TempStr);
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    If Assigned(fOnLoadUpdate) and FileExistsUTF8(TempStr) then
+  {$ELSE}
+    If Assigned(fOnLoadUpdate) and FileExists(TempStr) then
+  {$IFEND}
+      fOnLoadUpdate(Self,TempStr);
   end
 else DoUpdateRestore;
 end;
@@ -463,9 +468,11 @@ begin
 ResourceStream := TResourceStream.Create(hInstance,GamesDataResName,RT_RCDATA);
 try
 {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  FileName := ExtractFilePath(SysToUTF8(ParamStr(0))) + GamesDataFileBin;
   If DirectoryExistsUTF8(ExtractFileDir(FileName)) or CreateDirUTF8(ExtractFileDir(FileName)) then
     ResourceStream.SaveToFile(UTF8ToSys(FileName));
 {$ELSE}
+  FileName := ExtractFilePath(ParamStr(0)) + GamesDataFileBin;
   If DirectoryExists(ExtractFileDir(FileName)) or CreateDir(ExtractFileDir(FileName)) then
     ResourceStream.SaveToFile(FileName);
 {$IFEND}

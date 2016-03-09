@@ -190,6 +190,7 @@ uses
   ACC_Settings, ACC_Strings, ACC_Input, ACC_PluginComm,
   AboutForm, SettingsForm, UpdateForm;
 
+
 procedure TfMainForm.AfterShow(var Msg: TMessage);
 begin
 If fLoadingUpdate then
@@ -241,6 +242,9 @@ else
     sbStatusBar.Panels[1].Text := ACCSTR_UI_STB_PluginOffline;
     grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionInactive;
   end;
+{$IFDEF FPC}
+grbSpeedLimit.Invalidate;
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------

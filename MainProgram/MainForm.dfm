@@ -513,7 +513,7 @@ object fMainForm: TfMainForm
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 3
+    TabOrder = 4
     OnChange = cbUnitsChange
   end
   object btnAbout: TButton
@@ -522,7 +522,7 @@ object fMainForm: TfMainForm
     Width = 113
     Height = 21
     Caption = 'About...'
-    TabOrder = 5
+    TabOrder = 6
     OnClick = btnAboutClick
   end
   object btnSettings: TButton
@@ -531,7 +531,7 @@ object fMainForm: TfMainForm
     Width = 113
     Height = 21
     Caption = 'Settings...'
-    TabOrder = 4
+    TabOrder = 5
     OnClick = btnSettingsClick
   end
   object grbSpeedLimit: TGroupBox
@@ -598,7 +598,7 @@ object fMainForm: TfMainForm
     Width = 113
     Height = 17
     Caption = 'Show key bindings'
-    TabOrder = 7
+    TabOrder = 3
     OnClick = cbShowKeyBindingsClick
   end
   object oXPManifest: TXPManifest

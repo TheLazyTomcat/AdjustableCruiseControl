@@ -83,7 +83,7 @@ implementation
 {$ENDIF}
 
 uses
-  MainForm, KeyBindForm, SupportedGamesForm, UpdateForm,{$IFNDEF FPC}MsgForm,{$ENDIF}
+  MainForm, KeyBindForm, SupportedGamesForm, UpdateForm,
   ACC_Common, ACC_Strings, ACC_Input, ACC_Manager;
 
 
@@ -187,7 +187,7 @@ begin
 {$IFDEF FPC}
 Application.MessageBox(ACCSTR_UI_SET_TIH_ProcessScanTimer,'Processes scan interval',MB_ICONINFORMATION);
 {$ELSE}
-ShowInfoMsg(Self,0,ACCSTR_UI_SET_TIH_ProcessScanTimer,'Processes scan interval','','');
+MessageDlg(ACCSTR_UI_SET_TIH_ProcessScanTimer,mtInformation,[mbOK],0);
 {$ENDIF}
 end;
 
@@ -198,7 +198,7 @@ begin
 {$IFDEF FPC}
 Application.MessageBox(ACCSTR_UI_SET_TIH_ModuleLoadTimer,'Modules load timeout',MB_ICONINFORMATION);
 {$ELSE}
-ShowInfoMsg(Self,0,ACCSTR_UI_SET_TIH_ModuleLoadTimer,'Modules load timeout','','');
+MessageDlg(ACCSTR_UI_SET_TIH_ModuleLoadTimer,mtInformation,[mbOK],0);
 {$ENDIF}
 end;
 
@@ -324,7 +324,7 @@ begin
 {$IFDEF FPC}
 If Application.MessageBox(ACCSTR_UI_SET_DEF_LoadDefaultSettings,'Load default settings',MB_ICONWARNING or MB_YESNO) = IDYES then
 {$ELSE}
-If ShowWarningMsg(Self,1,ACCSTR_UI_SET_DEF_LoadDefaultSettings,'Load default settings','','') then
+If MessageDlg(ACCSTR_UI_SET_DEF_LoadDefaultSettings,mtWarning,[mbYes,mbNo],0) = mrYes then
 {$ENDIF}
   begin
     LocalSettingsManager.InitSettings;
@@ -337,11 +337,7 @@ end;
 procedure TfSettingsForm.btnExportSettingsClick(Sender: TObject);
 begin
 If diaExportSettings.Execute then
-{$IFDEF FPC}
-  LocalSettingsManager.SaveToIni(UTF8ToString(diaExportSettings.FileName));
-{$ELSE}
-  LocalSettingsManager.SaveToIni(diaExportSettings.FileName);
-{$ENDIF}
+LocalSettingsManager.SaveToIni(diaExportSettings.FileName);
 end;
 
 //------------------------------------------------------------------------------
@@ -350,16 +346,13 @@ procedure TfSettingsForm.btnImportSettingsClick(Sender: TObject);
 begin
 If diaImportSettings.Execute then
   begin
-    {$IFDEF FPC}
-    If LocalSettingsManager.LoadFromIni(UTF8ToString(diaImportSettings.FileName)) then
-      SettingsToForm
-    else
-      Application.MessageBox('Settings import has failed.','Adjustable Cruise Control',MB_ICONERROR);
-    {$ELSE}
     If LocalSettingsManager.LoadFromIni(diaImportSettings.FileName) then
       SettingsToForm
     else
-      ShowErrorMsg('Settings import has failed.');
+    {$IFDEF FPC}
+      Application.MessageBox('Settings import has failed.','Adjustable Cruise Control',MB_ICONERROR);
+    {$ELSE}
+      MessageDlg('Settings import has failed.',mtError,[mbOK],0);
     {$ENDIF}
   end;
 end;

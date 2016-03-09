@@ -62,8 +62,11 @@ implementation
 {$ENDIF}
 
 uses
-  ShlObj, {$IFNDEF FPC}MsgForm,{$ELSE}LCLType,{$ENDIF} Registry,
-  ACC_Common, ACC_Strings, ACC_Manager, SupportedGamesForm;
+  ShlObj, Registry, {$IFDEF FPC}LCLType,{$ENDIF}
+  ACC_Common, ACC_Strings, ACC_Manager, SupportedGamesForm
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION >= 20701)}
+  , LazUTF8
+  {$IFEND};
 
 {$IFDEF FPC}
 const
@@ -119,7 +122,7 @@ else
   {$IFDEF FPC}
     Application.MessageBox('Failed to load selected file.','Games Data Update',MB_ICONERROR);
   {$ELSE}
-    ShowErrorMsg(Application.MainForm,0,'Failed to load selected file.','Games Data Update','','');
+    MessageDlg('Failed to load selected file.',mtError,[mbOK],0);
   {$ENDIF}
   end;
 end;
@@ -291,11 +294,7 @@ var
 begin
 If diaLoadUpdate.Execute then
   begin
-    {$IFDEF FPC}
-    If fUpdateDataManager.LoadFrom(UTF8ToString(diaLoadUpdate.FileName)) then
-    {$ELSE}
     If fUpdateDataManager.LoadFrom(diaLoadUpdate.FileName) then
-    {$ENDIF}
       begin
         fUpdateDataManager.CheckUpdate(ACCManager.GamesDataManager);
         FillList;
@@ -312,7 +311,7 @@ If diaLoadUpdate.Execute then
       {$IFDEF FPC}
         Application.MessageBox('Failed to load selected file.','Adjustable Cruise Control',MB_ICONERROR);
       {$ELSE}
-        ShowErrorMsg('Failed to load selected file.');
+        MessageDlg('Failed to load selected file.',mtError,[mbOK],0);
       {$ENDIF}
       end;
   end;
@@ -330,7 +329,7 @@ If AddCount > 0 then
   {$IFDEF FPC}
     Application.MessageBox(PChar(IntToStr(AddCount) + ' change(s) was made in the list of supported games.'),'Adjustable Cruise Control',MB_ICONINFORMATION);
   {$ELSE}
-    ShowInfoMsg(IntToStr(AddCount) + ' change(s) was made in the list of supported games.');
+    MessageDlg(IntToStr(AddCount) + ' change(s) was made in the list of supported games.',mtInformation,[mbOK],0);
   {$ENDIF}
     ACCManager.ProcessBinder.SetGamesData(ACCManager.GamesDataManager.GamesData);
     ACCManager.ProcessBinder.Rebind;
@@ -343,7 +342,7 @@ else
 {$IFDEF FPC}
   Application.MessageBox('No change was made.','Adjustable Cruise Control',MB_ICONINFORMATION);
 {$ELSE}
-  ShowInfoMsg('No change was made.');
+  MessageDlg('No change was made.',mtInformation,[mbOK],0);
 {$ENDIF}
 end;
 
@@ -380,10 +379,18 @@ procedure TfUpdateForm.btnAssociateFileClick(Sender: TObject);
       Reg.WriteString('','Binary update file for Adjustable Cruise Control 2');
       Reg.CloseKey;
       Reg.OpenKey('Software\Classes\ACCUpdateFile\DefaultIcon', True);
+    {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION >= 20701)}
+      Reg.WriteString('',UTF8ToWinCP(ParamStr(0) + ',1'));
+    {$ELSE}
       Reg.WriteString('',ParamStr(0) + ',1');
+    {$IFEND}
       Reg.CloseKey;
       Reg.OpenKey('Software\Classes\ACCUpdateFile\shell\open\command', True);
+    {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION >= 20701)}
+      Reg.WriteString('',UTF8ToWinCP(ParamStr(0) + ' "%1"')) ;
+    {$ELSE}
       Reg.WriteString('',ParamStr(0) + ' "%1"') ;
+    {$IFEND}
       Reg.CloseKey;
     finally
       Reg.Free;
@@ -408,13 +415,38 @@ procedure TfUpdateForm.btnAssociateFileClick(Sender: TObject);
     SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,nil,nil);
   end;
 
+{$IFNDEF FPC}
+  Function InPlaceMessageDlg(const Msg: String; Captions: array of string): Integer;
+  var
+    MsgDialog:    TForm;
+    i:            Integer;
+    CaptionIndex: Integer;
+  begin
+    MsgDialog := CreateMessageDialog(Msg,mtConfirmation,[mbYes,mbNo]);
+    CaptionIndex := 0;
+    For i := 0 to Pred(MsgDialog.ComponentCount) do
+      begin
+        If CaptionIndex > High(Captions) then Break;
+        If MsgDialog.Components[i] is TButton then
+          with TButton(MsgDialog.Components[i]) do
+            begin
+              Left := Left + (CaptionIndex * 10) - 5;
+              Width := Width + 10;
+              Caption := Captions[CaptionIndex];
+              Inc(CaptionIndex);
+            end;
+      end;
+    Result := MsgDialog.ShowModal;
+  end;
+{$ENDIF}
+
 begin
 If FileAssociated then
   begin
   {$IFDEF FPC}
     If QuestionDlg('File association',ACCSTR_UI_SUPG_ASSOC_Deassociate,mtConfirmation,[$100,'Remove',$101,'Reassociate'],'') = $100 then
   {$ELSE}
-    If ShowQuestionMsg(Self,1,ACCSTR_UI_SUPG_ASSOC_Deassociate,'File association','Remove','Reassociate') then
+    If InPlaceMessageDlg(ACCSTR_UI_SUPG_ASSOC_Deassociate,['Remove','Reassociate']) = mrYes then
   {$ENDIF}    
       DeassociateFile
     else
@@ -425,7 +457,7 @@ else
   {$IFDEF FPC}
     If Application.MessageBox(ACCSTR_UI_SUPG_ASSOC_Associate,'File association',MB_ICONQUESTION or MB_YESNO) = IDYES then
   {$ELSE}
-    If ShowQuestionMsg(Self,1,ACCSTR_UI_SUPG_ASSOC_Associate,'File association','','') then
+    If MessageDlg(ACCSTR_UI_SUPG_ASSOC_Associate,mtConfirmation,[mbYes,mbNo],0) = mrYes then
   {$ENDIF}
       AssociateFile;
   end;

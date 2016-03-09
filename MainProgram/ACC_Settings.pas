@@ -213,7 +213,10 @@ implementation
 
 uses
   Windows, SysUtils, IniFiles,
-  DefRegistry, FloatHex;  
+  DefRegistry, FloatHex
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  , LazUTF8
+  {$IFEND};
 
 const
   // Default program settings
@@ -361,8 +364,10 @@ end;
 constructor TSettingsManager.Create(SettingsVariable: PSettings);
 begin
 inherited Create;
-If Assigned(SettingsVariable) then fSettings := SettingsVariable
-  else raise Exception.Create('TSettingsManager.Create: Settings variable is not assigned.');
+If Assigned(SettingsVariable) then
+  fSettings := SettingsVariable
+else
+  raise Exception.Create('TSettingsManager.Create: Settings variable is not assigned.');
 end;
 
 //------------------------------------------------------------------------------
@@ -436,7 +441,11 @@ try
     Registry.RootKey := HKEY_CURRENT_USER;
     If Registry.OpenKeyReadOnly(SettingsRegistryKey) then
       begin
+      {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+        fSettings^.ProgramPath := SysToUTF8(ParamStr(0));
+      {$ELSE}
         fSettings^.ProgramPath := ParamStr(0);
+      {$IFEND}
         fSettings^.ShowSplashScreen := Registry.ReadBoolDef(SETN_VAL_REG_ShowSplashScreen,def_Settings.ShowSplashScreen);
         fSettings^.MinimizeToTray := Registry.ReadBoolDef(SETN_VAL_REG_MinimizeToTray,def_Settings.MinimizeToTray);
         fSettings^.StartMinimized := Registry.ReadBoolDef(SETN_VAL_REG_StartMinimized,def_Settings.StartMinimized);
@@ -600,9 +609,17 @@ var
 
 begin
 try
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  IniFile := TIniFile.Create(UTF8ToSys(FileName));
+{$ELSE}
   IniFile := TIniFile.Create(FileName);
+{$IFEND}
   try
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    fSettings^.ProgramPath := SysToUTF8(ParamStr(0));
+  {$ELSE}
     fSettings^.ProgramPath := ParamStr(0);
+  {$IFEND}
     fSettings^.ShowSplashScreen := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_ShowSplashScreen,def_Settings.ShowSplashScreen);
     fSettings^.MinimizeToTray := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_MinimizetoTray,def_Settings.MinimizeToTray);
     fSettings^.StartMinimized := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_StartMinimized,def_Settings.StartMinimized);
@@ -678,7 +695,11 @@ var
 
 begin
 try
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  IniFile := TIniFile.Create(UTF8ToSys(FileName));
+{$ELSE}
   IniFile := TIniFile.Create(FileName);
+{$IFEND}
   try
     ValidateSettings;
 
