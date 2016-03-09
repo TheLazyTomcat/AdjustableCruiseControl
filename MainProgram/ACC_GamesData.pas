@@ -414,10 +414,16 @@ end;
 //------------------------------------------------------------------------------
 
 Function TIconList.IndexOfItem(Identifier: String): Integer;
+var
+  i:  Integer;
 begin
-For Result := 0 to Pred(Count) do
-  If AnsiSameText(PIconListItem(Items[Result])^.Identifier,Identifier) then Exit;
 Result := -1;
+For i := 0 to Pred(Count) do
+  If AnsiSameText(PIconListItem(Items[i])^.Identifier,Identifier) then
+    begin
+      Result := i;
+      Break;
+    end;
 end;
 
 //------------------------------------------------------------------------------
@@ -1702,10 +1708,16 @@ end;
 //------------------------------------------------------------------------------
 
 Function TGamesDataManager.IndexOf(Identifier: TGUID): Integer;
+var
+  i:  Integer;
 begin
-For Result := Low(fGamesData.Entries) to High(fGamesData.Entries) do
-  If IsEqualGUID(fGamesData.Entries[Result].Identifier,Identifier) then Exit;
 Result := -1;
+For i := Low(fGamesData.Entries) to High(fGamesData.Entries) do
+  If IsEqualGUID(fGamesData.Entries[i].Identifier,Identifier) then
+    begin
+      Result := i;
+      Break;
+    end;
 end;
 
 //------------------------------------------------------------------------------

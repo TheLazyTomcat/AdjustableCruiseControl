@@ -265,14 +265,19 @@ end;
 
 Function TProcessList.IndexOf(const ExecName: String; ProcessID: DWORD): Integer;
 var
+  i:            Integer;
   TempListItem: TProcessListItem;
 begin
-For Result := 0 to Pred(fRealCount) do
-  begin
-    TempListItem := ListItems[Result];
-    If (ProcessID = TempListItem.ProcessID) and AnsiSameText(ExecName,TempListItem.ExecName) then Exit
-  end;
 Result := -1;
+For i := 0 to Pred(fRealCount) do
+  begin
+    TempListItem := ListItems[i];
+    If (ProcessID = TempListItem.ProcessID) and AnsiSameText(ExecName,TempListItem.ExecName) then
+      begin
+        Result := i;
+        Break;
+      end;
+  end;
 end;
 
 //------------------------------------------------------------------------------

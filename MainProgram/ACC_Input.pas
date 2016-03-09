@@ -142,28 +142,44 @@ end;
 //------------------------------------------------------------------------------
 
 Function TTriggersList.IndexOfTrigger(Trigger: Integer): Integer;
+var
+  i:  Integer;
 begin
-For Result := 0 to Pred(Count) do
-  If PTriggerListItem(Items[Result])^.Trigger = Trigger then Exit;
 Result := -1;
+For i := 0 to Pred(Count) do
+  If PTriggerListItem(Items[i])^.Trigger = Trigger then
+    begin
+      Result := i;
+      Break;
+    end;
 end;
 
 //------------------------------------------------------------------------------
 
 Function TTriggersList.IndexOfInput(Input: TInput; ReqShiftKey: Boolean = True): Integer;
 var
+  i:            Integer;
   TempItemPtr:  PTriggerListItem;
 begin
-For Result := 0 to Pred(Count) do
-  begin
-    TempItemPtr := PTriggerListItem(Items[Result]);
-    If (TempItemPtr^.Input.PrimaryKey = Input.PrimaryKey) and
-       (TempItemPtr^.Input.ShiftKey = Input.ShiftKey) then Exit;
-  end;
-If not ReqShiftKey then
-  For Result := 0 to Pred(Count) do
-    If PTriggerListItem(Items[Result])^.Input.PrimaryKey = Input.PrimaryKey then Exit;
 Result := -1;
+For i := 0 to Pred(Count) do
+  begin
+    TempItemPtr := PTriggerListItem(Items[i]);
+    If (TempItemPtr^.Input.PrimaryKey = Input.PrimaryKey) and
+       (TempItemPtr^.Input.ShiftKey = Input.ShiftKey) then
+       begin
+         Result := i;
+         Exit;
+       end;
+  end;
+Result := -1;
+If not ReqShiftKey then
+  For i := 0 to Pred(Count) do
+    If PTriggerListItem(Items[i])^.Input.PrimaryKey = Input.PrimaryKey then
+      begin
+        Result := i;
+        Break;
+      end;
 end;
 
 //------------------------------------------------------------------------------
