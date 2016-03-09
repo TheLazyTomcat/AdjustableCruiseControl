@@ -50,6 +50,7 @@ implementation
 {$R *.dfm}
 
 uses
+  WinFileInfo,
   DescriptionForm, LibraryForm;
 
 procedure TfMainForm.FillInstalledPluginsList;
@@ -76,6 +77,15 @@ procedure TfMainForm.FormCreate(Sender: TObject);
 var
   i:  Integer;
 begin
+with TWinFileInfo.Create(WFI_LS_LoadVersionInfo or WFI_LS_LoadFixedFileInfo or WFI_LS_DecodeFixedFileInfo) do
+try
+  Caption := Format('Plugin Installer %d.%d.%d',[
+    VersionInfoFixedFileInfoDecoded.FileVersionMembers.Major,
+    VersionInfoFixedFileInfoDecoded.FileVersionMembers.Minor,
+    VersionInfoFixedFileInfoDecoded.FileVersionMembers.Release]);
+finally
+  Free;
+end;
 PluginInstaller := TACCPluginInstaller.Create;
 dlgSelectPlugin.InitialDir := ExtractFileDir(ParamStr(0));
 cmbGame.Items.BeginUpdate;
