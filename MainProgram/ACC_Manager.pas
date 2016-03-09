@@ -50,7 +50,7 @@ type
     Function GetPluginState: Boolean;
   protected
     procedure Application_OnMinimize(Sender: TObject); virtual;
-    procedure InstaceControl_OnRestoreMessage(Sender: TObject; Parameter: Integer); virtual;
+    procedure InstaceControl_OnRestoreMessage(Sender: TObject; UpdateLoad: Boolean); virtual;
     procedure ProcessBinder_OnStateChange(Sender: TObject); virtual;
     procedure ProcessBinder_OnGameUnbind(Sender: TObject); virtual;
     procedure WMCClient_OnValueRecived(Sender: TObject; {%H-}SenderID: TWMCConnectionID; Value: TWMCMultiValue); virtual;
@@ -167,17 +167,15 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TACCManager.InstaceControl_OnRestoreMessage(Sender: TObject; Parameter: Integer);
+procedure TACCManager.InstaceControl_OnRestoreMessage(Sender: TObject; UpdateLoad: Boolean);
 var
   TempStr:  String;
 
-  procedure DoRestore;
+  procedure DoUpdateRestore;
   begin
     If not fProcessBinder.Binded or not GameActive then
       If fTrayIcon.Visible then
-        begin
-          DoApplicationRestore(Self);
-        end
+        DoApplicationRestore(Self)
       else
         begin
           fApplication.Restore;
@@ -190,13 +188,13 @@ var
   end;
   
 begin
-If Parameter = 1 then
+If UpdateLoad then
   begin
-    DoRestore;
+    DoUpdateRestore;
     TempStr := fInstanceControl.ReadSharedString;
     If Assigned(fOnLoadUpdate) and FileExists(TempStr) then fOnLoadUpdate(Self,TempStr);
   end
-else DoRestore;
+else DoUpdateRestore;
 end;
 
 //------------------------------------------------------------------------------
