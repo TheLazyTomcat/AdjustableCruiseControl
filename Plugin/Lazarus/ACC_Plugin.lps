@@ -4,13 +4,12 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Debug_win_x86"/>
-    <Units Count="13">
+    <Units Count="17">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="3" Y="8"/>
-        <UsageCount Value="26"/>
+        <CursorPos X="3" Y="20"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -19,7 +18,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="527"/>
         <CursorPos X="11" Y="12"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="28"/>
       </Unit1>
       <Unit2>
         <Filename Value="..\SCS_Telemetry_Condensed.pas"/>
@@ -27,7 +26,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2204"/>
         <CursorPos X="45" Y="1600"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="28"/>
       </Unit2>
       <Unit3>
         <Filename Value="..\ACC_PluginManager.pas"/>
@@ -35,7 +34,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="56"/>
         <CursorPos X="30" Y="135"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="28"/>
       </Unit3>
       <Unit4>
         <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
@@ -43,45 +42,78 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="9"/>
         <CursorPos X="21" Y="25"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="24"/>
       </Unit4>
       <Unit5>
-        <Filename Value="..\..\MainProgram\Libs\DefRegistry.pas"/>
-        <UsageCount Value="26"/>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="60"/>
+        <CursorPos X="37" Y="73"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
       </Unit5>
       <Unit6>
-        <Filename Value="..\..\MainProgram\Libs\FloatHex.pas"/>
+        <Filename Value="..\..\MainProgram\Libs\DefRegistry.pas"/>
         <UsageCount Value="26"/>
       </Unit6>
       <Unit7>
+        <Filename Value="..\..\MainProgram\Libs\FloatHex.pas"/>
+        <UsageCount Value="26"/>
+      </Unit7>
+      <Unit8>
         <Filename Value="..\..\MainProgram\Libs\CRC32.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="78"/>
         <CursorPos X="5" Y="89"/>
         <UsageCount Value="23"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="..\..\MainProgram\Libs\WndAlloc.pas"/>
-        <UsageCount Value="23"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\..\MainProgram\Libs\MulticastEvent.pas"/>
+        <Filename Value="..\..\MainProgram\Libs\WndAlloc.pas"/>
         <UsageCount Value="23"/>
       </Unit9>
       <Unit10>
-        <Filename Value="..\..\MainProgram\Libs\UtilityWindow.pas"/>
+        <Filename Value="..\..\MainProgram\Libs\MulticastEvent.pas"/>
         <UsageCount Value="23"/>
       </Unit10>
       <Unit11>
-        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas"/>
-        <UsageCount Value="22"/>
+        <Filename Value="..\..\MainProgram\Libs\UtilityWindow.pas"/>
+        <UsageCount Value="23"/>
       </Unit11>
       <Unit12>
-        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgComm.pas"/>
+        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgCommServer.pas"/>
         <UsageCount Value="22"/>
       </Unit12>
+      <Unit13>
+        <Filename Value="..\..\MainProgram\Libs\WMC\WinMsgComm.pas"/>
+        <UsageCount Value="22"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="..\..\Source\ACC_PluginManager.pas"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="118"/>
+        <CursorPos X="22" Y="61"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\..\Source\Libs\WinTaskScheduler.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="222"/>
+        <CursorPos X="3" Y="235"/>
+        <UsageCount Value="10"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="D:\Lazarus\components\lazutils\lazutf8.pas"/>
+        <UnitName Value="LazUTF8"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3424"/>
+        <CursorPos X="3" Y="3429"/>
+        <UsageCount Value="10"/>
+      </Unit16>
     </Units>
-    <JumpHistory Count="4" HistoryIndex="3">
+    <JumpHistory Count="17" HistoryIndex="16">
       <Position1>
         <Filename Value="ACC_Plugin.lpr"/>
         <Caret Line="6" TopLine="2"/>
@@ -98,6 +130,56 @@
         <Filename Value="ACC_Plugin.lpr"/>
         <Caret Line="5" Column="26"/>
       </Position4>
+      <Position5>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+      </Position5>
+      <Position6>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="105" Column="4" TopLine="86"/>
+      </Position6>
+      <Position7>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="22" Column="46" TopLine="9"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\..\Source\ACC_PluginManager.pas"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\..\Source\ACC_PluginManager.pas"/>
+        <Caret Line="115" Column="29" TopLine="109"/>
+      </Position9>
+      <Position10>
+        <Filename Value="..\..\Source\ACC_PluginManager.pas"/>
+        <Caret Line="61" Column="22" TopLine="48"/>
+      </Position10>
+      <Position11>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="33" Column="3" TopLine="33"/>
+      </Position11>
+      <Position12>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="54" Column="27" TopLine="41"/>
+      </Position12>
+      <Position13>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="82" Column="28" TopLine="70"/>
+      </Position13>
+      <Position14>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="114" Column="29" TopLine="102"/>
+      </Position14>
+      <Position15>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="115" Column="32" TopLine="107"/>
+      </Position15>
+      <Position16>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="241" Column="22" TopLine="225"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <Caret Line="240" Column="17" TopLine="224"/>
+      </Position17>
     </JumpHistory>
   </ProjectSession>
 </CONFIG>

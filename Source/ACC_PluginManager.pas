@@ -38,6 +38,7 @@ type
     fSpeedLimit:      scs_float_t;
     fFeatures:        LongWord;
     fLimitSending:    Boolean;
+    fDeleteTask:      Boolean;
     fWMCServer:       TWinMsgCommServer;
   protected
     procedure WriteToGameLog(Text: String; MsgType: scs_log_type_t = SCS_LOG_TYPE_error); virtual;
@@ -55,21 +56,13 @@ type
     procedure SetValue(Name: TelemetryString; {%H-}Index: scs_u32_t; Value: scs_value_t); virtual;
   end;
 
-{$IF not Declared(FPC_FULLVERSION)}
-const
-  FPC_FULLVERSION = Integer(0);
-{$IFEND}
-
 implementation
 
 uses
-  Windows, SysUtils, ShellAPI, Math, DefRegistry, WinFileInfo,
-  ACC_Settings, ACC_PluginComm
+  Windows, SysUtils, Math, WinFileInfo,
+  ACC_Settings, ACC_PluginComm, ACC_PluginLauncher
   {$IF Defined(FPC) and not Defined(Unicode)}
   , LazUTF8
-  {$IF FPC_FULLVERSION < 20701}
-  , LazFileUtils
-  {$IFEND}
   {$IFEND};
 
 var
@@ -120,67 +113,31 @@ end;
 
 procedure TACCPluginManager.RunMainProgram;
 var
-  Registry:   TDefRegistry;
-  ExecPath:   String;
-{$IFDEF Debug}
-  ExecResult: Integer;
-{$ENDIF}
+  PluginSettings: TSettings;
 begin
-Registry := TDefRegistry.Create;
+with TSettingsManager.Create(@PluginSettings) do
 try
-  Registry.RootKey := HKEY_CURRENT_USER;
-  If Registry.OpenKeyReadOnly(SettingsRegistryKey) then
-    begin
-    {$IF Defined(FPC) and not Defined(Unicode)}
-      ExecPath := WinCPToUTF8(Registry.ReadStringDef(SETN_VAL_REG_ProgramPath,''));
-    {$ELSE}
-      ExecPath := Registry.ReadStringDef(SETN_VAL_REG_ProgramPath,'');
-    {$IFEND}
-    {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
-      If FileExistsUTF8(ExecPath) then
-    {$ELSE}
-      If FileExists(ExecPath) then
-    {$IFEND}
-        begin
-        {$IFDEF Debug}
-        {$IF Defined(FPC) and not Defined(Unicode)}
-          ExecResult := Integer(ShellExecute(0,'open',PChar(UTF8ToWinCP(ExecPath)),nil,nil,SW_SHOWNORMAL));
-        {$ELSE}
-          ExecResult := Integer(ShellExecute(0,'open',PChar(ExecPath),nil,nil,SW_SHOWNORMAL));
-        {$IFEND}
-          case ExecResult of
-            0:                      WriteToGameLog('[ACC] Exec: The operating system is out of memory or resources');
-          //ERROR_FILE_NOT_FOUND:   WriteToGameLog('[ACC] Exec: The specified file was not found');
-          //ERROR_PATH_NOT_FOUND:   WriteToGameLog('[ACC] Exec: The specified path was not found');
-            ERROR_BAD_FORMAT:       WriteToGameLog('[ACC] Exec: The .exe file is invalid');
-            SE_ERR_ACCESSDENIED:    WriteToGameLog('[ACC] Exec: The operating system denied access to the specified file');
-            SE_ERR_ASSOCINCOMPLETE: WriteToGameLog('[ACC] Exec: The file name association is incomplete or invalid');
-            SE_ERR_DDEBUSY:         WriteToGameLog('[ACC] Exec: The DDE transaction could not be completed because other DDE transactions were being processed');
-            SE_ERR_DDEFAIL:         WriteToGameLog('[ACC] Exec: The DDE transaction failed');
-            SE_ERR_DDETIMEOUT:      WriteToGameLog('[ACC] Exec: The DDE transaction could not be completed because the request timed out');
-            SE_ERR_DLLNOTFOUND:     WriteToGameLog('[ACC] Exec: The specified DLL was not found');
-            SE_ERR_FNF:             WriteToGameLog('[ACC] Exec: The specified file was not found');
-            SE_ERR_NOASSOC:         WriteToGameLog('[ACC] Exec: There is no application associated with the given file name extension');
-            SE_ERR_OOM:             WriteToGameLog('[ACC] Exec: There was not enough memory to complete the operation');
-            SE_ERR_PNF:             WriteToGameLog('[ACC] Exec: The specified path was not found');
-            SE_ERR_SHARE:           WriteToGameLog('[ACC] Exec: A sharing violation occurred');
-          else
-            If ExecResult > 32 then WriteToGameLog('[ACC] Exec: Program started',SCS_LOG_TYPE_message)
-              else WriteToGameLog(Format('[ACC] Exec: Unknown error (%d) occured',[ExecResult]));
-          end;
-        {$ELSE}
-        {$IF Defined(FPC) and not Defined(Unicode)}
-          ShellExecute(0,'open',PChar(UTF8ToWinCP(ExecPath)),nil,nil,SW_SHOWNORMAL);
-        {$ELSE}
-          ShellExecute(0,'open',PChar(ExecPath),nil,nil,SW_SHOWNORMAL);
-        {$IFEND}
-        {$ENDIF}
-        end
-      else {$IFDEF Debug}WriteToGameLog('[ACC] Exec: File not found.'){$ENDIF};
-      Registry.CloseKey;
-    end
+  LoadPluginSettings;
 finally
-  Registry.Free;
+  Free;
+end;
+case PluginSettings.PluginLaunchMethod of
+  0:  begin
+        If GetModuleHandle('steam.dll') = 0 then
+          RunMainProgram_Shell(PluginSettings.ProgramPath,WriteToGameLog)
+        else
+          begin
+            RunMainProgram_TaskScheduler(PluginSettings.ProgramPath,WriteToGameLog);
+            fDeleteTask := True;
+          end;
+      end;
+  1:  RunMainProgram_Shell(PluginSettings.ProgramPath,WriteToGameLog);
+  2:  begin
+        RunMainProgram_TaskScheduler(PluginSettings.ProgramPath,WriteToGameLog);
+        fDeleteTask := True;
+      end;
+else
+  WriteToGameLog(Format('[ACC] Exec: Unknown launch method (%d).',[PluginSettings.PluginLaunchMethod]));
 end;
 end;
 
@@ -317,6 +274,7 @@ WriteToGameLog('[ACC] Plugin loaded (' + ACC_PLG_VersionStr + '  ' + ACC_PLG_Bui
 WriteToGameLog('[ACC] Features 0x' + IntToHex(fFeatures,8),SCS_LOG_TYPE_message);
 {$ENDIF}
 fLimitSending := False;
+fDeleteTask := False;
 fWMCServer := TWinMsgCommServer.Create(nil,False,WMC_MessageName);
 fWMCServer.OnValueReceived := WMCServer_OnValueReceived;
 RunMainProgram;
@@ -326,6 +284,7 @@ end;
 
 destructor TACCPluginManager.Destroy;
 begin
+If fDeleteTask then DeleteTask;
 fWMCServer.Free;
 UnregisterChannels;
 UnregisterEvents;

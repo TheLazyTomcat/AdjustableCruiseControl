@@ -16,7 +16,8 @@ uses
 
   ACC_Settings,
   ACC_PluginComm,
-  ACC_PluginManager;
+  ACC_PluginManager,
+  ACC_PluginLauncher;
 
 {$R *.res}
 

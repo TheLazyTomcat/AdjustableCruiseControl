@@ -23,7 +23,7 @@
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="1"/>
       <RevisionNr Value="3"/>
-      <BuildNr Value="51"/>
+      <BuildNr Value="52"/>
       <Language Value="0405"/>
       <StringTable Comments="Game plugin for ACC 2.4.x" CompanyName="František Milt" FileDescription="Adjustable Cruise Control Plugin" InternalName="ACC 2.4.x Plugin" LegalCopyright="© 2013 - 2016 František Milt" LegalTrademarks="Adjustable Cruise Control Plugin" OriginalFilename="ACC_Plugin.dll" ProductName="Adjustable Cruise Control Plugin" ProductVersion="1.1.3"/>
     </VersionInfo>
@@ -162,7 +162,7 @@
         <PackageName Value="LazUtils"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="6">
       <Unit0>
         <Filename Value="ACC_Plugin.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -183,6 +183,10 @@
         <Filename Value="..\..\MainProgram\ACC_PluginComm.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="..\..\Source\ACC_PluginLauncher.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit5>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -14,9 +14,10 @@ uses
 
   SCS_Telemetry_Condensed,
 
-  ACC_Settings      in '..\..\Source\ACC_Settings.pas',
-  ACC_PluginComm    in '..\..\Source\ACC_PluginComm.pas',
-  ACC_PluginManager in '..\..\Source\ACC_PluginManager.pas';
+  ACC_Settings       in '..\..\Source\ACC_Settings.pas',
+  ACC_PluginComm     in '..\..\Source\ACC_PluginComm.pas',
+  ACC_PluginManager  in '..\..\Source\ACC_PluginManager.pas',
+  ACC_PluginLauncher in '..\..\Source\ACC_PluginLauncher.pas';
 
 {$R *.res}
 
