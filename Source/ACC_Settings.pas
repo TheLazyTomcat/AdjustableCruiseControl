@@ -38,6 +38,7 @@ const
   SETN_VAL_ShowKeyBindings         = 'ShowKeyBindings';
   SETN_VAL_UsedSpeedUnit           = 'UsedSpeedUnit';
   SETN_VAL_ZeroLimitAction         = 'ZeroLimitAction';
+  SETN_VAL_PluginLaunchMethod      = 'PluginLaunchMethod';
 
   SETN_VAL_TMR_ProcessBinderScanInterval = 'ProcessBinderScanInterval';
   SETN_VAL_TMR_ModulesLoadTimeout        = 'ModulesLoadTimeout';
@@ -82,6 +83,7 @@ const
   SETN_VAL_REG_ShowKeyBindings         = SETN_GRP_General + '.' + SETN_VAL_ShowKeyBindings;
   SETN_VAL_REG_UsedSpeedUnit           = SETN_GRP_General + '.' + SETN_VAL_UsedSpeedUnit;
   SETN_VAL_REG_ZeroLimitAction         = SETN_GRP_General + '.' + SETN_VAL_ZeroLimitAction;
+  SETN_VAL_REG_PluginLaunchMethod      = SETN_GRP_General + '.' + SETN_VAL_PluginLaunchMethod;
 
   SETN_VAL_TMR_REG_ProcessBinderScanInterval = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ProcessBinderScanInterval;
   SETN_VAL_TMR_REG_ModulesLoadTimeout        = SETN_GRP_Timers + '.' + SETN_VAL_TMR_ModulesLoadTimeout;
@@ -173,6 +175,7 @@ type
     ShowKeyBindings:            Boolean;
     UsedSpeedUnit:              Integer;
     ZeroLimitAction:            Integer;
+    PluginLaunchMethod:         Integer;
     ProcessBinderScanInterval:  Integer;
     ModulesLoadTimeout:         Integer;
     SpeedUnits:                 Array of TSpeedUnit;
@@ -196,6 +199,7 @@ type
     procedure ValidateSettings;
     procedure InitSettings;
     procedure PreloadSettings;
+    procedure LoadPluginSettings;
     Function LoadFromRegistry: Boolean;
     Function SaveToRegistry: Boolean;
     Function LoadFromIni(const FileName: String): Boolean;
@@ -232,6 +236,7 @@ const
     ShowKeyBindings:            True;
     UsedSpeedUnit:              0;
     ZeroLimitAction:            0;
+    PluginLaunchMethod:         0;    
     ProcessBinderScanInterval:  1000;
     ModulesLoadTimeout:         5000;
     SpeedUnits:                 nil;
@@ -414,6 +419,37 @@ try
         fSettings^.ShowSplashScreen := Registry.ReadBoolDef(SETN_VAL_REG_ShowSplashScreen,def_Settings.ShowSplashScreen);
         fSettings^.MinimizeToTray := Registry.ReadBoolDef(SETN_VAL_REG_MinimizeToTray,def_Settings.MinimizeToTray);
         fSettings^.StartMinimized := Registry.ReadBoolDef(SETN_VAL_REG_StartMinimized,def_Settings.StartMinimized);
+        Registry.CloseKey;
+        ValidateSettings;
+      end
+    else InitSettings;
+  finally
+    Registry.Free;
+  end;
+except
+  InitSettings;
+end;
+end;
+
+//------------------------------------------------------------------------------
+
+procedure TSettingsManager.LoadPluginSettings;
+var
+  Registry: TDefRegistry;
+begin
+try
+  Registry := TDefRegistry.Create;
+  try
+    Registry.RootKey := HKEY_CURRENT_USER;
+    If Registry.OpenKeyReadOnly(SettingsRegistryKey) then
+      begin
+      {$IF Defined(FPC) and not Defined(Unicode)}
+        fSettings^.ProgramPath := WinCPToUTF8(Registry.ReadStringDef(SETN_VAL_REG_ProgramPath,def_Settings.ProgramPath));
+      {$ELSE}
+        fSettings^.ProgramPath := Registry.ReadStringDef(SETN_VAL_REG_ProgramPath,def_Settings.ProgramPath);
+      {$IFEND}
+        fSettings^.PluginLaunchMethod := Registry.ReadIntegerDef(SETN_VAL_REG_PluginLaunchMethod,def_Settings.PluginLaunchMethod);
+        Registry.CloseKey; 
         ValidateSettings;
       end
     else InitSettings;
@@ -460,6 +496,7 @@ try
         fSettings^.ShowKeyBindings := Registry.ReadBoolDef(SETN_VAL_REG_ShowKeyBindings,def_Settings.ShowKeyBindings);
         fSettings^.UsedSpeedUnit := Registry.ReadIntegerDef(SETN_VAL_REG_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
         fSettings^.ZeroLimitAction := Registry.ReadIntegerDef(SETN_VAL_REG_ZeroLimitAction,def_Settings.ZeroLimitAction);
+        fSettings^.PluginLaunchMethod := Registry.ReadIntegerDef(SETN_VAL_REG_PluginLaunchMethod,def_Settings.PluginLaunchMethod);
 
         fSettings^.ProcessBinderScanInterval := Registry.ReadIntegerDef(SETN_VAL_TMR_REG_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
         fSettings^.ModulesLoadTimeout := Registry.ReadIntegerDef(SETN_VAL_TMR_REG_ModulesLoadTimeout,def_Settings.ModulesLoadTimeout);
@@ -550,6 +587,7 @@ try
         Registry.WriteBool(SETN_VAL_REG_ShowKeyBindings,fSettings^.ShowKeyBindings);
         Registry.WriteInteger(SETN_VAL_REG_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
         Registry.WriteInteger(SETN_VAL_REG_ZeroLimitAction,fSettings^.ZeroLimitAction);
+        Registry.WriteInteger(SETN_VAL_REG_PluginLaunchMethod,fSettings^.PluginLaunchMethod);
 
         Registry.WriteInteger(SETN_VAL_TMR_REG_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);
         Registry.WriteInteger(SETN_VAL_TMR_REG_ModulesLoadTimeout,fSettings^.ModulesLoadTimeout);
@@ -638,6 +676,7 @@ try
     fSettings^.ShowKeyBindings := IniFile.ReadBool(SETN_GRP_General,SETN_VAL_ShowKeyBindings,def_Settings.ShowKeyBindings);
     fSettings^.UsedSpeedUnit := IniFile.ReadInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,def_Settings.UsedSpeedUnit);
     fSettings^.ZeroLimitAction := IniFile.ReadInteger(SETN_GRP_General,SETN_VAL_ZeroLimitAction,def_Settings.ZeroLimitAction);
+    fSettings^.PluginLaunchMethod := IniFile.ReadInteger(SETN_GRP_General,SETN_VAL_PluginLaunchMethod,def_Settings.PluginLaunchMethod);
 
     fSettings^.ProcessBinderScanInterval := IniFile.ReadInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,def_Settings.ProcessBinderScanInterval);
     fSettings^.ModulesLoadTimeout := IniFile.ReadInteger(SETN_GRP_Timers,SETN_VAL_TMR_ModulesLoadTimeout,def_Settings.ModulesLoadTimeout);
@@ -722,6 +761,7 @@ try
     IniFile.WriteBool(SETN_GRP_General,SETN_VAL_ShowKeyBindings,fSettings^.ShowKeyBindings);
     IniFile.WriteInteger(SETN_GRP_General,SETN_VAL_UsedSpeedUnit,fSettings^.UsedSpeedUnit);
     IniFile.WriteInteger(SETN_GRP_General,SETN_VAL_ZeroLimitAction,fSettings^.ZeroLimitAction);
+    IniFile.WriteInteger(SETN_GRP_General,SETN_VAL_PluginLaunchMethod,fSettings^.PluginLaunchMethod);
 
     IniFile.WriteInteger(SETN_GRP_Timers,SETN_VAL_TMR_ProcessBinderScanInterval,fSettings^.ProcessBinderScanInterval);
     IniFile.WriteInteger(SETN_GRP_Timers,SETN_VAL_TMR_ModulesLoadTimeout,fSettings^.ModulesLoadTimeout);

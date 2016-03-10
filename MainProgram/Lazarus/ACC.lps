@@ -8,8 +8,6 @@
       <Unit0>
         <Filename Value="ACC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="13"/>
         <CursorPos X="3" Y="26"/>
         <UsageCount Value="150"/>
         <Loaded Value="True"/>
@@ -110,7 +108,8 @@
         <ComponentName Value="fMainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
         <CursorPos X="26" Y="246"/>
         <UsageCount Value="150"/>
         <Loaded Value="True"/>
@@ -478,25 +477,21 @@
       </Unit70>
       <Unit71>
         <Filename Value="..\..\Source\ACC_Common.pas"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="24"/>
         <CursorPos X="13" Y="37"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit71>
     </Units>
-    <JumpHistory Count="3" HistoryIndex="2">
+    <JumpHistory Count="2" HistoryIndex="1">
       <Position1>
         <Filename Value="ACC.lpr"/>
         <Caret Line="3" Column="18"/>
       </Position1>
       <Position2>
-        <Filename Value="..\..\Source\ACC_Common.pas"/>
-      </Position2>
-      <Position3>
         <Filename Value="ACC.lpr"/>
         <Caret Line="3" Column="18"/>
-      </Position3>
+      </Position2>
     </JumpHistory>
   </ProjectSession>
   <Debugging>
