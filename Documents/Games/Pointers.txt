@@ -903,3 +903,19 @@ American Truck Simulator 1.0.0 Multi Steam 64b [CRC32: EF06D0F4]
 CCStatus:	amtrucks.exe +0x011FE888 --> +0x00000990 --> +0x0000006C --> Boolean
 CCSpeed:	amtrucks.exe +0x011FE888 --> +0x00000990 --> +0x00000070 --> Single (kph)
 TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+American Truck Simulator 1.1.1 Multi Steam 64b [CRC32: 5F44A88F]
+CCStatus:	amtrucks.exe +0x011FE928 --> +0x00000990 --> +0x0000006C --> Boolean
+CCSpeed:	amtrucks.exe +0x011FE928 --> +0x00000990 --> +0x00000070 --> Single (kph)
+TruckSpeed:	n/k
+
+
+--------------------------------------------------------------------------------------------------------
+
+American Truck Simulator 1.1.1.3 Multi Steam 64b [CRC32: 4BEFB53C]
+CCStatus:	amtrucks.exe +0x011FE928 --> +0x00000990 --> +0x0000006C --> Boolean
+CCSpeed:	amtrucks.exe +0x011FE928 --> +0x00000990 --> +0x00000070 --> Single (kph)
+TruckSpeed:	n/k

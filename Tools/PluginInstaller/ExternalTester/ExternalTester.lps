@@ -9,7 +9,7 @@
         <Filename Value="ExternalTester.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <CursorPos X="18" Y="11"/>
+        <CursorPos X="3" Y="6"/>
         <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -28,7 +28,7 @@
         <UsageCount Value="23"/>
       </Unit2>
     </Units>
-    <CustomDefines Count="7">
+    <OtherDefines Count="7">
       <Define0 Value="FPC"/>
       <Define1 Value="Windows"/>
       <Define2 Value="Debug"/>
@@ -36,7 +36,12 @@
       <Define4 Value="x86"/>
       <Define5 Value="x64"/>
       <Define6 Value="ExternalTester"/>
-    </CustomDefines>
-    <JumpHistory HistoryIndex="-1"/>
+    </OtherDefines>
+    <JumpHistory Count="1">
+      <Position1>
+        <Filename Value="ExternalTester.lpr"/>
+        <Caret Line="6" Column="3"/>
+      </Position1>
+    </JumpHistory>
   </ProjectSession>
 </CONFIG>

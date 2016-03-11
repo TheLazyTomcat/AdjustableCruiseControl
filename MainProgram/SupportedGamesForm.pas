@@ -1,8 +1,15 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 unit SupportedGamesForm;
 
 interface
 
-{$INCLUDE ACC_Defs.inc}
+{$INCLUDE '..\Source\ACC_Defs.inc'}
 
 uses
   Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
@@ -121,7 +128,7 @@ try
     end;
   ListPointerData(GDIN_GD_CCSpeed,TempGameData.CCSpeed);
   ListPointerData(GDIN_GD_CCStatus,TempGameData.CCStatus);
-  If TGamesDataManager.TruckSpeedSupported(TempGameData) <> ssrNone then
+  If TGamesDataManager.TruckSpeedSupport(TempGameData) <> ssrNone then
     ListPointerData(GDIN_GD_TruckSpeed,TempGameData.TruckSpeed);
   AddRow(GDIN_GD_Values,IntToStr(Length(TempGameData.Values)));
   For i := Low(TempGameData.Values) to High(TempGameData.Values) do

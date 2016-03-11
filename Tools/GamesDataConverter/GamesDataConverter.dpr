@@ -1,3 +1,10 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 program GamesDataConverter;
 
 {$APPTYPE CONSOLE}
@@ -6,8 +13,8 @@ uses
   SysUtils,
   Classes,
 
-  ACC_Common    in '..\..\MainProgram\ACC_Common.pas',
-  ACC_GamesData in '..\..\MainProgram\ACC_GamesData.pas';
+  ACC_Common    in '..\..\Source\ACC_Common.pas',
+  ACC_GamesData in '..\..\Source\ACC_GamesData.pas';
 
 
 type
@@ -135,7 +142,7 @@ else
     WriteLn;
     WriteLn('GamesDataConverter -i InputFile -of OtuputFileFormat [-o OutputFile] [-ic GameIconFile_1 [GameIconFile_2 ...]]');
     WriteLn;
-    WriteLn('OutputFileFormat - can be one of following: INI, BIN, INI1, INI2, INI2.1, BIN1,');
+    WriteLn('OutputFileFormat - can be one of following: INI, BIN, INI2, INI2.1, BIN1,');
     WriteLn('                   BIN1.1');
     WriteLn('                   INI maps to INI2.1; BIN maps to BIN1.1');
     WriteLn('      OutputFile - when not specified, output file has the same name as input');

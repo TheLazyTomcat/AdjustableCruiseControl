@@ -1,1 +1,0 @@
-start ..\..\Tools\GamesDataConverter\GamesDataConverter.exe -i old_GamesData.ini -o new_GamesData.ini -of ini

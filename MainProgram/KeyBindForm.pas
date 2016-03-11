@@ -1,8 +1,15 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 unit KeyBindForm;
 
 interface
 
-{$INCLUDE ACC_Defs.inc}
+{$INCLUDE '..\Source\ACC_Defs.inc'}
 
 uses
   Windows, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs,
@@ -49,7 +56,7 @@ implementation
 {$ENDIF}
 
 uses
-  SettingsForm,{$IFNDEF FPC}MsgForm,{$ENDIF}
+  SettingsForm,
   ACC_Strings, ACC_Input, ACC_Manager;
   
 
@@ -132,7 +139,7 @@ begin
 {$IFDEF FPC}
 If Application.MessageBox(PChar(Format(ACCSTR_UI_SET_BIND_ClearBinding,[fActionText])),'Clear binding',MB_ICONWARNING or MB_YESNO) = IDYES then
 {$ELSE}
-If ShowWarningMsg(Self,1,Format(ACCSTR_UI_SET_BIND_ClearBinding,[fActionText]),'Clear binding','','') then
+If MessageDlg(Format(ACCSTR_UI_SET_BIND_ClearBinding,[fActionText]),mtWarning,[mbYes,mbNo],0) = mrYes then
 {$ENDIF}
   begin
     fInput := InvalidInput;

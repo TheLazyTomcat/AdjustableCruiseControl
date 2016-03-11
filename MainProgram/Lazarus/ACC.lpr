@@ -1,10 +1,20 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 program ACC;
 
-{$INCLUDE ..\ACC_Defs.inc}
+{$INCLUDE '..\..\Source\ACC_Defs.inc'}
 
 uses
   Interfaces, // this includes the LCL widgetset
   SysUtils,
+{$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+  LazUTF8,
+{$IFEND}
   Forms,
 
   ACC_Common,
@@ -35,9 +45,15 @@ var
 
   procedure CheckStartedForUpdate;
   begin
+  {$IF Defined(FPC) and not Defined(Unicode) and (FPC_FULLVERSION < 20701)}
+    If (ParamCount > 0) and FileExists(ParamStr(1)) then
+      begin
+        UpdateFile := SysToUTF8(ParamStr(1));
+  {$ELSE}
     If (ParamCount > 0) and FileExists(ParamStr(1)) then
       begin
         UpdateFile := ParamStr(1);
+  {$IFEND}
         LoadingUpdate := True;
       end;
   end;

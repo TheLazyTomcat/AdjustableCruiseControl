@@ -1,8 +1,15 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 unit MainForm;
 
 interface
 
-{$INCLUDE ACC_Defs.inc}
+{$INCLUDE '..\Source\ACC_Defs.inc'}
 
 uses
   Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls,
@@ -190,6 +197,7 @@ uses
   ACC_Settings, ACC_Strings, ACC_Input, ACC_PluginComm,
   AboutForm, SettingsForm, UpdateForm;
 
+
 procedure TfMainForm.AfterShow(var Msg: TMessage);
 begin
 If fLoadingUpdate then
@@ -241,6 +249,9 @@ else
     sbStatusBar.Panels[1].Text := ACCSTR_UI_STB_PluginOffline;
     grbSpeedLimit.Caption := ACCSTR_UI_LIM_BoxCaptionInactive;
   end;
+{$IFDEF FPC}
+grbSpeedLimit.Invalidate;
+{$ENDIF}
 end;
 
 //------------------------------------------------------------------------------

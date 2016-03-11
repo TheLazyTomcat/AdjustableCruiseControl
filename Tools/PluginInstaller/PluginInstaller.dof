@@ -94,7 +94,7 @@ OutputDir=
 UnitOutputDir=.\DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\..\MainProgram\Libs
+SearchPath=..\..\Source\Libs
 Packages=vcl;rtl;vclx;VclSmp;vclshlctrls;AdvCircularProgressPkgD7;TMSMenusD7;AdvShaperPkgD7;alpb;sulab;butcmps;EZJTexturePanelD6;FormShapePkgD7;GradientLabelPkgD7;ic;l3d;lfr;fw;mmjl;ash;tqpb;shlab;vaf;ish;xib;TPNGButton;wbme;verinf;aled;DelphiX70
 Conditionals=
 DebugSourceDirs=
@@ -110,8 +110,8 @@ IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=1
 MinorVer=1
-Release=1
-Build=35
+Release=2
+Build=38
 Debug=0
 PreRelease=0
 Special=0
@@ -122,20 +122,21 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=František Milt
 FileDescription=Plugin Installer Application
-FileVersion=1.1.1.35
+FileVersion=1.1.2.38
 InternalName=Plugin Installer
 LegalCopyright=© 2015 - 2016 František Milt
 LegalTrademarks=Plugin Installer
 OriginalFilename=PluginInstaller.exe
 ProductName=Plugin Installer
-ProductVersion=1.1.1
+ProductVersion=1.1.2
 Comments=Utility designed to ease (un)installation of plugins for truck games developed by SCS Software
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=1
-Item0=..\..\MainProgram\Libs
+Count=2
+Item0=..\..\Source\Libs
+Item1=..\..\MainProgram\Libs
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\DCU

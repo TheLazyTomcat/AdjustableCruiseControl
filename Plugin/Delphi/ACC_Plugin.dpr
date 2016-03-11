@@ -1,20 +1,30 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 library ACC_Plugin;
+
+{$INCLUDE ..\..\Source\ACC_Defs.inc} 
 
 uses
   SysUtils,
 
-  SCS_Telemetry_Condensed in '..\SCS_Telemetry_Condensed.pas',
+  SCS_Telemetry_Condensed,
 
-  ACC_Settings      in '..\..\MainProgram\ACC_Settings.pas',
-  ACC_PluginComm    in '..\..\MainProgram\ACC_PluginComm.pas',
-  ACC_PluginManager in '..\ACC_PluginManager.pas';
+  ACC_Settings       in '..\..\Source\ACC_Settings.pas',
+  ACC_PluginComm     in '..\..\Source\ACC_PluginComm.pas',
+  ACC_PluginManager  in '..\..\Source\ACC_PluginManager.pas',
+  ACC_PluginLauncher in '..\..\Source\ACC_PluginLauncher.pas';
 
 {$R *.res}
 
 var
   PluginManager: TACCPluginManager = nil;
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 Function TelemetryLibraryInit(version: scs_u32_t; params: p_scs_telemetry_init_params_t): scs_result_t; stdcall;
 begin

@@ -1,13 +1,21 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 program PluginInstaller;
 
 uses
   Forms,
-  SCS_Telemetry_Condensed in '..\..\Plugin\SCS_Telemetry_Condensed.pas',
-  ACC_PluginInstaller in 'ACC_PluginInstaller.pas',
-  ACC_PluginCheck in 'ACC_PluginCheck.pas',
-  MainForm in 'MainForm.pas' {fMainForm},
+
+  ACC_PluginInstaller in '..\..\Source\ACC_PluginInstaller.pas',
+  ACC_PluginCheck     in '..\..\Source\ACC_PluginCheck.pas',
+
+  MainForm        in 'MainForm.pas' {fMainForm},
   DescriptionForm in 'DescriptionForm.pas' {fDescriptionForm},
-  LibraryForm in 'LibraryForm.pas' {fLibraryForm};
+  LibraryForm     in 'LibraryForm.pas' {fLibraryForm};
 
 {$R *.res}
 

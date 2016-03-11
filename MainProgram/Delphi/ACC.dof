@@ -94,7 +94,7 @@ OutputDir=.\Release\win_x86
 UnitOutputDir=.\DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\Libs;..\Libs\WMC
+SearchPath=..\..\Source\Libs
 Packages=vcl;rtl;vclx;VclSmp;vclshlctrls;AdvCircularProgressPkgD7;TMSMenusD7;AdvShaperPkgD7;alpb;sulab;butcmps;EZJTexturePanelD6;FormShapePkgD7;GradientLabelPkgD7;ic;l3d;lfr;fw;mmjl;ash;tqpb;shlab;vaf;ish;xib;TPNGButton;wbme;verinf;aled;DelphiX70
 Conditionals=Delphi;x86;Release
 DebugSourceDirs=
@@ -109,9 +109,9 @@ DebugCWD=
 IncludeVerInfo=1
 AutoIncBuild=1
 MajorVer=2
-MinorVer=3
-Release=3
-Build=255
+MinorVer=4
+Release=0
+Build=258
 Debug=0
 PreRelease=0
 Special=0
@@ -122,13 +122,13 @@ CodePage=1250
 [Version Info Keys]
 CompanyName=František Milt
 FileDescription=Adjustable Cruise Control Application
-FileVersion=2.3.3.255
+FileVersion=2.4.0.258
 InternalName=ACC 2.3.x
 LegalCopyright=© 2013 - 2016 František Milt
 LegalTrademarks=Adjustable Cruise Control
 OriginalFilename=ACC.exe
 ProductName=Adjustable Cruise Control
-ProductVersion=2.3.3
+ProductVersion=2.4.0
 Comments=Main program for ACC 2.3.x
 [HistoryLists\hlConditionals]
 Count=2
@@ -138,10 +138,11 @@ Item1=Delphi;x86
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=3
-Item0=..\Libs;..\Libs\WMC
+Count=4
+Item0=..\..\Source\Libs
 Item1=..\Libs
-Item2=D:\Program Files\Borland\cmps temp\pngdelphi
+Item2=..\Libs;..\Libs\WMC
+Item3=D:\Program Files\Borland\cmps temp\pngdelphi
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\DCU
