@@ -2,24 +2,24 @@ unit SCS_Telemetry_Condensed;
 
 {==============================================================================}
 {  SCS Telemetry API headers condenser, version 1.0a                           }
-{  Condensed on: Monday 2015-05-11 16:32:54                                    }
+{  Condensed on: Saturday 2016-03-12 13:42:22                                  }
 {==============================================================================}
 
 interface
 
-{$IFDEF x64}
+{$IF defined(CPUX86_64) or defined(CPUX64)}
   {$DEFINE SCS_ARCHITECTURE_x64}
-{$ELSE}
+{$ELSEIF defined(CPU386)}
   {$DEFINE SCS_ARCHITECTURE_x86}
-{$ENDIF}
+{$ELSE}
+  {$MESSAGE Fatal 'Unsupported CPU architecture'}
+{$IFEND}
 
 {$IFDEF Debug}
   {$DEFINE AssertTypeSize}
 {$ELSE}
   {$UNDEF AssertTypeSize}
 {$ENDIF}
-
-{.$DEFINE AssertTypeSize}
 
 {=== scssdk.pas ===============================================================}
 (**
@@ -30,15 +30,30 @@ interface
 
 // String types used in the API.
 type
-  TUTF8Char = type AnsiChar;  PUTF8Char = ^TUTF8Char;
+{$IF not Declared(TUTF8Char)}
+  TUTF8Char = type AnsiChar;
+{$IFEND}
+{$IF not Declared(PUTF8Char)}
+  PUTF8Char = ^TUTF8Char;
+{$IFEND}
   
   TelemetryString = type UTF8String;
 
 // Types used trough the SDK.
   scs_u8_t      = Byte;               p_scs_u8_t      = ^scs_u8_t;
   scs_u16_t     = Word;               p_scs_u16_t     = ^scs_u16_t;
-  scs_s32_t     = LongInt; {Integer}  p_scs_s32_t     = ^scs_s32_t;
-  scs_u32_t     = LongWord;{Cardinal} p_scs_u32_t     = ^scs_u32_t;
+
+{$IF (SizeOf(LongInt) = 4) and (SizeOf(LongWord) = 4)}
+  scs_s32_t     = LongInt;
+  scs_u32_t     = LongWord;
+{$ELSEIF (SizeOf(Integer) = 4) and (SizeOf(Cardinal) = 4)}
+  scs_s32_t     = Integer;
+  scs_u32_t     = Cardinal;
+{$ELSE}
+  {$MESSAGE FATAL 'Cannot declare 32bit integers'}
+{$IFEND}
+  p_scs_s32_t     = ^scs_s32_t;       p_scs_u32_t     = ^scs_u32_t;
+
   scs_u64_t     = UInt64;             p_scs_u64_t     = ^scs_u64_t;
   scs_float_t   = Single;             p_scs_float_t   = ^scs_float_t;
   scs_double_t  = Double;             p_scs_double_t  = ^scs_double_t;
@@ -293,7 +308,7 @@ type
      *)
     pitch:    scs_float_t;
     (**
-     * @brief Rool
+     * @brief Roll
      *
      * Stored in unit range where <-0.5,0.5> corresponds to <-180,180>.
      *
@@ -2179,7 +2194,7 @@ begin
 If Assigned(Str) then
   begin
     SetLength(Result,StrLen(PAnsiChar(Str)));
-    Move(Str^,PUTF8Char(Result)^,Length(Result));
+    Move(Str^,PUTF8Char(Result)^,Length(Result) * SizeOf(TUTF8Char));
   end
 else Result := '';
 end;
@@ -2188,8 +2203,10 @@ end;
 
 Function TelemetryStringToAPIString(const Str: TelemetryString): scs_string_t;
 begin
-If Length(Str) > 0 then Result := scs_string_t(StrNew(PAnsiChar(Str)))
-  else Result := nil;
+If Length(Str) > 0 then
+  Result := scs_string_t(StrNew(PAnsiChar(Str)))
+else
+  Result := nil;
 end;
 
 //------------------------------------------------------------------------------
@@ -2210,7 +2227,11 @@ begin
 {$IFDEF Unicode}
 Result := UTF8Decode(Str);
 {$ELSE}
+{$IFDEF FPC}
+Result := Str;
+{$ELSE}
 Result := UTF8ToAnsi(Str);
+{$ENDIF}
 {$ENDIF}
 end;
 
@@ -2221,7 +2242,11 @@ begin
 {$IFDEF Unicode}
 Result := UTF8Encode(Str);
 {$ELSE}
+{$IFDEF FPC}
+Result := Str;
+{$ELSE}
 Result := AnsiToUTF8(Str);
+{$ENDIF}
 {$ENDIF}
 end;
 
