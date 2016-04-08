@@ -1,25 +1,32 @@
+{-------------------------------------------------------------------------------
+
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+-------------------------------------------------------------------------------}
 unit SCS_Telemetry_Condensed;
 
 {==============================================================================}
 {  SCS Telemetry API headers condenser, version 1.0a                           }
-{  Condensed on: Monday 2015-05-11 16:32:54                                    }
+{  Condensed on: Tuesday 2016-03-22 07:04:29                                   }
 {==============================================================================}
 
 interface
 
-{$IFDEF x64}
+{$IF defined(CPUX86_64) or defined(CPUX64)}
   {$DEFINE SCS_ARCHITECTURE_x64}
-{$ELSE}
+{$ELSEIF defined(CPU386)}
   {$DEFINE SCS_ARCHITECTURE_x86}
-{$ENDIF}
+{$ELSE}
+  {$MESSAGE Fatal 'Unsupported CPU architecture'}
+{$IFEND}
 
 {$IFDEF Debug}
   {$DEFINE AssertTypeSize}
 {$ELSE}
   {$UNDEF AssertTypeSize}
 {$ENDIF}
-
-{.$DEFINE AssertTypeSize}
 
 {=== scssdk.pas ===============================================================}
 (**
@@ -30,15 +37,36 @@ interface
 
 // String types used in the API.
 type
-  TUTF8Char = type AnsiChar;  PUTF8Char = ^TUTF8Char;
+{$IF not Declared(TUTF8Char)}
+  TUTF8Char = type AnsiChar;
+{$IFEND}
+{$IF not Declared(PUTF8Char)}
+  PUTF8Char = ^TUTF8Char;
+{$IFEND}
   
   TelemetryString = type UTF8String;
 
 // Types used trough the SDK.
   scs_u8_t      = Byte;               p_scs_u8_t      = ^scs_u8_t;
   scs_u16_t     = Word;               p_scs_u16_t     = ^scs_u16_t;
-  scs_s32_t     = LongInt; {Integer}  p_scs_s32_t     = ^scs_s32_t;
-  scs_u32_t     = LongWord;{Cardinal} p_scs_u32_t     = ^scs_u32_t;
+
+{$IF (SizeOf(LongInt) = 4) and (SizeOf(LongWord) = 4)}
+  scs_s32_t     = LongInt;
+  scs_u32_t     = LongWord;
+{$ELSEIF (SizeOf(Integer) = 4) and (SizeOf(Cardinal) = 4)}
+  scs_s32_t     = Integer;
+  scs_u32_t     = Cardinal;
+{$ELSE}
+  {$MESSAGE FATAL 'Cannot declare 32bit integers'}
+{$IFEND}
+  p_scs_s32_t   = ^scs_s32_t;         p_scs_u32_t     = ^scs_u32_t;
+
+{$IF (defined(DCC) or declared(CompilerVersion)) and not defined(FPC)}
+  {$IF (CompilerVersion <= 17)}
+  UInt64 = Int64;
+  {$IFEND}
+{$IFEND}
+
   scs_u64_t     = UInt64;             p_scs_u64_t     = ^scs_u64_t;
   scs_float_t   = Single;             p_scs_float_t   = ^scs_float_t;
   scs_double_t  = Double;             p_scs_double_t  = ^scs_double_t;
@@ -293,7 +321,7 @@ type
      *)
     pitch:    scs_float_t;
     (**
-     * @brief Rool
+     * @brief Roll
      *
      * Stored in unit range where <-0.5,0.5> corresponds to <-180,180>.
      *
@@ -2163,6 +2191,70 @@ const
 // @li The localized strings are not updated when different in-game
 //     language is selected.
 
+{=== amtrucks/scssdk_ats.pas ==================================================}
+(**
+ * @file scssdk_ats.h
+ *
+ * @brief ATS specific constants.
+ *)
+
+const
+(**
+ * @brief Value used in the scs_sdk_init_params_t::game_id to identify this game.
+ *)
+  SCS_GAME_ID_ATS = TelemetryString('ats');
+
+{=== amtrucks/scssdk_telemetry_ats.pas ========================================}
+(**
+ * @file scssdk_telemetry_ats.h
+ *
+ * @brief ATS telemetry specific constants.
+ *)
+
+(**
+ * @name Value used in the scs_sdk_init_params_t::game_version
+ *
+ * Changes in the major version indicate incompatible changes (e.g. changed interpretation
+ * of the channel value). Change of major version is highly discouraged, creation of
+ * alternative channel is preferred solution if necessary.
+ * Changes in the minor version indicate compatible changes (e.g. added channel, more supported
+ * value types). Removal of channel is also compatible change however it is recommended
+ * to keep the channel with some default value.
+ *
+ * Changes:
+ * 1.00 - initial version - corresponds to 1.12 in ETS2
+ *)
+//@{
+const
+  SCS_TELEMETRY_ATS_GAME_VERSION_1_00    = (1 shl 16) or 0   {0x00010000};
+  SCS_TELEMETRY_ATS_GAME_VERSION_CURRENT = SCS_TELEMETRY_ATS_GAME_VERSION_1_00;
+//@}
+
+// Game specific units.
+//
+// @li The game uses US Dolars as internal currency provided
+//     by the telemetry unless documented otherwise.
+
+// Channels defined in scssdk_telemetry_common_channels.h,
+// scssdk_telemetry_truck_common_channels.h and
+// scssdk_telemetry_trailer_common_channels.h are supported
+// with following exceptions and limitations as of v1.00:
+//
+// @li Adblue related channels are not supported.
+// @li The fuel_average_consumption is currently mostly static and depends
+//     on presence of the trailer and skills of the driver instead
+//     of the workload of the engine.
+// @li Rolling rotation of trailer wheels is determined from linear
+//     movement.
+// @li The pressures, temperatures and voltages are not simulated.
+//     They are very loosely approximated.
+
+// Configurations defined in scssdk_telemetry_common_configs.h are
+// supported with following exceptions and limitations as of v1.00:
+//
+// @li The localized strings are not updated when different in-game
+//     language is selected.
+
 {******************************************************************************}
 {******************************************************************************}
 {******************************************************************************}
@@ -2179,7 +2271,7 @@ begin
 If Assigned(Str) then
   begin
     SetLength(Result,StrLen(PAnsiChar(Str)));
-    Move(Str^,PUTF8Char(Result)^,Length(Result));
+    Move(Str^,PUTF8Char(Result)^,Length(Result) * SizeOf(TUTF8Char));
   end
 else Result := '';
 end;
@@ -2188,8 +2280,10 @@ end;
 
 Function TelemetryStringToAPIString(const Str: TelemetryString): scs_string_t;
 begin
-If Length(Str) > 0 then Result := scs_string_t(StrNew(PAnsiChar(Str)))
-  else Result := nil;
+If Length(Str) > 0 then
+  Result := scs_string_t(StrNew(PAnsiChar(Str)))
+else
+  Result := nil;
 end;
 
 //------------------------------------------------------------------------------
@@ -2210,7 +2304,11 @@ begin
 {$IFDEF Unicode}
 Result := UTF8Decode(Str);
 {$ELSE}
+{$IFDEF FPC}
+Result := Str;
+{$ELSE}
 Result := UTF8ToAnsi(Str);
+{$ENDIF}
 {$ENDIF}
 end;
 
@@ -2221,7 +2319,11 @@ begin
 {$IFDEF Unicode}
 Result := UTF8Encode(Str);
 {$ELSE}
+{$IFDEF FPC}
+Result := Str;
+{$ELSE}
 Result := AnsiToUTF8(Str);
+{$ENDIF}
 {$ENDIF}
 end;
 
