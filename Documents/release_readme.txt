@@ -489,7 +489,7 @@ Changelog
 List of changes between individual versions of ACC.
 
 2.3.3 -> 2.4.0
-  - corrected issue where Steam could thing the game is running when it was
+  - corrected issue where Steam could think the game is running when it was
     already closed as long as the ACC was running (Steam considered ACC to be
     part of the game)
   - removed support for obsolete games data formats
