@@ -919,3 +919,38 @@ American Truck Simulator 1.1.1.3 Multi Steam 64b [CRC32: 4BEFB53C]
 CCStatus:	amtrucks.exe +0x011FE928 --> +0x00000990 --> +0x0000006C --> Boolean
 CCSpeed:	amtrucks.exe +0x011FE928 --> +0x00000990 --> +0x00000070 --> Single (kph)
 TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.23.1.1 Multi [CRC32: eef96e16]
+CCStatus:	eurotrucks2.exe +0x00CDE5A8 --> +0x00000564 --> +0x00000064 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00CDE5A8 --> +0x00000564 --> +0x00000068 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.23.1.1 Multi Steam [CRC32: 9c0bc74e]
+CCStatus:	eurotrucks2.exe +0x00CCD8E4 --> +0x00000564 --> +0x00000064 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00CCD8E4 --> +0x00000564 --> +0x00000068 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.23.1.1 Multi 64b [CRC32: 85c44400]
+CCStatus:	eurotrucks2.exe +0x010D6FF8 --> +0x00000998 --> +0x00000074 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x010D6FF8 --> +0x00000998 --> +0x00000078 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.23.1.1 Multi Steam 64b [CRC32: fb4c0f81]
+CCStatus:	eurotrucks2.exe +0x010BD238 --> +0x00000998 --> +0x00000074 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x010BD238 --> +0x00000998 --> +0x00000078 --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+American Truck Simulator 1.2.1.1 Multi Steam 64b [CRC32: 0857C060]
+CCStatus:	amtrucks.exe +0x010A4430 --> +0x00000998 --> +0x00000074 --> Boolean
+CCSpeed:	amtrucks.exe +0x010A4430 --> +0x00000998 --> +0x00000078 --> Single (kph)
+TruckSpeed:	n/k
