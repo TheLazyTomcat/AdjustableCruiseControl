@@ -954,3 +954,31 @@ American Truck Simulator 1.2.1.1 Multi Steam 64b [CRC32: 0857C060]
 CCStatus:	amtrucks.exe +0x010A4430 --> +0x00000998 --> +0x00000074 --> Boolean
 CCSpeed:	amtrucks.exe +0x010A4430 --> +0x00000998 --> +0x00000078 --> Single (kph)
 TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.24.2.1 Multi [CRC32: 285c323b]
+CCStatus:	eurotrucks2.exe +0x00d49988 --> +0x00000564 --> +0x00000068 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00d49988 --> +0x00000564 --> +0x0000006c --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.24.2.2 Multi Steam [CRC32: d4a6acb3]
+CCStatus:	eurotrucks2.exe +0x00d38cc0 --> +0x00000564 --> +0x00000068 --> Boolean
+CCSpeed:	eurotrucks2.exe +0x00d38cc0 --> +0x00000564 --> +0x00000068 Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.24.2.1 Multi 64b [CRC32: eebafd16]
+CCStatus:	eurotrucks2.exe +0x --> +0x --> +0x --> Boolean
+CCSpeed:	eurotrucks2.exe +0x --> +0x --> +0x --> Single (kph)
+TruckSpeed:	n/k
+
+--------------------------------------------------------------------------------------------------------
+
+Euro Truck Simulator 2 1.24.2.2 Multi Steam 64b [CRC32: a349673f]
+CCStatus:	eurotrucks2.exe +0x --> +0x --> +0x --> Boolean
+CCSpeed:	eurotrucks2.exe +0x --> +0x --> +0x --> Single (kph)
+TruckSpeed:	n/k
